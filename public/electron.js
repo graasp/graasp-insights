@@ -42,6 +42,31 @@ const createWindow = () => {
       : `file://${path.join(__dirname, './index.html')}`,
   );
 
+  if (isDev) {
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+      REDUX_DEVTOOLS,
+      // eslint-disable-next-line global-require
+    } = require('electron-devtools-installer');
+
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => {
+        logger.info(`added extension: ${name}`);
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
+
+    installExtension(REDUX_DEVTOOLS)
+      .then((name) => {
+        logger.info(`added extension: ${name}`);
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
+  }
+
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
 
