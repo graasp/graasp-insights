@@ -1,7 +1,8 @@
 {
   "name": "graasp-insights",
   "version": "0.1.0",
-  "main": "index.js",
+  "homepage": "./",
+  "main": "public/electron.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/graasp/graasp-insights"
@@ -13,22 +14,43 @@
     "Hagop Taminian"
   ],
   "license": "AGPL-3.0",
+  "dependencies": {
+    "about-window": "1.13.4",
+    "electron-is-dev": "1.2.0",
+    "electron-log": "4.2.2",
+    "lowdb": "1.0.0",
+    "mkdirp": "1.0.4",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
   "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.0",
+    "@babel/plugin-transform-runtime": "7.9.0",
+    "@babel/preset-env": "7.9.0",
+    "@babel/register": "7.9.0",
     "@commitlint/cli": "9.1.1",
     "@commitlint/config-conventional": "9.1.1",
+    "babel-eslint": "10.1.0",
+    "electron": "9.2.0",
     "eslint": "7.6.0",
     "eslint-config-airbnb": "18.2.0",
     "eslint-config-prettier": "6.11.0",
+    "eslint-config-react-app": "5.2.1",
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-mocha": "8.0.0",
     "eslint-plugin-react": "7.20.5",
+    "eslint-plugin-react-app": "6.2.2",
     "husky": "4.2.5",
     "prettier": "2.0.5",
     "pretty-quick": "2.0.1",
-    "standard-version": "8.0.2"
+    "react-scripts": "3.4.1",
+    "standard-version": "8.0.2",
+    "typescript": "3.9.7"
   },
   "scripts": {
+    "start": "electron .\"",
     "lint": "eslint ."
   }
 }
