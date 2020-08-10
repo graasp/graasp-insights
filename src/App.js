@@ -5,6 +5,7 @@ import { withTranslation } from 'react-i18next';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { HOME_PATH } from './config/paths';
 import theme from './theme';
+import Home from './components/Home';
 
 const styles = () => ({
   Main: {
@@ -42,7 +43,7 @@ export class App extends Component {
         <Router>
           <div className="app" style={{ height }}>
             <Switch>
-              <Route exact path={HOME_PATH} />
+              <Route exact path={HOME_PATH} component={Home} />
             </Switch>
           </div>
         </Router>
