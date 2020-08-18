@@ -17,6 +17,7 @@ const {
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
 const env = require('./env.json');
+const { executePythonScript } = require('./app/listeners');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -220,6 +221,8 @@ const generateMenu = () => {
 app.on('ready', async () => {
   createWindow();
   generateMenu();
+
+  executePythonScript();
 });
 
 app.on('activate', () => {
