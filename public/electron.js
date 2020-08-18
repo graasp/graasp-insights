@@ -16,6 +16,12 @@ const {
   escapeEscapeCharacter,
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
+const env = require('./env.json');
+
+// add keys to process
+Object.keys(env).forEach((key) => {
+  process.env[key] = env[key];
+});
 
 let mainWindow;
 
