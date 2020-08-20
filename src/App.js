@@ -1,23 +1,10 @@
 import React, { Component } from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import { withStyles } from '@material-ui/core';
 import { withTranslation } from 'react-i18next';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { HOME_PATH } from './config/paths';
 import theme from './theme';
 import Home from './components/Home';
-
-const styles = () => ({
-  Main: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  toastrIcon: { marginBottom: '-20px', fontSize: '45px' },
-});
 
 export class App extends Component {
   state = { height: 0 };
@@ -52,8 +39,8 @@ export class App extends Component {
   }
 }
 
-const StyledApp = withStyles(styles, { withTheme: true })(App);
+// const StyledApp = withStyles(styles, { withTheme: true })(App);
 
-const TranslatedApp = withTranslation()(StyledApp);
+const TranslatedApp = withTranslation()(App);
 
 export default TranslatedApp;

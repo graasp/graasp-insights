@@ -2,13 +2,14 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from '../langs/en.json';
 import fr from '../langs/fr.json';
+import { DEFAULT_LANGUAGE } from './constants';
 
 i18n.use(initReactI18next).init({
   resources: {
     en,
     fr,
   },
-  fallbackLng: 'en',
+  fallbackLng: DEFAULT_LANGUAGE,
   // debug only when not in production
   debug: process.env.NODE_ENV !== 'production',
   ns: ['translations'],

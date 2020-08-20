@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://graasp.eu">
+  <a href="https://graasp.org">
     <img alt="Graasp" src="https://avatars3.githubusercontent.com/u/43075056" width="300" />
   </a>
 </p>
@@ -14,13 +14,7 @@
   <a href="https://app.codeship.com/projects/315997">
     <img
       alt="CodeShip"
-      src="https://app.codeship.com/projects/e0ef44e0-cff2-0136-9889-2aa8b2e23b88/status?branch=master"
-    />
-  </a>
-  <a href="https://www.codacy.com/app/graasp/graasp-desktop">
-    <img
-      alt="Codacy Badge"
-      src="https://api.codacy.com/project/badge/Grade/b46362710a304906bb6ce858408e59a2"
+      src="https://app.codeship.com/projects/9044aa80-c503-0138-36a4-4e33c7c5a318/status?branch=master"
     />
   </a>
   <a href="https://conventionalcommits.org">
@@ -35,7 +29,7 @@
       src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg"
     />
   </a>
-  <a href="https://github.com/graasp/graasp-desktop/blob/master/LICENSE">
+  <a href="https://github.com/graasp/graasp-insights/blob/master/LICENSE">
     <img
       alt="License"
       src="https://img.shields.io/badge/license-AGPLv3.0-blue.svg"
@@ -68,7 +62,7 @@ BROWSER=none
 ```
 
 The `GH_TOKEN` environment variable is only used for releasing new versions of the Graasp Desktop
-application. For advanced used, if you want to create your own distribution, you can add your
+application. For advanced use, if you want to create your own distribution, you can add your
 `GH_TOKEN` here and use `electron-builder` to manage releases on GitHub.
 
 The `BROWSER=none` assignment simply tells Electron not to use a browser to load, but instead to

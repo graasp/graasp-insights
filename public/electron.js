@@ -98,11 +98,12 @@ const standardFileSubmenu = [
   {
     label: 'About',
     click: () => {
+      const year = new Date().getFullYear();
       openAboutWindow({
         // asset for icon is in the public/assets folder
         base_path: escapeEscapeCharacter(app.getAppPath()),
         icon_path: path.join(__dirname, ICON_PATH),
-        copyright: 'Copyright © 2019 React',
+        copyright: `Copyright © ${year} EPFL\nCopyright © ${year} Graasp Association`,
         product_name: PRODUCT_NAME,
         use_version_info: false,
         adjust_window_size: true,
@@ -119,7 +120,7 @@ const standardFileSubmenu = [
         bug_link_text: 'Report a Bug/Issue',
         // we cannot use homepage from package.json as
         // create-react-app uses it to build the frontend
-        homepage: 'https://graasp.eu/',
+        homepage: 'https://graasp.org/',
       });
     },
   },
