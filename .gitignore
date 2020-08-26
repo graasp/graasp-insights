@@ -3,3 +3,30 @@
 
 # misc
 .DS_Store
+.env.*
+env*
+public/env.json
+.env*
+
+# include encrypted environment variables
+electron-builder.env
+!.env*.encrypted
+!env*.encrypted
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/dist/
+
+# build
+.webpack
+
+# vim settings
+.rootdir
+
+# exclude logs
+*.log
+
+# production
+build/*
+!build/favicon.ico

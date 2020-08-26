@@ -1,7 +1,8 @@
 {
   "name": "graasp-insights",
   "version": "0.1.0",
-  "main": "index.js",
+  "homepage": "./",
+  "main": "public/electron.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/graasp/graasp-insights"
@@ -13,22 +14,76 @@
     "Hagop Taminian"
   ],
   "license": "AGPL-3.0",
+  "dependencies": {
+    "@material-ui/core": "4.11.0",
+    "@material-ui/icons": "4.9.1",
+    "about-window": "1.13.4",
+    "clsx": "1.1.1",
+    "connected-react-router": "6.8.0",
+    "electron-devtools-installer": "3.1.1",
+    "electron-is-dev": "1.2.0",
+    "electron-log": "4.2.2",
+    "history": "5.0.0",
+    "i18next": "19.6.3",
+    "lowdb": "1.0.0",
+    "mkdirp": "1.0.4",
+    "prop-types": "15.7.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-i18next": "11.7.0",
+    "react-loading": "2.0.3",
+    "react-redux": "7.2.1",
+    "react-redux-toastr": "7.6.5",
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0",
+    "redux": "4.0.5",
+    "redux-devtools-extension": "2.13.8",
+    "redux-promise": "0.6.0",
+    "redux-thunk": "2.3.0"
+  },
   "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.0",
+    "@babel/plugin-transform-runtime": "7.9.0",
+    "@babel/preset-env": "7.9.0",
+    "@babel/register": "7.9.0",
     "@commitlint/cli": "9.1.1",
     "@commitlint/config-conventional": "9.1.1",
-    "eslint": "7.6.0",
+    "babel-eslint": "10.1.0",
+    "concurrently": "5.3.0",
+    "electron": "9.2.0",
+    "env-cmd": "10.1.0",
     "eslint-config-airbnb": "18.2.0",
     "eslint-config-prettier": "6.11.0",
+    "eslint-config-react-app": "5.2.1",
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-mocha": "8.0.0",
     "eslint-plugin-react": "7.20.5",
+    "eslint-plugin-react-app": "6.2.2",
     "husky": "4.2.5",
     "prettier": "2.0.5",
     "pretty-quick": "2.0.1",
-    "standard-version": "8.0.2"
+    "react-scripts": "3.4.1",
+    "standard-version": "8.0.2",
+    "typescript": "3.9.7",
+    "wait-on": "5.2.0"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prestart": "env-cmd -f ./.env.local node scripts/setup.js",
+    "start": "concurrently \"env-cmd -f ./.env.local react-scripts start\" \"wait-on http://localhost:3000 && env-cmd -f ./.env.local electron .\""
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
