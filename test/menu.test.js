@@ -21,7 +21,7 @@ describe('Menu Scenarios', function () {
   });
 
   it(
-    'Displays correct navigation',
+    'displays correct navigation',
     mochaAsync(async () => {
       const { client } = app;
       await openDrawer(client);
