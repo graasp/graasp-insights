@@ -83,10 +83,7 @@
     "mocha": "concurrently \"env-cmd -f ./.env.test react-scripts start\" \"wait-on http://localhost:3000 && mocha --require @babel/register \"test/**/*.test.js\"\"",
     "prettier:check": "prettier --check {src,public,test}/**/*.js",
     "prettier:write": "prettier --write {src,public,test}/**/*.js",
-    "ci": "run-s test:ci report:ci",
-    "test:ci": "react-scripts test --env=jsdom --coverage",
-    "report": "cat ./coverage/lcov.info | env-cmd -f ./.env.test codacy-coverage",
-    "report:ci": "cat ./coverage/lcov.info | codacy-coverage",
+    "ci": "react-scripts test --env=jsdom --coverage",
     "setup": "node scripts/setup.js"
   },
   "browserslist": {
