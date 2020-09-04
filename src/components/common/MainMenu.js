@@ -9,7 +9,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import { withTranslation } from 'react-i18next';
 import { HOME_PATH } from '../../config/paths';
-import { HOME_MENU_ITEM_ID } from '../../config/selectors';
+import { HOME_MENU_ITEM_ID, QUIT_MENU_ITEM_ID } from '../../config/selectors';
 
 export class MainMenu extends Component {
   static propTypes = {
@@ -37,6 +37,7 @@ export class MainMenu extends Component {
 
     return (
       <MenuItem
+        id={QUIT_MENU_ITEM_ID}
         onClick={() => {
           window.close();
         }}
