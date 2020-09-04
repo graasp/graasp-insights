@@ -64,6 +64,7 @@
     "eslint-plugin-react": "7.20.5",
     "eslint-plugin-react-app": "6.2.2",
     "husky": "4.2.5",
+    "npm-run-all": "4.1.5",
     "prettier": "2.0.5",
     "pretty-quick": "2.0.1",
     "react-scripts": "3.4.1",
@@ -79,8 +80,11 @@
     "mocha": "concurrently \"env-cmd -f ./.env.test react-scripts start\" \"wait-on http://localhost:3000 && mocha --require @babel/register \"test/**/*.test.js\"\"",
     "prettier:check": "prettier --check {src,public,test}/**/*.js",
     "prettier:write": "prettier --write {src,public,test}/**/*.js",
+    "ci": "run-s test:ci report:ci",
+    "test:ci": "react-scripts test --env=jsdom --coverage",
+    "report": "cat ./coverage/lcov.info | env-cmd -f ./.env.test codacy-coverage",
+    "report:ci": "cat ./coverage/lcov.info | codacy-coverage",
     "setup": "node scripts/setup.js"
-  
   },
   "browserslist": {
     "production": [

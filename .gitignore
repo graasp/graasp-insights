@@ -33,3 +33,10 @@ build/*
 
 # exclude keys
 *.aes
+
+# testing
+/coverage
+
+# exclude unused coverage information
+.nyc_output
+coverage.lcov
