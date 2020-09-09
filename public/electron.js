@@ -6,6 +6,7 @@ const {
   Menu,
   // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
@@ -16,7 +17,12 @@ const {
   escapeEscapeCharacter,
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
+const {
+  SHOW_LOAD_SPACE_PROMPT_CHANNEL,
+  CREATE_FILE_COPY,
+} = require('./app/config/channels');
 const env = require('./env.json');
+const { showLoadSpacePrompt } = require('./app/listeners');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -34,7 +40,7 @@ const createWindow = () => {
     show: false,
     movable: true,
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       preload: `${__dirname}/app/preload.js`,
       webSecurity: false,
     },
@@ -220,6 +226,8 @@ const generateMenu = () => {
 app.on('ready', async () => {
   createWindow();
   generateMenu();
+  // prompt when loading a space
+  ipcMain.on(SHOW_LOAD_SPACE_PROMPT_CHANNEL, showLoadSpacePrompt(mainWindow));
 });
 
 app.on('activate', () => {
@@ -230,4 +238,14 @@ app.on('activate', () => {
 
 ipcMain.on('load-page', (event, arg) => {
   mainWindow.loadURL(arg);
+});
+
+ipcMain.on(CREATE_FILE_COPY, (event, args) => {
+  console.log(`event is ${event} and args is ${args.fileLocation}`);
+  fs.createCopy(args.fileLocation, 'newFile.json', (err) => {
+    if (err) {
+      logger.error(err);
+    }
+    console.log('File was copied!');
+  });
 });

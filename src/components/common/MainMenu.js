@@ -6,10 +6,15 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import HomeIcon from '@material-ui/icons/Home';
+import PublishIcon from '@material-ui/icons/Publish';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import { withTranslation } from 'react-i18next';
-import { HOME_PATH } from '../../config/paths';
-import { HOME_MENU_ITEM_ID, QUIT_MENU_ITEM_ID } from '../../config/selectors';
+import { HOME_PATH, LOAD_FILE_PATH } from '../../config/paths';
+import {
+  HOME_MENU_ITEM_ID,
+  LOAD_MENU_ITEM_ID,
+  QUIT_MENU_ITEM_ID,
+} from '../../config/selectors';
 
 export class MainMenu extends Component {
   static propTypes = {
@@ -68,6 +73,17 @@ export class MainMenu extends Component {
             <HomeIcon />
           </ListItemIcon>
           <ListItemText primary={t('Home')} />
+        </MenuItem>
+        <MenuItem
+          id={LOAD_MENU_ITEM_ID}
+          onClick={() => this.handleClick(LOAD_FILE_PATH)}
+          button
+          selected={path === LOAD_FILE_PATH}
+        >
+          <ListItemIcon>
+            <PublishIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Load')} />
         </MenuItem>
 
         {this.renderCloseApp()}
