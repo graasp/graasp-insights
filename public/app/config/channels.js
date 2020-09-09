@@ -3,7 +3,7 @@
 // and public/app/config/channels.js
 
 module.exports = {
-  SHOW_LOAD_SPACE_PROMPT_CHANNEL: 'prompt:space:load:show',
-  RESPOND_LOAD_SPACE_PROMPT_CHANNEL: 'prompt:space:load:respond',
-  CREATE_FILE_COPY: 'file:copy',
+  SHOW_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:show',
+  RESPOND_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:respond',
+  CREATE_FILE_COPY: 'file:import',
 };

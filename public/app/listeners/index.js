@@ -1,3 +1,3 @@
-const showLoadSpacePrompt = require('./showLoadSpacePrompt');
+const showLoadDatasetPrompt = require('./showLoadDatasetPrompt');
 
-module.exports = { showLoadSpacePrompt };
+module.exports = { showLoadDatasetPrompt };

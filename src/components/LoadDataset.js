@@ -6,27 +6,38 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import Main from './common/Main';
-import { showBrowsePrompt } from '../utils/browse';
-import { CREATE_FILE_COPY } from '../config/channels';
+import {
+  SHOW_LOAD_DATASET_PROMPT_CHANNEL,
+  RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
+  CREATE_FILE_COPY,
+} from '../config/channels';
 
-const LoadFile = () => {
+const LoadDataset = () => {
   const { t } = useTranslation();
   const [fileLocation, setFileLocation] = useState('');
 
   const handleFileLocation = (event) => {
     const filePath = event.target ? event.target.value : event;
-    console.log('hey', filePath);
     setFileLocation(filePath);
   };
 
   const handleBrowse = () => {
-    showBrowsePrompt(handleFileLocation);
+    const options = {
+      filters: [{ name: 'json', extensions: ['json'] }],
+    };
+    window.ipcRenderer.send(SHOW_LOAD_DATASET_PROMPT_CHANNEL, options);
+    window.ipcRenderer.once(
+      RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
+      (event, filePaths) => {
+        if (filePaths && filePaths.length) {
+          // currently we select only one file
+          handleFileLocation(filePaths[0]);
+        }
+      },
+    );
   };
 
   const handleCopy = () => {
-    console.log('I am sending the file...');
-    console.log(CREATE_FILE_COPY);
-    console.log({ fileLocation });
     window.ipcRenderer.send(CREATE_FILE_COPY, { fileLocation });
   };
 
@@ -63,7 +74,7 @@ const LoadFile = () => {
           onClick={handleCopy}
           color="primary"
           //   className={classes.button}
-          //   disabled={!fileLocation.endsWith('.zip')}
+          disabled={!fileLocation.endsWith('.json')}
         >
           {t('Submit')}
         </Button>
@@ -72,4 +83,4 @@ const LoadFile = () => {
   );
 };
 
-export default withRouter(LoadFile);
+export default withRouter(LoadDataset);

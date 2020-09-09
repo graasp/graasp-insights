@@ -9,7 +9,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PublishIcon from '@material-ui/icons/Publish';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import { withTranslation } from 'react-i18next';
-import { HOME_PATH, LOAD_FILE_PATH } from '../../config/paths';
+import { HOME_PATH, LOAD_DATASET_PATH } from '../../config/paths';
 import {
   HOME_MENU_ITEM_ID,
   LOAD_MENU_ITEM_ID,
@@ -76,9 +76,9 @@ export class MainMenu extends Component {
         </MenuItem>
         <MenuItem
           id={LOAD_MENU_ITEM_ID}
-          onClick={() => this.handleClick(LOAD_FILE_PATH)}
+          onClick={() => this.handleClick(LOAD_DATASET_PATH)}
           button
-          selected={path === LOAD_FILE_PATH}
+          selected={path === LOAD_DATASET_PATH}
         >
           <ListItemIcon>
             <PublishIcon />
