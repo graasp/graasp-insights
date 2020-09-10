@@ -9,7 +9,7 @@ import Main from './common/Main';
 import {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
-  CREATE_FILE_COPY,
+  LOAD_DATASET,
 } from '../config/channels';
 
 const LoadDataset = () => {
@@ -38,7 +38,7 @@ const LoadDataset = () => {
   };
 
   const handleCopy = () => {
-    window.ipcRenderer.send(CREATE_FILE_COPY, { fileLocation });
+    window.ipcRenderer.send(LOAD_DATASET, { fileLocation });
   };
 
   return (

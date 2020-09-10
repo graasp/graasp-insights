@@ -5,5 +5,5 @@
 module.exports = {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:show',
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:respond',
-  CREATE_FILE_COPY: 'file:import',
+  LOAD_DATASET: 'dataset:load',
 };

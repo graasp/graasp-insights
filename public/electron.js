@@ -6,7 +6,6 @@ const {
   Menu,
   // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
-const fs = require('fs');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
@@ -19,10 +18,10 @@ const {
 const isMac = require('./app/utils/isMac');
 const {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
-  CREATE_FILE_COPY,
+  LOAD_DATASET,
 } = require('./app/config/channels');
+const { showLoadDatasetPrompt, loadDataset } = require('./app/listeners');
 const env = require('./env.json');
-const { showLoadDatasetPrompt } = require('./app/listeners');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -243,14 +242,4 @@ ipcMain.on('load-page', (event, arg) => {
   mainWindow.loadURL(arg);
 });
 
-ipcMain.on(CREATE_FILE_COPY, (event, args) => {
-  const { fileLocation } = args;
-  const newFileName = `copy_of_${fileLocation.substring(
-    fileLocation.lastIndexOf('/') + 1,
-  )}`;
-  fs.copyFile(fileLocation, newFileName, (err) => {
-    if (err) {
-      logger.error(err);
-    }
-  });
-});
+ipcMain.on(LOAD_DATASET, loadDataset);

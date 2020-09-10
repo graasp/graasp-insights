@@ -309,6 +309,11 @@ exports[`<App /> renders correctly 1`] = `
           exact={true}
           path="/"
         />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/load-dataset"
+        />
       </Switch>
     </div>
   </HashRouter>
