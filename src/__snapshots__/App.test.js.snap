@@ -312,6 +312,11 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
+          path="/developer"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
           path="/load-dataset"
         />
         <Route

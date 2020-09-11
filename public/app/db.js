@@ -5,11 +5,10 @@ const FileSync = require('lowdb/adapters/FileSync');
 const logger = require('./logger');
 const { DATABASE_PATH, VAR_FOLDER } = require('./config/config');
 
+const DATASETS_COLLECTION = 'datasets';
+
 // use promisified fs
 const fsPromises = fs.promises;
-
-// eslint-disable-next-line import/prefer-default-export
-const DATASETS_COLLECTION = 'datasets';
 
 // bootstrap database
 const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
@@ -31,7 +30,9 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   const db = low(adapter);
 
   // set some defaults (required if json file is empty)
-  db.defaults({ [DATASETS_COLLECTION]: [] }).write();
+  db.defaults({
+    [DATASETS_COLLECTION]: [],
+  }).write();
   return db;
 };
 

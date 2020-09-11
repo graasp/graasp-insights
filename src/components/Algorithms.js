@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import { withTranslation } from 'react-i18next';
 import Main from './common/Main';
 import { getDatasets } from '../actions';
-import { EXECUTE_PYTHON_ALGORITHM } from '../config/channels';
+import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
 import Loader from './common/Loader';
 
 class Algorithms extends Component {
@@ -49,7 +49,10 @@ class Algorithms extends Component {
 
   executePythonAlgorithm = () => {
     const { datasetId } = this.state;
-    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM, { id: 1, datasetId });
+    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
+      id: 1,
+      datasetId,
+    });
   };
 
   render() {

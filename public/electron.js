@@ -19,10 +19,13 @@ const {
 const isMac = require('./app/utils/isMac');
 const {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
-  LOAD_DATASET,
-  EXECUTE_PYTHON_ALGORITHM,
+  LOAD_DATASET_CHANNEL,
+  EXECUTE_PYTHON_ALGORITHM_CHANNEL,
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
+  GET_DATABASE_CHANNEL,
+  SET_SAMPLE_DATABASE_CHANNEL,
+  SET_DATABASE_CHANNEL,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
@@ -30,9 +33,11 @@ const {
   executePythonAlgorithm,
   getDataset,
   getDatasets,
+  setDatabase,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
+const sampleDatabase = require('./app/data/sample');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -251,9 +256,36 @@ app.on('ready', async () => {
   // called when getting a dataset
   ipcMain.on(GET_DATASET_CHANNEL, getDataset(mainWindow, db));
 
-  ipcMain.on(LOAD_DATASET, loadDataset(mainWindow, db));
+  ipcMain.on(LOAD_DATASET_CHANNEL, loadDataset(mainWindow, db));
 
-  ipcMain.on(EXECUTE_PYTHON_ALGORITHM, executePythonAlgorithm(mainWindow, db));
+  ipcMain.on(
+    EXECUTE_PYTHON_ALGORITHM_CHANNEL,
+    executePythonAlgorithm(mainWindow, db),
+  );
+
+  // called when getting the database
+  ipcMain.on(GET_DATABASE_CHANNEL, async () => {
+    try {
+      const database = db.getState();
+      mainWindow.webContents.send(GET_DATABASE_CHANNEL, database);
+    } catch (err) {
+      logger.error(err);
+      mainWindow.webContents.send(GET_DATABASE_CHANNEL, null);
+    }
+  });
+
+  // called when setting the sample database
+  ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, async (e) => {
+    setDatabase(mainWindow, db)(e, {
+      payload: sampleDatabase,
+      channel: SET_SAMPLE_DATABASE_CHANNEL,
+    });
+  });
+
+  // called when setting the database
+  ipcMain.on(SET_DATABASE_CHANNEL, (e, payload) => {
+    setDatabase(mainWindow, db)(e, { payload, channel: SET_DATABASE_CHANNEL });
+  });
 });
 
 app.on('activate', () => {

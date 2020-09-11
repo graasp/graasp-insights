@@ -5,11 +5,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
-import CodeIcon from '@material-ui/icons/Code';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import CloseIcon from '@material-ui/icons/ExitToApp';
+import CodeIcon from '@material-ui/icons/Code';
 import { withTranslation } from 'react-i18next';
-import { HOME_PATH, ALGORITHMS_PATH, DATASETS_PATH } from '../../config/paths';
+import {
+  HOME_PATH,
+  ALGORITHMS_PATH,
+  DATASETS_PATH,
+  DEVELOPER_PATH,
+} from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
   DATASETS_MENU_ITEM_ID,
@@ -56,6 +61,29 @@ export class MainMenu extends Component {
     );
   };
 
+  renderDeveloperItem = () => {
+    const {
+      match: { path },
+      t,
+    } = this.props;
+    if (process.env.NODE_ENV === 'development') {
+      return (
+        <MenuItem
+          onClick={() => this.handleClick(DEVELOPER_PATH)}
+          selected={path === DEVELOPER_PATH}
+          button
+        >
+          <ListItemIcon>
+            <CodeIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Developer')} />
+        </MenuItem>
+      );
+    }
+
+    return null;
+  };
+
   render() {
     const {
       match: { path },
@@ -76,15 +104,16 @@ export class MainMenu extends Component {
         </MenuItem>
         <MenuItem
           id={ALGORITHMS_MENU_ITEM_ID}
+          selected={path === ALGORITHMS_PATH}
           onClick={() => this.handleClick(ALGORITHMS_PATH)}
           button
-          selected={path === ALGORITHMS_PATH}
         >
           <ListItemIcon>
             <CodeIcon />
           </ListItemIcon>
           <ListItemText primary={t('Algorithms')} />
         </MenuItem>
+        {this.renderDeveloperItem()}
 
         {this.renderCloseApp()}
       </List>

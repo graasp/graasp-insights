@@ -8,9 +8,11 @@ import {
   DATASETS_PATH,
   DATASET_PATH,
   ALGORITHMS_PATH,
+  DEVELOPER_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDataset from './components/LoadDataset';
+import DeveloperScreen from './components/developer/DeveloperScreen';
 import Algorithms from './components/Algorithms';
 import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
@@ -40,6 +42,7 @@ export class App extends Component {
           <div className="app" style={{ height }}>
             <Switch>
               <Route exact path={DATASET_PATH} component={DatasetScreen} />
+              <Route exact path={DEVELOPER_PATH} component={DeveloperScreen} />
               <Route exact path={LOAD_DATASET_PATH} component={LoadDataset} />
               <Route exact path={DATASETS_PATH} component={Datasets} />
               <Route exact path={ALGORITHMS_PATH} component={Algorithms} />
