@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import { reducer as toastr } from 'react-redux-toastr';
+import dataset from './datasetReducer';
 
 export default combineReducers({
-  // keys should always be camelCase
   toastr,
+  dataset,
 });

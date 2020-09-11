@@ -15,3 +15,7 @@ export const ORDER_BY = {
   ASC: 'asc',
   DESC: 'desc',
 };
+
+export const MAX_FILE_SIZE = 400;
+
+export const DEFAULT_LOCALE_DATE = 'en-US';

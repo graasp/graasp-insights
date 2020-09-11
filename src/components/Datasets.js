@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
-
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import { List } from 'immutable';
+import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -17,17 +19,23 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-
 import theme from '../theme';
 import Main from './common/Main';
-import { DATASETS_TABLE_COLUMNS, ORDER_BY } from '../config/constants';
+import Loader from './common/Loader';
+import {
+  DATASETS_TABLE_COLUMNS,
+  DEFAULT_LOCALE_DATE,
+  ORDER_BY,
+} from '../config/constants';
 import { sortByKey } from '../utils/sorting';
+import { getDatasets } from '../actions';
+import { LOAD_DATASET_PATH } from '../config/paths';
 
-const useStyles = makeStyles({
+const styles = () => ({
   addButton: {
     color: theme.palette.secondary.main,
     backgroundColor: theme.palette.primary.main,
-    position: 'absolute',
+    position: 'fixed',
     right: '16px',
     bottom: '16px',
     '&:hover, &.Mui-focusVisible': {
@@ -39,202 +47,246 @@ const useStyles = makeStyles({
   },
 });
 
-// fake dataset that will be deleted later
-const fakeDatasets = [
-  {
-    name: 'Atomic Structure',
-    description: 'Atomic Structure Dataset of students during two months',
-    size: 413,
-    created: '7/13/20',
-    lastModified: '7/13/20',
-    anonymized: false,
-  },
-  {
-    name: 'Animals of the world',
-    description: 'Collection of all the referenced animals of world.',
-    size: 409600,
-    created: '7/12/18',
-    lastModified: '9/14/20',
-    anonymized: false,
-  },
-  {
-    name: 'Anonymized Atomic Structure',
-    description: 'Anonymized version of Atomic Structure Dataset',
-    size: 211,
-    created: '7/02/20',
-    lastModified: '7/02/20',
-    anonymized: true,
-  },
-];
+class Datasets extends Component {
+  state = {
+    isAsc: true,
+    orderBy: DATASETS_TABLE_COLUMNS.NAME,
+  };
 
-const Datasets = () => {
-  const classes = useStyles();
-  const { t } = useTranslation();
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+    dispatchGetDatasets: PropTypes.func.isRequired,
+    classes: PropTypes.shape({
+      addButton: PropTypes.string.isRequired,
+      columnName: PropTypes.string.isRequired,
+    }).isRequired,
+    t: PropTypes.func.isRequired,
+    datasets: PropTypes.instanceOf(List),
+  };
 
-  // name column sorted ascending by default
-  const [isAsc, setIsAsc] = useState(true);
-  const [orderBy, setOrderBy] = useState(DATASETS_TABLE_COLUMNS.NAME);
+  static defaultProps = {
+    datasets: List(),
+  };
 
-  const handlePublish = () => {
+  componentDidMount() {
+    const { dispatchGetDatasets } = this.props;
+    dispatchGetDatasets();
+  }
+
+  handlePublish = () => {
     // TODO: implement publish functionality
   };
 
-  const handleAnonymize = () => {
+  handleAnonymize = () => {
     // TODO: implement anonymize functionality
   };
 
-  const handleEdit = () => {
+  handleEdit = () => {
     // TODO: implement edit functionality
   };
 
-  const handleDelete = () => {
+  handleDelete = () => {
     // TODO: implement delete functionality
   };
 
-  const handleAdd = () => {
-    // TODO: implement add functionality
+  handleAdd = () => {
+    const {
+      history: { push },
+    } = this.props;
+    push(LOAD_DATASET_PATH);
   };
 
-  const handleSortColumn = (column) => {
+  handleSortColumn = (column) => {
+    const { orderBy, isAsc } = this.state;
     if (orderBy === column) {
-      setIsAsc(!isAsc);
+      this.setState({ isAsc: !isAsc });
     } else {
-      setOrderBy(column);
-      setIsAsc(true);
+      this.setState({ isAsc: true, orderBy: column });
     }
   };
 
-  return (
-    <Main content>
-      <Container>
-        <h1>{t('Datasets')}</h1>
-        <Table aria-label="table of datasets">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">
-                <TableSortLabel
-                  active={orderBy === DATASETS_TABLE_COLUMNS.NAME}
-                  direction={
-                    orderBy === DATASETS_TABLE_COLUMNS.NAME && !isAsc
-                      ? ORDER_BY.DESC
-                      : ORDER_BY.ASC
-                  }
-                  onClick={() => {
-                    handleSortColumn(DATASETS_TABLE_COLUMNS.NAME);
-                  }}
-                >
-                  <Typography className={classes.columnName}>
-                    {t('Name')}
-                  </Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={orderBy === DATASETS_TABLE_COLUMNS.SIZE}
-                  direction={
-                    orderBy === DATASETS_TABLE_COLUMNS.SIZE && !isAsc
-                      ? ORDER_BY.DESC
-                      : ORDER_BY.ASC
-                  }
-                  onClick={() => {
-                    handleSortColumn(DATASETS_TABLE_COLUMNS.SIZE);
-                  }}
-                >
-                  <Typography className={classes.columnName}>
-                    {t('Size')}
-                  </Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={orderBy === DATASETS_TABLE_COLUMNS.CREATED}
-                  direction={
-                    orderBy === DATASETS_TABLE_COLUMNS.CREATED && !isAsc
-                      ? ORDER_BY.DESC
-                      : ORDER_BY.ASC
-                  }
-                  onClick={() => {
-                    handleSortColumn(DATASETS_TABLE_COLUMNS.CREATED);
-                  }}
-                >
-                  <Typography className={classes.columnName}>
-                    {t('Created')}
-                  </Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED}
-                  direction={
-                    orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED && !isAsc
-                      ? ORDER_BY.DESC
-                      : ORDER_BY.ASC
-                  }
-                  onClick={() => {
-                    handleSortColumn(DATASETS_TABLE_COLUMNS.LAST_MODIFIED);
-                  }}
-                >
-                  <Typography className={classes.columnName}>
-                    {t('Last Modified')}
-                  </Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right" />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortByKey(fakeDatasets, orderBy, isAsc).map((dataset) => (
-              <TableRow key={dataset.name}>
-                <TableCell>
-                  <Typography variant="h6">{dataset.name}</Typography>
-                  <Typography>{dataset.description}</Typography>
+  renderDatasetsContent = () => {
+    const { orderBy, isAsc } = this.state;
+    const { datasets, t } = this.props;
+
+    const sortedDatasets = sortByKey(datasets, orderBy, isAsc);
+
+    return sortedDatasets.map((dataset) => {
+      const { name, size, lastModified, createdAt, description = '' } = dataset;
+      const sizeString = size ? `${size}${t('KB')}` : t('unknown');
+      const createdAtString = createdAt
+        ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
+        : t('unknown');
+      const lastModifiedString = lastModified
+        ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
+        : t('unknown');
+      return (
+        <TableRow key={dataset.name}>
+          <TableCell>
+            <Typography variant="h6">{name}</Typography>
+            <Typography>{description}</Typography>
+          </TableCell>
+          <TableCell align="right">{sizeString}</TableCell>
+          <TableCell align="right">{createdAtString}</TableCell>
+          <TableCell align="right">{lastModifiedString}</TableCell>
+          <TableCell align="right">
+            <IconButton
+              aria-label="publish"
+              onClick={() => this.handlePublish(dataset)}
+            >
+              <PublishIcon />
+            </IconButton>
+            {!dataset.anonymized && (
+              <IconButton
+                aria-label="anonymize"
+                onClick={() => this.handleAnonymize(dataset)}
+              >
+                <EqualizerIcon />
+              </IconButton>
+            )}
+            <IconButton
+              aria-label="edit"
+              onClick={() => this.handleEdit(dataset)}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              aria-label="delete"
+              onClick={() => this.handleDelete(dataset)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      );
+    });
+  };
+
+  render() {
+    const { isAsc, orderBy } = this.state;
+    const { classes, t, datasets } = this.props;
+
+    if (!datasets) {
+      return <Loader />;
+    }
+
+    if (!datasets.size) {
+      return <Main fullscreen>{t('No datasets available')}</Main>;
+    }
+
+    return (
+      <Main>
+        <Container>
+          <h1>{t('Datasets')}</h1>
+          <Table aria-label="table of datasets">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">
+                  <TableSortLabel
+                    active={orderBy === DATASETS_TABLE_COLUMNS.NAME}
+                    direction={
+                      orderBy === DATASETS_TABLE_COLUMNS.NAME && !isAsc
+                        ? ORDER_BY.DESC
+                        : ORDER_BY.ASC
+                    }
+                    onClick={() => {
+                      this.handleSortColumn(DATASETS_TABLE_COLUMNS.NAME);
+                    }}
+                  >
+                    <Typography className={classes.columnName}>
+                      {t('Name')}
+                    </Typography>
+                  </TableSortLabel>
                 </TableCell>
-                <TableCell align="right">{`${dataset.size}KB`}</TableCell>
-                <TableCell align="right">{dataset.created}</TableCell>
-                <TableCell align="right">{dataset.lastModified}</TableCell>
                 <TableCell align="right">
-                  <IconButton
-                    aria-label="publish"
-                    onClick={() => handlePublish(dataset)}
+                  <TableSortLabel
+                    active={orderBy === DATASETS_TABLE_COLUMNS.SIZE}
+                    direction={
+                      orderBy === DATASETS_TABLE_COLUMNS.SIZE && !isAsc
+                        ? ORDER_BY.DESC
+                        : ORDER_BY.ASC
+                    }
+                    onClick={() => {
+                      this.handleSortColumn(DATASETS_TABLE_COLUMNS.SIZE);
+                    }}
                   >
-                    <PublishIcon />
-                  </IconButton>
-                  {!dataset.anonymized && (
-                    <IconButton
-                      aria-label="anonymize"
-                      onClick={() => handleAnonymize(dataset)}
-                    >
-                      <EqualizerIcon />
-                    </IconButton>
-                  )}
-                  <IconButton
-                    aria-label="edit"
-                    onClick={() => handleEdit(dataset)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => handleDelete(dataset)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                    <Typography className={classes.columnName}>
+                      {t('Size')}
+                    </Typography>
+                  </TableSortLabel>
                 </TableCell>
+                <TableCell align="right">
+                  <TableSortLabel
+                    active={orderBy === DATASETS_TABLE_COLUMNS.CREATED}
+                    direction={
+                      orderBy === DATASETS_TABLE_COLUMNS.CREATED && !isAsc
+                        ? ORDER_BY.DESC
+                        : ORDER_BY.ASC
+                    }
+                    onClick={() => {
+                      this.handleSortColumn(DATASETS_TABLE_COLUMNS.CREATED);
+                    }}
+                  >
+                    <Typography className={classes.columnName}>
+                      {t('Created')}
+                    </Typography>
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell align="right">
+                  <TableSortLabel
+                    active={orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED}
+                    direction={
+                      orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED && !isAsc
+                        ? ORDER_BY.DESC
+                        : ORDER_BY.ASC
+                    }
+                    onClick={() => {
+                      this.handleSortColumn(
+                        DATASETS_TABLE_COLUMNS.LAST_MODIFIED,
+                      );
+                    }}
+                  >
+                    <Typography className={classes.columnName}>
+                      {t('Last Modified')}
+                    </Typography>
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell align="right" />
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <IconButton
-          variant="contained"
-          aria-label="add"
-          className={classes.addButton}
-          onClick={handleAdd}
-        >
-          <AddIcon />
-        </IconButton>
-      </Container>
-    </Main>
-  );
+            </TableHead>
+            <TableBody>{this.renderDatasetsContent()}</TableBody>
+          </Table>
+          <IconButton
+            variant="contained"
+            aria-label="add"
+            className={classes.addButton}
+            onClick={this.handleAdd}
+          >
+            <AddIcon />
+          </IconButton>
+        </Container>
+      </Main>
+    );
+  }
+}
+
+const mapStateToProps = ({ dataset }) => ({
+  datasets: dataset.getIn(['datasets']),
+});
+
+const mapDispatchToProps = {
+  dispatchGetDatasets: getDatasets,
 };
 
-export default withRouter(Datasets);
+const ConnectedComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Datasets);
+const StyledComponent = withStyles(styles, { withTheme: true })(
+  ConnectedComponent,
+);
+const TranslatedComponent = withTranslation()(StyledComponent);
+
+export default withRouter(TranslatedComponent);
