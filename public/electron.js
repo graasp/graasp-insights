@@ -16,6 +16,11 @@ const {
   escapeEscapeCharacter,
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
+const {
+  SHOW_LOAD_DATASET_PROMPT_CHANNEL,
+  LOAD_DATASET,
+} = require('./app/config/channels');
+const { showLoadDatasetPrompt, loadDataset } = require('./app/listeners');
 const env = require('./env.json');
 
 // add keys to process
@@ -220,6 +225,11 @@ const generateMenu = () => {
 app.on('ready', async () => {
   createWindow();
   generateMenu();
+  // prompt when loading a dataset
+  ipcMain.on(
+    SHOW_LOAD_DATASET_PROMPT_CHANNEL,
+    showLoadDatasetPrompt(mainWindow),
+  );
 });
 
 app.on('activate', () => {
@@ -231,3 +241,5 @@ app.on('activate', () => {
 ipcMain.on('load-page', (event, arg) => {
   mainWindow.loadURL(arg);
 });
+
+ipcMain.on(LOAD_DATASET, loadDataset);
