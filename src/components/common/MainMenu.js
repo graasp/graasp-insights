@@ -7,12 +7,14 @@ import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import HomeIcon from '@material-ui/icons/Home';
 import PublishIcon from '@material-ui/icons/Publish';
+import CodeIcon from '@material-ui/icons/Code';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import { withTranslation } from 'react-i18next';
-import { HOME_PATH, LOAD_DATASET_PATH } from '../../config/paths';
+import { HOME_PATH, LOAD_DATASET_PATH, SCRIPTS_PATH } from '../../config/paths';
 import {
   HOME_MENU_ITEM_ID,
   LOAD_MENU_ITEM_ID,
+  SCRIPTS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
 } from '../../config/selectors';
 
@@ -84,6 +86,17 @@ export class MainMenu extends Component {
             <PublishIcon />
           </ListItemIcon>
           <ListItemText primary={t('Load')} />
+        </MenuItem>
+        <MenuItem
+          id={SCRIPTS_MENU_ITEM_ID}
+          onClick={() => this.handleClick(SCRIPTS_PATH)}
+          button
+          selected={path === SCRIPTS_PATH}
+        >
+          <ListItemIcon>
+            <CodeIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Scripts')} />
         </MenuItem>
 
         {this.renderCloseApp()}
