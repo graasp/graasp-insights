@@ -8,17 +8,20 @@ import List from '@material-ui/core/List';
 import HomeIcon from '@material-ui/icons/Home';
 import PublishIcon from '@material-ui/icons/Publish';
 import CodeIcon from '@material-ui/icons/Code';
+import PieChartIcon from '@material-ui/icons/PieChart';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import { withTranslation } from 'react-i18next';
 import {
   HOME_PATH,
   LOAD_DATASET_PATH,
   ALGORITHMS_PATH,
+  DATASETS_PATH,
 } from '../../config/paths';
 import {
   HOME_MENU_ITEM_ID,
   LOAD_MENU_ITEM_ID,
   ALGORITHMS_MENU_ITEM_ID,
+  DATASETS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
 } from '../../config/selectors';
 
@@ -101,6 +104,17 @@ export class MainMenu extends Component {
             <CodeIcon />
           </ListItemIcon>
           <ListItemText primary={t('Algorithms')} />
+        </MenuItem>
+        <MenuItem
+          id={DATASETS_MENU_ITEM_ID}
+          onClick={() => this.handleClick(DATASETS_PATH)}
+          button
+          selected={path === DATASETS_PATH}
+        >
+          <ListItemIcon>
+            <PieChartIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Datasets')} />
         </MenuItem>
 
         {this.renderCloseApp()}
