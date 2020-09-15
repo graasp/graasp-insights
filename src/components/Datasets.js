@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import { darken, makeStyles } from '@material-ui/core/styles';
 
 import Container from '@material-ui/core/Container';
 import Table from '@material-ui/core/Table';
@@ -13,7 +14,9 @@ import PublishIcon from '@material-ui/icons/Publish';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 
+import theme from '../theme';
 import Main from './common/Main';
 
 const fakeDatasets = [
@@ -69,7 +72,22 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const useStyles = makeStyles({
+  addButton: {
+    color: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
+    position: 'absolute',
+    right: '16px',
+    bottom: '16px',
+    '&:hover, &.Mui-focusVisible': {
+      backgroundColor: darken(theme.palette.primary.main, 0.2),
+    },
+  },
+});
+
 const Datasets = () => {
+  const classes = useStyles();
+
   // name column sorted ascending by default
   const [isAsc, setIsAsc] = React.useState(true);
   const [orderBy, setOrderBy] = React.useState('name');
@@ -88,6 +106,10 @@ const Datasets = () => {
 
   const handleDelete = () => {
     // TODO: implement delete functionality
+  };
+
+  const handleAdd = () => {
+    // TODO: implement add functionality
   };
 
   const handleSortColumn = (column) => {
@@ -194,6 +216,14 @@ const Datasets = () => {
             )}
           </TableBody>
         </Table>
+        <IconButton
+          variant="contained"
+          aria-label="add"
+          className={classes.addButton}
+          onClick={() => handleAdd()}
+        >
+          <AddIcon />
+        </IconButton>
       </Container>
     </Main>
   );
