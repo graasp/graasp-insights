@@ -19,12 +19,12 @@ const isMac = require('./app/utils/isMac');
 const {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET,
-  EXECUTE_PRINT_ID_SCRIPT,
+  EXECUTE_PYTHON_SCRIPT,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
   loadDataset,
-  executePrintIdScript,
+  executePythonScript,
 } = require('./app/listeners');
 const env = require('./env.json');
 
@@ -249,4 +249,4 @@ ipcMain.on('load-page', (event, arg) => {
 
 ipcMain.on(LOAD_DATASET, loadDataset);
 
-ipcMain.on(EXECUTE_PRINT_ID_SCRIPT, executePrintIdScript);
+ipcMain.on(EXECUTE_PYTHON_SCRIPT, executePythonScript);

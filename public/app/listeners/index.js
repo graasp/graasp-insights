@@ -1,5 +1,5 @@
 const showLoadDatasetPrompt = require('./showLoadDatasetPrompt');
 const loadDataset = require('./loadDataset');
-const executePrintIdScript = require('./executePrintIdScript');
+const executePythonScript = require('./executePythonScript');
 
-module.exports = { showLoadDatasetPrompt, loadDataset, executePrintIdScript };
+module.exports = { showLoadDatasetPrompt, loadDataset, executePythonScript };
