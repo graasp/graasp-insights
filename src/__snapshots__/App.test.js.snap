@@ -317,6 +317,11 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
+          path="/display-datasets"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
           path="/algorithms"
         />
       </Switch>
