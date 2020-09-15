@@ -10,11 +10,15 @@ import PublishIcon from '@material-ui/icons/Publish';
 import CodeIcon from '@material-ui/icons/Code';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import { withTranslation } from 'react-i18next';
-import { HOME_PATH, LOAD_DATASET_PATH, SCRIPTS_PATH } from '../../config/paths';
+import {
+  HOME_PATH,
+  LOAD_DATASET_PATH,
+  ALGORITHMS_PATH,
+} from '../../config/paths';
 import {
   HOME_MENU_ITEM_ID,
   LOAD_MENU_ITEM_ID,
-  SCRIPTS_MENU_ITEM_ID,
+  ALGORITHMS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
 } from '../../config/selectors';
 
@@ -88,15 +92,15 @@ export class MainMenu extends Component {
           <ListItemText primary={t('Load')} />
         </MenuItem>
         <MenuItem
-          id={SCRIPTS_MENU_ITEM_ID}
-          onClick={() => this.handleClick(SCRIPTS_PATH)}
+          id={ALGORITHMS_MENU_ITEM_ID}
+          onClick={() => this.handleClick(ALGORITHMS_PATH)}
           button
-          selected={path === SCRIPTS_PATH}
+          selected={path === ALGORITHMS_PATH}
         >
           <ListItemIcon>
             <CodeIcon />
           </ListItemIcon>
-          <ListItemText primary={t('Scripts')} />
+          <ListItemText primary={t('Algorithms')} />
         </MenuItem>
 
         {this.renderCloseApp()}

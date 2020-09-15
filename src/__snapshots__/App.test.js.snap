@@ -317,7 +317,7 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
-          path="/scripts"
+          path="/algorithms"
         />
       </Switch>
     </div>

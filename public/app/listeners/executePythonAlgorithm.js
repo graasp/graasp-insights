@@ -2,9 +2,9 @@ const path = require('path');
 const { spawn } = require('child_process');
 const logger = require('../logger');
 
-const executePythonScript = (event, args) => {
-  const { scriptId } = args;
-  logger.debug(`executing script with scriptId ${scriptId}`);
+const executePythonAlgorithm = (event, args) => {
+  const { algorithmId } = args;
+  logger.debug(`executing algorithm with algorithmId ${algorithmId}`);
   logger.debug('expecting a file named copy_of_data.json to exist');
   logger.debug(__dirname);
 
@@ -19,4 +19,4 @@ const executePythonScript = (event, args) => {
   });
 };
 
-module.exports = executePythonScript;
+module.exports = executePythonAlgorithm;
