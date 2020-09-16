@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { darken, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Container from '@material-ui/core/Container';
 import Table from '@material-ui/core/Table';
@@ -18,6 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import theme from '../theme';
 import Main from './common/Main';
+import { DATASETS_TABLE_COLUMNS, ORDER_BY } from '../config/constants';
 
 const fakeDatasets = [
   {
@@ -46,7 +47,7 @@ const fakeDatasets = [
   },
 ];
 
-function descendingComparator(a, b, orderBy) {
+const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -54,15 +55,15 @@ function descendingComparator(a, b, orderBy) {
     return 1;
   }
   return 0;
-}
+};
 
-function getComparator(isAsc, orderBy) {
+const getComparator = (isAsc, orderBy) => {
   return isAsc
     ? (a, b) => -descendingComparator(a, b, orderBy)
     : (a, b) => descendingComparator(a, b, orderBy);
-}
+};
 
-function stableSort(array, comparator) {
+const stableSort = (array, comparator) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -70,7 +71,7 @@ function stableSort(array, comparator) {
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-}
+};
 
 const useStyles = makeStyles({
   addButton: {
@@ -80,7 +81,7 @@ const useStyles = makeStyles({
     right: '16px',
     bottom: '16px',
     '&:hover, &.Mui-focusVisible': {
-      backgroundColor: darken(theme.palette.primary.main, 0.2),
+      backgroundColor: theme.palette.primary.main,
     },
   },
 });
@@ -90,7 +91,7 @@ const Datasets = () => {
 
   // name column sorted ascending by default
   const [isAsc, setIsAsc] = React.useState(true);
-  const [orderBy, setOrderBy] = React.useState('name');
+  const [orderBy, setOrderBy] = React.useState(DATASETS_TABLE_COLUMNS.NAME);
 
   const handlePublish = () => {
     // TODO: implement publish functionality
@@ -130,38 +131,60 @@ const Datasets = () => {
             <TableRow>
               <TableCell align="left">
                 <TableSortLabel
-                  active={orderBy === 'name'}
-                  direction={orderBy === 'name' && !isAsc ? 'desc' : 'asc'}
-                  onClick={() => handleSortColumn('name')}
+                  active={orderBy === DATASETS_TABLE_COLUMNS.NAME}
+                  direction={
+                    orderBy === DATASETS_TABLE_COLUMNS.NAME && !isAsc
+                      ? ORDER_BY.DESC
+                      : ORDER_BY.ASC
+                  }
+                  onClick={() => {
+                    handleSortColumn(DATASETS_TABLE_COLUMNS.NAME);
+                  }}
                 >
                   <strong>Name</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
                 <TableSortLabel
-                  active={orderBy === 'size'}
-                  direction={orderBy === 'size' && !isAsc ? 'desc' : 'asc'}
-                  onClick={() => handleSortColumn('size')}
+                  active={orderBy === DATASETS_TABLE_COLUMNS.SIZE}
+                  direction={
+                    orderBy === DATASETS_TABLE_COLUMNS.SIZE && !isAsc
+                      ? ORDER_BY.DESC
+                      : ORDER_BY.ASC
+                  }
+                  onClick={() => {
+                    handleSortColumn(DATASETS_TABLE_COLUMNS.SIZE);
+                  }}
                 >
                   <strong>Size</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
                 <TableSortLabel
-                  active={orderBy === 'created'}
-                  direction={orderBy === 'created' && !isAsc ? 'desc' : 'asc'}
-                  onClick={() => handleSortColumn('created')}
+                  active={orderBy === DATASETS_TABLE_COLUMNS.CREATED}
+                  direction={
+                    orderBy === DATASETS_TABLE_COLUMNS.CREATED && !isAsc
+                      ? ORDER_BY.DESC
+                      : ORDER_BY.ASC
+                  }
+                  onClick={() => {
+                    handleSortColumn(DATASETS_TABLE_COLUMNS.CREATED);
+                  }}
                 >
                   <strong>Created</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
                 <TableSortLabel
-                  active={orderBy === 'lastModified'}
+                  active={orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED}
                   direction={
-                    orderBy === 'lastModified' && !isAsc ? 'desc' : 'asc'
+                    orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED && !isAsc
+                      ? ORDER_BY.DESC
+                      : ORDER_BY.ASC
                   }
-                  onClick={() => handleSortColumn('lastModified')}
+                  onClick={() => {
+                    handleSortColumn(DATASETS_TABLE_COLUMNS.LAST_MODIFIED);
+                  }}
                 >
                   <strong>Last Modified</strong>
                 </TableSortLabel>
@@ -220,7 +243,7 @@ const Datasets = () => {
           variant="contained"
           aria-label="add"
           className={classes.addButton}
-          onClick={() => handleAdd()}
+          onClick={handleAdd}
         >
           <AddIcon />
         </IconButton>
