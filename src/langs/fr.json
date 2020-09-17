@@ -1,6 +1,10 @@
 {
   "translations": {
     "Home": "Accueil",
-    "Quit": "Quitter"
+    "Quit": "Quitter",
+    "Name": "Nom",
+    "Size": "Taille",
+    "Created": "Date de création",
+    "Last Modified": "Dernière Modification"
   }
 }

@@ -1,6 +1,10 @@
 {
   "translations": {
     "Home": "Home",
-    "Quit": "Quit"
+    "Quit": "Quit",
+    "Name": "Name",
+    "Size": "Size",
+    "Created": "Created",
+    "Last Modified": "Last Modified"
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Container from '@material-ui/core/Container';
@@ -88,6 +89,7 @@ const useStyles = makeStyles({
 
 const Datasets = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   // name column sorted ascending by default
   const [isAsc, setIsAsc] = React.useState(true);
@@ -141,7 +143,7 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.NAME);
                   }}
                 >
-                  <strong>Name</strong>
+                  <strong>{t('Name')}</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -211,15 +213,13 @@ const Datasets = () => {
                     >
                       <PublishIcon />
                     </IconButton>
-                    {!dataset.anonymized ? (
+                    {!dataset.anonymized && (
                       <IconButton
                         aria-label="anonymize"
                         onClick={() => handleAnonymize(dataset)}
                       >
                         <EqualizerIcon />
                       </IconButton>
-                    ) : (
-                      ''
                     )}
                     <IconButton
                       aria-label="edit"
