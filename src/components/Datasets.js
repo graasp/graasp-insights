@@ -158,7 +158,7 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.SIZE);
                   }}
                 >
-                  <strong>Size</strong>
+                  <strong>{t('Size')}</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -173,7 +173,7 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.CREATED);
                   }}
                 >
-                  <strong>Created</strong>
+                  <strong>{t('Created')}</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -188,7 +188,7 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.LAST_MODIFIED);
                   }}
                 >
-                  <strong>Last Modified</strong>
+                  <strong>{t('Last Modified')}</strong>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right" />
