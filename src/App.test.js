@@ -9,6 +9,8 @@ describe('<App />', () => {
       changeLanguage: jest.fn(),
     },
     t: jest.fn(),
+    dispatchGetLanguage: jest.fn(),
+    lang: 'en',
   };
 
   // eslint-disable-next-line react/jsx-props-no-spreading

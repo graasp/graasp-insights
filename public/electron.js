@@ -27,6 +27,8 @@ const {
   SET_SAMPLE_DATABASE_CHANNEL,
   SET_DATABASE_CHANNEL,
   DELETE_DATASET_CHANNEL,
+  SET_LANGUAGE_CHANNEL,
+  GET_LANGUAGE_CHANNEL,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
@@ -37,6 +39,8 @@ const {
   setDatabase,
   deleteDataset,
   setSampleDatabase,
+  getLanguage,
+  setLanguage,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
@@ -283,6 +287,10 @@ app.on('ready', async () => {
 
   // called when setting the database
   ipcMain.on(SET_DATABASE_CHANNEL, setDatabase(mainWindow, db));
+
+  ipcMain.on(SET_LANGUAGE_CHANNEL, setLanguage(mainWindow, db));
+
+  ipcMain.on(GET_LANGUAGE_CHANNEL, getLanguage(mainWindow, db));
 });
 
 app.on('activate', () => {

@@ -7,6 +7,22 @@
     "Created": "Created",
     "Last Modified": "Last Modified",
     "Quick Actions": "Quick Actions",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Load": "Load",
+    "Datasets": "Datasets",
+    "Algorithms": "Algorithms",
+    "Settings": "Settings",
+    "Developer": "Developer",
+    "Load a File": "Load a File",
+    "Browse": "Browse",
+    "Submit": "Submit",
+    "Danger Zone! Proceed with caution as changes to this section might lead to data loss.": "Attention ! Les modifications de cette section pourraient entraîner une perte de données.",
+    "The database is empty.": "The database is empty.",
+    "Manually Edit the Database": "Manually Edit the Database",
+    "Use Sample Database": "Use Sample Database",
+    "Language": "Language",
+    "KB": "KB",
+    "Quick actions": "Actions rapides",
+    "Run Algorithm": "Run Algorithm"
   }
 }

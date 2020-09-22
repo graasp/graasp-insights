@@ -1,4 +1,5 @@
 export const DATASETS_COLLECTION = 'datasets';
+export const SETTINGS_COLLECTION = 'settings';
 
 export const DEFAULT_LANGUAGE = 'en';
 export const DEFAULT_PROTOCOL = 'https';
