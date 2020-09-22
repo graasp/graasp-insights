@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -20,59 +21,8 @@ import AddIcon from '@material-ui/icons/Add';
 import theme from '../theme';
 import Main from './common/Main';
 import { DATASETS_TABLE_COLUMNS, ORDER_BY } from '../config/constants';
-
-const fakeDatasets = [
-  {
-    name: 'Atomic Structure',
-    description: 'Atomic Structure Dataset of students during two months',
-    size: 413,
-    created: '7/13/20',
-    lastModified: '7/13/20',
-    anonymized: false,
-  },
-  {
-    name: 'Animals of the world',
-    description: 'Collection of all the referenced animals of world.',
-    size: 409600,
-    created: '7/12/18',
-    lastModified: '9/14/20',
-    anonymized: false,
-  },
-  {
-    name: 'Anonymized Atomic Structure',
-    description: 'Anonymized version of Atomic Structure Dataset',
-    size: 211,
-    created: '7/02/20',
-    lastModified: '7/02/20',
-    anonymized: true,
-  },
-];
-
-const descendingComparator = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-};
-
-const getComparator = (isAsc, orderBy) => {
-  return isAsc
-    ? (a, b) => -descendingComparator(a, b, orderBy)
-    : (a, b) => descendingComparator(a, b, orderBy);
-};
-
-const stableSort = (array, comparator) => {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-};
+import { fakeDatasets } from './exampleDatasets';
+import { sortByKey } from '../utils/sorting';
 
 const useStyles = makeStyles({
   addButton: {
@@ -85,6 +35,9 @@ const useStyles = makeStyles({
       backgroundColor: theme.palette.primary.main,
     },
   },
+  columnName: {
+    fontWeight: 'bold',
+  },
 });
 
 const Datasets = () => {
@@ -92,8 +45,8 @@ const Datasets = () => {
   const { t } = useTranslation();
 
   // name column sorted ascending by default
-  const [isAsc, setIsAsc] = React.useState(true);
-  const [orderBy, setOrderBy] = React.useState(DATASETS_TABLE_COLUMNS.NAME);
+  const [isAsc, setIsAsc] = useState(true);
+  const [orderBy, setOrderBy] = useState(DATASETS_TABLE_COLUMNS.NAME);
 
   const handlePublish = () => {
     // TODO: implement publish functionality
@@ -127,8 +80,8 @@ const Datasets = () => {
   return (
     <Main content>
       <Container>
-        <h1>Datasets</h1>
-        <Table aria-label="simple table">
+        <h1>{t('Datasets')}</h1>
+        <Table aria-label="table of datasets">
           <TableHead>
             <TableRow>
               <TableCell align="left">
@@ -143,7 +96,9 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.NAME);
                   }}
                 >
-                  <strong>{t('Name')}</strong>
+                  <Typography className={classes.columnName}>
+                    {t('Name')}
+                  </Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -158,7 +113,9 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.SIZE);
                   }}
                 >
-                  <strong>{t('Size')}</strong>
+                  <Typography className={classes.columnName}>
+                    {t('Size')}
+                  </Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -173,7 +130,9 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.CREATED);
                   }}
                 >
-                  <strong>{t('Created')}</strong>
+                  <Typography className={classes.columnName}>
+                    {t('Created')}
+                  </Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -188,55 +147,54 @@ const Datasets = () => {
                     handleSortColumn(DATASETS_TABLE_COLUMNS.LAST_MODIFIED);
                   }}
                 >
-                  <strong>{t('Last Modified')}</strong>
+                  <Typography className={classes.columnName}>
+                    {t('Last Modified')}
+                  </Typography>
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right" />
             </TableRow>
           </TableHead>
           <TableBody>
-            {stableSort(fakeDatasets, getComparator(isAsc, orderBy)).map(
-              (dataset) => (
-                <TableRow key={dataset.name}>
-                  <TableCell>
-                    <span style={{ fontSize: '20px' }}>{dataset.name}</span>
-                    <br />
-                    {dataset.description}
-                  </TableCell>
-                  <TableCell align="right">{`${dataset.size}KB`}</TableCell>
-                  <TableCell align="right">{dataset.created}</TableCell>
-                  <TableCell align="right">{dataset.lastModified}</TableCell>
-                  <TableCell align="right">
+            {sortByKey(fakeDatasets, orderBy, isAsc).map((dataset) => (
+              <TableRow key={dataset.name}>
+                <TableCell>
+                  <Typography variant="h6">{dataset.name}</Typography>
+                  <Typography>{dataset.description}</Typography>
+                </TableCell>
+                <TableCell align="right">{`${dataset.size}KB`}</TableCell>
+                <TableCell align="right">{dataset.created}</TableCell>
+                <TableCell align="right">{dataset.lastModified}</TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    aria-label="publish"
+                    onClick={() => handlePublish(dataset)}
+                  >
+                    <PublishIcon />
+                  </IconButton>
+                  {!dataset.anonymized && (
                     <IconButton
-                      aria-label="publish"
-                      onClick={() => handlePublish(dataset)}
+                      aria-label="anonymize"
+                      onClick={() => handleAnonymize(dataset)}
                     >
-                      <PublishIcon />
+                      <EqualizerIcon />
                     </IconButton>
-                    {!dataset.anonymized && (
-                      <IconButton
-                        aria-label="anonymize"
-                        onClick={() => handleAnonymize(dataset)}
-                      >
-                        <EqualizerIcon />
-                      </IconButton>
-                    )}
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => handleEdit(dataset)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => handleDelete(dataset)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ),
-            )}
+                  )}
+                  <IconButton
+                    aria-label="edit"
+                    onClick={() => handleEdit(dataset)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDelete(dataset)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
         <IconButton
