@@ -9,7 +9,7 @@ const Algorithms = () => {
   const { t } = useTranslation();
 
   const executePythonAlgorithm = () => {
-    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM, { algorithmId: 1 });
+    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM, { id: 1 });
   };
 
   return (

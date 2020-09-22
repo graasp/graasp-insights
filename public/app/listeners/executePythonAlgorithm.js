@@ -3,10 +3,7 @@ const { spawn } = require('child_process');
 const logger = require('../logger');
 
 const executePythonAlgorithm = (event, args) => {
-  const { algorithmId } = args;
-  logger.debug(`executing algorithm with algorithmId ${algorithmId}`);
-  logger.debug('expecting a file named copy_of_data.json to exist');
-  logger.debug(__dirname);
+  // const { id } = args;
 
   const process = spawn('python', [
     path.resolve(__dirname, '../../python.py'), // todo: this file should be a parameter
