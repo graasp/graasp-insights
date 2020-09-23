@@ -40,6 +40,3 @@ build/*
 # exclude unused coverage information
 .nyc_output
 coverage.lcov
-
-# temporary dataset file
-src/components/exampleDatasets.js

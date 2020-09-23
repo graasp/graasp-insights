@@ -21,7 +21,6 @@ import AddIcon from '@material-ui/icons/Add';
 import theme from '../theme';
 import Main from './common/Main';
 import { DATASETS_TABLE_COLUMNS, ORDER_BY } from '../config/constants';
-import { fakeDatasets } from './exampleDatasets';
 import { sortByKey } from '../utils/sorting';
 
 const useStyles = makeStyles({
@@ -39,6 +38,34 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
   },
 });
+
+// fake dataset that will be deleted later
+const fakeDatasets = [
+  {
+    name: 'Atomic Structure',
+    description: 'Atomic Structure Dataset of students during two months',
+    size: 413,
+    created: '7/13/20',
+    lastModified: '7/13/20',
+    anonymized: false,
+  },
+  {
+    name: 'Animals of the world',
+    description: 'Collection of all the referenced animals of world.',
+    size: 409600,
+    created: '7/12/18',
+    lastModified: '9/14/20',
+    anonymized: false,
+  },
+  {
+    name: 'Anonymized Atomic Structure',
+    description: 'Anonymized version of Atomic Structure Dataset',
+    size: 211,
+    created: '7/02/20',
+    lastModified: '7/02/20',
+    anonymized: true,
+  },
+];
 
 const Datasets = () => {
   const classes = useStyles();
