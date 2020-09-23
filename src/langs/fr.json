@@ -5,6 +5,8 @@
     "Name": "Nom",
     "Size": "Taille",
     "Created": "Date de création",
-    "Last Modified": "Dernière Modification"
+    "Last Modified": "Dernière Modification",
+    "Quick Actions": "Actions Rapides",
+    "Unknown": "Inconnu"
   }
 }

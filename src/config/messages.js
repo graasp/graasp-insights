@@ -4,9 +4,10 @@
 
 const ERROR_MESSAGE_HEADER = 'Error';
 const SUCCESS_MESSAGE_HEADER = 'Success';
-const ERROR_GETTING_DATASET_MESSAGE = 'There was an error getting the dataset';
+const ERROR_GETTING_DATASET_MESSAGE =
+  'There was an error retrieving the dataset';
 const ERROR_GETTING_DATASETS_MESSAGE =
-  'There was an error getting the datasets';
+  'There was an error retrieving the datasets';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,

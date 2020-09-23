@@ -2,12 +2,579 @@
   "data": {
     "actions": [
       {
-        "user": "1234",
+        "_id": "5f60873b8872f5e4125eeeb6",
+        "user": "5f60874735d84d75e4d9674d",
+        "sessionId": null,
         "data": {
-          "text": "hello"
-        }
+          "subpage": "5f608753ae8ec5690ad1a113"
+        },
+        "visibility": "public",
+        "space": "5f608753ae8ec5690ad1a113",
+        "verb": "navigate",
+        "postedAt": "2019-03-21T10:52:24.554Z",
+        "sessionSequenceNumber": 1,
+        "userType": "graasp",
+        "geolocation": {
+          "range": [2512973824, 2512974847],
+          "country": "JO",
+          "region": "",
+          "eu": "0",
+          "timezone": "Asia/Amman",
+          "city": "",
+          "ll": [31, 36],
+          "metro": 0,
+          "area": 50
+        },
+        "createdAt": "2019-03-21T10:52:24.647Z",
+        "updatedAt": "2019-03-21T10:52:24.647Z",
+        "__v": 0
+      },
+      {
+        "_id": "5f60874ddbb9a00b2a34fbc5",
+        "user": "5f60874735d84d75e4d9674d",
+        "sessionId": null,
+        "data": {
+          "subpage": "5f608762f1877cf639223e1a"
+        },
+        "visibility": "public",
+        "space": "5f6087657d67d67995814535",
+        "verb": "navigate",
+        "postedAt": "2019-09-10T10:52:32.203Z",
+        "sessionSequenceNumber": 2,
+        "userType": "graasp",
+        "geolocation": {
+          "range": [2512973824, 2512974847],
+          "country": "JO",
+          "region": "",
+          "eu": "0",
+          "timezone": "Asia/Amman",
+          "city": "",
+          "ll": [31, 36],
+          "metro": 0,
+          "area": 50
+        },
+        "createdAt": "2019-09-10T10:52:32.305Z",
+        "updatedAt": "2019-09-10T10:52:32.305Z",
+        "__v": 0
       }
-    ]
-  },
-  "dataset": [{ "hello": "world", "my": "value" }]
+    ],
+    "metadata": {
+      "spaceTree": [
+        {
+          "id": "5f608803dd20c11abaa6598a",
+          "name": "Space",
+          "parentId": null
+        },
+        {
+          "id": "5f608831e13d96c2b6c15ae9",
+          "name": "Subspace One",
+          "parentId": "5f608803dd20c11abaa6598a"
+        },
+        {
+          "id": "5f6088397c747b1d3342e879",
+          "name": "Subspace Two",
+          "parentId": "5f608803dd20c11abaa6598a"
+        },
+        {
+          "id": "5f60883daaabd31f82294b27",
+          "name": "Subspace Three",
+          "parentId": "5f608803dd20c11abaa6598a"
+        },
+        {
+          "id": "5f6088427131a65b7aa47137",
+          "name": "Subspace Four",
+          "parentId": "5f608803dd20c11abaa6598a"
+        },
+        {
+          "id": "5f608845ded80332e5f05708",
+          "name": "Subspace Five",
+          "parentId": "5f608803dd20c11abaa6598a"
+        },
+        {
+          "id": "5f6088497d7348d8fed866dc",
+          "name": "Subspace Six",
+          "parentId": "5f608803dd20c11abaa6598a"
+        }
+      ],
+      "users": [
+        {
+          "_id": "5f60874735d84d75e4d9674d",
+          "name": "Anonymous Anon",
+          "type": "graasp"
+        },
+        {
+          "_id": "5f6088843be9d2bfcb71a78a",
+          "name": "Generic User",
+          "type": "graasp"
+        }
+      ],
+      "appInstances": [
+        {
+          "_id": "5f608c35687d024dd00c00cb",
+          "url": "https://www.google.com",
+          "name": "Hypothesis Scratchpad",
+          "settings": {
+            "metadata": {
+              "actor": {
+                "id": "5f60874735d84d75e4d9674d",
+                "objectType": "graasp_editor",
+                "displayName": "Anonymous Anon"
+              },
+              "provider": {
+                "id": "5f608803dd20c11abaa6598a",
+                "objectType": "ils",
+                "displayName": "Space",
+                "url": "https://graasp.eu/spaces/5f608803dd20c11abaa6598a",
+                "inquiryPhase": "User defined",
+                "inquiryPhaseId": "5f608831e13d96c2b6c15ae9",
+                "inquiryPhaseName": "Subspace One",
+                "ilsHasAngeLA": true,
+                "ilsHasAngeLO": false
+              },
+              "target": {
+                "id": "5f608c35687d024dd00c00cb_configuration",
+                "objectType": "configuration",
+                "displayName": "Hypotheses scratchpad 3 configuration",
+                "forApplication": "hypothesis"
+              },
+              "generator": {
+                "id": "5f608c35687d024dd00c00cb",
+                "objectType": "application",
+                "displayName": "hypotheses3",
+                "url": "https://www.google.com"
+              },
+              "flags": {},
+              "id": "5f608c35687d024dd00c00cb_configuration",
+              "published": "2020-06-26T10:14:08.619Z"
+            },
+            "content": {
+              "version": "3.0",
+              "help": "\r\n<ul>\r\n    <li><b>Create a hypothesis</b> by dragging conditionals (e.g., if, then) and variables in the hypothesis box</li>\r\n    <li><b>Create your own term</b> by dragging the &#34[type your own]&#34 in the hypothesis box and click on it to edit\r\n    </li>\r\n    <li><b>Rearrange terms</b> by dragging them around</li>\r\n    <li><b>Delete terms</b> by dragging them outside the hypothesis box</li>\r\n    <li><b>Add a hypothesis</b> by clicking the plus sign</li>\r\n    <li><b>Delete a hypothesis</b> by clicking the trashcan</li>\r\n    <li><b>Adjust your level of confidence</b> in a hypothesis by adjusting the &#34;horseshoe&#34; next to the\r\n        hypothesis\r\n    </li>\r\n</ul>\r\n",
+              "useConfigurationHelp": false,
+              "autoLoadLatestResource": true,
+              "showResourceName": false,
+              "singleDocumentMode": true,
+              "showImportExport": false,
+              "showLoadExamples": false,
+              "showLoadConfiguration": true,
+              "showModelJson": false,
+              "autoSave": true,
+              "defaultResourceName": "",
+              "loadInitialResource": true,
+              "initialResourceString": null,
+              "collaborationStartup": "disabled",
+              "collaborationEnable": false,
+              "collaborationBroadcastMode": false,
+              "collaborationPreserveClientModel": false,
+              "collaborationShowOwnClicks": true,
+              "collaborationShowCursors": true,
+              "collaborationExpectGroupState": true,
+              "collaborationDebug": false,
+              "collaborationHideLoadingDialog": false,
+              "collaborationShowTextBoxFocus": false,
+              "collaborationEnableUndoRedo": false,
+              "collaborationIgnoreGroups": false,
+              "usePeerFeedback": false,
+              "allowWithdrawingFeedbackRequest": false,
+              "showNotifications": true,
+              "peerFeedbackConfiguration": {
+                "explanation": "You can rate the hypothesis/hypotheses of your peer to each one of the following criteria. \n            You may provide comments to your peer to justify your ratings.\n            You may also suggest changes that have to be made in the hypothesis/hypotheses.",
+                "peerFeedbackQuestionConfigurations": [
+                  {
+                    "id": "hypotheses1",
+                    "explanation": "Each hypothesis contains at least one dependent variable.",
+                    "questionType": "Smileys3",
+                    "required": true,
+                    "showComment": true,
+                    "initialComment": "",
+                    "minimumNrOfWords": 0
+                  },
+                  {
+                    "id": "hypotheses3",
+                    "explanation": "Each hypothesis contains one and only one independent variable.",
+                    "questionType": "Smileys3",
+                    "required": true,
+                    "showComment": true,
+                    "initialComment": "",
+                    "minimumNrOfWords": 0
+                  },
+                  {
+                    "id": "hypotheses3",
+                    "explanation": "Each hypothesis indicates a relationship between one independent variable and at least one dependent variable.",
+                    "questionType": "Smileys3",
+                    "required": true,
+                    "showComment": true,
+                    "initialComment": "",
+                    "minimumNrOfWords": 0
+                  },
+                  {
+                    "id": "hypotheses4",
+                    "explanation": "The independent variable of each hypothesis can be manipulated in the laboratory.",
+                    "questionType": "Smileys3",
+                    "required": true,
+                    "showComment": true,
+                    "initialComment": "",
+                    "minimumNrOfWords": 0
+                  },
+                  {
+                    "id": "hypotheses5",
+                    "explanation": "The dependent variable in each hypothesis can be measured in the laboratory.",
+                    "questionType": "Smileys3",
+                    "required": true,
+                    "showComment": true,
+                    "initialComment": "",
+                    "minimumNrOfWords": 0
+                  },
+                  {
+                    "id": "hypotheses6",
+                    "explanation": "Each hypothesis addresses the initial problem of the lesson.",
+                    "questionType": "Smileys3",
+                    "required": true,
+                    "showComment": true,
+                    "initialComment": "",
+                    "minimumNrOfWords": 0
+                  }
+                ]
+              },
+              "verifyLogActions": true,
+              "showStartupTimes": false,
+              "specialLanguageTerms": {},
+              "configUISettings": {
+                "showHideSections": {
+                  "i_hypotheses3_configuration_hypotheses3": true,
+                  "i_ut_tools_hypothesis_configuration_title": true
+                }
+              },
+              "mockLogAccessorStartPoint": "Now",
+              "mockLogAccessorDeltaT": 0,
+              "useCustomContainerTitle": false,
+              "customContainerTitle": "",
+              "conditionals": [],
+              "variables": [],
+              "minimumNrOfItems": 1,
+              "maximumNrOfItems": 10,
+              "confidence": true,
+              "freeInput": true,
+              "hypothesisMode": "Standard",
+              "predefinedOperatorIds": [
+                "Increases",
+                "Decreases",
+                "Remains",
+                "Changes",
+                "LargerThan",
+                "SmallerThan",
+                "Equals",
+                "NotEquals"
+              ],
+              "expressions": [
+                {
+                  "type": "Expression",
+                  "id": "Expression-11468ae3-3d92-461a-ed00-ef8656ade0e5",
+                  "key": "expression 1",
+                  "label": "expression 1",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false
+                },
+                {
+                  "type": "Expression",
+                  "id": "Expression-2c17437b-8fdc-4ae0-ed81-fa97a0a30c48",
+                  "key": "expression 2",
+                  "label": "expression 2",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false
+                },
+                {
+                  "type": "Expression",
+                  "id": "Expression-0e4545b6-c72f-4f12-a53a-c43604b39e67",
+                  "key": "expression 3",
+                  "label": "expression 3",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false
+                },
+                {
+                  "type": "Expression",
+                  "id": "Expression-8e83ce94-e86f-440b-98b4-9c1a69e82f1a",
+                  "key": "expression 4",
+                  "label": "expression 4",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false
+                }
+              ],
+              "values": [
+                {
+                  "type": "Value",
+                  "id": "Value-22e29da9-8ce5-42a0-e022-23359c0451f7",
+                  "key": "variable 1",
+                  "label": "variable 1",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "unit": null
+                },
+                {
+                  "type": "Value",
+                  "id": "Value-cb8e22ef-8763-4b17-a6a2-672f0566d16d",
+                  "key": "variable 2",
+                  "label": "variable 2",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "unit": null
+                },
+                {
+                  "type": "Value",
+                  "id": "Value-4e05e8dc-8981-4c87-f11c-545c978e8bec",
+                  "key": "variable 3",
+                  "label": "variable 3",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "unit": null
+                },
+                {
+                  "type": "Value",
+                  "id": "Value-eb079761-b6c3-4122-c73e-5f30f800b1fc",
+                  "key": "variable 4",
+                  "label": "variable 4",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "unit": null
+                }
+              ],
+              "operators": [
+                {
+                  "type": "Operator",
+                  "id": "Operator_7133294a-a29c-416b-a6e7-739e8bdffa67",
+                  "key": "if",
+                  "label": "IF",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "None"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_ed121e92-bce8-4c3e-80c2-37733fb95e53",
+                  "key": "then",
+                  "label": "THEN",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "None"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_05d4fc77-f2e0-4ac3-d109-04358989984b",
+                  "key": "Increases",
+                  "label": "increases",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "None"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_5fc92cfa-eb68-4976-d3f7-21a2d49e6cae",
+                  "key": "Decreases",
+                  "label": "decreases",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "None"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_8f5bf831-eb5c-4c9a-fdcf-cb33ac4f5caf",
+                  "key": "Remains",
+                  "label": "stays the same",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "None"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_d548383e-d1b4-4149-8a0f-1e8be7f41577",
+                  "key": "Changes",
+                  "label": "changes",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "None"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_55744022-5399-41f8-b89c-ad9a661f2652",
+                  "key": "LargerThan",
+                  "label": "is larger than",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "Value"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_4173287f-7b7e-4954-d402-fbde4ad994c9",
+                  "key": "SmallerThan",
+                  "label": "is smaller than",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "Value"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_d5882dc6-a33a-4a97-e045-9ac4bc523afe",
+                  "key": "Equals",
+                  "label": "is equal to",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "Value"
+                },
+                {
+                  "type": "Operator",
+                  "id": "Operator_ca589817-1837-4aae-8f46-6d4eba712e06",
+                  "key": "NotEquals",
+                  "label": "is not equal to",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": false,
+                  "operatorType": "Custom",
+                  "beforeType": "Value",
+                  "afterType": "Value"
+                }
+              ],
+              "customOperators": [],
+              "userDefinedValues": [
+                {
+                  "type": "Value",
+                  "id": "Value-ad0ee67d-36de-4a0d-a0c1-51eba1d8bf53",
+                  "key": "",
+                  "label": "",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": true,
+                  "unit": null
+                }
+              ],
+              "userDefinedExpressions": [
+                {
+                  "type": "Expression",
+                  "id": "Expression-f9005c1d-0032-48f2-efe9-8ddc9cf26155",
+                  "key": "",
+                  "label": "",
+                  "showLabel": true,
+                  "imageUrl": null,
+                  "imageWidth": -1,
+                  "imageHeight": -1,
+                  "userDefined": true
+                }
+              ],
+              "emptyStandardHypothesisPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptyIfThenStandardHypothesisActionPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptyIfThenStandardHypothesisReactionPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptyLimitedHypothesisActionPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptyLimitedHypothesisReactionPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptySimpleHypothesisActionPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptySimpleHypothesisReactionPlaceHolder": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "customApplicationTitle": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "customBlocksTitle": { "customText": "", "useCustomText": false },
+              "emptyExpressionText": {
+                "customText": "",
+                "useCustomText": false
+              },
+              "emptyVariableText": { "customText": "", "useCustomText": false }
+            }
+          }
+        }
+      ],
+      "createdAt": "2020-09-11T09:53:51.644Z"
+    }
+  }
 }

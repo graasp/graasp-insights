@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import Button from '@material-ui/core/Button';
+import { withTranslation } from 'react-i18next';
 import DatasetReader from './DatasetReader';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
@@ -20,6 +22,7 @@ class DatasetScreen extends Component {
       goBack: PropTypes.func.isRequired,
     }).isRequired,
     activity: PropTypes.bool.isRequired,
+    t: PropTypes.func.isRequired,
   };
 
   defaultProps = {
@@ -37,8 +40,15 @@ class DatasetScreen extends Component {
     dispatchGetDataset({ id });
   }
 
+  handleBack = () => {
+    const {
+      history: { goBack },
+    } = this.props;
+    goBack();
+  };
+
   render() {
-    const { dataset, activity } = this.props;
+    const { dataset, activity, t } = this.props;
 
     if (activity) {
       return <Loader />;
@@ -54,6 +64,9 @@ class DatasetScreen extends Component {
           size={dataset.get('size')}
           content={dataset.get('content')}
         />
+        <Button variant="contained" color="primary" onClick={this.handleBack}>
+          {t('Back')}
+        </Button>
       </Main>
     );
   }
@@ -72,4 +85,5 @@ const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(DatasetScreen);
-export default withRouter(ConnectedComponent);
+const TranslatedComponent = withTranslation()(ConnectedComponent);
+export default withRouter(TranslatedComponent);

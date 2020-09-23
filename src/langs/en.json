@@ -5,6 +5,8 @@
     "Name": "Name",
     "Size": "Size",
     "Created": "Created",
-    "Last Modified": "Last Modified"
+    "Last Modified": "Last Modified",
+    "Quick Actions": "Quick Actions",
+    "Unknown": "Unknown"
   }
 }

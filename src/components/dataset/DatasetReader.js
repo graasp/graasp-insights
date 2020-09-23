@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 import { Map } from 'immutable';
 import ReactJson from 'react-json-view';
 import { withTranslation } from 'react-i18next';
@@ -51,7 +52,9 @@ class DatasetReader extends Component {
     }
 
     if (size > MAX_FILE_SIZE) {
-      return <span>{t('This file is too huge to be displayed.')}</span>;
+      return (
+        <Typography>{t('This file is too big to be displayed.')}</Typography>
+      );
     }
 
     return <ReactJson collapsed src={json} />;

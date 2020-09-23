@@ -17,20 +17,18 @@ export const getDatasets = () => (dispatch) => {
   const flagGettingDatasets = createFlag(FLAG_GETTING_DATASETS);
   try {
     dispatch(flagGettingDatasets(true));
-    // tell electron to get space
+    // tell electron to get datasets
     window.ipcRenderer.send(GET_DATASETS_CHANNEL);
     window.ipcRenderer.once(GET_DATASETS_CHANNEL, async (event, datasets) => {
       // if there is no dataset, show error
       if (!datasets) {
-        return toastr.error(
-          ERROR_MESSAGE_HEADER,
-          ERROR_GETTING_DATASETS_MESSAGE,
-        );
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATASETS_MESSAGE);
+      } else {
+        dispatch({
+          type: GET_DATASETS_SUCCESS,
+          payload: datasets,
+        });
       }
-      dispatch({
-        type: GET_DATASETS_SUCCESS,
-        payload: datasets,
-      });
       return dispatch(flagGettingDatasets(false));
     });
   } catch (err) {
@@ -44,20 +42,18 @@ export const getDataset = ({ id }) => (dispatch) => {
   try {
     dispatch(flagGettingDataset(true));
 
-    // tell electron to get space
+    // tell electron to get a dataset
     window.ipcRenderer.send(GET_DATASET_CHANNEL, { id });
     window.ipcRenderer.once(GET_DATASET_CHANNEL, async (event, dataset) => {
       // if there is no dataset, show error
       if (!dataset) {
-        return toastr.error(
-          ERROR_MESSAGE_HEADER,
-          ERROR_GETTING_DATASET_MESSAGE,
-        );
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATASET_MESSAGE);
+      } else {
+        dispatch({
+          type: GET_DATASET_SUCCESS,
+          payload: dataset,
+        });
       }
-      dispatch({
-        type: GET_DATASET_SUCCESS,
-        payload: dataset,
-      });
       return dispatch(flagGettingDataset(false));
     });
   } catch (err) {

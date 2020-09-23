@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PublishIcon from '@material-ui/icons/Publish';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
+import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import Main from './common/Main';
@@ -28,7 +29,7 @@ import {
 } from '../config/constants';
 import { sortByKey } from '../utils/sorting';
 import { getDatasets } from '../actions';
-import { LOAD_DATASET_PATH } from '../config/paths';
+import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 
 const styles = (theme) => ({
   addButton: {
@@ -74,6 +75,13 @@ class Datasets extends Component {
     dispatchGetDatasets();
   }
 
+  handleView = ({ id }) => {
+    const {
+      history: { push },
+    } = this.props;
+    push(buildDatasetPath(id));
+  };
+
   handlePublish = () => {
     // TODO: implement publish functionality
   };
@@ -114,15 +122,15 @@ class Datasets extends Component {
 
     return sortedDatasets.map((dataset) => {
       const { name, size, lastModified, createdAt, description = '' } = dataset;
-      const sizeString = size ? `${size}${t('KB')}` : t('unknown');
+      const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('unknown');
+        : t('Unknown');
       const lastModifiedString = lastModified
         ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('unknown');
+        : t('Unknown');
       return (
-        <TableRow key={dataset.name}>
+        <TableRow key={dataset.id}>
           <TableCell>
             <Typography variant="h6">{name}</Typography>
             <Typography>{description}</Typography>
@@ -131,11 +139,17 @@ class Datasets extends Component {
           <TableCell align="right">{createdAtString}</TableCell>
           <TableCell align="right">{lastModifiedString}</TableCell>
           <TableCell align="right">
+            <IconButton>
+              <CodeIcon
+                aria-label="view"
+                onClick={() => this.handleView(dataset)}
+              />
+            </IconButton>
             <IconButton
-              aria-label="publish"
-              onClick={() => this.handlePublish(dataset)}
+              aria-label="edit"
+              onClick={() => this.handleEdit(dataset)}
             >
-              <PublishIcon />
+              <EditIcon />
             </IconButton>
             {!dataset.anonymized && (
               <IconButton
@@ -146,10 +160,10 @@ class Datasets extends Component {
               </IconButton>
             )}
             <IconButton
-              aria-label="edit"
-              onClick={() => this.handleEdit(dataset)}
+              aria-label="publish"
+              onClick={() => this.handlePublish(dataset)}
             >
-              <EditIcon />
+              <PublishIcon />
             </IconButton>
             <IconButton
               aria-label="delete"
@@ -252,7 +266,7 @@ class Datasets extends Component {
                     </Typography>
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="right" />
+                <TableCell align="right">{t('Quick actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.renderDatasetsContent()}</TableBody>

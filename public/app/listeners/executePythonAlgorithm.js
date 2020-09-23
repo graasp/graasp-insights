@@ -3,6 +3,7 @@ const { spawn } = require('child_process');
 const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/config');
+const { createNewDataset } = require('./loadDataset');
 
 const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
   // get corresponding dataset
@@ -34,13 +35,12 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
       logger.error(`python process exited with code ${code}`);
     } else {
       // save result in db
-      db.get('datasets')
-        .push({
-          id,
-          name: `hashed_${datasetName}`,
-          filepath: outputPath,
-        })
-        .write();
+      const newDataset = createNewDataset({
+        id,
+        name: `hashed_${datasetName}`,
+        filepath: outputPath,
+      });
+      db.get('datasets').push(newDataset).write();
       logger.debug(`save resulting dataset at ${outputPath}`);
     }
   });
