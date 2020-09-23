@@ -19,7 +19,6 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import theme from '../theme';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import {
@@ -31,13 +30,13 @@ import { sortByKey } from '../utils/sorting';
 import { getDatasets } from '../actions';
 import { LOAD_DATASET_PATH } from '../config/paths';
 
-const styles = () => ({
+const styles = (theme) => ({
   addButton: {
     color: theme.palette.secondary.main,
     backgroundColor: theme.palette.primary.main,
     position: 'fixed',
-    right: '16px',
-    bottom: '16px',
+    right: theme.spacing(2),
+    bottom: theme.spacing(2),
     '&:hover, &.Mui-focusVisible': {
       backgroundColor: theme.palette.primary.main,
     },
