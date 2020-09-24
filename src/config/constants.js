@@ -7,7 +7,7 @@ export const DRAWER_HEADER_HEIGHT = 55;
 export const DATASETS_TABLE_COLUMNS = {
   NAME: 'name',
   SIZE: 'size',
-  CREATED: 'created',
+  CREATED: 'createdAt',
   LAST_MODIFIED: 'lastModified',
 };
 
@@ -15,3 +15,7 @@ export const ORDER_BY = {
   ASC: 'asc',
   DESC: 'desc',
 };
+
+export const MAX_FILE_SIZE = 400;
+
+export const DEFAULT_LOCALE_DATE = 'en-US';

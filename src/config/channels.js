@@ -7,4 +7,6 @@ module.exports = {
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:respond',
   LOAD_DATASET: 'dataset:load',
   EXECUTE_PYTHON_ALGORITHM: 'algorithm:python:execute',
+  GET_DATASET_CHANNEL: 'dataset:get',
+  GET_DATASETS_CHANNEL: 'datasets:get',
 };

@@ -1,5 +1,13 @@
 const showLoadDatasetPrompt = require('./showLoadDatasetPrompt');
-const loadDataset = require('./loadDataset');
+const { loadDataset } = require('./loadDataset');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
+const getDataset = require('./getDataset');
+const getDatasets = require('./getDatasets');
 
-module.exports = { showLoadDatasetPrompt, loadDataset, executePythonAlgorithm };
+module.exports = {
+  getDataset,
+  getDatasets,
+  showLoadDatasetPrompt,
+  executePythonAlgorithm,
+  loadDataset,
+};

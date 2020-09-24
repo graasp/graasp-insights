@@ -307,7 +307,7 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
-          path="/"
+          path="/dataset/:id"
         />
         <Route
           component={[Function]}
@@ -317,12 +317,17 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
-          path="/display-datasets"
+          path="/datasets"
         />
         <Route
           component={[Function]}
           exact={true}
           path="/algorithms"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/"
         />
       </Switch>
     </div>

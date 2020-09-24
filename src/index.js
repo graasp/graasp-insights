@@ -4,6 +4,7 @@ import './index.css';
 import { Provider } from 'react-redux';
 import ReduxToastr from 'react-redux-toastr';
 import { I18nextProvider } from 'react-i18next';
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import i18nConfig from './config/i18n';
 import App from './App';
 import configureStore from './store/configure';

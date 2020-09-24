@@ -13,6 +13,7 @@ const logger = require('./app/logger');
 const {
   ICON_PATH,
   PRODUCT_NAME,
+  DATABASE_PATH,
   escapeEscapeCharacter,
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
@@ -20,13 +21,18 @@ const {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET,
   EXECUTE_PYTHON_ALGORITHM,
+  GET_DATASET_CHANNEL,
+  GET_DATASETS_CHANNEL,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
   loadDataset,
   executePythonAlgorithm,
+  getDataset,
+  getDatasets,
 } = require('./app/listeners');
 const env = require('./env.json');
+const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -228,6 +234,9 @@ const generateMenu = () => {
 };
 
 app.on('ready', async () => {
+  await ensureDatabaseExists(DATABASE_PATH);
+  const db = bootstrapDatabase(DATABASE_PATH);
+
   createWindow();
   generateMenu();
   // prompt when loading a dataset
@@ -235,6 +244,16 @@ app.on('ready', async () => {
     SHOW_LOAD_DATASET_PROMPT_CHANNEL,
     showLoadDatasetPrompt(mainWindow),
   );
+
+  // called when getting datasets
+  ipcMain.on(GET_DATASETS_CHANNEL, getDatasets(mainWindow, db));
+
+  // called when getting a dataset
+  ipcMain.on(GET_DATASET_CHANNEL, getDataset(mainWindow, db));
+
+  ipcMain.on(LOAD_DATASET, loadDataset(mainWindow, db));
+
+  ipcMain.on(EXECUTE_PYTHON_ALGORITHM, executePythonAlgorithm(mainWindow, db));
 });
 
 app.on('activate', () => {
@@ -246,7 +265,3 @@ app.on('activate', () => {
 ipcMain.on('load-page', (event, arg) => {
   mainWindow.loadURL(arg);
 });
-
-ipcMain.on(LOAD_DATASET, loadDataset);
-
-ipcMain.on(EXECUTE_PYTHON_ALGORITHM, executePythonAlgorithm);
