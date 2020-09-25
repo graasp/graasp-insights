@@ -26,6 +26,7 @@ const {
   GET_DATABASE_CHANNEL,
   SET_SAMPLE_DATABASE_CHANNEL,
   SET_DATABASE_CHANNEL,
+  DELETE_DATASET_CHANNEL,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
@@ -34,6 +35,7 @@ const {
   getDataset,
   getDatasets,
   setDatabase,
+  deleteDataset,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
@@ -257,6 +259,8 @@ app.on('ready', async () => {
   ipcMain.on(GET_DATASET_CHANNEL, getDataset(mainWindow, db));
 
   ipcMain.on(LOAD_DATASET_CHANNEL, loadDataset(mainWindow, db));
+  // called when deleting a dataset
+  ipcMain.on(DELETE_DATASET_CHANNEL, deleteDataset(mainWindow, db));
 
   ipcMain.on(
     EXECUTE_PYTHON_ALGORITHM_CHANNEL,

@@ -28,7 +28,7 @@ import {
   ORDER_BY,
 } from '../config/constants';
 import { sortByKey } from '../utils/sorting';
-import { getDatasets } from '../actions';
+import { getDatasets, deleteDataset } from '../actions';
 import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 
 const styles = (theme) => ({
@@ -58,6 +58,7 @@ class Datasets extends Component {
       push: PropTypes.func.isRequired,
     }).isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
+    dispatchDeleteDataset: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       columnName: PropTypes.string.isRequired,
@@ -94,8 +95,9 @@ class Datasets extends Component {
     // TODO: implement edit functionality
   };
 
-  handleDelete = () => {
-    // TODO: implement delete functionality
+  handleDelete = (dataset) => {
+    const { dispatchDeleteDataset } = this.props;
+    dispatchDeleteDataset({ id: dataset.id });
   };
 
   handleAdd = () => {
@@ -291,6 +293,7 @@ const mapStateToProps = ({ dataset }) => ({
 
 const mapDispatchToProps = {
   dispatchGetDatasets: getDatasets,
+  dispatchDeleteDataset: deleteDataset,
 };
 
 const ConnectedComponent = connect(

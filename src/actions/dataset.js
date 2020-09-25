@@ -1,16 +1,23 @@
 import { toastr } from 'react-redux-toastr';
 import { createFlag } from './common';
-import { GET_DATASET_CHANNEL, GET_DATASETS_CHANNEL } from '../config/channels';
+import {
+  GET_DATASET_CHANNEL,
+  GET_DATASETS_CHANNEL,
+  DELETE_DATASET_CHANNEL,
+} from '../config/channels';
 import {
   GET_DATASET_SUCCESS,
   FLAG_GETTING_DATASET,
   GET_DATASETS_SUCCESS,
   FLAG_GETTING_DATASETS,
+  DELETE_DATASET_SUCCESS,
+  FLAG_DELETING_DATASET,
 } from '../types';
 import {
   ERROR_GETTING_DATASET_MESSAGE,
   ERROR_MESSAGE_HEADER,
   ERROR_GETTING_DATASETS_MESSAGE,
+  ERROR_DELETING_DATASET_MESSAGE,
 } from '../config/messages';
 
 export const getDatasets = () => (dispatch) => {
@@ -59,5 +66,24 @@ export const getDataset = ({ id }) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATASET_MESSAGE);
     dispatch(flagGettingDataset(false));
+  }
+};
+
+export const deleteDataset = ({ id }) => (dispatch) => {
+  const flagDeletingDataset = createFlag(FLAG_DELETING_DATASET);
+  try {
+    dispatch(flagDeletingDataset(true));
+
+    window.ipcRenderer.send(DELETE_DATASET_CHANNEL, { id });
+    window.ipcRenderer.once(DELETE_DATASET_CHANNEL, async () => {
+      dispatch({
+        type: DELETE_DATASET_SUCCESS,
+      });
+      dispatch(flagDeletingDataset(false));
+      return getDatasets()(dispatch);
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_DATASET_MESSAGE);
+    dispatch(flagDeletingDataset(false));
   }
 };
