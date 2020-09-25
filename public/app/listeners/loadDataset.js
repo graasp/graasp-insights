@@ -5,9 +5,8 @@ const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/config');
 const { DATASETS_COLLECTION } = require('../db');
 
-const createNewDataset = ({ id, name, filepath }) => {
+const createNewDataset = ({ name, filepath, fileId }) => {
   // create and get file data
-  const fileId = id || ObjectId().str;
   const stats = fs.statSync(filepath);
   const { size } = stats;
   const sizeInKiloBytes = size / 1000;
@@ -24,13 +23,16 @@ const createNewDataset = ({ id, name, filepath }) => {
 };
 
 const loadDataset = (mainWindow, db) => async (event, args) => {
-  const { fileLocation } = args;
+  const { fileLocation, id } = args;
+  const fileId = id || ObjectId().str;
   const filename = path.basename(fileLocation);
-  const filepath = path.join(DATASETS_FOLDER, filename);
+  const extensionName = path.extname(filename);
+
+  const filepath = path.join(DATASETS_FOLDER, fileId + extensionName);
 
   try {
     fs.copyFileSync(fileLocation, filepath);
-    const newDataset = createNewDataset({ name: filename, filepath });
+    const newDataset = createNewDataset({ name: filename, filepath, fileId });
     logger.debug(`load dataset at ${filepath}`);
 
     // save file in lowdb
