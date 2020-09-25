@@ -36,10 +36,10 @@ const {
   getDatasets,
   setDatabase,
   deleteDataset,
+  setSampleDatabase,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
-const sampleDatabase = require('./app/data/sample');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -279,17 +279,10 @@ app.on('ready', async () => {
   });
 
   // called when setting the sample database
-  ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, async (e) => {
-    setDatabase(mainWindow, db)(e, {
-      payload: sampleDatabase,
-      channel: SET_SAMPLE_DATABASE_CHANNEL,
-    });
-  });
+  ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, setSampleDatabase(mainWindow, db));
 
   // called when setting the database
-  ipcMain.on(SET_DATABASE_CHANNEL, (e, payload) => {
-    setDatabase(mainWindow, db)(e, { payload, channel: SET_DATABASE_CHANNEL });
-  });
+  ipcMain.on(SET_DATABASE_CHANNEL, setDatabase(mainWindow, db));
 });
 
 app.on('activate', () => {

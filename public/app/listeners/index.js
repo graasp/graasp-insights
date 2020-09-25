@@ -5,6 +5,7 @@ const getDataset = require('./getDataset');
 const getDatasets = require('./getDatasets');
 const setDatabase = require('./setDatabase');
 const deleteDataset = require('./deleteDataset');
+const setSampleDatabase = require('./setSampleDatabase');
 
 module.exports = {
   getDataset,
@@ -14,4 +15,5 @@ module.exports = {
   executePythonAlgorithm,
   loadDataset,
   setDatabase,
+  setSampleDatabase,
 };
