@@ -3,6 +3,7 @@ const { loadDataset } = require('./loadDataset');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const getDataset = require('./getDataset');
 const getDatasets = require('./getDatasets');
+const setDatabase = require('./setDatabase');
 
 module.exports = {
   getDataset,
@@ -10,4 +11,5 @@ module.exports = {
   showLoadDatasetPrompt,
   executePythonAlgorithm,
   loadDataset,
+  setDatabase,
 };

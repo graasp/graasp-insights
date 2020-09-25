@@ -8,10 +8,17 @@ const ERROR_GETTING_DATASET_MESSAGE =
   'There was an error retrieving the dataset';
 const ERROR_GETTING_DATASETS_MESSAGE =
   'There was an error retrieving the datasets';
+const ERROR_SETTING_SAMPLE_DATABASE =
+  'There was an error setting the sample database';
+const ERROR_SETTING_DATABASE = 'There was an error setting the database';
+const ERROR_GETTING_DATABASE = 'There was an error retrieving the database';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
   SUCCESS_MESSAGE_HEADER,
   ERROR_GETTING_DATASET_MESSAGE,
   ERROR_GETTING_DATASETS_MESSAGE,
+  ERROR_SETTING_SAMPLE_DATABASE,
+  ERROR_SETTING_DATABASE,
+  ERROR_GETTING_DATABASE,
 };
