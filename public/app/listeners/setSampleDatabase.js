@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const _ = require('lodash');
 const logger = require('../logger');
 const {
   DATASETS_FOLDER,
@@ -10,7 +11,7 @@ const sampleDatabase = require('../data/sample');
 
 const setSampleDatabase = (mainWindow, db) => async () => {
   try {
-    db.setState(sampleDatabase).write();
+    db.setState(_.cloneDeep(sampleDatabase)).write();
     fs.emptyDirSync(DATASETS_FOLDER);
 
     fs.copyFileSync(
