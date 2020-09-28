@@ -12,4 +12,5 @@ module.exports = {
   GET_DATABASE_CHANNEL: 'developer:database:get',
   SET_DATABASE_CHANNEL: 'developer:database:set',
   SET_SAMPLE_DATABASE_CHANNEL: 'developer:database:sample:set',
+  DELETE_DATASET_CHANNEL: 'dataset:delete',
 };

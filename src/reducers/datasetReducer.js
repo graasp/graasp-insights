@@ -5,6 +5,7 @@ import {
   FLAG_GETTING_DATASETS,
   GET_DATASET_SUCCESS,
   GET_DATASETS_SUCCESS,
+  DELETE_DATASET_SUCCESS,
 } from '../types';
 
 const INITIAL_STATE = Map({
@@ -27,6 +28,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['current', 'content'], Map(payload));
     case GET_DATASETS_SUCCESS:
       return state.setIn(['datasets'], List(payload));
+    case DELETE_DATASET_SUCCESS:
     default:
       return state;
   }
