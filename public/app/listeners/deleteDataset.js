@@ -11,7 +11,7 @@ const deleteDataset = (mainWindow, db) => async (event, { id }) => {
 
     // delete the db
     fs.unlinkSync(filepath);
-    logger.log(`Deleted the dataset ${name} with id ${id} at ${filepath}`);
+    logger.debug(`Deleted the dataset ${name} with id ${id} at ${filepath}`);
 
     db.get(DATASETS_COLLECTION).remove({ id }).write();
 
