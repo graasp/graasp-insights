@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const ObjectId = require('bson-objectid');
@@ -13,7 +14,7 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
     .value();
 
   const id = ObjectId().str;
-  const outputPath = path.join(DATASETS_FOLDER, `${id}.json`);
+  const outputPath = path.join(DATASETS_FOLDER, `tmp_${id}.json`);
 
   const process = spawn('python', [
     path.resolve(__dirname, '../../python.py'), // todo: this file should be a parameter
@@ -33,15 +34,23 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
   process.on('close', (code) => {
     if (code !== 0) {
       logger.error(`python process exited with code ${code}`);
+
+      // delete tmp file
+      if (fs.existsSync(outputPath)) {
+        fs.unlinkSync(outputPath);
+      }
     } else {
       // save result in db
       const newDataset = createNewDataset({
-        id,
         name: `hashed_${datasetName}`,
         filepath: outputPath,
       });
       db.get('datasets').push(newDataset).write();
-      logger.debug(`save resulting dataset at ${outputPath}`);
+
+      // delete tmp file
+      fs.unlinkSync(outputPath);
+
+      logger.debug(`save resulting dataset at ${newDataset.filepath}`);
     }
   });
 };

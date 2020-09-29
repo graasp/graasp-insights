@@ -33,7 +33,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   const adapter = new FileSync(dbPath);
   const db = low(adapter);
 
-  // create the database folder if it doesn't already exist
+  // create the datasets folder if it doesn't already exist
   if (!fs.existsSync(DATASETS_FOLDER)) {
     mkdirp(DATASETS_FOLDER);
   }
