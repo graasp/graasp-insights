@@ -34,11 +34,6 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
   process.on('close', (code) => {
     if (code !== 0) {
       logger.error(`python process exited with code ${code}`);
-
-      // delete tmp file
-      if (fs.existsSync(outputPath)) {
-        fs.unlinkSync(outputPath);
-      }
     } else {
       // save result in db
       const newDataset = createNewDataset({
@@ -47,10 +42,12 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
       });
       db.get('datasets').push(newDataset).write();
 
-      // delete tmp file
-      fs.unlinkSync(outputPath);
-
       logger.debug(`save resulting dataset at ${newDataset.filepath}`);
+    }
+
+    // delete tmp file
+    if (fs.existsSync(outputPath)) {
+      fs.unlinkSync(outputPath);
     }
   });
 };
