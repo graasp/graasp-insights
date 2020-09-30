@@ -20,6 +20,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import {
@@ -88,8 +89,8 @@ class Datasets extends Component {
     // TODO: implement publish functionality
   };
 
-  handleAnonymize = () => {
-    // TODO: implement anonymize functionality
+  handleVisualize = () => {
+    // TODO: implement visualize functionality
   };
 
   handleEdit = () => {
@@ -135,45 +136,53 @@ class Datasets extends Component {
       return (
         <TableRow key={dataset.id}>
           <TableCell>
-            <Typography variant="h6">{name}</Typography>
+            <Typography variant="subtitle1">{name}</Typography>
             <Typography>{description}</Typography>
           </TableCell>
           <TableCell align="right">{sizeString}</TableCell>
           <TableCell align="right">{createdAtString}</TableCell>
           <TableCell align="right">{lastModifiedString}</TableCell>
           <TableCell align="right">
-            <IconButton>
-              <CodeIcon
-                aria-label="view"
-                onClick={() => this.handleView(dataset)}
-              />
-            </IconButton>
-            <IconButton
-              aria-label="edit"
-              onClick={() => this.handleEdit(dataset)}
-            >
-              <EditIcon />
-            </IconButton>
-            {!dataset.anonymized && (
+            <Tooltip title="View dataset">
+              <IconButton>
+                <CodeIcon
+                  aria-label="view"
+                  onClick={() => this.handleView(dataset)}
+                />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edit dataset">
               <IconButton
-                aria-label="anonymize"
-                onClick={() => this.handleAnonymize(dataset)}
+                aria-label="edit"
+                onClick={() => this.handleEdit(dataset)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Visualize dataset">
+              <IconButton
+                aria-label="visualize"
+                onClick={() => this.handleVisualize(dataset)}
               >
                 <EqualizerIcon />
               </IconButton>
-            )}
-            <IconButton
-              aria-label="publish"
-              onClick={() => this.handlePublish(dataset)}
-            >
-              <PublishIcon />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete(dataset)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            </Tooltip>
+            <Tooltip title="Publish dataset">
+              <IconButton
+                aria-label="publish"
+                onClick={() => this.handlePublish(dataset)}
+              >
+                <PublishIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Remove dataset">
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.handleDelete(dataset)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </TableCell>
         </TableRow>
       );
@@ -288,7 +297,11 @@ class Datasets extends Component {
                     </Typography>
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="right">{t('Quick actions')}</TableCell>
+                <TableCell align="right">
+                  <Typography className={classes.columnName}>
+                    {t('Quick actions')}
+                  </Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.renderDatasetsContent()}</TableBody>
