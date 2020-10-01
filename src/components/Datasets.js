@@ -19,10 +19,11 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
+import Alert from '@material-ui/lab/Alert';
 import Main from './common/Main';
 import Loader from './common/Loader';
+import LoadDatasetButton from './LoadDatasetButton';
 import {
   DATASETS_TABLE_COLUMNS,
   DEFAULT_LOCALE_DATE,
@@ -46,6 +47,9 @@ const styles = (theme) => ({
   columnName: {
     fontWeight: 'bold',
   },
+  infoAlert: {
+    margin: theme.spacing(2),
+  },
 });
 
 class Datasets extends Component {
@@ -63,6 +67,7 @@ class Datasets extends Component {
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       columnName: PropTypes.string.isRequired,
+      infoAlert: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
@@ -137,7 +142,7 @@ class Datasets extends Component {
         <TableRow key={dataset.id}>
           <TableCell>
             <Typography variant="subtitle1">{name}</Typography>
-            <Typography>{description}</Typography>
+            <Typography variant="caption">{description}</Typography>
           </TableCell>
           <TableCell align="right">{sizeString}</TableCell>
           <TableCell align="right">{createdAtString}</TableCell>
@@ -189,20 +194,6 @@ class Datasets extends Component {
     });
   };
 
-  renderAddButton() {
-    const { classes } = this.props;
-    return (
-      <IconButton
-        variant="contained"
-        aria-label="add"
-        className={classes.addButton}
-        onClick={this.handleAdd}
-      >
-        <AddIcon />
-      </IconButton>
-    );
-  }
-
   render() {
     const { isAsc, orderBy } = this.state;
     const { classes, t, datasets, isLoading } = this.props;
@@ -214,8 +205,10 @@ class Datasets extends Component {
     if (!datasets.size) {
       return (
         <Main fullscreen>
-          {t('No datasets available')}
-          {this.renderAddButton()}
+          <Alert severity="info" className={classes.infoAlert}>
+            {t('Add a dataset by clicking on the icon below.')}
+          </Alert>
+          <LoadDatasetButton />
         </Main>
       );
     }
@@ -306,7 +299,7 @@ class Datasets extends Component {
             </TableHead>
             <TableBody>{this.renderDatasetsContent()}</TableBody>
           </Table>
-          {this.renderAddButton()}
+          <LoadDatasetButton />
         </Container>
       </Main>
     );

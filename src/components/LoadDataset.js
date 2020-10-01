@@ -1,27 +1,74 @@
-import React, { useState } from 'react';
-import { withRouter } from 'react-router';
-import { useTranslation } from 'react-i18next';
-import FormControl from '@material-ui/core/FormControl';
-import Typography from '@material-ui/core/Typography';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { withTranslation } from 'react-i18next';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
-import Main from './common/Main';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET_CHANNEL,
 } from '../config/channels';
 
-const LoadDataset = () => {
-  const { t } = useTranslation();
-  const [fileLocation, setFileLocation] = useState('');
+const styles = () => ({
+  dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  addDataset: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  shortTextfield: {
+    width: '50%',
+  },
+});
 
-  const handleFileLocation = (event) => {
-    const filePath = event.target ? event.target.value : event;
-    setFileLocation(filePath);
+class LoadDataset extends Component {
+  state = {
+    fileLocation: '',
+    fileCustomName: '',
+    fileDescription: '',
   };
 
-  const handleBrowse = () => {
+  static propTypes = {
+    classes: PropTypes.shape({
+      dialogContent: PropTypes.shape({
+        display: PropTypes.string,
+        flexDirection: PropTypes.string,
+      }),
+      addDataset: PropTypes.shape({
+        display: PropTypes.string,
+        alignItems: PropTypes.string,
+      }),
+      shortTextfield: PropTypes.shape({ width: PropTypes.string }),
+    }).isRequired,
+    t: PropTypes.func.isRequired,
+    open: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+  };
+
+  handleLocationInput = (event) => {
+    const filePath = event.target ? event.target.value : event;
+    this.setState({ fileLocation: filePath });
+  };
+
+  handleCustomNameInput = (event) => {
+    this.setState({ fileCustomName: event.target.value });
+  };
+
+  handleDescriptionInput = (event) => {
+    this.setState({ fileDescription: event.target.value });
+  };
+
+  handleBrowse = () => {
     const options = {
       filters: [{ name: 'json', extensions: ['json'] }],
     };
@@ -31,56 +78,127 @@ const LoadDataset = () => {
       (event, filePaths) => {
         if (filePaths && filePaths.length) {
           // currently we select only one file
-          handleFileLocation(filePaths[0]);
+          this.handleLocationInput(filePaths[0]);
         }
       },
     );
   };
 
-  const handleCopy = () => {
-    window.ipcRenderer.send(LOAD_DATASET_CHANNEL, { fileLocation });
+  handleFileSubmit = () => {
+    const { fileCustomName, fileLocation, fileDescription } = this.state;
+    window.ipcRenderer.send(LOAD_DATASET_CHANNEL, {
+      fileCustomName,
+      fileLocation,
+      fileDescription,
+    });
   };
 
-  return (
-    <Main fullScreen>
-      <FormControl>
-        <Typography variant="h4" color="inherit" style={{ margin: '2rem' }}>
-          {t('Load a File')}
-        </Typography>
-        <Button
-          // id={LOAD_BROWSE_BUTTON_ID}
-          variant="contained"
-          onClick={handleBrowse}
-          color="primary"
-          // className={classes.button}
-        >
-          {t('Browse')}
-        </Button>
-        <Input
-          // id={LOAD_INPUT_ID}
-          required
-          onChange={handleFileLocation}
-          // className={classes.input}
-          // inputProps={{
-          //   'aria-label': 'Description',
-          // }}
-          autoFocus
-          value={fileLocation}
-          type="text"
-        />
-        <Button
-          //   id={LOAD_SUBMIT_BUTTON_ID}
-          variant="contained"
-          onClick={handleCopy}
-          color="primary"
-          //   className={classes.button}
-          disabled={!fileLocation.endsWith('.json')}
-        >
-          {t('Submit')}
-        </Button>
-      </FormControl>
-    </Main>
-  );
-};
+  render() {
+    const { classes, t, open, handleClose } = this.props;
+    const { fileLocation, fileCustomName, fileDescription } = this.state;
 
-export default withRouter(LoadDataset);
+    return (
+      <Dialog
+        open={open}
+        onClose={() => {
+          this.setState({
+            fileLocation: '',
+            fileCustomName: '',
+            fileDescription: '',
+          });
+          handleClose();
+        }}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="create-new-item-form">
+          {t('Add new dataset')}
+        </DialogTitle>
+        <DialogContent className={classes.dialogContent}>
+          <div className={classes.addDataset}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="browse"
+              label="Select dataset"
+              className={classes.shortTextfield}
+              onChange={this.handleLocationInput}
+              value={fileLocation}
+            />
+            <IconButton onClick={this.handleBrowse}>
+              <SearchIcon />
+            </IconButton>
+          </div>
+
+          <TextField
+            margin="dense"
+            id="name"
+            label="Name"
+            value={fileCustomName}
+            onChange={this.handleCustomNameInput}
+            className={classes.shortTextfield}
+          />
+
+          <TextField
+            margin="dense"
+            id="description"
+            label="Description"
+            value={fileDescription}
+            onChange={this.handleDescriptionInput}
+            multiline
+            rows={4}
+            rowsMax={4}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              this.setState({
+                fileLocation: '',
+                fileCustomName: '',
+                fileDescription: '',
+              });
+              handleClose();
+            }}
+            color="primary"
+          >
+            {t('Cancel')}
+          </Button>
+          <Button
+            onClick={() => {
+              this.handleFileSubmit();
+              this.setState({
+                fileLocation: '',
+                fileCustomName: '',
+                fileDescription: '',
+              });
+              handleClose();
+            }}
+            color="primary"
+            disabled={!fileLocation.endsWith('.json')}
+          >
+            {t('Add dataset')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+}
+
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = {};
+
+const ConnectedComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoadDataset);
+
+const StyledComponent = withStyles(styles, { withTheme: true })(
+  ConnectedComponent,
+);
+
+const TranslatedComponent = withTranslation()(StyledComponent);
+
+export default TranslatedComponent;

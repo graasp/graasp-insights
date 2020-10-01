@@ -5,7 +5,7 @@ const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/config');
 const { DATASETS_COLLECTION } = require('../db');
 
-const createNewDataset = ({ name, filepath }) => {
+const createNewDataset = ({ name, filepath, description }) => {
   // create and get file data
   const fileId = ObjectId().str;
   const destPath = path.join(DATASETS_FOLDER, `${fileId}.json`);
@@ -24,6 +24,7 @@ const createNewDataset = ({ name, filepath }) => {
     id: fileId,
     name,
     filepath: destPath,
+    description,
     size: sizeInKiloBytes,
     createdAt,
     lastModified,
@@ -31,20 +32,23 @@ const createNewDataset = ({ name, filepath }) => {
 };
 
 const loadDataset = (mainWindow, db) => async (event, args) => {
-  const { fileLocation } = args;
+  const { fileLocation, fileDescription } = args;
+  let { fileCustomName } = args;
 
-  // filename without extension
-  const filename = path
-    .basename(fileLocation)
-    .slice(0, -path.extname(fileLocation).length);
+  if (!fileCustomName) {
+    // if no name is provided by user, use filename without extension
+    fileCustomName = path
+      .basename(fileLocation)
+      .slice(0, -path.extname(fileLocation).length);
+  }
 
   try {
     const newDataset = createNewDataset({
-      name: filename,
+      name: fileCustomName,
       filepath: fileLocation,
+      description: fileDescription,
     });
     logger.debug(`load dataset at ${newDataset.filepath}`);
-
     // save file in lowdb
     db.get(DATASETS_COLLECTION).push(newDataset).write();
   } catch (err) {
