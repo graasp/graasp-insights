@@ -65,6 +65,7 @@ class Datasets extends Component {
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
+    isLoading: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -195,9 +196,9 @@ class Datasets extends Component {
 
   render() {
     const { isAsc, orderBy } = this.state;
-    const { classes, t, datasets } = this.props;
+    const { classes, t, datasets, isLoading } = this.props;
 
-    if (!datasets) {
+    if (isLoading) {
       return <Loader />;
     }
 
@@ -301,6 +302,7 @@ class Datasets extends Component {
 
 const mapStateToProps = ({ dataset }) => ({
   datasets: dataset.getIn(['datasets']),
+  isLoading: dataset.getIn(['current', 'activity']).size > 0,
 });
 
 const mapDispatchToProps = {
