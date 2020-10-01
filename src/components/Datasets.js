@@ -65,6 +65,7 @@ class Datasets extends Component {
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
+    isLoading: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -179,16 +180,35 @@ class Datasets extends Component {
     });
   };
 
+  renderAddButton() {
+    const { classes } = this.props;
+    return (
+      <IconButton
+        variant="contained"
+        aria-label="add"
+        className={classes.addButton}
+        onClick={this.handleAdd}
+      >
+        <AddIcon />
+      </IconButton>
+    );
+  }
+
   render() {
     const { isAsc, orderBy } = this.state;
-    const { classes, t, datasets } = this.props;
+    const { classes, t, datasets, isLoading } = this.props;
 
-    if (!datasets) {
+    if (isLoading) {
       return <Loader />;
     }
 
     if (!datasets.size) {
-      return <Main fullscreen>{t('No datasets available')}</Main>;
+      return (
+        <Main fullscreen>
+          {t('No datasets available')}
+          {this.renderAddButton()}
+        </Main>
+      );
     }
 
     return (
@@ -273,14 +293,7 @@ class Datasets extends Component {
             </TableHead>
             <TableBody>{this.renderDatasetsContent()}</TableBody>
           </Table>
-          <IconButton
-            variant="contained"
-            aria-label="add"
-            className={classes.addButton}
-            onClick={this.handleAdd}
-          >
-            <AddIcon />
-          </IconButton>
+          {this.renderAddButton()}
         </Container>
       </Main>
     );
@@ -289,6 +302,7 @@ class Datasets extends Component {
 
 const mapStateToProps = ({ dataset }) => ({
   datasets: dataset.getIn(['datasets']),
+  isLoading: dataset.getIn(['current', 'activity']).size > 0,
 });
 
 const mapDispatchToProps = {
