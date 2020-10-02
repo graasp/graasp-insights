@@ -29,6 +29,9 @@ const {
   DELETE_DATASET_CHANNEL,
   SET_LANGUAGE_CHANNEL,
   GET_LANGUAGE_CHANNEL,
+  DELETE_RESULT_CHANNEL,
+  GET_RESULTS_CHANNEL,
+  GET_RESULT_CHANNEL,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
@@ -41,6 +44,9 @@ const {
   setSampleDatabase,
   getLanguage,
   setLanguage,
+  getResult,
+  getResults,
+  deleteResult,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
@@ -263,8 +269,18 @@ app.on('ready', async () => {
   ipcMain.on(GET_DATASET_CHANNEL, getDataset(mainWindow, db));
 
   ipcMain.on(LOAD_DATASET_CHANNEL, loadDataset(mainWindow, db));
+
   // called when deleting a dataset
   ipcMain.on(DELETE_DATASET_CHANNEL, deleteDataset(mainWindow, db));
+
+  // called when getting results
+  ipcMain.on(GET_RESULTS_CHANNEL, getResults(mainWindow, db));
+
+  // called when getting a result
+  ipcMain.on(GET_RESULT_CHANNEL, getResult(mainWindow, db));
+
+  // called when deleting a result
+  ipcMain.on(DELETE_RESULT_CHANNEL, deleteResult(mainWindow, db));
 
   ipcMain.on(
     EXECUTE_PYTHON_ALGORITHM_CHANNEL,

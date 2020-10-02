@@ -1,4 +1,4 @@
-const { DATASETS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION, RESULTS_COLLECTION } = require('../db');
 const { SAMPLE_DATASET_FILEPATH } = require('../config/config');
 
 module.exports = {
@@ -12,4 +12,5 @@ module.exports = {
       lastModified: Date.now(),
     },
   ],
+  [RESULTS_COLLECTION]: [],
 };

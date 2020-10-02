@@ -15,4 +15,7 @@ module.exports = {
   DELETE_DATASET_CHANNEL: 'dataset:delete',
   GET_LANGUAGE_CHANNEL: 'settings:lang:get',
   SET_LANGUAGE_CHANNEL: 'settings:lang:set',
+  DELETE_RESULT_CHANNEL: 'result:delete',
+  GET_RESULT_CHANNEL: 'result:get',
+  GET_RESULTS_CHANNEL: 'results:get',
 };
