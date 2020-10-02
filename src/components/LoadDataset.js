@@ -14,8 +14,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
-  LOAD_DATASET_CHANNEL,
 } from '../config/channels';
+import { addDataset } from '../actions';
 
 const styles = () => ({
   dialogContent: {
@@ -53,6 +53,7 @@ class LoadDataset extends Component {
     t: PropTypes.func.isRequired,
     open: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
+    dispatchAddDataset: PropTypes.func.isRequired,
   };
 
   handleLocationInput = (event) => {
@@ -86,11 +87,8 @@ class LoadDataset extends Component {
 
   handleFileSubmit = () => {
     const { fileCustomName, fileLocation, fileDescription } = this.state;
-    window.ipcRenderer.send(LOAD_DATASET_CHANNEL, {
-      fileCustomName,
-      fileLocation,
-      fileDescription,
-    });
+    const { dispatchAddDataset } = this.props;
+    dispatchAddDataset({ fileCustomName, fileLocation, fileDescription });
   };
 
   render() {
@@ -188,7 +186,9 @@ class LoadDataset extends Component {
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  dispatchAddDataset: addDataset,
+};
 
 const ConnectedComponent = connect(
   mapStateToProps,

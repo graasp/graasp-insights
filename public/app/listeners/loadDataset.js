@@ -4,6 +4,7 @@ const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/config');
 const { DATASETS_COLLECTION } = require('../db');
+const { LOAD_DATASET_CHANNEL } = require('../config/channels');
 
 const createNewDataset = ({ name, filepath, description }) => {
   // create and get file data
@@ -51,6 +52,8 @@ const loadDataset = (mainWindow, db) => async (event, args) => {
     logger.debug(`load dataset at ${newDataset.filepath}`);
     // save file in lowdb
     db.get(DATASETS_COLLECTION).push(newDataset).write();
+    // send message with created dataset
+    mainWindow.webContents.send(LOAD_DATASET_CHANNEL, newDataset);
   } catch (err) {
     logger.log(err);
   }
