@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -95,6 +94,4 @@ const ConnectedComponent = connect(
 
 const StyledComponent = withStyles(styles)(ConnectedComponent);
 
-const TranslatedComponent = withTranslation()(StyledComponent);
-
-export default withRouter(TranslatedComponent);
+export default withTranslation()(StyledComponent);

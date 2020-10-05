@@ -12,6 +12,10 @@ const ERROR_SETTING_SAMPLE_DATABASE =
   'There was an error setting the sample database';
 const ERROR_SETTING_DATABASE = 'There was an error setting the database';
 const ERROR_GETTING_DATABASE = 'There was an error retrieving the database';
+const ERROR_DELETING_DATASET_MESSAGE =
+  'There was an error deleting the dataset';
+const ERROR_GETTING_LANGUAGE = 'There was an error retrieving the language.';
+const ERROR_SETTING_LANGUAGE = 'There was an error setting the language.';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -21,4 +25,7 @@ module.exports = {
   ERROR_SETTING_SAMPLE_DATABASE,
   ERROR_SETTING_DATABASE,
   ERROR_GETTING_DATABASE,
+  ERROR_DELETING_DATASET_MESSAGE,
+  ERROR_GETTING_LANGUAGE,
+  ERROR_SETTING_LANGUAGE,
 };

@@ -16,7 +16,7 @@ const ERROR_DELETING_DATASET_MESSAGE =
   'There was an error deleting the dataset';
 const SUCCESS_LOADING_DATASET_MESSAGE = 'The dataset was loaded successfully';
 const ERROR_LOADING_DATASET_MESSAGE = 'There was an error loading the dataset';
-const ERROR_GETTING_LANGUAGE = 'There was an error getting the language.';
+const ERROR_GETTING_LANGUAGE = 'There was an error retrieving the language.';
 const ERROR_SETTING_LANGUAGE = 'There was an error setting the language.';
 
 module.exports = {

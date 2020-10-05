@@ -9,8 +9,8 @@ import {
 import {
   FLAG_GETTING_LANGUAGE,
   FLAG_SETTING_LANGUAGE,
-  GET_LANGUAGE_SUCCEEDED,
-  SET_LANGUAGE_SUCCEEDED,
+  GET_LANGUAGE_SUCCESS,
+  SET_LANGUAGE_SUCCESS,
 } from '../types';
 import { createFlag } from './common';
 
@@ -26,7 +26,7 @@ const getLanguage = async () => (dispatch) => {
         toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_LANGUAGE);
       } else {
         dispatch({
-          type: GET_LANGUAGE_SUCCEEDED,
+          type: GET_LANGUAGE_SUCCESS,
           payload: lang,
         });
       }
@@ -48,7 +48,7 @@ const setLanguage = async ({ lang }) => (dispatch) => {
         toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_LANGUAGE);
       } else {
         dispatch({
-          type: SET_LANGUAGE_SUCCEEDED,
+          type: SET_LANGUAGE_SUCCESS,
           payload,
         });
       }

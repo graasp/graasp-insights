@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { GET_LANGUAGE_SUCCEEDED, SET_LANGUAGE_SUCCEEDED } from '../types';
+import { GET_LANGUAGE_SUCCESS, SET_LANGUAGE_SUCCESS } from '../types';
 import { DEFAULT_LANGUAGE } from '../config/constants';
 
 const INITIAL_STATE = Map({
@@ -8,8 +8,8 @@ const INITIAL_STATE = Map({
 
 export default (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
-    case GET_LANGUAGE_SUCCEEDED:
-    case SET_LANGUAGE_SUCCEEDED:
+    case GET_LANGUAGE_SUCCESS:
+    case SET_LANGUAGE_SUCCESS:
       return state.set('lang', payload);
     default:
       return state;
