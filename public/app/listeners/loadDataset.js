@@ -33,29 +33,30 @@ const createNewDataset = ({ name, filepath, description }) => {
 };
 
 const loadDataset = (mainWindow, db) => async (event, args) => {
-  const { fileLocation, fileDescription } = args;
-  let { fileCustomName } = args;
+  const { fileLocation, fileCustomName, fileDescription } = args;
+  const defaultFileName = path
+    .basename(fileLocation)
+    .slice(0, -path.extname(fileLocation).length);
+  const fileName = fileCustomName || defaultFileName;
 
-  if (!fileCustomName) {
-    // if no name is provided by user, use filename without extension
-    fileCustomName = path
-      .basename(fileLocation)
-      .slice(0, -path.extname(fileLocation).length);
-  }
-
-  try {
-    const newDataset = createNewDataset({
-      name: fileCustomName,
-      filepath: fileLocation,
-      description: fileDescription,
-    });
-    logger.debug(`load dataset at ${newDataset.filepath}`);
-    // save file in lowdb
-    db.get(DATASETS_COLLECTION).push(newDataset).write();
-    // send message with created dataset
-    mainWindow.webContents.send(LOAD_DATASET_CHANNEL, newDataset);
-  } catch (err) {
-    logger.log(err);
+  if (fs.existsSync(fileLocation)) {
+    try {
+      const newDataset = createNewDataset({
+        name: fileName,
+        filepath: fileLocation,
+        description: fileDescription,
+      });
+      logger.debug(`load dataset at ${newDataset.filepath}`);
+      // save file in lowdb
+      db.get(DATASETS_COLLECTION).push(newDataset).write();
+      // send message with created dataset
+      mainWindow.webContents.send(LOAD_DATASET_CHANNEL, newDataset);
+    } catch (err) {
+      logger.log(err);
+    }
+  } else {
+    // empty message will be read by /actions/dataset.js as !dataset, and hence trigger an error
+    mainWindow.webContents.send(LOAD_DATASET_CHANNEL);
   }
 };
 

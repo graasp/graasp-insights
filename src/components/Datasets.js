@@ -148,7 +148,7 @@ class Datasets extends Component {
           <TableCell align="right">{createdAtString}</TableCell>
           <TableCell align="right">{lastModifiedString}</TableCell>
           <TableCell align="right">
-            <Tooltip title="View dataset">
+            <Tooltip title={t('View dataset')}>
               <IconButton>
                 <CodeIcon
                   aria-label="view"
@@ -156,7 +156,7 @@ class Datasets extends Component {
                 />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Edit dataset">
+            <Tooltip title={t('Edit dataset')}>
               <IconButton
                 aria-label="edit"
                 onClick={() => this.handleEdit(dataset)}
@@ -164,7 +164,7 @@ class Datasets extends Component {
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Visualize dataset">
+            <Tooltip title={t('Visualize dataset')}>
               <IconButton
                 aria-label="visualize"
                 onClick={() => this.handleVisualize(dataset)}
@@ -172,7 +172,7 @@ class Datasets extends Component {
                 <EqualizerIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Publish dataset">
+            <Tooltip title={t('Publish dataset')}>
               <IconButton
                 aria-label="publish"
                 onClick={() => this.handlePublish(dataset)}
@@ -180,7 +180,7 @@ class Datasets extends Component {
                 <PublishIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Remove dataset">
+            <Tooltip title={t('Remove dataset')}>
               <IconButton
                 aria-label="delete"
                 onClick={() => this.handleDelete(dataset)}

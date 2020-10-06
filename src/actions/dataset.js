@@ -14,13 +14,16 @@ import {
   DELETE_DATASET_SUCCESS,
   FLAG_DELETING_DATASET,
   LOAD_DATASET_SUCCESS,
+  FLAG_LOADING_DATASET,
 } from '../types';
 import {
   ERROR_GETTING_DATASET_MESSAGE,
   ERROR_MESSAGE_HEADER,
+  SUCCESS_MESSAGE_HEADER,
   ERROR_GETTING_DATASETS_MESSAGE,
   ERROR_DELETING_DATASET_MESSAGE,
-  ERROR_ADDING_DATASET_MESSAGE,
+  ERROR_LOADING_DATASET_MESSAGE,
+  SUCCESS_LOADING_DATASET_MESSAGE,
 } from '../config/messages';
 
 export const getDatasets = () => (dispatch) => {
@@ -47,12 +50,14 @@ export const getDatasets = () => (dispatch) => {
   }
 };
 
-export const addDataset = ({
+export const loadDataset = ({
   fileCustomName,
   fileLocation,
   fileDescription,
 }) => (dispatch) => {
+  const flagLoadingDataset = createFlag(FLAG_LOADING_DATASET);
   try {
+    dispatch(flagLoadingDataset(true));
     window.ipcRenderer.send(LOAD_DATASET_CHANNEL, {
       fileCustomName,
       fileLocation,
@@ -60,16 +65,19 @@ export const addDataset = ({
     });
     window.ipcRenderer.once(LOAD_DATASET_CHANNEL, async (event, dataset) => {
       if (!dataset) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_ADDING_DATASET_MESSAGE);
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_LOADING_DATASET_MESSAGE);
       } else {
         dispatch({
           type: LOAD_DATASET_SUCCESS,
           payload: dataset,
         });
+        toastr.success(SUCCESS_MESSAGE_HEADER, SUCCESS_LOADING_DATASET_MESSAGE);
       }
+      return dispatch(flagLoadingDataset(false));
     });
   } catch (err) {
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_ADDING_DATASET_MESSAGE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_LOADING_DATASET_MESSAGE);
+    dispatch(flagLoadingDataset(false));
   }
 };
 

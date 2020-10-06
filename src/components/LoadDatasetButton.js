@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
-import LoadDataset from './LoadDataset';
+import LoadDatasetModal from './LoadDatasetModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +44,7 @@ const LoadDatasetButton = () => {
           <AddIcon />
         </IconButton>
       </Tooltip>
-      <LoadDataset
+      <LoadDatasetModal
         open={open}
         setOpen={setOpen}
         handleClickOpen={handleClickOpen}

@@ -15,14 +15,14 @@ import {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
 } from '../config/channels';
-import { addDataset } from '../actions';
+import { loadDataset } from '../actions';
 
 const styles = () => ({
   dialogContent: {
     display: 'flex',
     flexDirection: 'column',
   },
-  addDataset: {
+  loadDataset: {
     display: 'flex',
     alignItems: 'center',
   },
@@ -31,7 +31,7 @@ const styles = () => ({
   },
 });
 
-class LoadDataset extends Component {
+class LoadDatasetModal extends Component {
   state = {
     fileLocation: '',
     fileCustomName: '',
@@ -44,7 +44,7 @@ class LoadDataset extends Component {
         display: PropTypes.string,
         flexDirection: PropTypes.string,
       }),
-      addDataset: PropTypes.shape({
+      loadDataset: PropTypes.shape({
         display: PropTypes.string,
         alignItems: PropTypes.string,
       }),
@@ -113,15 +113,17 @@ class LoadDataset extends Component {
           {t('Add new dataset')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
-          <div className={classes.addDataset}>
+          <div className={classes.loadDataset}>
             <TextField
               autoFocus
               margin="dense"
               id="browse"
-              label="Select dataset"
-              className={classes.shortTextfield}
+              label={t('Select dataset')}
+              fullWidth
               onChange={this.handleLocationInput}
               value={fileLocation}
+              helperText={t('(Required)')}
+              required
             />
             <IconButton onClick={this.handleBrowse}>
               <SearchIcon />
@@ -131,21 +133,23 @@ class LoadDataset extends Component {
           <TextField
             margin="dense"
             id="name"
-            label="Name"
+            label={t('Dataset name')}
             value={fileCustomName}
             onChange={this.handleCustomNameInput}
-            className={classes.shortTextfield}
+            fullWidth
+            helperText={t('(Optional)')}
           />
 
           <TextField
             margin="dense"
             id="description"
-            label="Description"
+            label={t('Description')}
             value={fileDescription}
             onChange={this.handleDescriptionInput}
             multiline
             rows={4}
             rowsMax={4}
+            helperText={t('(Optional)')}
             fullWidth
           />
         </DialogContent>
@@ -187,13 +191,13 @@ class LoadDataset extends Component {
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
-  dispatchAddDataset: addDataset,
+  dispatchAddDataset: loadDataset,
 };
 
 const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LoadDataset);
+)(LoadDatasetModal);
 
 const StyledComponent = withStyles(styles, { withTheme: true })(
   ConnectedComponent,

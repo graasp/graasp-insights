@@ -11,7 +11,7 @@ import {
   DEVELOPER_PATH,
 } from './config/paths';
 import theme from './theme';
-import LoadDataset from './components/LoadDataset';
+import LoadDatasetModal from './components/LoadDatasetModal';
 import DeveloperScreen from './components/developer/DeveloperScreen';
 import Algorithms from './components/Algorithms';
 import Datasets from './components/Datasets';
@@ -43,7 +43,11 @@ export class App extends Component {
             <Switch>
               <Route exact path={DATASET_PATH} component={DatasetScreen} />
               <Route exact path={DEVELOPER_PATH} component={DeveloperScreen} />
-              <Route exact path={LOAD_DATASET_PATH} component={LoadDataset} />
+              <Route
+                exact
+                path={LOAD_DATASET_PATH}
+                component={LoadDatasetModal}
+              />
               <Route exact path={DATASETS_PATH} component={Datasets} />
               <Route exact path={ALGORITHMS_PATH} component={Algorithms} />
               <Route exact path={HOME_PATH} component={Datasets} />
