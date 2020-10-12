@@ -1,10 +1,11 @@
 import { Map, List } from 'immutable';
-import { updateActivityList } from './common';
+import { updateActivityList, pushDatasetToList } from './common';
 import {
   FLAG_GETTING_DATASET,
   FLAG_GETTING_DATASETS,
   GET_DATASET_SUCCESS,
   GET_DATASETS_SUCCESS,
+  LOAD_DATASET_SUCCESS,
   DELETE_DATASET_SUCCESS,
 } from '../types';
 
@@ -28,6 +29,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['current', 'content'], Map(payload));
     case GET_DATASETS_SUCCESS:
       return state.setIn(['datasets'], List(payload));
+    case LOAD_DATASET_SUCCESS:
+      return state.updateIn(['datasets'], pushDatasetToList(payload));
     case DELETE_DATASET_SUCCESS:
     default:
       return state;

@@ -4,8 +4,9 @@ const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/config');
 const { DATASETS_COLLECTION } = require('../db');
+const { LOAD_DATASET_CHANNEL } = require('../config/channels');
 
-const createNewDataset = ({ name, filepath }) => {
+const createNewDataset = ({ name, filepath, description }) => {
   // create and get file data
   const fileId = ObjectId().str;
   const destPath = path.join(DATASETS_FOLDER, `${fileId}.json`);
@@ -24,6 +25,7 @@ const createNewDataset = ({ name, filepath }) => {
     id: fileId,
     name,
     filepath: destPath,
+    description,
     size: sizeInKiloBytes,
     createdAt,
     lastModified,
@@ -31,24 +33,30 @@ const createNewDataset = ({ name, filepath }) => {
 };
 
 const loadDataset = (mainWindow, db) => async (event, args) => {
-  const { fileLocation } = args;
-
-  // filename without extension
-  const filename = path
+  const { fileLocation, fileCustomName, fileDescription } = args;
+  const defaultFileName = path
     .basename(fileLocation)
     .slice(0, -path.extname(fileLocation).length);
+  const fileName = fileCustomName || defaultFileName;
 
-  try {
-    const newDataset = createNewDataset({
-      name: filename,
-      filepath: fileLocation,
-    });
-    logger.debug(`load dataset at ${newDataset.filepath}`);
-
-    // save file in lowdb
-    db.get(DATASETS_COLLECTION).push(newDataset).write();
-  } catch (err) {
-    logger.log(err);
+  if (fs.existsSync(fileLocation)) {
+    try {
+      const newDataset = createNewDataset({
+        name: fileName,
+        filepath: fileLocation,
+        description: fileDescription,
+      });
+      logger.debug(`load dataset at ${newDataset.filepath}`);
+      // save file in lowdb
+      db.get(DATASETS_COLLECTION).push(newDataset).write();
+      // send message with created dataset
+      mainWindow.webContents.send(LOAD_DATASET_CHANNEL, newDataset);
+    } catch (err) {
+      logger.log(err);
+    }
+  } else {
+    // empty message will be read by /actions/dataset.js as !dataset, and hence trigger an error
+    mainWindow.webContents.send(LOAD_DATASET_CHANNEL);
   }
 };
 

@@ -14,6 +14,8 @@ const ERROR_SETTING_DATABASE = 'There was an error setting the database';
 const ERROR_GETTING_DATABASE = 'There was an error retrieving the database';
 const ERROR_DELETING_DATASET_MESSAGE =
   'There was an error deleting the dataset';
+const SUCCESS_LOADING_DATASET_MESSAGE = 'The dataset was loaded successfully';
+const ERROR_LOADING_DATASET_MESSAGE = 'There was an error loading the dataset';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -24,4 +26,6 @@ module.exports = {
   ERROR_SETTING_DATABASE,
   ERROR_GETTING_DATABASE,
   ERROR_DELETING_DATASET_MESSAGE,
+  ERROR_LOADING_DATASET_MESSAGE,
+  SUCCESS_LOADING_DATASET_MESSAGE,
 };

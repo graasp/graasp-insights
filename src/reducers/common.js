@@ -5,5 +5,9 @@ const updateActivityList = (flag) => {
   return (list) => list.pop();
 };
 
+const pushDatasetToList = (payload) => {
+  return (list) => list.push(payload);
+};
+
 // eslint-disable-next-line import/prefer-default-export
-export { updateActivityList };
+export { updateActivityList, pushDatasetToList };
