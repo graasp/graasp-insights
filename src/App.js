@@ -14,6 +14,7 @@ import {
   SETTINGS_PATH,
   RESULTS_PATH,
   RESULT_PATH,
+  EXECUTIONS_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -25,6 +26,7 @@ import SettingsModal from './components/SettingsModal';
 import { getLanguage } from './actions';
 import Results from './components/Results';
 import ResultScreen from './components/result/ResultScreen';
+import Executions from './components/Executions';
 
 export class App extends Component {
   state = { height: 0 };
@@ -85,6 +87,7 @@ export class App extends Component {
               <Route exact path={RESULT_PATH} component={ResultScreen} />
               <Route exact path={HOME_PATH} component={Datasets} />
               <Route exact path={SETTINGS_PATH} component={SettingsModal} />
+              <Route exact path={EXECUTIONS_PATH} component={Executions} />
             </Switch>
           </div>
         </Router>

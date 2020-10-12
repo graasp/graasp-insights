@@ -27,6 +27,12 @@ export const ORDER_BY = {
   DESC: 'desc',
 };
 
+export const ALGORITHMS_TABLE_COLUMNS = {
+  ALGORITHM: 'algorithm',
+  AUTHOR: 'author',
+  LANGUAGE: 'language',
+};
+
 export const MAX_FILE_SIZE = 400;
 
 export const DEFAULT_LOCALE_DATE = 'en-US';

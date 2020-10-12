@@ -3,63 +3,194 @@ import { connect } from 'react-redux';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+import Alert from '@material-ui/lab/Alert';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Container from '@material-ui/core/Container';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
+import Tooltip from '@material-ui/core/Tooltip';
 import Main from './common/Main';
-import { getDatasets } from '../actions';
-import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
+import { getAlgorithms, deleteAlgorithm } from '../actions';
 import Loader from './common/Loader';
+import { sortByKey } from '../utils/sorting';
+import { ALGORITHMS_TABLE_COLUMNS, ORDER_BY } from '../config/constants';
+
+const styles = (theme) => ({
+  infoAlert: {
+    margin: theme.spacing(2),
+  },
+});
 
 class Algorithms extends Component {
   static propTypes = {
-    datasets: PropTypes.instanceOf(List),
+    algorithms: PropTypes.instanceOf(List).isRequired,
     t: PropTypes.func.isRequired,
-    dispatchGetDatasets: PropTypes.func.isRequired,
+    dispatchGetAlgorithms: PropTypes.func.isRequired,
+    dispatchDeleteAlgorithm: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    classes: PropTypes.shape({
+      infoAlert: PropTypes.string.isRequired,
+    }).isRequired,
   };
 
-  static defaultProps = {
-    datasets: null,
+  state = {
+    isAsc: true,
+    orderBy: ALGORITHMS_TABLE_COLUMNS.ALGORITHM,
   };
-
-  state = (() => {
-    const { datasets } = this.props;
-    return {
-      datasetId: datasets?.first()?.id,
-    };
-  })();
 
   componentDidMount() {
-    const { dispatchGetDatasets } = this.props;
-    dispatchGetDatasets();
+    const { dispatchGetAlgorithms } = this.props;
+    dispatchGetAlgorithms();
   }
 
-  componentDidUpdate({ datasets: prevDatasets }) {
-    const { datasets } = this.props;
-    if (prevDatasets !== datasets && datasets.size) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ datasetId: datasets.first().id });
+  handleSortColumn(column) {
+    const { orderBy, isAsc } = this.state;
+    if (orderBy === column) {
+      this.setState({ isAsc: !isAsc });
+    } else {
+      this.setState({ isAsc: true, orderBy: column });
     }
   }
 
-  handleDatasetSelectOnChange = (e) => {
-    this.setState({ datasetId: e.target.value });
-  };
+  // eslint-disable-next-line class-methods-use-this
+  handleExecute() {
+    // TODO: implement execute functionality
+  }
 
-  executePythonAlgorithm = () => {
-    const { datasetId } = this.state;
-    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
-      id: 1,
-      datasetId,
+  // eslint-disable-next-line class-methods-use-this
+  handleEdit() {
+    // TODO: implement editing functionality
+  }
+
+  handleDelete(id) {
+    const { dispatchDeleteAlgorithm } = this.props;
+    dispatchDeleteAlgorithm({ id });
+  }
+
+  renderTableHead() {
+    const { isAsc, orderBy } = this.state;
+    const { t } = this.props;
+
+    return (
+      <TableHead>
+        <TableRow>
+          <TableCell align="left">
+            <TableSortLabel
+              active={orderBy === ALGORITHMS_TABLE_COLUMNS.ALGORITHM}
+              direction={
+                orderBy === ALGORITHMS_TABLE_COLUMNS.ALGORITHM && !isAsc
+                  ? ORDER_BY.DESC
+                  : ORDER_BY.ASC
+              }
+              onClick={() => {
+                this.handleSortColumn(ALGORITHMS_TABLE_COLUMNS.ALGORITHM);
+              }}
+            >
+              <Typography>{t('Algorithm')}</Typography>
+            </TableSortLabel>
+          </TableCell>
+          <TableCell align="left">
+            <TableSortLabel
+              active={orderBy === ALGORITHMS_TABLE_COLUMNS.AUTHOR}
+              direction={
+                orderBy === ALGORITHMS_TABLE_COLUMNS.AUTHOR && !isAsc
+                  ? ORDER_BY.DESC
+                  : ORDER_BY.ASC
+              }
+              onClick={() => {
+                this.handleSortColumn(ALGORITHMS_TABLE_COLUMNS.AUTHOR);
+              }}
+            >
+              <Typography>{t('Author')}</Typography>
+            </TableSortLabel>
+          </TableCell>
+          <TableCell align="left">
+            <TableSortLabel
+              active={orderBy === ALGORITHMS_TABLE_COLUMNS.LANGUAGE}
+              direction={
+                orderBy === ALGORITHMS_TABLE_COLUMNS.LANGUAGE && !isAsc
+                  ? ORDER_BY.DESC
+                  : ORDER_BY.ASC
+              }
+              onClick={() => {
+                this.handleSortColumn(ALGORITHMS_TABLE_COLUMNS.LANGUAGE);
+              }}
+            >
+              <Typography>{t('Language')}</Typography>
+            </TableSortLabel>
+          </TableCell>
+          <TableCell align="center">{t('Quick Actions')}</TableCell>
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  renderTableContent() {
+    const { orderBy, isAsc } = this.state;
+    const { algorithms, t } = this.props;
+
+    const sortedAlgorithms = sortByKey(algorithms, orderBy, isAsc);
+
+    return sortedAlgorithms.map((algorithm) => {
+      const { id, name, description, author, language } = algorithm;
+
+      return (
+        <TableRow key={name}>
+          <TableCell>
+            <Typography variant="h6">{name}</Typography>
+            <Typography>{description}</Typography>
+          </TableCell>
+          <TableCell>{author}</TableCell>
+          <TableCell>{language}</TableCell>
+          <TableCell>
+            <Tooltip title={t('Execute algorithm on a dataset')}>
+              <IconButton aria-label="execute" onClick={this.handleExecute}>
+                <DoubleArrowIcon />
+              </IconButton>
+            </Tooltip>
+            {!author !== 'graasp' && (
+              <Tooltip title={t('Edit algorithm')}>
+                <IconButton aria-label="edit" onClick={this.handleEdit}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title={t('Delete algorithm')}>
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.handleDelete(id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
+        </TableRow>
+      );
     });
-  };
+  }
+
+  renderTable() {
+    return (
+      <Table aria-label="table of algorithms">
+        {this.renderTableHead()}
+        <TableBody>{this.renderTableContent()}</TableBody>
+      </Table>
+    );
+  }
 
   render() {
-    const { datasetId } = this.state;
-    const { datasets, t } = this.props;
+    const { algorithms, t, isLoading, classes } = this.props;
 
-    if (!datasets || !datasetId) {
+    if (isLoading) {
       return (
         <Main fullScreen>
           <Loader />
@@ -67,39 +198,38 @@ class Algorithms extends Component {
       );
     }
 
-    if (!datasets.size) {
-      return <Main fullScreen>{t('Load datasets first')}</Main>;
+    if (algorithms.size <= 0) {
+      return (
+        <Main>
+          <Container>
+            <h1>{t('Algorithms')}</h1>
+            <Alert severity="info" className={classes.infoAlert}>
+              {t('No algorithms are available')}
+            </Alert>
+          </Container>
+        </Main>
+      );
     }
 
     return (
-      <Main fullScreen>
-        {/* todo: turn this into a list showing different algorithms that can be executed */}
-        <Typography color="inherit" style={{ margin: '2rem' }}>
-          {t('Execute algorithm 1 (Hash user ids) on')}
-        </Typography>
-        <Select value={datasetId} onChange={this.handleDatasetSelectOnChange}>
-          {datasets.map(({ id, name }) => {
-            return <MenuItem value={id}>{name}</MenuItem>;
-          })}
-        </Select>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={this.executePythonAlgorithm}
-        >
-          {t('Run Algorithm')}
-        </Button>
+      <Main>
+        <Container>
+          <h1>{t('Algorithms')}</h1>
+          {this.renderTable()}
+        </Container>
       </Main>
     );
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
-  datasets: dataset.get('datasets'),
+const mapStateToProps = ({ dataset, algorithms }) => ({
+  algorithms: algorithms.get('algorithms'),
+  isLoading: dataset.getIn(['current', 'activity']).size > 0,
 });
 
 const mapDispatchToProps = {
-  dispatchGetDatasets: getDatasets,
+  dispatchGetAlgorithms: getAlgorithms,
+  dispatchDeleteAlgorithm: deleteAlgorithm,
 };
 
 const ConnectedComponent = connect(
@@ -107,4 +237,8 @@ const ConnectedComponent = connect(
   mapDispatchToProps,
 )(Algorithms);
 
-export default withTranslation()(ConnectedComponent);
+const StyledComponent = withStyles(styles, { withTheme: true })(
+  ConnectedComponent,
+);
+
+export default withTranslation()(StyledComponent);

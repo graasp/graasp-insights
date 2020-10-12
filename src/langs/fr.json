@@ -37,6 +37,9 @@
     "(Optional)": "(Optionnel)",
     "Description": "Description",
     "Cancel": "Annuler",
-    "Add dataset": "Ajouter le dataset"
+    "Add dataset": "Ajouter le dataset",
+    "Execute algorithm on a dataset": "Exécuter l'algorithme sur un dataset",
+    "Edit algorithm": "Éditer l'algorithme",
+    "Delete algorithm": "Supprimer l'algorithme"
   }
 }

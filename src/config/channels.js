@@ -18,4 +18,6 @@ module.exports = {
   DELETE_RESULT_CHANNEL: 'result:delete',
   GET_RESULT_CHANNEL: 'result:get',
   GET_RESULTS_CHANNEL: 'results:get',
+  GET_ALGORITHMS_CHANNEL: 'algorithms:get',
+  DELETE_ALGORITHM_CHANNEL: 'algorithm:delete',
 };

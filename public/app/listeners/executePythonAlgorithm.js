@@ -34,7 +34,7 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
   const outputPath = path.join(RESULTS_FOLDER, `${id}.json`);
 
   const process = spawn('python', [
-    path.resolve(__dirname, '../../python.py'), // todo: this file should be a parameter
+    path.resolve(__dirname, '../../algorithms/hash_users.py'), // todo: this file should be a parameter
     filepath,
     outputPath, // todo: this file should be named based on the original file name and script run
   ]);

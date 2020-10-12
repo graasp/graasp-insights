@@ -22,6 +22,10 @@ const ERROR_GETTING_LANGUAGE_MESSAGE =
   'There was an error retrieving the language';
 const ERROR_SETTING_LANGUAGE_MESSAGE =
   'There was an error setting the language';
+const ERROR_GETTING_ALGORITHMS_MESSAGE =
+  'There was an error retrieving the algorithms';
+const ERROR_DELETING_ALGORITHM_MESSAGE =
+  'There was an error deleting the algorithm';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -36,4 +40,6 @@ module.exports = {
   SUCCESS_LOADING_DATASET_MESSAGE,
   ERROR_GETTING_LANGUAGE_MESSAGE,
   ERROR_SETTING_LANGUAGE_MESSAGE,
+  ERROR_GETTING_ALGORITHMS_MESSAGE,
+  ERROR_DELETING_ALGORITHM_MESSAGE,
 };

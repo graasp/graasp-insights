@@ -4,6 +4,7 @@ import dataset from './datasetReducer';
 import result from './resultReducer';
 import developer from './developerReducer';
 import settings from './settingsReducer';
+import algorithms from './algorithmsReducer';
 
 export default combineReducers({
   toastr,
@@ -11,4 +12,5 @@ export default combineReducers({
   result,
   developer,
   settings,
+  algorithms,
 });

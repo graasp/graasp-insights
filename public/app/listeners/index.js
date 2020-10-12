@@ -11,6 +11,8 @@ const getLanguage = require('./getLanguage');
 const getResult = require('./getResult');
 const getResults = require('./getResults');
 const deleteResult = require('./deleteResult');
+const getAlgorithms = require('./getAlgorithms');
+const deleteAlgorithm = require('./deleteAlgorithm');
 
 module.exports = {
   getDataset,
@@ -26,4 +28,6 @@ module.exports = {
   getResult,
   getResults,
   deleteResult,
+  getAlgorithms,
+  deleteAlgorithm,
 };

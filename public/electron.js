@@ -14,6 +14,7 @@ const {
   ICON_PATH,
   PRODUCT_NAME,
   DATABASE_PATH,
+  ALGORITHMS_FOLDER,
   escapeEscapeCharacter,
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
@@ -32,6 +33,8 @@ const {
   DELETE_RESULT_CHANNEL,
   GET_RESULTS_CHANNEL,
   GET_RESULT_CHANNEL,
+  GET_ALGORITHMS_CHANNEL,
+  DELETE_ALGORITHM_CHANNEL,
 } = require('./app/config/channels');
 const {
   showLoadDatasetPrompt,
@@ -47,9 +50,15 @@ const {
   getResult,
   getResults,
   deleteResult,
+  getAlgorithms,
+  deleteAlgorithm,
 } = require('./app/listeners');
 const env = require('./env.json');
-const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
+const {
+  ensureDatabaseExists,
+  bootstrapDatabase,
+  ensureAlgorithmsExist,
+} = require('./app/db');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -253,6 +262,7 @@ const generateMenu = () => {
 app.on('ready', async () => {
   await ensureDatabaseExists(DATABASE_PATH);
   const db = bootstrapDatabase(DATABASE_PATH);
+  await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
 
   createWindow();
   generateMenu();
@@ -307,6 +317,11 @@ app.on('ready', async () => {
   ipcMain.on(SET_LANGUAGE_CHANNEL, setLanguage(mainWindow, db));
 
   ipcMain.on(GET_LANGUAGE_CHANNEL, getLanguage(mainWindow, db));
+  // called when getting all the algorithms
+  ipcMain.on(GET_ALGORITHMS_CHANNEL, getAlgorithms(mainWindow, db));
+
+  // called when deleting an algorithm
+  ipcMain.on(DELETE_ALGORITHM_CHANNEL, deleteAlgorithm(mainWindow, db));
 });
 
 app.on('activate', () => {

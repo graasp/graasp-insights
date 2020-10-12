@@ -7,6 +7,7 @@ export const DEVELOPER_PATH = '/developer';
 export const SETTINGS_PATH = '/settings';
 export const RESULTS_PATH = '/results';
 export const RESULT_PATH = '/result/:id';
+export const EXECUTIONS_PATH = '/executions';
 
 export const buildDatasetPath = (id = ':id') => {
   return `/dataset/${id}`;
