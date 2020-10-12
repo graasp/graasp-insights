@@ -19,7 +19,7 @@ import DeveloperScreen from './components/developer/DeveloperScreen';
 import Algorithms from './components/Algorithms';
 import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
-import Settings from './components/Settings';
+import SettingsModal from './components/SettingsModal';
 import { getLanguage } from './actions';
 
 export class App extends Component {
@@ -78,7 +78,7 @@ export class App extends Component {
               <Route exact path={DATASETS_PATH} component={Datasets} />
               <Route exact path={ALGORITHMS_PATH} component={Algorithms} />
               <Route exact path={HOME_PATH} component={Datasets} />
-              <Route exact path={SETTINGS_PATH} component={Settings} />
+              <Route exact path={SETTINGS_PATH} component={SettingsModal} />
             </Switch>
           </div>
         </Router>

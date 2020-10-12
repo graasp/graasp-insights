@@ -9,19 +9,31 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 
-import Main from './common/Main';
 import { langs } from '../config/i18n';
 import { getLanguage, setLanguage } from '../actions';
 
-const styles = () => ({
+const styles = (theme) => ({
   formControl: {
-    width: '100%',
+    width: theme.spacing(25),
+  },
+  content: {
+    padding: theme.spacing(2),
   },
 });
 
-const Settings = (props) => {
-  const { dispatchGetLanguage, dispatchSetLanguage, lang, t, classes } = props;
+const SettingsModal = (props) => {
+  const {
+    dispatchGetLanguage,
+    dispatchSetLanguage,
+    lang,
+    t,
+    classes,
+    open,
+    handleClose,
+  } = props;
   dispatchGetLanguage();
 
   const handleChangeLanguage = async (event) => {
@@ -56,26 +68,29 @@ const Settings = (props) => {
   };
 
   return (
-    <Main>
-      <Container>
-        <h1>{t('Settings')}</h1>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>{t('Settings')}</DialogTitle>
+      <Container className={classes.content}>
         {renderLanguageSelect()}
       </Container>
-    </Main>
+    </Dialog>
   );
 };
 
-Settings.propTypes = {
+SettingsModal.propTypes = {
   lang: PropTypes.string.isRequired,
   dispatchGetLanguage: PropTypes.func.isRequired,
   dispatchSetLanguage: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     formControl: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
   }).isRequired,
   i18n: PropTypes.shape({
     changeLanguage: PropTypes.func.isRequired,
   }).isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ settings }) => ({
@@ -90,7 +105,7 @@ const mapDispatchToProps = {
 const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Settings);
+)(SettingsModal);
 
 const StyledComponent = withStyles(styles)(ConnectedComponent);
 

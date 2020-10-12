@@ -8,14 +8,12 @@ import List from '@material-ui/core/List';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import CodeIcon from '@material-ui/icons/Code';
-import SettingsIcon from '@material-ui/icons/Settings';
 import { withTranslation } from 'react-i18next';
 import {
   HOME_PATH,
   ALGORITHMS_PATH,
   DATASETS_PATH,
   DEVELOPER_PATH,
-  SETTINGS_PATH,
 } from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
@@ -116,16 +114,6 @@ export class MainMenu extends Component {
           <ListItemText primary={t('Algorithms')} />
         </MenuItem>
         {this.renderDeveloperItem()}
-        <MenuItem
-          onClick={() => this.handleClick(SETTINGS_PATH)}
-          selected={path === SETTINGS_PATH}
-          button
-        >
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary={t('Settings')} />
-        </MenuItem>
 
         {this.renderCloseApp()}
       </List>

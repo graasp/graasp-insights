@@ -149,11 +149,11 @@ class Datasets extends Component {
           <TableCell align="right">{lastModifiedString}</TableCell>
           <TableCell align="right">
             <Tooltip title={t('View dataset')}>
-              <IconButton>
-                <CodeIcon
-                  aria-label="view"
-                  onClick={() => this.handleView(dataset)}
-                />
+              <IconButton
+                aria-label="view"
+                onClick={() => this.handleView(dataset)}
+              >
+                <CodeIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title={t('Edit dataset')}>
