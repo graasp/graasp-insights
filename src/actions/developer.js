@@ -15,10 +15,10 @@ import {
 } from '../config/channels';
 import { ERROR_GENERAL } from '../config/errors';
 import {
-  ERROR_GETTING_DATABASE,
+  ERROR_GETTING_DATABASE_MESSAGE,
   ERROR_MESSAGE_HEADER,
-  ERROR_SETTING_SAMPLE_DATABASE,
-  ERROR_SETTING_DATABASE,
+  ERROR_SETTING_SAMPLE_DATABASE_MESSAGE,
+  ERROR_SETTING_DATABASE_MESSAGE,
 } from '../config/messages';
 
 const flagGettingDatabase = createFlag(FLAG_GETTING_DATABASE);
@@ -31,7 +31,7 @@ const getDatabase = async () => (dispatch) => {
     window.ipcRenderer.send(GET_DATABASE_CHANNEL);
     window.ipcRenderer.once(GET_DATABASE_CHANNEL, (event, db) => {
       if (db === ERROR_GENERAL) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATABASE);
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATABASE_MESSAGE);
       } else {
         console.log(db);
         dispatch({
@@ -43,7 +43,8 @@ const getDatabase = async () => (dispatch) => {
     });
   } catch (err) {
     console.error(err);
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATABASE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATABASE_MESSAGE);
+    dispatch(flagGettingDatabase(false));
   }
 };
 
@@ -53,7 +54,7 @@ const setDatabase = async (database) => (dispatch) => {
     window.ipcRenderer.send(SET_DATABASE_CHANNEL, database);
     window.ipcRenderer.once(SET_DATABASE_CHANNEL, (event, db) => {
       if (db === ERROR_GENERAL) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATABASE);
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATABASE_MESSAGE);
       } else {
         dispatch({
           type: SET_DATABASE_SUCCEEDED,
@@ -64,7 +65,8 @@ const setDatabase = async (database) => (dispatch) => {
     });
   } catch (err) {
     console.error(err);
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATABASE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATABASE_MESSAGE);
+    dispatch(flagSettingDatabase(false));
   }
 };
 
@@ -74,7 +76,10 @@ const setSampleDatabase = async () => (dispatch) => {
     window.ipcRenderer.send(SET_SAMPLE_DATABASE_CHANNEL);
     window.ipcRenderer.once(SET_SAMPLE_DATABASE_CHANNEL, (event, db) => {
       if (db === ERROR_GENERAL) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_SAMPLE_DATABASE);
+        toastr.error(
+          ERROR_MESSAGE_HEADER,
+          ERROR_SETTING_SAMPLE_DATABASE_MESSAGE,
+        );
       } else {
         dispatch({
           type: SET_SAMPLE_DATABASE_SUCCEEDED,
@@ -85,7 +90,8 @@ const setSampleDatabase = async () => (dispatch) => {
     });
   } catch (err) {
     console.error(err);
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_SAMPLE_DATABASE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_SAMPLE_DATABASE_MESSAGE);
+    dispatch(flagSettingSampleDatabase(false));
   }
 };
 

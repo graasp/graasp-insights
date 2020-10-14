@@ -6,6 +6,8 @@ const getDatasets = require('./getDatasets');
 const setDatabase = require('./setDatabase');
 const deleteDataset = require('./deleteDataset');
 const setSampleDatabase = require('./setSampleDatabase');
+const setLanguage = require('./setLanguage');
+const getLanguage = require('./getLanguage');
 
 module.exports = {
   getDataset,
@@ -16,4 +18,6 @@ module.exports = {
   loadDataset,
   setDatabase,
   setSampleDatabase,
+  setLanguage,
+  getLanguage,
 };

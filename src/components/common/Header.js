@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { DRAWER_BUTTON_ID } from '../../config/selectors';
 import { DRAWER_WIDTH } from '../../config/constants';
+import SettingsButton from '../SettingsButton';
 
 const styles = (theme) => ({
   appBar: {
@@ -29,7 +30,15 @@ const styles = (theme) => ({
     marginRight: theme.spacing(3),
   },
   hide: {
-    display: 'none',
+    visibility: 'hidden',
+  },
+  toolbar: {
+    justifyContent: 'space-between',
+    padding: theme.spacing(0),
+  },
+  rightButtons: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
 });
 
@@ -41,7 +50,7 @@ const Header = ({ classes, handleDrawerOpen, isSidebarOpen }) => {
         [classes.appBarShift]: isSidebarOpen,
       })}
     >
-      <Toolbar disableGutters={!isSidebarOpen}>
+      <Toolbar disableGutters={!isSidebarOpen} className={classes.toolbar}>
         <IconButton
           id={DRAWER_BUTTON_ID}
           color="inherit"
@@ -51,6 +60,9 @@ const Header = ({ classes, handleDrawerOpen, isSidebarOpen }) => {
         >
           <MenuIcon />
         </IconButton>
+        <div className={classes.rightButtons}>
+          <SettingsButton />
+        </div>
       </Toolbar>
     </AppBar>
   );
@@ -62,6 +74,8 @@ Header.propTypes = {
     appBarShift: PropTypes.string.isRequired,
     menuButton: PropTypes.string.isRequired,
     hide: PropTypes.string.isRequired,
+    toolbar: PropTypes.string.isRequired,
+    rightButtons: PropTypes.string.isRequired,
   }).isRequired,
   theme: PropTypes.shape({
     direction: PropTypes.string.isRequired,
