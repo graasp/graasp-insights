@@ -34,7 +34,7 @@ const styles = (theme) => ({
   },
   toolbar: {
     justifyContent: 'space-between',
-    padding: '0px',
+    padding: theme.spacing(0),
   },
   rightButtons: {
     marginLeft: theme.spacing(1),

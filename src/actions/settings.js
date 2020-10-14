@@ -3,8 +3,8 @@ import { GET_LANGUAGE_CHANNEL, SET_LANGUAGE_CHANNEL } from '../config/channels';
 import { ERROR_GENERAL } from '../config/errors';
 import {
   ERROR_MESSAGE_HEADER,
-  ERROR_GETTING_LANGUAGE,
-  ERROR_SETTING_LANGUAGE,
+  ERROR_GETTING_LANGUAGE_MESSAGE,
+  ERROR_SETTING_LANGUAGE_MESSAGE,
 } from '../config/messages';
 import {
   FLAG_GETTING_LANGUAGE,
@@ -21,13 +21,13 @@ const getLanguage = async () => (dispatch) => {
   try {
     dispatch(flagGettingLanguage(true));
     window.ipcRenderer.send(GET_LANGUAGE_CHANNEL);
-    window.ipcRenderer.once(GET_LANGUAGE_CHANNEL, (event, lang) => {
-      if (lang === ERROR_GENERAL) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_LANGUAGE);
+    window.ipcRenderer.once(GET_LANGUAGE_CHANNEL, (event, payload) => {
+      if (payload === ERROR_GENERAL) {
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_LANGUAGE_MESSAGE);
       } else {
         dispatch({
           type: GET_LANGUAGE_SUCCESS,
-          payload: lang,
+          payload,
         });
       }
       dispatch(flagGettingLanguage(false));
@@ -35,7 +35,8 @@ const getLanguage = async () => (dispatch) => {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_LANGUAGE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_LANGUAGE_MESSAGE);
+    dispatch(flagGettingLanguage(false));
   }
 };
 
@@ -45,7 +46,7 @@ const setLanguage = async ({ lang }) => (dispatch) => {
     window.ipcRenderer.send(SET_LANGUAGE_CHANNEL, lang);
     window.ipcRenderer.once(SET_LANGUAGE_CHANNEL, (event, payload) => {
       if (payload === ERROR_GENERAL) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_LANGUAGE);
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_LANGUAGE_MESSAGE);
       } else {
         dispatch({
           type: SET_LANGUAGE_SUCCESS,
@@ -57,7 +58,8 @@ const setLanguage = async ({ lang }) => (dispatch) => {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_LANGUAGE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_LANGUAGE_MESSAGE);
+    dispatch(flagSettingLanguage(false));
   }
 };
 
