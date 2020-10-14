@@ -50,6 +50,15 @@
     "Author": "Auteur",
     "Results": "Résultats",
     "Result from": "Résultat de",
-    "No results available": "Aucun résultat n'est disponible"
+    "No results available": "Aucun résultat n'est disponible",
+    "Space ID": "ID de l'Espace",
+    "Space Name": "Nom de l'Espace",
+    "Subspace Count": "Nombre de sous-espaces",
+    "Date Range": "Période",
+    "Action Count": "Nombre d'actions",
+    "User Count": "Nombre d'utilisateurs",
+    "Country Count": "Nombre de pays",
+    "Information": "Informations",
+    "Back":"Retour"
   }
 }
