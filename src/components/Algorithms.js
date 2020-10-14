@@ -16,7 +16,6 @@ import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Main from './common/Main';
 import { getAlgorithms, deleteAlgorithm } from '../actions';
@@ -62,11 +61,6 @@ class Algorithms extends Component {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  handleExecute() {
-    // TODO: implement execute functionality
-  }
-
-  // eslint-disable-next-line class-methods-use-this
   handleEdit() {
     // TODO: implement editing functionality
   }
@@ -85,14 +79,14 @@ class Algorithms extends Component {
         <TableRow>
           <TableCell align="left">
             <TableSortLabel
-              active={orderBy === ALGORITHMS_TABLE_COLUMNS.ALGORITHM}
+              active={orderBy === ALGORITHMS_TABLE_COLUMNS.NAME}
               direction={
-                orderBy === ALGORITHMS_TABLE_COLUMNS.ALGORITHM && !isAsc
+                orderBy === ALGORITHMS_TABLE_COLUMNS.NAME && !isAsc
                   ? ORDER_BY.DESC
                   : ORDER_BY.ASC
               }
               onClick={() => {
-                this.handleSortColumn(ALGORITHMS_TABLE_COLUMNS.ALGORITHM);
+                this.handleSortColumn(ALGORITHMS_TABLE_COLUMNS.NAME);
               }}
             >
               <Typography>{t('Algorithm')}</Typography>
@@ -152,11 +146,6 @@ class Algorithms extends Component {
           <TableCell>{author}</TableCell>
           <TableCell>{language}</TableCell>
           <TableCell>
-            <Tooltip title={t('Execute algorithm on a dataset')}>
-              <IconButton aria-label="execute" onClick={this.handleExecute}>
-                <DoubleArrowIcon />
-              </IconButton>
-            </Tooltip>
             {!author !== 'graasp' && (
               <Tooltip title={t('Edit algorithm')}>
                 <IconButton aria-label="edit" onClick={this.handleEdit}>
@@ -222,9 +211,9 @@ class Algorithms extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset, algorithms }) => ({
+const mapStateToProps = ({ algorithms }) => ({
   algorithms: algorithms.get('algorithms'),
-  isLoading: dataset.getIn(['current', 'activity']).size > 0,
+  isLoading: algorithms.getIn(['activity']).size > 0,
 });
 
 const mapDispatchToProps = {

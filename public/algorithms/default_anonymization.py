@@ -47,11 +47,6 @@ def iterate_and_suppress(dataset, path):
             if key in dataset:
                 iterate_and_suppress(dataset[key], subpath)
 
-def get_names(dataset):
-    users = dataset["metadata"]["users"]
-    names = [u["name"] for u in users]
-    return names
-
 def find_and_replace(dataset, substitution_map):
     """Traverses the whole a dataset, finds and replaces all occurences
     based on regular expressions.
@@ -86,13 +81,11 @@ def find_and_replace(dataset, substitution_map):
     
     traverse(dataset)
 
-        
-
 def parse_arguments():
     """ Parses command-line arguments. """
     parser = argparse.ArgumentParser(description='default anonymization on a dataset.')
     parser.add_argument('dataset_path', help='path to the json dataset')
-    parser.add_argument('-o', '--output_path', default="output.json",
+    parser.add_argument('output_path', default="output.json",
         help="destination path (including file name) for the output")
 
     return parser.parse_args()
@@ -113,13 +106,15 @@ def main():
     dataset = load_dataset(args.dataset_path)
 
     suppressed_fields = {
-        'data': {
-            'actions': ['geolocation', 'data']
-        },
-        'metadata': 'users'
+        'data': [
+            {
+                'actions': ['geolocation', 'data']
+            },
+            'users'
+        ],
     }
 
-    users = dataset["metadata"]["users"]
+    users = dataset["data"]["users"]
     names = [u["name"] for u in users]
     name_substitutions = { name: {
         "substitution": str(hash(name)),

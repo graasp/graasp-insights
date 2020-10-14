@@ -1,0 +1,41 @@
+import { toastr } from 'react-redux-toastr';
+import { createFlag } from './common';
+import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
+import { FLAG_EXECUTING_ALGORITHM, EXECUTION_SUCCESS } from '../types';
+import {
+  ERROR_MESSAGE_HEADER,
+  ERROR_EXECUTING_ALGORITHM_MESSAGE,
+  UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
+} from '../config/messages';
+import { PROGRAMMING_LANGUAGES } from '../config/constants';
+
+// eslint-disable-next-line import/prefer-default-export
+export const executeAlgorithm = ({ datasetId, algorithmId, language }) => (
+  dispatch,
+) => {
+  const flagExecuting = createFlag(FLAG_EXECUTING_ALGORITHM);
+
+  switch (language) {
+    case PROGRAMMING_LANGUAGES.PYTHON:
+      try {
+        dispatch(flagExecuting(true));
+        window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
+          datasetId,
+          algorithmId,
+        });
+        window.ipcRenderer.once(EXECUTE_PYTHON_ALGORITHM_CHANNEL, async () => {
+          dispatch({
+            type: EXECUTION_SUCCESS,
+          });
+          dispatch(flagExecuting(false));
+        });
+      } catch (err) {
+        toastr.error(ERROR_MESSAGE_HEADER, ERROR_EXECUTING_ALGORITHM_MESSAGE);
+        dispatch(flagExecuting(false));
+      }
+      break;
+
+    default:
+      toastr.error(ERROR_MESSAGE_HEADER, UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE);
+  }
+};

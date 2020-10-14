@@ -5,7 +5,7 @@ const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { RESULTS_FOLDER } = require('../config/config');
 const { createNewDataset } = require('./loadDataset');
-const { DATASETS_COLLECTION, RESULTS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION, RESULTS_COLLECTION, ALGORITHMS_COLLECTION } = require('../db');
 
 const createNewResultDataset = ({
   name,
@@ -23,21 +23,26 @@ const createNewResultDataset = ({
   return result;
 };
 
-const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
+const executePythonAlgorithm = (mainWindow, db) => (
+  event,
+  { datasetId, algorithmId },
+) => {
   // get corresponding dataset
   const { filepath, name: datasetName, description } = db
     .get(DATASETS_COLLECTION)
     .find({ id: datasetId })
     .value();
 
-  const id = ObjectId().str;
-  const outputPath = path.join(RESULTS_FOLDER, `${id}.json`);
+  // get the corresponding algorithm
+  const { filepath: algorithmFilepath, name: algorithmName } = db
+    .get(ALGORITHMS_COLLECTION)
+    .find({ id: algorithmId })
+    .value();
 
-  const process = spawn('python', [
-    path.resolve(__dirname, '../../algorithms/hash_users.py'), // todo: this file should be a parameter
-    filepath,
-    outputPath, // todo: this file should be named based on the original file name and script run
-  ]);
+  const id = ObjectId().str;
+  const tmpPath = path.join(RESULTS_FOLDER, `tmp_${id}.json`);
+
+  const process = spawn('python', [algorithmFilepath, filepath, tmpPath]);
 
   process.stdout.on('data', (chunk) => {
     const textChunk = chunk.toString('utf8'); // buffer to string
@@ -54,9 +59,9 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
     } else {
       // save result in db
       const newDataset = createNewResultDataset({
-        name: `hashed_${datasetName}`, // todo: change name depending on algorithm?
-        filepath: outputPath,
-        algorithmId: '1', // todo: update depending on the algorithm
+        name: `${datasetName}_${algorithmName}`,
+        filepath: tmpPath,
+        algorithmId: algorithmId,
         description,
       });
       db.get(RESULTS_COLLECTION).push(newDataset).write();
@@ -65,8 +70,8 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
     }
 
     // delete tmp file
-    if (fs.existsSync(outputPath)) {
-      fs.unlinkSync(outputPath);
+    if (fs.existsSync(tmpPath)) {
+      fs.unlinkSync(tmpPath);
     }
   });
 };

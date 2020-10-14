@@ -3,43 +3,80 @@ import { connect } from 'react-redux';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Alert from '@material-ui/lab/Alert';
+import Grid from '@material-ui/core/Grid';
+
 import Main from './common/Main';
-import { getDatasets } from '../actions';
-import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
+import { getDatasets, getAlgorithms, executeAlgorithm } from '../actions';
 import Loader from './common/Loader';
+
+const styles = (theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    width: '100%',
+  },
+  content: {
+    marginTop: theme.spacing(2),
+  },
+  selectLabel: {
+    width: theme.spacing(10),
+  },
+  infoAlert: {
+    margin: theme.spacing(2),
+  },
+});
 
 class Executions extends Component {
   static propTypes = {
     datasets: PropTypes.instanceOf(List),
+    algorithms: PropTypes.instanceOf(List),
     t: PropTypes.func.isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
+    dispatchGetAlgorithms: PropTypes.func.isRequired,
+    dispatchExecuteAlgorithm: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    classes: PropTypes.shape({
+      formControl: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+      selectLabel: PropTypes.string.isRequired,
+      infoAlert: PropTypes.string.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
     datasets: null,
+    algorithms: null,
   };
 
   state = (() => {
-    const { datasets } = this.props;
+    const { datasets, algorithms } = this.props;
     return {
       datasetId: datasets?.first()?.id,
+      algorithmId: algorithms?.first()?.id,
     };
   })();
 
   componentDidMount() {
-    const { dispatchGetDatasets } = this.props;
+    const { dispatchGetDatasets, dispatchGetAlgorithms } = this.props;
     dispatchGetDatasets();
+    dispatchGetAlgorithms();
   }
 
-  componentDidUpdate({ datasets: prevDatasets }) {
-    const { datasets } = this.props;
-    if (prevDatasets !== datasets && datasets.size) {
+  componentDidUpdate({ datasets: prevDatasets, algorithms: prevAlgorithms }) {
+    const { datasets, algorithms } = this.props;
+    if (prevDatasets !== datasets && datasets.size > 0) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ datasetId: datasets.first().id });
+    }
+    if (prevAlgorithms !== algorithms && algorithms.size > 0) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ algorithmId: algorithms.first().id });
     }
   }
 
@@ -47,19 +84,24 @@ class Executions extends Component {
     this.setState({ datasetId: e.target.value });
   };
 
-  executePythonAlgorithm = () => {
-    const { datasetId } = this.state;
-    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
-      id: 1,
-      datasetId,
-    });
+  handleAlgorithmSelectOnChange = (e) => {
+    this.setState({ algorithmId: e.target.value });
+  };
+
+  executeAlgorithm = () => {
+    const { dispatchExecuteAlgorithm, algorithms } = this.props;
+    const { datasetId, algorithmId } = this.state;
+    const { language } = algorithms.find(({ id }) => id === algorithmId);
+    if (language) {
+      dispatchExecuteAlgorithm({ datasetId, algorithmId, language });
+    }
   };
 
   render() {
-    const { datasetId } = this.state;
-    const { datasets, t } = this.props;
+    const { datasetId, algorithmId } = this.state;
+    const { datasets, algorithms, t, classes, isLoading } = this.props;
 
-    if (!datasets || !datasetId) {
+    if (isLoading) {
       return (
         <Main fullScreen>
           <Loader />
@@ -67,38 +109,98 @@ class Executions extends Component {
       );
     }
 
-    if (!datasets.size) {
-      return <Main fullScreen>{t('Load datasets first')}</Main>;
+    if (datasets.size <= 0) {
+      return (
+        <Main>
+          <Alert severity="info" className={classes.infoAlert}>
+            {t('Load a dataset first')}
+          </Alert>
+        </Main>
+      );
+    }
+
+    if (algorithms.size <= 0) {
+      return (
+        <Main>
+          <Alert severity="info" className={classes.infoAlert}>
+            {t('No algorithm is available')}
+          </Alert>
+        </Main>
+      );
     }
 
     return (
-      <Main fullScreen>
-        <Typography color="inherit" style={{ margin: '2rem' }}>
-          {t('Execute algorithm 1 (Hash user ids) on')}
-        </Typography>
-        <Select value={datasetId} onChange={this.handleDatasetSelectOnChange}>
-          {datasets.map(({ id, name }) => {
-            return <MenuItem value={id}>{name}</MenuItem>;
-          })}
-        </Select>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={this.executePythonAlgorithm}
-        >
-          {t('Run Algorithm')}
-        </Button>
+      <Main>
+        <Grid container justify="center" className={classes.content}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item className={classes.selectLabel}>
+              <Typography>{t('Dataset')}</Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <Select
+                  id="datasetSelect"
+                  value={datasetId || ''}
+                  onChange={this.handleDatasetSelectOnChange}
+                >
+                  {datasets.map(({ id, name }) => (
+                    <MenuItem value={id} key={id}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container justify="center" alignItems="center">
+            <Grid item className={classes.selectLabel}>
+              <Typography>{t('Algorithm')}</Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <Select
+                  id="algorithmSelect"
+                  value={algorithmId || ''}
+                  onChange={this.handleAlgorithmSelectOnChange}
+                >
+                  {algorithms.map(({ id, name }) => (
+                    <MenuItem value={id} key={id}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container justify="center">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.executeAlgorithm}
+              >
+                {t('Execute')}
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       </Main>
     );
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
+const mapStateToProps = ({ dataset, algorithms }) => ({
   datasets: dataset.get('datasets'),
+  algorithms: algorithms.get('algorithms'),
+  isLoading:
+    dataset.getIn(['current', 'activity']).size > 0 &&
+    algorithms.getIn(['activity']).size > 0,
 });
 
 const mapDispatchToProps = {
   dispatchGetDatasets: getDatasets,
+  dispatchGetAlgorithms: getAlgorithms,
+  dispatchExecuteAlgorithm: executeAlgorithm,
 };
 
 const ConnectedComponent = connect(
@@ -106,4 +208,8 @@ const ConnectedComponent = connect(
   mapDispatchToProps,
 )(Executions);
 
-export default withTranslation()(ConnectedComponent);
+const StyledComponent = withStyles(styles, { withTheme: true })(
+  ConnectedComponent,
+);
+
+export default withTranslation()(StyledComponent);

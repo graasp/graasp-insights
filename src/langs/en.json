@@ -40,6 +40,12 @@
     "Add dataset": "Add dataset",
     "Execute algorithm on a dataset": "Execute algorithm on a dataset",
     "Edit algorithm": "Edit algorithm",
-    "Delete algorithm": "Delete algorithm"
+    "Delete algorithm": "Delete algorithm",
+    "Dataset": "Dataset",
+    "Algorithm": "Algorithm",
+    "Load a dataset first": "Load a dataset first",
+    "No algorithm is available": "No algorithm is available",
+    "Execute": "Execute",
+    "Executions": "Executions"
   }
 }

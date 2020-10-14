@@ -28,7 +28,7 @@ export const ORDER_BY = {
 };
 
 export const ALGORITHMS_TABLE_COLUMNS = {
-  ALGORITHM: 'algorithm',
+  NAME: 'name',
   AUTHOR: 'author',
   LANGUAGE: 'language',
 };
@@ -36,3 +36,7 @@ export const ALGORITHMS_TABLE_COLUMNS = {
 export const MAX_FILE_SIZE = 400;
 
 export const DEFAULT_LOCALE_DATE = 'en-US';
+
+export const PROGRAMMING_LANGUAGES = {
+  PYTHON: 'python',
+};
