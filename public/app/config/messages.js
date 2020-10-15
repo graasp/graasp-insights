@@ -30,6 +30,8 @@ const ERROR_EXECUTING_ALGORITHM_MESSAGE =
   'There was an error while executing the algorithm';
 const UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
   'The programming language of the algorithm is not supported';
+const SUCCESS_EXECUTING_ALGORITHM_MESSAGE =
+  'The algorithm has been successfully executed';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -48,4 +50,5 @@ module.exports = {
   ERROR_DELETING_ALGORITHM_MESSAGE,
   ERROR_EXECUTING_ALGORITHM_MESSAGE,
   UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
+  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
 };

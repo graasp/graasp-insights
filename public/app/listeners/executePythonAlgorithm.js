@@ -6,6 +6,7 @@ const logger = require('../logger');
 const { RESULTS_FOLDER } = require('../config/config');
 const { createNewDataset } = require('./loadDataset');
 const { DATASETS_COLLECTION, RESULTS_COLLECTION, ALGORITHMS_COLLECTION } = require('../db');
+const { EXECUTE_PYTHON_ALGORITHM_CHANNEL } = require('../config/channels');
 
 const createNewResultDataset = ({
   name,
@@ -67,6 +68,8 @@ const executePythonAlgorithm = (mainWindow, db) => (
       db.get(RESULTS_COLLECTION).push(newDataset).write();
 
       logger.debug(`save resulting dataset at ${newDataset.filepath}`);
+
+      mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL);
     }
 
     // delete tmp file

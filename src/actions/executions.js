@@ -4,8 +4,10 @@ import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
 import { FLAG_EXECUTING_ALGORITHM, EXECUTION_SUCCESS } from '../types';
 import {
   ERROR_MESSAGE_HEADER,
+  SUCCESS_MESSAGE_HEADER,
   ERROR_EXECUTING_ALGORITHM_MESSAGE,
   UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
+  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
 } from '../config/messages';
 import { PROGRAMMING_LANGUAGES } from '../config/constants';
 
@@ -27,7 +29,12 @@ export const executeAlgorithm = ({ datasetId, algorithmId, language }) => (
           dispatch({
             type: EXECUTION_SUCCESS,
           });
-          dispatch(flagExecuting(false));
+          toastr.success(
+            SUCCESS_MESSAGE_HEADER,
+            SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
+          );
+
+          return dispatch(flagExecuting(false));
         });
       } catch (err) {
         toastr.error(ERROR_MESSAGE_HEADER, ERROR_EXECUTING_ALGORITHM_MESSAGE);
