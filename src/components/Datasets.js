@@ -204,7 +204,7 @@ class Datasets extends Component {
 
     if (!datasets.size) {
       return (
-        <Main fullscreen>
+        <Main fullScreen>
           <Alert severity="info" className={classes.infoAlert}>
             {t('Add a dataset by clicking on the icon below.')}
           </Alert>

@@ -7,11 +7,17 @@ const { RESULTS_FOLDER } = require('../config/config');
 const { createNewDataset } = require('./loadDataset');
 const { DATASETS_COLLECTION, RESULTS_COLLECTION } = require('../db');
 
-const createNewResultDataset = ({ name, filepath, algorithmId }) => {
+const createNewResultDataset = ({
+  name,
+  filepath,
+  algorithmId,
+  description,
+}) => {
   const result = createNewDataset({
     name,
     filepath,
     folderPath: RESULTS_FOLDER,
+    description,
   });
   result.algorithmId = algorithmId;
   return result;
@@ -19,7 +25,7 @@ const createNewResultDataset = ({ name, filepath, algorithmId }) => {
 
 const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
   // get corresponding dataset
-  const { filepath, name: datasetName } = db
+  const { filepath, name: datasetName, description } = db
     .get(DATASETS_COLLECTION)
     .find({ id: datasetId })
     .value();
@@ -51,6 +57,7 @@ const executePythonAlgorithm = (mainWindow, db) => (event, { datasetId }) => {
         name: `hashed_${datasetName}`, // todo: change name depending on algorithm?
         filepath: outputPath,
         algorithmId: '1', // todo: update depending on the algorithm
+        description,
       });
       db.get(RESULTS_COLLECTION).push(newDataset).write();
 

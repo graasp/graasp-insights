@@ -7,7 +7,9 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
 import Table from '@material-ui/core/Table';
+import Tooltip from '@material-ui/core/Tooltip';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -44,6 +46,9 @@ const styles = (theme) => ({
   columnName: {
     fontWeight: 'bold',
   },
+  infoAlert: {
+    margin: theme.spacing(2),
+  },
 });
 
 class Results extends Component {
@@ -60,6 +65,7 @@ class Results extends Component {
     dispatchDeleteResult: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
+      infoAlert: PropTypes.string.isRequired,
       columnName: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
@@ -133,46 +139,54 @@ class Results extends Component {
       return (
         <TableRow key={result.id}>
           <TableCell>
-            <Typography variant="h6">{name}</Typography>
-            <Typography>{description}</Typography>
+            <Typography variant="subtitle1">{name}</Typography>
+            <Typography variant="caption">{description}</Typography>
           </TableCell>
           <TableCell align="right">{sizeString}</TableCell>
           <TableCell align="right">{algorithmId}</TableCell>
           <TableCell align="right">{createdAtString}</TableCell>
           <TableCell align="right">{lastModifiedString}</TableCell>
           <TableCell align="right">
-            <IconButton>
-              <CodeIcon
-                aria-label="view"
-                onClick={() => this.handleView(result)}
-              />
-            </IconButton>
-            <IconButton
-              aria-label="edit"
-              onClick={() => this.handleEdit(result)}
-            >
-              <EditIcon />
-            </IconButton>
-            {!result.anonymized && (
+            <Tooltip title={t('View result')}>
+              <IconButton>
+                <CodeIcon
+                  aria-label="view"
+                  onClick={() => this.handleView(result)}
+                />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('Visualize result')}>
+              <IconButton
+                aria-label="edit"
+                onClick={() => this.handleEdit(result)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('Visualize result')}>
               <IconButton
                 aria-label="anonymize"
-                onClick={() => this.handleAnonymize(result)}
+                onClick={() => this.handleVisualize(result)}
               >
                 <EqualizerIcon />
               </IconButton>
-            )}
-            <IconButton
-              aria-label="publish"
-              onClick={() => this.handlePublish(result)}
-            >
-              <PublishIcon />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete(result)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            </Tooltip>
+            <Tooltip title={t('Publish dataset')}>
+              <IconButton
+                aria-label="publish"
+                onClick={() => this.handlePublish(result)}
+              >
+                <PublishIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('Remove dataset')}>
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.handleDelete(result)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </TableCell>
         </TableRow>
       );
@@ -190,9 +204,9 @@ class Results extends Component {
     if (!results.size) {
       return (
         <Main fullScreen>
-          <div>
-            <Typography variant="h4">{t('No results available')}</Typography>
-          </div>
+          <Alert severity="info" className={classes.infoAlert}>
+            {t('No results available')}
+          </Alert>
         </Main>
       );
     }
@@ -291,7 +305,11 @@ class Results extends Component {
                     </Typography>
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="right">{t('Quick actions')}</TableCell>
+                <TableCell align="right">
+                  <Typography className={classes.columnName}>
+                    {t('Quick actions')}
+                  </Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.renderResultsContent()}</TableBody>
