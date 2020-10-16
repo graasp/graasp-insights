@@ -5,7 +5,11 @@ const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { RESULTS_FOLDER } = require('../config/config');
 const { createNewDataset } = require('./loadDataset');
-const { DATASETS_COLLECTION, RESULTS_COLLECTION, ALGORITHMS_COLLECTION } = require('../db');
+const {
+  DATASETS_COLLECTION,
+  RESULTS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+} = require('../db');
 const { EXECUTE_PYTHON_ALGORITHM_CHANNEL } = require('../config/channels');
 
 const createNewResultDataset = ({
@@ -62,7 +66,7 @@ const executePythonAlgorithm = (mainWindow, db) => (
       const newDataset = createNewResultDataset({
         name: `${datasetName}_${algorithmName}`,
         filepath: tmpPath,
-        algorithmId: algorithmId,
+        algorithmId,
         description,
       });
       db.get(RESULTS_COLLECTION).push(newDataset).write();

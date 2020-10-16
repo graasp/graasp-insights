@@ -11,6 +11,7 @@ const {
   ALGORITHMS_FOLDER,
   VAR_FOLDER,
   GRAASP_ALGORITHMS,
+  ALGORITHMS_FOLDER_NAME,
 } = require('./config/config');
 
 const DATASETS_COLLECTION = 'datasets';
@@ -52,8 +53,8 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   // set some defaults (required if json file is empty)
   db.defaults({
     [DATASETS_COLLECTION]: [],
-    [RESULTS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
+    [RESULTS_COLLECTION]: [],
   }).write();
   return db;
 };
@@ -69,18 +70,20 @@ const ensureAlgorithmsExist = async (
 
   // set default algorithms
   GRAASP_ALGORITHMS.forEach((algo) => {
-    const { id, filename } = algo;
-    const srcPath = path.join('./public/algorithms', filename);
+    const { filename } = algo;
+    const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
     const destPath = path.join(algorithmsFolder, filename);
 
-    // check if file is in algorithms folder
-    if (!fs.existsSync(destPath) && fs.existsSync(srcPath)) {
-      fs.copyFileSync(srcPath, destPath);
-    }
+    if (fs.existsSync(srcPath)) {
+      // check if file is in algorithms folder
+      if (!fs.existsSync(destPath)) {
+        fs.copyFileSync(srcPath, destPath);
+      }
 
-    // check if algo entry is in metadata db
-    if (!db.get(ALGORITHMS_COLLECTION).find({ id }).value()) {
-      db.get(ALGORITHMS_COLLECTION).push(algo).write();
+      // check if algo entry is in metadata db
+      if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
+        db.get(ALGORITHMS_COLLECTION).push(algo).write();
+      }
     }
   });
 };

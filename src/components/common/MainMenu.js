@@ -119,16 +119,6 @@ export class MainMenu extends Component {
           <ListItemText primary={t('Algorithms')} />
         </MenuItem>
         <MenuItem
-          selected={path === RESULTS_PATH}
-          onClick={() => this.handleClick(RESULTS_PATH)}
-          button
-        >
-          <ListItemIcon>
-            <AssessmentIcon />
-          </ListItemIcon>
-          <ListItemText primary={t('Results')} />
-        </MenuItem>
-        <MenuItem
           id={EXECUTIONS_MENU_ITEM_ID}
           selected={path === EXECUTIONS_PATH}
           onClick={() => this.handleClick(EXECUTIONS_PATH)}
@@ -138,6 +128,16 @@ export class MainMenu extends Component {
             <TuneIcon />
           </ListItemIcon>
           <ListItemText primary={t('Executions')} />
+        </MenuItem>
+        <MenuItem
+          selected={path === RESULTS_PATH}
+          onClick={() => this.handleClick(RESULTS_PATH)}
+          button
+        >
+          <ListItemIcon>
+            <AssessmentIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Results')} />
         </MenuItem>
         {this.renderDeveloperItem()}
 

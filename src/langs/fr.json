@@ -43,9 +43,13 @@
     "Delete algorithm": "Supprimer l'algorithme",
     "Dataset": "Dataset",
     "Algorithm": "Algorithme",
-    "Load a dataset first": "Veuillez importer a dataset",
-    "No algorithm is available": "Aucun algorithme n'est disponible",
+    "Load a dataset first": "Veuillez importer un dataset",
+    "No algorithms are available": "Aucun algorithme n'est disponible",
     "Execute": "Exécuter",
-    "Executions": "Exécutions"
+    "Executions": "Exécutions",
+    "Author": "Auteur",
+    "Results": "Résultats",
+    "Result from": "Résultat de",
+    "No results available": "Aucun résultat n'est disponible"
   }
 }

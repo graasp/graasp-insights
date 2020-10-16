@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Alert from '@material-ui/lab/Alert';
-import Grid from '@material-ui/core/Grid';
 
 import Main from './common/Main';
 import { getDatasets, getAlgorithms, executeAlgorithm } from '../actions';
@@ -21,14 +20,18 @@ const styles = (theme) => ({
     margin: theme.spacing(1),
     width: '100%',
   },
-  content: {
-    marginTop: theme.spacing(2),
-  },
-  selectLabel: {
-    width: theme.spacing(10),
-  },
   infoAlert: {
     margin: theme.spacing(2),
+  },
+  container: {
+    width: '50%',
+    margin: '0 auto',
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    display: 'block',
+    margin: '0 auto',
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -43,9 +46,9 @@ class Executions extends Component {
     isLoading: PropTypes.bool.isRequired,
     classes: PropTypes.shape({
       formControl: PropTypes.string.isRequired,
-      content: PropTypes.string.isRequired,
-      selectLabel: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      container: PropTypes.string.isRequired,
+      button: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -54,30 +57,15 @@ class Executions extends Component {
     algorithms: null,
   };
 
-  state = (() => {
-    const { datasets, algorithms } = this.props;
-    return {
-      datasetId: datasets?.first()?.id,
-      algorithmId: algorithms?.first()?.id,
-    };
-  })();
+  state = {
+    datasetId: '',
+    algorithmId: '',
+  };
 
   componentDidMount() {
     const { dispatchGetDatasets, dispatchGetAlgorithms } = this.props;
     dispatchGetDatasets();
     dispatchGetAlgorithms();
-  }
-
-  componentDidUpdate({ datasets: prevDatasets, algorithms: prevAlgorithms }) {
-    const { datasets, algorithms } = this.props;
-    if (prevDatasets !== datasets && datasets.size > 0) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ datasetId: datasets.first().id });
-    }
-    if (prevAlgorithms !== algorithms && algorithms.size > 0) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ algorithmId: algorithms.first().id });
-    }
   }
 
   handleDatasetSelectOnChange = (e) => {
@@ -109,7 +97,7 @@ class Executions extends Component {
       );
     }
 
-    if (datasets.size <= 0) {
+    if (!datasets.size) {
       return (
         <Main>
           <Alert severity="info" className={classes.infoAlert}>
@@ -119,11 +107,11 @@ class Executions extends Component {
       );
     }
 
-    if (algorithms.size <= 0) {
+    if (!algorithms.size) {
       return (
         <Main>
           <Alert severity="info" className={classes.infoAlert}>
-            {t('No algorithm is available')}
+            {t('No algorithms are available')}
           </Alert>
         </Main>
       );
@@ -131,59 +119,47 @@ class Executions extends Component {
 
     return (
       <Main>
-        <Grid container justify="center" className={classes.content}>
-          <Grid container justify="center" alignItems="center">
-            <Grid item className={classes.selectLabel}>
-              <Typography>{t('Dataset')}</Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
-                  id="datasetSelect"
-                  value={datasetId || ''}
-                  onChange={this.handleDatasetSelectOnChange}
-                >
-                  {datasets.map(({ id, name }) => (
-                    <MenuItem value={id} key={id}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid container justify="center" alignItems="center">
-            <Grid item className={classes.selectLabel}>
-              <Typography>{t('Algorithm')}</Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
-                  id="algorithmSelect"
-                  value={algorithmId || ''}
-                  onChange={this.handleAlgorithmSelectOnChange}
-                >
-                  {algorithms.map(({ id, name }) => (
-                    <MenuItem value={id} key={id}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid container justify="center">
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.executeAlgorithm}
-              >
-                {t('Execute')}
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+        <div className={classes.container}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel id="dataset-select">Dataset</InputLabel>
+            <Select
+              labelId="dataset-select"
+              value={datasetId}
+              onChange={this.handleDatasetSelectOnChange}
+              label={t('Dataset')}
+            >
+              {datasets.map(({ id, name }) => (
+                <MenuItem value={id} key={id}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel id="algorithm-select">Algorithm</InputLabel>
+            <Select
+              labelId="algorithm-select"
+              value={algorithmId}
+              onChange={this.handleAlgorithmSelectOnChange}
+              label={t('Algorithm')}
+            >
+              {algorithms.map(({ id, name }) => (
+                <MenuItem value={id} key={id}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.executeAlgorithm}
+            className={classes.button}
+            disabled={!datasetId || !algorithmId}
+          >
+            {t('Execute')}
+          </Button>
+        </div>
       </Main>
     );
   }

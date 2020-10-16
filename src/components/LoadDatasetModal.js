@@ -40,18 +40,12 @@ class LoadDatasetModal extends Component {
 
   static propTypes = {
     classes: PropTypes.shape({
-      dialogContent: PropTypes.shape({
-        display: PropTypes.string,
-        flexDirection: PropTypes.string,
-      }),
-      loadDataset: PropTypes.shape({
-        display: PropTypes.string,
-        alignItems: PropTypes.string,
-      }),
-      shortTextfield: PropTypes.shape({ width: PropTypes.string }),
+      dialogContent: PropTypes.string.isRequired,
+      loadDataset: PropTypes.string.isRequired,
+      shortTextfield: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
-    open: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     dispatchAddDataset: PropTypes.func.isRequired,
   };

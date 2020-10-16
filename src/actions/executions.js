@@ -1,7 +1,7 @@
 import { toastr } from 'react-redux-toastr';
 import { createFlag } from './common';
 import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
-import { FLAG_EXECUTING_ALGORITHM, EXECUTION_SUCCESS } from '../types';
+import { FLAG_EXECUTING_ALGORITHM, EXECUTE_ALGORITHM_SUCCESS } from '../types';
 import {
   ERROR_MESSAGE_HEADER,
   SUCCESS_MESSAGE_HEADER,
@@ -15,30 +15,30 @@ import { PROGRAMMING_LANGUAGES } from '../config/constants';
 export const executeAlgorithm = ({ datasetId, algorithmId, language }) => (
   dispatch,
 ) => {
-  const flagExecuting = createFlag(FLAG_EXECUTING_ALGORITHM);
+  const flagExecutingAlgorithm = createFlag(FLAG_EXECUTING_ALGORITHM);
 
   switch (language) {
     case PROGRAMMING_LANGUAGES.PYTHON:
       try {
-        dispatch(flagExecuting(true));
+        dispatch(flagExecutingAlgorithm(true));
         window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
           datasetId,
           algorithmId,
         });
         window.ipcRenderer.once(EXECUTE_PYTHON_ALGORITHM_CHANNEL, async () => {
           dispatch({
-            type: EXECUTION_SUCCESS,
+            type: EXECUTE_ALGORITHM_SUCCESS,
           });
           toastr.success(
             SUCCESS_MESSAGE_HEADER,
             SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
           );
 
-          return dispatch(flagExecuting(false));
+          return dispatch(flagExecutingAlgorithm(false));
         });
       } catch (err) {
         toastr.error(ERROR_MESSAGE_HEADER, ERROR_EXECUTING_ALGORITHM_MESSAGE);
-        dispatch(flagExecuting(false));
+        dispatch(flagExecutingAlgorithm(false));
       }
       break;
 

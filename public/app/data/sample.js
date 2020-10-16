@@ -1,5 +1,12 @@
-const { DATASETS_COLLECTION, RESULTS_COLLECTION, ALGORITHMS_COLLECTION } = require('../db');
-const { SAMPLE_DATASET_FILEPATH, GRAASP_ALGORITHMS } = require('../config/config');
+const {
+  DATASETS_COLLECTION,
+  RESULTS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+} = require('../db');
+const {
+  SAMPLE_DATASET_FILEPATH,
+  GRAASP_ALGORITHMS,
+} = require('../config/config');
 
 module.exports = {
   [DATASETS_COLLECTION]: [

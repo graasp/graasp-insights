@@ -9,20 +9,20 @@ const deleteAlgorithm = (mainWindow, db) => async (event, { id }) => {
     const algorithm = db.get(ALGORITHMS_COLLECTION).find({ id }).value();
     const { filepath, name } = algorithm;
 
+    // remove metadata entry
+    db.get(ALGORITHMS_COLLECTION).remove({ id }).write();
+
     // delete the algorithm
     fs.unlinkSync(filepath);
     logger.debug(`Deleted the algorithm ${name} with id ${id} at ${filepath}`);
 
-    // remove metadata entry
-    db.get(ALGORITHMS_COLLECTION).remove({ id }).write();
-
-    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL);
+    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, id);
   } catch (err) {
     if (err.code === 'ENOENT') {
       logger.error('File not found!');
     }
     logger.error(err);
-    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL);
+    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, null);
   }
 };
 

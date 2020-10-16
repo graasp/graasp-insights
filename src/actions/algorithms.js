@@ -49,7 +49,13 @@ export const deleteAlgorithm = ({ id }) => (dispatch) => {
     dispatch(flagDeletingAlgorithm(true));
 
     window.ipcRenderer.send(DELETE_ALGORITHM_CHANNEL, { id });
-    window.ipcRenderer.once(DELETE_ALGORITHM_CHANNEL, async () => {
+    window.ipcRenderer.once(DELETE_ALGORITHM_CHANNEL, async (payload) => {
+      if (!payload) {
+        return toastr.error(
+          ERROR_MESSAGE_HEADER,
+          ERROR_DELETING_ALGORITHM_MESSAGE,
+        );
+      }
       dispatch({
         type: DELETE_ALGORITHM_SUCCESS,
       });
