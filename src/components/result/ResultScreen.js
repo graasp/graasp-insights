@@ -6,18 +6,18 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { withTranslation } from 'react-i18next';
-import JSONFileReader from '../common/JSONFileReader';
 import Loader from '../common/Loader';
+import JSONFileReader from '../common/JSONFileReader';
 import Main from '../common/Main';
-import { getDataset } from '../../actions';
+import { getResult } from '../../actions';
 
-class DatasetScreen extends Component {
+class ResultScreen extends Component {
   static propTypes = {
-    dataset: PropTypes.instanceOf(Map).isRequired,
+    result: PropTypes.instanceOf(Map).isRequired,
     match: PropTypes.shape({
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
-    dispatchGetDataset: PropTypes.func.isRequired,
+    dispatchGetResult: PropTypes.func.isRequired,
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
     }).isRequired,
@@ -26,18 +26,18 @@ class DatasetScreen extends Component {
   };
 
   defaultProps = {
-    dataset: Map(),
+    result: Map(),
   };
 
   componentDidMount() {
     const {
-      dispatchGetDataset,
+      dispatchGetResult,
       match: {
         params: { id },
       },
     } = this.props;
 
-    dispatchGetDataset({ id });
+    dispatchGetResult({ id });
   }
 
   handleBack = () => {
@@ -48,21 +48,21 @@ class DatasetScreen extends Component {
   };
 
   render() {
-    const { dataset, activity, t } = this.props;
+    const { result, activity, t } = this.props;
 
     if (activity) {
       return <Loader />;
     }
-    if (dataset.isEmpty()) {
+    if (result.isEmpty()) {
       return null;
     }
 
     return (
       <Main>
-        <Typography variant="h4">{dataset.get('name')}</Typography>
+        <Typography variant="h4">{result.get('name')}</Typography>
         <JSONFileReader
-          size={dataset.get('size')}
-          content={dataset.get('content')}
+          size={result.get('size')}
+          content={result.get('content')}
         />
         <Button variant="contained" color="primary" onClick={this.handleBack}>
           {t('Back')}
@@ -72,18 +72,18 @@ class DatasetScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
-  dataset: dataset.getIn(['current', 'content']),
-  activity: dataset.getIn(['current', 'activity']).size,
+const mapStateToProps = ({ result }) => ({
+  result: result.getIn(['current', 'content']),
+  activity: result.getIn(['current', 'activity']).size,
 });
 
 const mapDispatchToProps = {
-  dispatchGetDataset: getDataset,
+  dispatchGetResult: getResult,
 };
 
 const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DatasetScreen);
+)(ResultScreen);
 const TranslatedComponent = withTranslation()(ConnectedComponent);
 export default withRouter(TranslatedComponent);

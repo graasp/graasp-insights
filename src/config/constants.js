@@ -14,6 +14,14 @@ export const DATASETS_TABLE_COLUMNS = {
   LAST_MODIFIED: 'lastModified',
 };
 
+export const RESULTS_TABLE_COLUMNS = {
+  NAME: 'name',
+  ALGORITHM: 'algorithmId',
+  SIZE: 'size',
+  CREATED: 'createdAt',
+  LAST_MODIFIED: 'lastModified',
+};
+
 export const ORDER_BY = {
   ASC: 'asc',
   DESC: 'desc',

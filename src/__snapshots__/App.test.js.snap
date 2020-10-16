@@ -332,6 +332,16 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
+          path="/results"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/result/:id"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
           path="/"
         />
         <Route

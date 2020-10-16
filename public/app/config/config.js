@@ -14,6 +14,7 @@ const VAR_FOLDER = `${escapeEscapeCharacter(app.getPath('userData'))}/var`;
 const DATABASE_PATH = `${VAR_FOLDER}/db.json`;
 const ICON_PATH = 'app/assets/icon.png';
 const DATASETS_FOLDER = `${VAR_FOLDER}/datasets`;
+const RESULTS_FOLDER = `${VAR_FOLDER}/results`;
 const SAMPLE_DATASET_FILEPATH = path.resolve(
   `${DATASETS_FOLDER}/sampleDataset.json`,
 );
@@ -32,5 +33,6 @@ module.exports = {
   ICON_PATH,
   PRODUCT_NAME,
   DATASETS_FOLDER,
+  RESULTS_FOLDER,
   escapeEscapeCharacter,
 };

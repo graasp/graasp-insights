@@ -4,10 +4,10 @@ import Typography from '@material-ui/core/Typography';
 import { Map } from 'immutable';
 import ReactJson from 'react-json-view';
 import { withTranslation } from 'react-i18next';
-import Loader from '../common/Loader';
+import Loader from './Loader';
 import { MAX_FILE_SIZE } from '../../config/constants';
 
-class DatasetReader extends Component {
+class JSONFileReader extends Component {
   static propTypes = {
     content: PropTypes.string,
     size: PropTypes.number,
@@ -61,4 +61,4 @@ class DatasetReader extends Component {
   }
 }
 
-export default withTranslation()(DatasetReader);
+export default withTranslation()(JSONFileReader);

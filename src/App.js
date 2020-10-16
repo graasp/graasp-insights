@@ -12,6 +12,8 @@ import {
   ALGORITHMS_PATH,
   DEVELOPER_PATH,
   SETTINGS_PATH,
+  RESULTS_PATH,
+  RESULT_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -21,6 +23,8 @@ import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
 import SettingsModal from './components/SettingsModal';
 import { getLanguage } from './actions';
+import Results from './components/Results';
+import ResultScreen from './components/result/ResultScreen';
 
 export class App extends Component {
   state = { height: 0 };
@@ -77,6 +81,8 @@ export class App extends Component {
               />
               <Route exact path={DATASETS_PATH} component={Datasets} />
               <Route exact path={ALGORITHMS_PATH} component={Algorithms} />
+              <Route exact path={RESULTS_PATH} component={Results} />
+              <Route exact path={RESULT_PATH} component={ResultScreen} />
               <Route exact path={HOME_PATH} component={Datasets} />
               <Route exact path={SETTINGS_PATH} component={SettingsModal} />
             </Switch>

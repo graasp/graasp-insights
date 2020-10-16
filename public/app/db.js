@@ -6,10 +6,12 @@ const logger = require('./logger');
 const {
   DATABASE_PATH,
   DATASETS_FOLDER,
+  RESULTS_FOLDER,
   VAR_FOLDER,
 } = require('./config/config');
 
 const DATASETS_COLLECTION = 'datasets';
+const RESULTS_COLLECTION = 'results';
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -38,15 +40,22 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     mkdirp(DATASETS_FOLDER);
   }
 
+  // create the results folder if it doesn't already exist
+  if (!fs.existsSync(RESULTS_FOLDER)) {
+    mkdirp(RESULTS_FOLDER);
+  }
+
   // set some defaults (required if json file is empty)
   db.defaults({
     [DATASETS_COLLECTION]: [],
+    [RESULTS_COLLECTION]: [],
   }).write();
   return db;
 };
 
 module.exports = {
   DATASETS_COLLECTION,
+  RESULTS_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
 };

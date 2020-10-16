@@ -6,10 +6,10 @@ const { DATASETS_FOLDER } = require('../config/config');
 const { DATASETS_COLLECTION } = require('../db');
 const { LOAD_DATASET_CHANNEL } = require('../config/channels');
 
-const createNewDataset = ({ name, filepath, description }) => {
+const createNewDataset = ({ name, filepath, description, folderPath }) => {
   // create and get file data
   const fileId = ObjectId().str;
-  const destPath = path.join(DATASETS_FOLDER, `${fileId}.json`);
+  const destPath = path.join(folderPath, `${fileId}.json`);
 
   // copy file
   fs.copyFileSync(filepath, destPath);
@@ -45,6 +45,7 @@ const loadDataset = (mainWindow, db) => async (event, args) => {
         name: fileName,
         filepath: fileLocation,
         description: fileDescription,
+        folderPath: DATASETS_FOLDER,
       });
       logger.debug(`load dataset at ${newDataset.filepath}`);
       // save file in lowdb
@@ -53,6 +54,7 @@ const loadDataset = (mainWindow, db) => async (event, args) => {
       mainWindow.webContents.send(LOAD_DATASET_CHANNEL, newDataset);
     } catch (err) {
       logger.log(err);
+      mainWindow.webContents.send(LOAD_DATASET_CHANNEL);
     }
   } else {
     // empty message will be read by /actions/dataset.js as !dataset, and hence trigger an error

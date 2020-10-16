@@ -7,7 +7,9 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
 import Table from '@material-ui/core/Table';
+import Tooltip from '@material-ui/core/Tooltip';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,19 +21,16 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Tooltip from '@material-ui/core/Tooltip';
-import Alert from '@material-ui/lab/Alert';
 import Main from './common/Main';
 import Loader from './common/Loader';
-import LoadDatasetButton from './LoadDatasetButton';
 import {
-  DATASETS_TABLE_COLUMNS,
+  RESULTS_TABLE_COLUMNS,
   DEFAULT_LOCALE_DATE,
   ORDER_BY,
 } from '../config/constants';
 import { sortByKey } from '../utils/sorting';
-import { getDatasets, deleteDataset } from '../actions';
-import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
+import { getResults, deleteResult } from '../actions';
+import { buildResultPath } from '../config/paths';
 
 const styles = (theme) => ({
   addButton: {
@@ -52,66 +51,58 @@ const styles = (theme) => ({
   },
 });
 
-class Datasets extends Component {
+class Results extends Component {
   state = {
     isAsc: true,
-    orderBy: DATASETS_TABLE_COLUMNS.NAME,
+    orderBy: RESULTS_TABLE_COLUMNS.NAME,
   };
 
   static propTypes = {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
-    dispatchGetDatasets: PropTypes.func.isRequired,
-    dispatchDeleteDataset: PropTypes.func.isRequired,
+    dispatchGetResults: PropTypes.func.isRequired,
+    dispatchDeleteResult: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
-      columnName: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      columnName: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
-    datasets: PropTypes.instanceOf(List),
-    isLoading: PropTypes.bool.isRequired,
+    results: PropTypes.instanceOf(List),
   };
 
   static defaultProps = {
-    datasets: List(),
+    results: List(),
   };
 
   componentDidMount() {
-    const { dispatchGetDatasets } = this.props;
-    dispatchGetDatasets();
+    const { dispatchGetResults } = this.props;
+    dispatchGetResults();
   }
 
   handleView = ({ id }) => {
     const {
       history: { push },
     } = this.props;
-    push(buildDatasetPath(id));
+    push(buildResultPath(id));
   };
 
   handlePublish = () => {
     // TODO: implement publish functionality
   };
 
-  handleVisualize = () => {
-    // TODO: implement visualize functionality
+  handleAnonymize = () => {
+    // TODO: implement anonymize functionality
   };
 
   handleEdit = () => {
     // TODO: implement edit functionality
   };
 
-  handleDelete = (dataset) => {
-    const { dispatchDeleteDataset } = this.props;
-    dispatchDeleteDataset({ id: dataset.id });
-  };
-
-  handleAdd = () => {
-    const {
-      history: { push },
-    } = this.props;
-    push(LOAD_DATASET_PATH);
+  handleDelete = (result) => {
+    const { dispatchDeleteResult } = this.props;
+    dispatchDeleteResult({ id: result.id });
   };
 
   handleSortColumn = (column) => {
@@ -123,14 +114,21 @@ class Datasets extends Component {
     }
   };
 
-  renderDatasetsContent = () => {
+  renderResultsContent = () => {
     const { orderBy, isAsc } = this.state;
-    const { datasets, t } = this.props;
+    const { results, t } = this.props;
 
-    const sortedDatasets = sortByKey(datasets, orderBy, isAsc);
+    const sortedResults = sortByKey(results, orderBy, isAsc);
 
-    return sortedDatasets.map((dataset) => {
-      const { name, size, lastModified, createdAt, description = '' } = dataset;
+    return sortedResults.map((result) => {
+      const {
+        name,
+        size,
+        lastModified,
+        createdAt,
+        description = '',
+        algorithmId,
+      } = result;
       const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
@@ -139,35 +137,36 @@ class Datasets extends Component {
         ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
       return (
-        <TableRow key={dataset.id}>
+        <TableRow key={result.id}>
           <TableCell>
             <Typography variant="subtitle1">{name}</Typography>
             <Typography variant="caption">{description}</Typography>
           </TableCell>
           <TableCell align="right">{sizeString}</TableCell>
+          <TableCell align="right">{algorithmId}</TableCell>
           <TableCell align="right">{createdAtString}</TableCell>
           <TableCell align="right">{lastModifiedString}</TableCell>
           <TableCell align="right">
-            <Tooltip title={t('View dataset')}>
-              <IconButton
-                aria-label="view"
-                onClick={() => this.handleView(dataset)}
-              >
-                <CodeIcon />
+            <Tooltip title={t('View result')}>
+              <IconButton>
+                <CodeIcon
+                  aria-label="view"
+                  onClick={() => this.handleView(result)}
+                />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('Edit dataset')}>
+            <Tooltip title={t('Visualize result')}>
               <IconButton
                 aria-label="edit"
-                onClick={() => this.handleEdit(dataset)}
+                onClick={() => this.handleEdit(result)}
               >
                 <EditIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('Visualize dataset')}>
+            <Tooltip title={t('Visualize result')}>
               <IconButton
-                aria-label="visualize"
-                onClick={() => this.handleVisualize(dataset)}
+                aria-label="anonymize"
+                onClick={() => this.handleVisualize(result)}
               >
                 <EqualizerIcon />
               </IconButton>
@@ -175,7 +174,7 @@ class Datasets extends Component {
             <Tooltip title={t('Publish dataset')}>
               <IconButton
                 aria-label="publish"
-                onClick={() => this.handlePublish(dataset)}
+                onClick={() => this.handlePublish(result)}
               >
                 <PublishIcon />
               </IconButton>
@@ -183,7 +182,7 @@ class Datasets extends Component {
             <Tooltip title={t('Remove dataset')}>
               <IconButton
                 aria-label="delete"
-                onClick={() => this.handleDelete(dataset)}
+                onClick={() => this.handleDelete(result)}
               >
                 <DeleteIcon />
               </IconButton>
@@ -196,19 +195,18 @@ class Datasets extends Component {
 
   render() {
     const { isAsc, orderBy } = this.state;
-    const { classes, t, datasets, isLoading } = this.props;
+    const { classes, t, results } = this.props;
 
-    if (isLoading) {
+    if (!results) {
       return <Loader />;
     }
 
-    if (!datasets.size) {
+    if (!results.size) {
       return (
         <Main fullScreen>
           <Alert severity="info" className={classes.infoAlert}>
-            {t('Add a dataset by clicking on the icon below.')}
+            {t('No results available')}
           </Alert>
-          <LoadDatasetButton />
         </Main>
       );
     }
@@ -216,20 +214,20 @@ class Datasets extends Component {
     return (
       <Main>
         <Container>
-          <h1>{t('Datasets')}</h1>
-          <Table aria-label="table of datasets">
+          <h1>{t('Results')}</h1>
+          <Table aria-label="table of results">
             <TableHead>
               <TableRow>
                 <TableCell align="left">
                   <TableSortLabel
-                    active={orderBy === DATASETS_TABLE_COLUMNS.NAME}
+                    active={orderBy === RESULTS_TABLE_COLUMNS.NAME}
                     direction={
-                      orderBy === DATASETS_TABLE_COLUMNS.NAME && !isAsc
+                      orderBy === RESULTS_TABLE_COLUMNS.NAME && !isAsc
                         ? ORDER_BY.DESC
                         : ORDER_BY.ASC
                     }
                     onClick={() => {
-                      this.handleSortColumn(DATASETS_TABLE_COLUMNS.NAME);
+                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.NAME);
                     }}
                   >
                     <Typography className={classes.columnName}>
@@ -239,14 +237,14 @@ class Datasets extends Component {
                 </TableCell>
                 <TableCell align="right">
                   <TableSortLabel
-                    active={orderBy === DATASETS_TABLE_COLUMNS.SIZE}
+                    active={orderBy === RESULTS_TABLE_COLUMNS.SIZE}
                     direction={
-                      orderBy === DATASETS_TABLE_COLUMNS.SIZE && !isAsc
+                      orderBy === RESULTS_TABLE_COLUMNS.SIZE && !isAsc
                         ? ORDER_BY.DESC
                         : ORDER_BY.ASC
                     }
                     onClick={() => {
-                      this.handleSortColumn(DATASETS_TABLE_COLUMNS.SIZE);
+                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.SIZE);
                     }}
                   >
                     <Typography className={classes.columnName}>
@@ -256,14 +254,31 @@ class Datasets extends Component {
                 </TableCell>
                 <TableCell align="right">
                   <TableSortLabel
-                    active={orderBy === DATASETS_TABLE_COLUMNS.CREATED}
+                    active={orderBy === RESULTS_TABLE_COLUMNS.ALGORITHM}
                     direction={
-                      orderBy === DATASETS_TABLE_COLUMNS.CREATED && !isAsc
+                      orderBy === RESULTS_TABLE_COLUMNS.SCRIPT && !isAsc
                         ? ORDER_BY.DESC
                         : ORDER_BY.ASC
                     }
                     onClick={() => {
-                      this.handleSortColumn(DATASETS_TABLE_COLUMNS.CREATED);
+                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.ALGORITHM);
+                    }}
+                  >
+                    <Typography className={classes.columnName}>
+                      {t('Result from')}
+                    </Typography>
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell align="right">
+                  <TableSortLabel
+                    active={orderBy === RESULTS_TABLE_COLUMNS.CREATED}
+                    direction={
+                      orderBy === RESULTS_TABLE_COLUMNS.CREATED && !isAsc
+                        ? ORDER_BY.DESC
+                        : ORDER_BY.ASC
+                    }
+                    onClick={() => {
+                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.CREATED);
                     }}
                   >
                     <Typography className={classes.columnName}>
@@ -273,15 +288,15 @@ class Datasets extends Component {
                 </TableCell>
                 <TableCell align="right">
                   <TableSortLabel
-                    active={orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED}
+                    active={orderBy === RESULTS_TABLE_COLUMNS.LAST_MODIFIED}
                     direction={
-                      orderBy === DATASETS_TABLE_COLUMNS.LAST_MODIFIED && !isAsc
+                      orderBy === RESULTS_TABLE_COLUMNS.LAST_MODIFIED && !isAsc
                         ? ORDER_BY.DESC
                         : ORDER_BY.ASC
                     }
                     onClick={() => {
                       this.handleSortColumn(
-                        DATASETS_TABLE_COLUMNS.LAST_MODIFIED,
+                        RESULTS_TABLE_COLUMNS.LAST_MODIFIED,
                       );
                     }}
                   >
@@ -297,29 +312,27 @@ class Datasets extends Component {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>{this.renderDatasetsContent()}</TableBody>
+            <TableBody>{this.renderResultsContent()}</TableBody>
           </Table>
-          <LoadDatasetButton />
         </Container>
       </Main>
     );
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
-  datasets: dataset.getIn(['datasets']),
-  isLoading: dataset.getIn(['current', 'activity']).size > 0,
+const mapStateToProps = ({ result }) => ({
+  results: result.getIn(['results']),
 });
 
 const mapDispatchToProps = {
-  dispatchGetDatasets: getDatasets,
-  dispatchDeleteDataset: deleteDataset,
+  dispatchGetResults: getResults,
+  dispatchDeleteResult: deleteResult,
 };
 
 const ConnectedComponent = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Datasets);
+)(Results);
 const StyledComponent = withStyles(styles, { withTheme: true })(
   ConnectedComponent,
 );
