@@ -104,7 +104,7 @@ class Datasets extends Component {
 
     if (!datasets.size) {
       return (
-        <Main fullScreen>
+        <Main>
           <Alert severity="info" className={classes.infoAlert}>
             {t('Add a dataset by clicking on the icon below.')}
           </Alert>
@@ -120,7 +120,6 @@ class Datasets extends Component {
         field: 'dataset',
         alignColumn: 'left',
         alignField: 'left',
-        bold: true,
       },
       {
         columnName: t('Size'),
@@ -128,7 +127,6 @@ class Datasets extends Component {
         field: 'size',
         alignColumn: 'right',
         alignField: 'right',
-        bold: true,
       },
       {
         columnName: t('Created'),
@@ -136,7 +134,6 @@ class Datasets extends Component {
         field: 'createdAt',
         alignColumn: 'right',
         alignField: 'right',
-        bold: true,
       },
       {
         columnName: t('Last Modified'),
@@ -144,14 +141,12 @@ class Datasets extends Component {
         field: 'lastModified',
         alignColumn: 'right',
         alignField: 'right',
-        bold: true,
       },
       {
         columnName: t('Quick actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',
-        bold: false,
       },
     ];
 

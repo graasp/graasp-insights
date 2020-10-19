@@ -25,17 +25,29 @@ export const executeAlgorithm = ({ datasetId, algorithmId, language }) => (
           datasetId,
           algorithmId,
         });
-        window.ipcRenderer.once(EXECUTE_PYTHON_ALGORITHM_CHANNEL, async () => {
-          dispatch({
-            type: EXECUTE_ALGORITHM_SUCCESS,
-          });
-          toastr.success(
-            SUCCESS_MESSAGE_HEADER,
-            SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
-          );
+        window.ipcRenderer.once(
+          EXECUTE_PYTHON_ALGORITHM_CHANNEL,
+          async (event, id) => {
+            if (id) {
+              // success
+              dispatch({
+                type: EXECUTE_ALGORITHM_SUCCESS,
+              });
+              toastr.success(
+                SUCCESS_MESSAGE_HEADER,
+                SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
+              );
+            } else {
+              // failure
+              toastr.error(
+                ERROR_MESSAGE_HEADER,
+                ERROR_EXECUTING_ALGORITHM_MESSAGE,
+              );
+            }
 
-          return dispatch(flagExecutingAlgorithm(false));
-        });
+            return dispatch(flagExecutingAlgorithm(false));
+          },
+        );
       } catch (err) {
         toastr.error(ERROR_MESSAGE_HEADER, ERROR_EXECUTING_ALGORITHM_MESSAGE);
         dispatch(flagExecutingAlgorithm(false));

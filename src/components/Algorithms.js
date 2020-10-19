@@ -62,7 +62,7 @@ class Algorithms extends Component {
 
     if (algorithms.size <= 0) {
       return (
-        <Main fullscreen>
+        <Main>
           <Alert severity="info" className={classes.infoAlert}>
             {t('No algorithms are available')}
           </Alert>
@@ -77,7 +77,6 @@ class Algorithms extends Component {
         field: 'algorithm',
         alignColumn: 'left',
         alignField: 'left',
-        bold: true,
       },
       {
         columnName: t('Author'),
@@ -85,7 +84,6 @@ class Algorithms extends Component {
         field: 'author',
         alignColumn: 'left',
         alignField: 'left',
-        bold: true,
       },
       {
         columnName: t('Language'),
@@ -93,14 +91,12 @@ class Algorithms extends Component {
         field: 'language',
         alignColumn: 'left',
         alignField: 'left',
-        bold: true,
       },
       {
         columnName: t('Quick actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',
-        bold: false,
       },
     ];
 

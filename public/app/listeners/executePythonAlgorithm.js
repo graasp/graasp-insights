@@ -32,55 +32,64 @@ const executePythonAlgorithm = (mainWindow, db) => (
   event,
   { datasetId, algorithmId },
 ) => {
-  // get corresponding dataset
-  const { filepath, name: datasetName, description } = db
-    .get(DATASETS_COLLECTION)
-    .find({ id: datasetId })
-    .value();
+  try {
+    // get corresponding dataset
+    const { filepath, name: datasetName, description } = db
+      .get(DATASETS_COLLECTION)
+      .find({ id: datasetId })
+      .value();
 
-  // get the corresponding algorithm
-  const { filepath: algorithmFilepath, name: algorithmName } = db
-    .get(ALGORITHMS_COLLECTION)
-    .find({ id: algorithmId })
-    .value();
+    // get the corresponding algorithm
+    const { filepath: algorithmFilepath, name: algorithmName } = db
+      .get(ALGORITHMS_COLLECTION)
+      .find({ id: algorithmId })
+      .value();
 
-  const id = ObjectId().str;
-  const tmpPath = path.join(RESULTS_FOLDER, `tmp_${id}.json`);
+    const id = ObjectId().str;
+    const tmpPath = path.join(RESULTS_FOLDER, `tmp_${id}.json`);
 
-  const process = spawn('python', [algorithmFilepath, filepath, tmpPath]);
+    const process = spawn('python', [algorithmFilepath, filepath, tmpPath]);
 
-  process.stdout.on('data', (chunk) => {
-    const textChunk = chunk.toString('utf8'); // buffer to string
-    logger.debug(textChunk);
-  });
+    process.stdout.on('data', (chunk) => {
+      const textChunk = chunk.toString('utf8'); // buffer to string
+      logger.debug(textChunk);
+    });
 
-  process.stderr.on('data', (data) => {
-    logger.error(data.toString());
-  });
+    process.stderr.on('data', (data) => {
+      logger.error(data.toString());
+    });
 
-  process.on('close', (code) => {
-    if (code !== 0) {
-      logger.error(`python process exited with code ${code}`);
-    } else {
-      // save result in db
-      const newDataset = createNewResultDataset({
-        name: `${datasetName}_${algorithmName}`,
-        filepath: tmpPath,
-        algorithmId,
-        description,
-      });
-      db.get(RESULTS_COLLECTION).push(newDataset).write();
+    process.on('close', (code) => {
+      if (code !== 0) {
+        logger.error(`python process exited with code ${code}`);
+        mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, null);
+      } else {
+        // save result in db
+        const newDataset = createNewResultDataset({
+          name: `${datasetName}_${algorithmName}`,
+          filepath: tmpPath,
+          algorithmId,
+          description,
+        });
+        db.get(RESULTS_COLLECTION).push(newDataset).write();
 
-      logger.debug(`save resulting dataset at ${newDataset.filepath}`);
+        logger.debug(`save resulting dataset at ${newDataset.filepath}`);
 
-      mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL);
-    }
+        mainWindow.webContents.send(
+          EXECUTE_PYTHON_ALGORITHM_CHANNEL,
+          newDataset.id,
+        );
+      }
 
-    // delete tmp file
-    if (fs.existsSync(tmpPath)) {
-      fs.unlinkSync(tmpPath);
-    }
-  });
+      // delete tmp file
+      if (fs.existsSync(tmpPath)) {
+        fs.unlinkSync(tmpPath);
+      }
+    });
+  } catch (err) {
+    logger.error(err);
+    mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, null);
+  }
 };
 
 module.exports = executePythonAlgorithm;

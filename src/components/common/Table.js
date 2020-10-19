@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
-import clsx from 'clsx';
 import MaterialTable from '@material-ui/core/Table';
 import { withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -39,7 +38,7 @@ const Table = (props) => {
     <MaterialTable aria-label="table">
       <TableHead>
         <TableRow>
-          {columns.map(({ columnName, alignColumn, sortBy, bold }) => {
+          {columns.map(({ columnName, alignColumn, sortBy }) => {
             return (
               <TableCell align={alignColumn} key={columnName}>
                 {sortBy ? (
@@ -54,14 +53,12 @@ const Table = (props) => {
                       handleSortColumn(sortBy);
                     }}
                   >
-                    <Typography className={clsx({ [classes.bold]: bold })}>
+                    <Typography className={classes.bold}>
                       {columnName}
                     </Typography>
                   </TableSortLabel>
                 ) : (
-                  <Typography className={clsx({ [classes.bold]: bold })}>
-                    {columnName}
-                  </Typography>
+                  <Typography className={classes.bold}>{columnName}</Typography>
                 )}
               </TableCell>
             );

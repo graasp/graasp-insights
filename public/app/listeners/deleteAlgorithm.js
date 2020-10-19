@@ -20,9 +20,11 @@ const deleteAlgorithm = (mainWindow, db) => async (event, { id }) => {
   } catch (err) {
     if (err.code === 'ENOENT') {
       logger.error('File not found!');
+      mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, id);
+    } else {
+      logger.error(err);
+      mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, null);
     }
-    logger.error(err);
-    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, null);
   }
 };
 

@@ -18,7 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import { DEFAULT_LOCALE_DATE } from '../config/constants';
-import { getResults, deleteResult } from '../actions';
+import { getResults, deleteResult, getAlgorithms } from '../actions';
 import { buildResultPath } from '../config/paths';
 import Table from './common/Table';
 
@@ -33,9 +33,6 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.primary.main,
     },
   },
-  columnName: {
-    fontWeight: 'bold',
-  },
   infoAlert: {
     margin: theme.spacing(2),
   },
@@ -48,22 +45,25 @@ class Results extends Component {
     }).isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
     dispatchDeleteResult: PropTypes.func.isRequired,
+    dispatchGetAlgorithms: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
-      columnName: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
+    algorithms: PropTypes.instanceOf(List),
   };
 
   static defaultProps = {
     results: List(),
+    algorithms: List(),
   };
 
   componentDidMount() {
-    const { dispatchGetResults } = this.props;
+    const { dispatchGetResults, dispatchGetAlgorithms } = this.props;
     dispatchGetResults();
+    dispatchGetAlgorithms();
   }
 
   handleView = ({ id }) => {
@@ -77,7 +77,7 @@ class Results extends Component {
     // TODO: implement publish functionality
   };
 
-  handleAnonymize = () => {
+  handleVisualize = () => {
     // TODO: implement anonymize functionality
   };
 
@@ -91,7 +91,7 @@ class Results extends Component {
   };
 
   render() {
-    const { classes, t, results } = this.props;
+    const { classes, t, results, algorithms } = this.props;
 
     if (!results) {
       return <Loader />;
@@ -99,7 +99,7 @@ class Results extends Component {
 
     if (!results.size) {
       return (
-        <Main fullScreen>
+        <Main>
           <Alert severity="info" className={classes.infoAlert}>
             {t('No results available')}
           </Alert>
@@ -114,7 +114,13 @@ class Results extends Component {
         field: 'dataset',
         alignColumn: 'left',
         alignField: 'left',
-        bold: true,
+      },
+      {
+        columnName: t('Result from'),
+        sortBy: 'algorithmName',
+        field: 'algorithmName',
+        alignColumn: 'left',
+        alignField: 'left',
       },
       {
         columnName: t('Size'),
@@ -122,15 +128,6 @@ class Results extends Component {
         field: 'size',
         alignColumn: 'right',
         alignField: 'right',
-        bold: true,
-      },
-      {
-        columnName: t('Result from'),
-        sortBy: 'algorithmId',
-        field: 'algorithmId',
-        alignColumn: 'right',
-        alignField: 'right',
-        bold: true,
       },
       {
         columnName: t('Created'),
@@ -138,7 +135,6 @@ class Results extends Component {
         field: 'createdAt',
         alignColumn: 'right',
         alignField: 'right',
-        bold: true,
       },
       {
         columnName: t('Last Modified'),
@@ -146,18 +142,16 @@ class Results extends Component {
         field: 'lastModified',
         alignColumn: 'right',
         alignField: 'right',
-        bold: true,
       },
       {
         columnName: t('Quick actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',
-        bold: false,
       },
     ];
 
-    const rows = results.map((dataset) => {
+    const rows = results.map((result) => {
       const {
         id,
         name,
@@ -166,7 +160,8 @@ class Results extends Component {
         createdAt,
         algorithmId,
         description = '',
-      } = dataset;
+      } = result;
+
       const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
@@ -174,10 +169,14 @@ class Results extends Component {
       const lastModifiedString = lastModified
         ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
+      const algorithmName = algorithms.find(
+        ({ id: resultId }) => resultId === algorithmId,
+      )?.name;
+
       return {
         key: id,
         name,
-        algorithmId,
+        algorithmName,
         dataset: [
           <Typography variant="subtitle1" key="name">
             {name}
@@ -194,7 +193,7 @@ class Results extends Component {
           <Tooltip title={t('View dataset')} key="view">
             <IconButton
               aria-label="view"
-              onClick={() => this.handleView(dataset)}
+              onClick={() => this.handleView(result)}
             >
               <CodeIcon />
             </IconButton>
@@ -202,7 +201,7 @@ class Results extends Component {
           <Tooltip title={t('Edit dataset')} key="edit">
             <IconButton
               aria-label="edit"
-              onClick={() => this.handleEdit(dataset)}
+              onClick={() => this.handleEdit(result)}
             >
               <EditIcon />
             </IconButton>
@@ -210,7 +209,7 @@ class Results extends Component {
           <Tooltip title={t('Visualize dataset')} key="visualize">
             <IconButton
               aria-label="visualize"
-              onClick={() => this.handleVisualize(dataset)}
+              onClick={() => this.handleVisualize(result)}
             >
               <EqualizerIcon />
             </IconButton>
@@ -218,7 +217,7 @@ class Results extends Component {
           <Tooltip title={t('Publish dataset')} key="publish">
             <IconButton
               aria-label="publish"
-              onClick={() => this.handlePublish(dataset)}
+              onClick={() => this.handlePublish(result)}
             >
               <PublishIcon />
             </IconButton>
@@ -226,7 +225,7 @@ class Results extends Component {
           <Tooltip title={t('Remove dataset')} key="delete">
             <IconButton
               aria-label="delete"
-              onClick={() => this.handleDelete(dataset)}
+              onClick={() => this.handleDelete(result)}
             >
               <DeleteIcon />
             </IconButton>
@@ -246,12 +245,14 @@ class Results extends Component {
   }
 }
 
-const mapStateToProps = ({ result }) => ({
+const mapStateToProps = ({ result, algorithms }) => ({
   results: result.getIn(['results']),
+  algorithms: algorithms.getIn(['algorithms']),
 });
 
 const mapDispatchToProps = {
   dispatchGetResults: getResults,
+  dispatchGetAlgorithms: getAlgorithms,
   dispatchDeleteResult: deleteResult,
 };
 
