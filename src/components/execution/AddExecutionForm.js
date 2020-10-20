@@ -26,6 +26,14 @@ import {
 } from '../../shared/messages';
 import { SCHEMA_TYPES } from '../../shared/constants';
 import SchemaTag from '../common/SchemaTag';
+import {
+  buildExecutionAlgorithmOptionId,
+  buildExecutionDatasetOptionId,
+  EXECUTIONS_ALERT_NO_DATASET_ID,
+  EXECUTIONS_ALGORITHMS_SELECT_ID,
+  EXECUTIONS_DATASETS_SELECT_ID,
+  EXECUTIONS_EXECUTE_BUTTON_ID,
+} from '../../config/selectors';
 
 const styles = (theme) => ({
   formControl: {
@@ -99,7 +107,7 @@ class AddExecutionForm extends Component {
     dispatchGetResults();
   }
 
-  handleDatasetSelectOnChange = (e) => {
+  handleSourceSelectOnChange = (e) => {
     this.setState({ sourceId: e.target.value });
   };
 
@@ -143,7 +151,12 @@ class AddExecutionForm extends Component {
     const resultMenuItems = results
       .sortBy(({ name }) => name)
       .map(({ id, name }) => (
-        <MenuItem value={id} key={id} className={classes.menuItem}>
+        <MenuItem
+          value={id}
+          key={id}
+          className={classes.menuItem}
+          id={buildExecutionDatasetOptionId(id)}
+        >
           {name}
         </MenuItem>
       ));
@@ -156,8 +169,9 @@ class AddExecutionForm extends Component {
         <Select
           labelId="dataset-select"
           value={sourceId}
-          onChange={this.handleDatasetSelectOnChange}
+          onChange={this.handleSourceSelectOnChange}
           label={label}
+          id={EXECUTIONS_DATASETS_SELECT_ID}
         >
           {!datasetMenuItems.isEmpty() && (
             <ListSubheader>{t('Datasets')}</ListSubheader>
@@ -178,6 +192,7 @@ class AddExecutionForm extends Component {
     const button = (
       <div className={classes.buttonWrapper}>
         <Button
+          id={EXECUTIONS_EXECUTE_BUTTON_ID}
           variant="contained"
           color="primary"
           onClick={this.executeAlgorithm}
@@ -223,7 +238,11 @@ class AddExecutionForm extends Component {
 
     if (datasets.isEmpty() && results.isEmpty()) {
       return (
-        <Alert severity="info" className={classes.infoAlert}>
+        <Alert
+          severity="info"
+          className={classes.infoAlert}
+          id={EXECUTIONS_ALERT_NO_DATASET_ID}
+        >
           {t('Load a dataset first')}
         </Alert>
       );
@@ -249,9 +268,14 @@ class AddExecutionForm extends Component {
             value={algorithmId}
             onChange={this.handleAlgorithmSelectOnChange}
             label={algorithmLabel}
+            id={EXECUTIONS_ALGORITHMS_SELECT_ID}
           >
             {algorithms.map(({ id, name }) => (
-              <MenuItem value={id} key={id}>
+              <MenuItem
+                value={id}
+                key={id}
+                id={buildExecutionAlgorithmOptionId(id)}
+              >
                 {name}
               </MenuItem>
             ))}

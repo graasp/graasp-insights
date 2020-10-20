@@ -23,6 +23,7 @@ const {
 const DATASETS_COLLECTION = 'datasets';
 const RESULTS_COLLECTION = 'results';
 const ALGORITHMS_COLLECTION = 'algorithms';
+const EXECUTIONS_COLLECTION = 'executions';
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -61,6 +62,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
     [RESULTS_COLLECTION]: [],
+    [EXECUTIONS_COLLECTION]: [],
   }).write();
   return db;
 };
@@ -125,6 +127,7 @@ module.exports = {
   DATASETS_COLLECTION,
   RESULTS_COLLECTION,
   ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,

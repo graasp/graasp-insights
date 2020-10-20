@@ -1,11 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable func-names */
 import { expect } from 'chai';
-import {
-  mochaAsync,
-  expectElementToExist,
-  expectElementToNotExist,
-} from './utils';
+import { mochaAsync } from './utils';
 import { createApplication, closeApplication } from './application';
 import { DEFAULT_GLOBAL_TIMEOUT } from './constants';
 import {
@@ -94,7 +90,7 @@ const viewDataset = async (client, dataset) => {
   expect(await nameTitle.getText()).to.equal(name);
 
   // check info table
-  expectElementToExist(client, `#${DATASET_TABLE_INFORMATION_ID}`);
+  await client.expectElementToExist(`#${DATASET_TABLE_INFORMATION_ID}`);
   expect(
     await (await client.$(`#${DATASET_TABLE_SPACE_ID_ID}`)).getText(),
   ).to.equal(spaceId);
@@ -122,14 +118,10 @@ const deleteDataset = async (client, { name }) => {
   await deleteButton.click();
   // todo: validate confirm prompt
 
-  await expectElementToNotExist(
-    client,
-    `span.${buildDatasetsListNameClass(name)}`,
-  );
-  await expectElementToNotExist(
-    client,
-    `span.${buildDatasetsListDescriptionClass(name)}`,
-  );
+  await client.expectElementToExist(`span.${buildDatasetsListNameClass(name)}`);
+  // await client.expectElementToNotExist(
+  //   `span.${buildDatasetsListDescriptionClass(name)}`,
+  // );
 };
 
 describe('Datasets Scenarios', function () {
@@ -151,12 +143,12 @@ describe('Datasets Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      await expectElementToExist(client, `#${DATASETS_EMPTY_ALERT_ID}`);
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
 
       const dataset = MISSING_FILE_DATASET;
       await fillAddDatasetFormAndAccept(client, dataset);
 
-      await expectElementToExist(client, `#${DATASETS_EMPTY_ALERT_ID}`);
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
     }),
   );
 
@@ -165,7 +157,7 @@ describe('Datasets Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      await expectElementToExist(client, `#${DATASETS_EMPTY_ALERT_ID}`);
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
 
       const dataset = MISSING_FILE_DATASET;
       await fillAddDatasetForm(client, dataset);
@@ -173,7 +165,7 @@ describe('Datasets Scenarios', function () {
 
       await client.pause(ADD_DATASET_PAUSE);
 
-      await expectElementToExist(client, `#${DATASETS_EMPTY_ALERT_ID}`);
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
     }),
   );
 
@@ -182,7 +174,7 @@ describe('Datasets Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      await expectElementToExist(client, `#${DATASETS_EMPTY_ALERT_ID}`);
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
 
       const dataset = SIMPLE_DATASET;
       await addDataset(client, dataset);

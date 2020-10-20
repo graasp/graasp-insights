@@ -20,12 +20,10 @@ const ERROR_GETTING_DATABASE_MESSAGE =
 const SUCCESS_LOADING_DATASET_MESSAGE = 'Dataset loaded successfully';
 const ERROR_LOADING_DATASET_MESSAGE = 'There was an error loading the dataset';
 const ERROR_MISSING_FILE_MESSAGE = 'The corresponding file was not found';
-const buildPythonProcessErrorMessage = (code) =>
-  `The Python process exited with code ${code}`;
-const ERROR_EXECUTING_PYTHON_ALGORITHM_MESSAGE =
-  'There was an error executing the Python algorithm';
-const SUCCESS_EXECUTING_PYTHON_ALGORITHM_MESSAGE =
-  'The Python algorithm was executed successfully';
+const buildProcessErrorMessage = (code) =>
+  `The process exited with code ${code}`;
+const SUCCESS_EXECUTING_ALGORITHM_MESSAGE =
+  'The execution was executed successfully';
 const ERROR_DELETING_DATASET_MESSAGE =
   'There was an error deleting the dataset';
 const SUCCESS_DELETING_DATASET_MESSAGE = 'The dataset was deleted successfully';
@@ -47,6 +45,8 @@ const ERROR_SETTING_LANGUAGE_MESSAGE =
   'There was an error setting the language';
 const ERROR_EXECUTING_ALGORITHM_MESSAGE =
   'There was an error while executing the algorithm';
+const ERROR_DELETING_ALGORITHM_MESSAGE =
+  'There was an error deleting the algorithm';
 const UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
   'The programming language of the algorithm is not supported';
 const ERROR_GETTING_RESULTS_MESSAGE =
@@ -62,8 +62,6 @@ const ERROR_EXPORTING_RESULT_MESSAGE =
 const SUCCESS_EXPORTING_RESULT_MESSAGE = 'The result was exported successfully';
 const ERROR_SETTING_DATASET_FILE_MESSAGE =
   'There was an error editing the dataset';
-const ERROR_DELETING_ALGORITHM_MESSAGE =
-  'There was an error deleting the algorithm';
 const ERROR_ADDING_ALGORITHM_MESSAGE =
   'There was an error adding the algorithm';
 const SUCCESS_ADDING_ALGORITHM_MESSAGE = 'The algorithm was added successfully';
@@ -79,6 +77,14 @@ const ERROR_GETTING_UTILS_MESSAGE =
   'There was an error retrieving the utils file';
 const ERROR_SAVING_UTILS_MESSAGE = 'There was an error saving the utils file';
 const SUCCESS_SAVING_UTILS_MESSAGE = 'The utils file was saved successfully';
+const ERROR_CREATING_EXECUTION_MESSAGE =
+  'There was an error creating the execution';
+const ERROR_GETTING_EXECUTIONS_MESSAGE =
+  'There was an error retrieving the executions';
+const ERROR_DELETING_EXECUTION_MESSAGE =
+  'There was an error deleting the execution';
+const SUCCESS_DELETING_EXECUTION_MESSAGE =
+  'The execution was deleted successfully';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -91,9 +97,8 @@ module.exports = {
   SUCCESS_LOADING_DATASET_MESSAGE,
   ERROR_LOADING_DATASET_MESSAGE,
   ERROR_MISSING_FILE_MESSAGE,
-  buildPythonProcessErrorMessage,
-  ERROR_EXECUTING_PYTHON_ALGORITHM_MESSAGE,
-  SUCCESS_EXECUTING_PYTHON_ALGORITHM_MESSAGE,
+  buildProcessErrorMessage,
+  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
   ERROR_DELETING_DATASET_MESSAGE,
   SUCCESS_DELETING_DATASET_MESSAGE,
   SUCCESS_DELETING_RESULT_MESSAGE,
@@ -126,4 +131,8 @@ module.exports = {
   ERROR_GETTING_UTILS_MESSAGE,
   ERROR_SAVING_UTILS_MESSAGE,
   SUCCESS_SAVING_UTILS_MESSAGE,
+  ERROR_CREATING_EXECUTION_MESSAGE,
+  ERROR_GETTING_EXECUTIONS_MESSAGE,
+  ERROR_DELETING_EXECUTION_MESSAGE,
+  SUCCESS_DELETING_EXECUTION_MESSAGE,
 };

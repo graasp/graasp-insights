@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable func-names */
-import { mochaAsync, openDrawer, expectElementToExist } from './utils';
+import { mochaAsync, openDrawer } from './utils';
 import { createApplication, closeApplication } from './application';
 import { DEFAULT_GLOBAL_TIMEOUT } from './constants';
 import {
@@ -29,9 +29,9 @@ describe('Menu Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
       await openDrawer(client);
-      await expectElementToExist(client, `#${DATASETS_MENU_ITEM_ID}`);
-      await expectElementToExist(client, `#${ALGORITHMS_MENU_ITEM_ID}`);
-      await expectElementToExist(client, `#${QUIT_MENU_ITEM_ID}`);
+      await client.expectElementToExist(`#${DATASETS_MENU_ITEM_ID}`);
+      await client.expectElementToExist(`#${ALGORITHMS_MENU_ITEM_ID}`);
+      await client.expectElementToExist(`#${QUIT_MENU_ITEM_ID}`);
     }),
   );
 });

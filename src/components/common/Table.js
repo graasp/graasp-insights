@@ -19,7 +19,7 @@ const styles = () => ({
 });
 
 const Table = (props) => {
-  const { columns, rows, classes } = props;
+  const { columns, rows, classes, id } = props;
   const [isAsc, setIsAsc] = useState(true);
   const [orderBy, setOrderBy] = useState();
 
@@ -35,7 +35,7 @@ const Table = (props) => {
   const sortedRows = sortByKey(rows, orderBy, isAsc);
 
   return (
-    <MaterialTable aria-label="table">
+    <MaterialTable aria-label="table" id={id}>
       <TableHead>
         <TableRow>
           {columns.map(({ columnName, alignColumn, sortBy }) => {
@@ -91,6 +91,11 @@ Table.propTypes = {
   classes: PropTypes.shape({
     bold: PropTypes.string.isRequired,
   }).isRequired,
+  id: PropTypes.string,
+};
+
+Table.defaultProps = {
+  id: '',
 };
 
 const StyledComponent = withStyles(styles, { withTheme: false })(Table);

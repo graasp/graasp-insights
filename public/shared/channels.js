@@ -3,7 +3,6 @@
 
 module.exports = {
   LOAD_DATASET_CHANNEL: 'dataset:load',
-  EXECUTE_PYTHON_ALGORITHM_CHANNEL: 'execute:python',
   GET_DATASET_CHANNEL: 'dataset:get',
   GET_DATASETS_CHANNEL: 'datasets:get',
   SET_DATASET_FILE_CHANNEL: 'dataset:file:set',
@@ -28,4 +27,8 @@ module.exports = {
   BROWSE_FILE_CHANNEL: 'file:browse',
   GET_UTILS_CHANNEL: 'utils:get',
   SAVE_UTILS_CHANNEL: 'utils:save',
+  GET_EXECUTIONS_CHANNEL: 'executions:get',
+  CREATE_EXECUTION_CHANNEL: 'execution:create',
+  DELETE_EXECUTION_CHANNEL: 'execution:delete',
+  EXECUTE_ALGORITHM_CHANNEL: 'execution:execute',
 };

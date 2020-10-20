@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from 'chai';
 import { DRAWER_BUTTON_ID } from '../src/config/selectors';
 import { OPEN_DRAWER_PAUSE } from './constants';
 
@@ -18,20 +17,4 @@ export const openDrawer = async (client) => {
     await drawerButton.click();
   }
   await client.pause(OPEN_DRAWER_PAUSE);
-};
-
-export const expectElementToExist = async (client, elementSelector) => {
-  const el = await client.$(elementSelector);
-  const found = await el.isExisting();
-  if (!found) {
-    /* eslint-disable-next-line no-console */
-    console.log(`${elementSelector} is not found`);
-  }
-  expect(found).to.be.true;
-};
-
-export const expectElementToNotExist = async (client, elementSelector) => {
-  const el = await client.$(elementSelector);
-  const found = await el.isExisting();
-  expect(found).to.be.false;
 };

@@ -1,0 +1,51 @@
+{
+  "data": {
+    "actions": [
+      {
+        "_id": "555555328729e6001a0ee309",
+        "user": "5405e202da3a95cf9050e8f9",
+        "sessionId": null,
+        "data": { "page": "111111328729e1111a0ee309" },
+        "visibility": "public",
+        "space": "5ed5f92233c8a33f3d5d87a5",
+        "verb": "navigate",
+        "postedAt": "2020-06-02T07:05:28.916Z",
+        "sessionSequenceNumber": 1,
+        "userType": "graasp",
+        "geolocation": {
+          "range": [1560085760, 1560086015],
+          "country": "JO",
+          "region": "IR",
+          "eu": "0",
+          "timezone": "Asia/Amman",
+          "city": "Irbid",
+          "ll": [32.5556, 35.85],
+          "metro": 0,
+          "area": 50
+        },
+        "createdAt": "2020-06-02T07:05:22.136Z",
+        "updatedAt": "2020-06-02T07:05:22.136Z",
+        "__v": 0
+      }
+    ],
+    "users": [
+      {
+        "_id": "5405e202da3a95cf9050e8f9",
+        "name": "Learning Analytics",
+        "type": "graasp"
+      }
+    ],
+    "appInstances": [],
+    "appInstanceResources": [],
+    "metadata": {
+      "spaceTree": [
+        {
+          "id": "5ed5f92233c8a33f3d5d87a5",
+          "name": "Mathematics",
+          "parentId": null
+        }
+      ],
+      "createdAt": "2020-10-13T07:57:11.743Z"
+    }
+  }
+}

@@ -24,6 +24,7 @@ import { formatFileSize } from '../utils/formatting';
 import ExportButton from './common/ExportButton';
 import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
 import { FLAG_EXPORTING_RESULT } from '../shared/types';
+import { RESULTS_MAIN_ID } from '../config/selectors';
 
 const styles = (theme) => ({
   addButton: {
@@ -120,7 +121,7 @@ class Results extends Component {
         alignField: 'left',
       },
       {
-        columnName: t('Result from'),
+        columnName: t('From Algorithm'),
         sortBy: 'algorithmName',
         field: 'algorithmName',
         alignColumn: 'left',
@@ -240,7 +241,7 @@ class Results extends Component {
     });
 
     return (
-      <Main>
+      <Main id={RESULTS_MAIN_ID}>
         <Container>
           <h1>{t('Results')}</h1>
           <Table columns={columns} rows={rows} />
