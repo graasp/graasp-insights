@@ -3,11 +3,11 @@
     "actions": [
       {
         "_id": "555555328729e6001a0ee309",
-        "user": "99999b05cd601766ce72c0b9",
+        "user": "5405e202da3a95cf9050e8f9",
         "sessionId": null,
         "data": { "page": "111111328729e1111a0ee309" },
         "visibility": "public",
-        "space": "5ed0000003c8a33f3d5d87a5",
+        "space": "5ed5f92233c8a33f3d5d87a5",
         "verb": "navigate",
         "postedAt": "2020-06-02T07:05:28.916Z",
         "sessionSequenceNumber": 1,
