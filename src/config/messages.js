@@ -22,6 +22,16 @@ const ERROR_GETTING_LANGUAGE_MESSAGE =
   'There was an error retrieving the language';
 const ERROR_SETTING_LANGUAGE_MESSAGE =
   'There was an error setting the language';
+const ERROR_GETTING_ALGORITHMS_MESSAGE =
+  'There was an error retrieving the algorithms';
+const ERROR_DELETING_ALGORITHM_MESSAGE =
+  'There was an error deleting the algorithm';
+const ERROR_EXECUTING_ALGORITHM_MESSAGE =
+  'There was an error while executing the algorithm';
+const UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
+  'The programming language of the algorithm is not supported';
+const SUCCESS_EXECUTING_ALGORITHM_MESSAGE =
+  'The algorithm has been successfully executed';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -36,4 +46,9 @@ module.exports = {
   SUCCESS_LOADING_DATASET_MESSAGE,
   ERROR_GETTING_LANGUAGE_MESSAGE,
   ERROR_SETTING_LANGUAGE_MESSAGE,
+  ERROR_GETTING_ALGORITHMS_MESSAGE,
+  ERROR_DELETING_ALGORITHM_MESSAGE,
+  ERROR_EXECUTING_ALGORITHM_MESSAGE,
+  UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
+  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
 };

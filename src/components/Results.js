@@ -8,13 +8,7 @@ import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
-import Table from '@material-ui/core/Table';
 import Tooltip from '@material-ui/core/Tooltip';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import IconButton from '@material-ui/core/IconButton';
 import PublishIcon from '@material-ui/icons/Publish';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
@@ -23,14 +17,10 @@ import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Main from './common/Main';
 import Loader from './common/Loader';
-import {
-  RESULTS_TABLE_COLUMNS,
-  DEFAULT_LOCALE_DATE,
-  ORDER_BY,
-} from '../config/constants';
-import { sortByKey } from '../utils/sorting';
-import { getResults, deleteResult } from '../actions';
+import { DEFAULT_LOCALE_DATE } from '../config/constants';
+import { getResults, deleteResult, getAlgorithms } from '../actions';
 import { buildResultPath } from '../config/paths';
+import Table from './common/Table';
 
 const styles = (theme) => ({
   addButton: {
@@ -43,42 +33,37 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.primary.main,
     },
   },
-  columnName: {
-    fontWeight: 'bold',
-  },
   infoAlert: {
     margin: theme.spacing(2),
   },
 });
 
 class Results extends Component {
-  state = {
-    isAsc: true,
-    orderBy: RESULTS_TABLE_COLUMNS.NAME,
-  };
-
   static propTypes = {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
     dispatchDeleteResult: PropTypes.func.isRequired,
+    dispatchGetAlgorithms: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
-      columnName: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
+    algorithms: PropTypes.instanceOf(List),
   };
 
   static defaultProps = {
     results: List(),
+    algorithms: List(),
   };
 
   componentDidMount() {
-    const { dispatchGetResults } = this.props;
+    const { dispatchGetResults, dispatchGetAlgorithms } = this.props;
     dispatchGetResults();
+    dispatchGetAlgorithms();
   }
 
   handleView = ({ id }) => {
@@ -92,7 +77,7 @@ class Results extends Component {
     // TODO: implement publish functionality
   };
 
-  handleAnonymize = () => {
+  handleVisualize = () => {
     // TODO: implement anonymize functionality
   };
 
@@ -105,97 +90,8 @@ class Results extends Component {
     dispatchDeleteResult({ id: result.id });
   };
 
-  handleSortColumn = (column) => {
-    const { orderBy, isAsc } = this.state;
-    if (orderBy === column) {
-      this.setState({ isAsc: !isAsc });
-    } else {
-      this.setState({ isAsc: true, orderBy: column });
-    }
-  };
-
-  renderResultsContent = () => {
-    const { orderBy, isAsc } = this.state;
-    const { results, t } = this.props;
-
-    const sortedResults = sortByKey(results, orderBy, isAsc);
-
-    return sortedResults.map((result) => {
-      const {
-        name,
-        size,
-        lastModified,
-        createdAt,
-        description = '',
-        algorithmId,
-      } = result;
-      const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
-      const createdAtString = createdAt
-        ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
-      const lastModifiedString = lastModified
-        ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
-      return (
-        <TableRow key={result.id}>
-          <TableCell>
-            <Typography variant="subtitle1">{name}</Typography>
-            <Typography variant="caption">{description}</Typography>
-          </TableCell>
-          <TableCell align="right">{sizeString}</TableCell>
-          <TableCell align="right">{algorithmId}</TableCell>
-          <TableCell align="right">{createdAtString}</TableCell>
-          <TableCell align="right">{lastModifiedString}</TableCell>
-          <TableCell align="right">
-            <Tooltip title={t('View result')}>
-              <IconButton>
-                <CodeIcon
-                  aria-label="view"
-                  onClick={() => this.handleView(result)}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={t('Visualize result')}>
-              <IconButton
-                aria-label="edit"
-                onClick={() => this.handleEdit(result)}
-              >
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={t('Visualize result')}>
-              <IconButton
-                aria-label="anonymize"
-                onClick={() => this.handleVisualize(result)}
-              >
-                <EqualizerIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={t('Publish dataset')}>
-              <IconButton
-                aria-label="publish"
-                onClick={() => this.handlePublish(result)}
-              >
-                <PublishIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={t('Remove dataset')}>
-              <IconButton
-                aria-label="delete"
-                onClick={() => this.handleDelete(result)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-          </TableCell>
-        </TableRow>
-      );
-    });
-  };
-
   render() {
-    const { isAsc, orderBy } = this.state;
-    const { classes, t, results } = this.props;
+    const { classes, t, results, algorithms } = this.props;
 
     if (!results) {
       return <Loader />;
@@ -203,7 +99,7 @@ class Results extends Component {
 
     if (!results.size) {
       return (
-        <Main fullScreen>
+        <Main>
           <Alert severity="info" className={classes.infoAlert}>
             {t('No results available')}
           </Alert>
@@ -211,121 +107,152 @@ class Results extends Component {
       );
     }
 
+    const columns = [
+      {
+        columnName: t('Name'),
+        sortBy: 'name',
+        field: 'dataset',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
+      {
+        columnName: t('Result from'),
+        sortBy: 'algorithmName',
+        field: 'algorithmName',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
+      {
+        columnName: t('Size'),
+        sortBy: 'sizeNumeric',
+        field: 'size',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
+        columnName: t('Created'),
+        sortBy: 'createdAt',
+        field: 'createdAt',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
+        columnName: t('Last Modified'),
+        sortBy: 'lastModified',
+        field: 'lastModified',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
+        columnName: t('Quick actions'),
+        field: 'quickActions',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+    ];
+
+    const rows = results.map((result) => {
+      const {
+        id,
+        name,
+        size,
+        lastModified,
+        createdAt,
+        algorithmId,
+        description = '',
+      } = result;
+
+      const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
+      const createdAtString = createdAt
+        ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
+        : t('Unknown');
+      const lastModifiedString = lastModified
+        ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
+        : t('Unknown');
+      const algorithmName = algorithms.find(
+        ({ id: resultId }) => resultId === algorithmId,
+      )?.name;
+
+      return {
+        key: id,
+        name,
+        algorithmName,
+        dataset: [
+          <Typography variant="subtitle1" key="name">
+            {name}
+          </Typography>,
+          <Typography variant="caption" key="description">
+            {description}
+          </Typography>,
+        ],
+        size: sizeString,
+        sizeNumeric: size,
+        createdAt: createdAtString,
+        lastModified: lastModifiedString,
+        quickActions: [
+          <Tooltip title={t('View dataset')} key="view">
+            <IconButton
+              aria-label="view"
+              onClick={() => this.handleView(result)}
+            >
+              <CodeIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Edit dataset')} key="edit">
+            <IconButton
+              aria-label="edit"
+              onClick={() => this.handleEdit(result)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Visualize dataset')} key="visualize">
+            <IconButton
+              aria-label="visualize"
+              onClick={() => this.handleVisualize(result)}
+            >
+              <EqualizerIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Publish dataset')} key="publish">
+            <IconButton
+              aria-label="publish"
+              onClick={() => this.handlePublish(result)}
+            >
+              <PublishIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Remove dataset')} key="delete">
+            <IconButton
+              aria-label="delete"
+              onClick={() => this.handleDelete(result)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+        ],
+      };
+    });
+
     return (
       <Main>
         <Container>
           <h1>{t('Results')}</h1>
-          <Table aria-label="table of results">
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">
-                  <TableSortLabel
-                    active={orderBy === RESULTS_TABLE_COLUMNS.NAME}
-                    direction={
-                      orderBy === RESULTS_TABLE_COLUMNS.NAME && !isAsc
-                        ? ORDER_BY.DESC
-                        : ORDER_BY.ASC
-                    }
-                    onClick={() => {
-                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.NAME);
-                    }}
-                  >
-                    <Typography className={classes.columnName}>
-                      {t('Name')}
-                    </Typography>
-                  </TableSortLabel>
-                </TableCell>
-                <TableCell align="right">
-                  <TableSortLabel
-                    active={orderBy === RESULTS_TABLE_COLUMNS.SIZE}
-                    direction={
-                      orderBy === RESULTS_TABLE_COLUMNS.SIZE && !isAsc
-                        ? ORDER_BY.DESC
-                        : ORDER_BY.ASC
-                    }
-                    onClick={() => {
-                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.SIZE);
-                    }}
-                  >
-                    <Typography className={classes.columnName}>
-                      {t('Size')}
-                    </Typography>
-                  </TableSortLabel>
-                </TableCell>
-                <TableCell align="right">
-                  <TableSortLabel
-                    active={orderBy === RESULTS_TABLE_COLUMNS.ALGORITHM}
-                    direction={
-                      orderBy === RESULTS_TABLE_COLUMNS.SCRIPT && !isAsc
-                        ? ORDER_BY.DESC
-                        : ORDER_BY.ASC
-                    }
-                    onClick={() => {
-                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.ALGORITHM);
-                    }}
-                  >
-                    <Typography className={classes.columnName}>
-                      {t('Result from')}
-                    </Typography>
-                  </TableSortLabel>
-                </TableCell>
-                <TableCell align="right">
-                  <TableSortLabel
-                    active={orderBy === RESULTS_TABLE_COLUMNS.CREATED}
-                    direction={
-                      orderBy === RESULTS_TABLE_COLUMNS.CREATED && !isAsc
-                        ? ORDER_BY.DESC
-                        : ORDER_BY.ASC
-                    }
-                    onClick={() => {
-                      this.handleSortColumn(RESULTS_TABLE_COLUMNS.CREATED);
-                    }}
-                  >
-                    <Typography className={classes.columnName}>
-                      {t('Created')}
-                    </Typography>
-                  </TableSortLabel>
-                </TableCell>
-                <TableCell align="right">
-                  <TableSortLabel
-                    active={orderBy === RESULTS_TABLE_COLUMNS.LAST_MODIFIED}
-                    direction={
-                      orderBy === RESULTS_TABLE_COLUMNS.LAST_MODIFIED && !isAsc
-                        ? ORDER_BY.DESC
-                        : ORDER_BY.ASC
-                    }
-                    onClick={() => {
-                      this.handleSortColumn(
-                        RESULTS_TABLE_COLUMNS.LAST_MODIFIED,
-                      );
-                    }}
-                  >
-                    <Typography className={classes.columnName}>
-                      {t('Last Modified')}
-                    </Typography>
-                  </TableSortLabel>
-                </TableCell>
-                <TableCell align="right">
-                  <Typography className={classes.columnName}>
-                    {t('Quick actions')}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderResultsContent()}</TableBody>
-          </Table>
+          <Table columns={columns} rows={rows} />
         </Container>
       </Main>
     );
   }
 }
 
-const mapStateToProps = ({ result }) => ({
+const mapStateToProps = ({ result, algorithms }) => ({
   results: result.getIn(['results']),
+  algorithms: algorithms.getIn(['algorithms']),
 });
 
 const mapDispatchToProps = {
   dispatchGetResults: getResults,
+  dispatchGetAlgorithms: getAlgorithms,
   dispatchDeleteResult: deleteResult,
 };
 

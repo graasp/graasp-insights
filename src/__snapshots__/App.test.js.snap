@@ -349,6 +349,11 @@ exports[`<App /> renders correctly 1`] = `
           exact={true}
           path="/settings"
         />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/executions"
+        />
       </Switch>
     </div>
   </HashRouter>

@@ -9,6 +9,7 @@ import PieChartIcon from '@material-ui/icons/PieChart';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import CodeIcon from '@material-ui/icons/Code';
+import TuneIcon from '@material-ui/icons/Tune';
 import { withTranslation } from 'react-i18next';
 import {
   HOME_PATH,
@@ -16,11 +17,13 @@ import {
   DATASETS_PATH,
   DEVELOPER_PATH,
   RESULTS_PATH,
+  EXECUTIONS_PATH,
 } from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
   DATASETS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
+  EXECUTIONS_MENU_ITEM_ID,
 } from '../../config/selectors';
 
 export class MainMenu extends Component {
@@ -114,6 +117,17 @@ export class MainMenu extends Component {
             <CodeIcon />
           </ListItemIcon>
           <ListItemText primary={t('Algorithms')} />
+        </MenuItem>
+        <MenuItem
+          id={EXECUTIONS_MENU_ITEM_ID}
+          selected={path === EXECUTIONS_PATH}
+          onClick={() => this.handleClick(EXECUTIONS_PATH)}
+          button
+        >
+          <ListItemIcon>
+            <TuneIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Executions')} />
         </MenuItem>
         <MenuItem
           selected={path === RESULTS_PATH}

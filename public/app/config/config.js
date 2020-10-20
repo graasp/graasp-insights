@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { app } = require('electron');
 const path = require('path');
+const ObjectId = require('bson-objectid');
 const isWindows = require('../utils/isWindows');
 
 // resolve path for windows '\'
@@ -15,12 +16,41 @@ const DATABASE_PATH = `${VAR_FOLDER}/db.json`;
 const ICON_PATH = 'app/assets/icon.png';
 const DATASETS_FOLDER = `${VAR_FOLDER}/datasets`;
 const RESULTS_FOLDER = `${VAR_FOLDER}/results`;
+const ALGORITHMS_FOLDER = `${VAR_FOLDER}/algorithms`;
 const SAMPLE_DATASET_FILEPATH = path.resolve(
   `${DATASETS_FOLDER}/sampleDataset.json`,
 );
+const ALGORITHMS_FOLDER_NAME = 'algorithms';
 const PRODUCT_NAME = 'Graasp Insights';
 const TMP_FOLDER = 'tmp';
 const DEFAULT_LANG = 'en';
+const DEFAULT_AUTHOR = 'Graasp';
+
+const PROGRAMMING_LANGUAGES = {
+  PYTHON: 'Python',
+};
+
+const GRAASP_ALGORITHMS = [
+  {
+    id: ObjectId().str,
+    name: 'Default anonymization',
+    description:
+      'Hashes the user ids, replaces user/id occurences by the hash version, removes geolocation and data fields',
+    filename: 'default_anonymization.py',
+    filepath: path.join(ALGORITHMS_FOLDER, 'default_anonymization.py'),
+    author: DEFAULT_AUTHOR,
+    language: PROGRAMMING_LANGUAGES.PYTHON,
+  },
+  {
+    id: ObjectId().str,
+    name: 'Hash users',
+    description: 'Hashes the user fields',
+    filename: 'hash_users.py',
+    filepath: path.join(ALGORITHMS_FOLDER, 'hash_users.py'),
+    author: DEFAULT_AUTHOR,
+    language: PROGRAMMING_LANGUAGES.PYTHON,
+  },
+];
 
 module.exports = {
   DEFAULT_LOGGING_LEVEL,
@@ -34,5 +64,8 @@ module.exports = {
   PRODUCT_NAME,
   DATASETS_FOLDER,
   RESULTS_FOLDER,
+  ALGORITHMS_FOLDER,
+  GRAASP_ALGORITHMS,
+  ALGORITHMS_FOLDER_NAME,
   escapeEscapeCharacter,
 };

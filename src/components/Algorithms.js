@@ -3,63 +3,56 @@ import { connect } from 'react-redux';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+import Alert from '@material-ui/lab/Alert';
+import Container from '@material-ui/core/Container';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip';
 import Main from './common/Main';
-import { getDatasets } from '../actions';
-import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
+import { getAlgorithms, deleteAlgorithm } from '../actions';
 import Loader from './common/Loader';
+import Table from './common/Table';
+
+const styles = (theme) => ({
+  infoAlert: {
+    margin: theme.spacing(2),
+  },
+});
 
 class Algorithms extends Component {
   static propTypes = {
-    datasets: PropTypes.instanceOf(List),
+    algorithms: PropTypes.instanceOf(List).isRequired,
     t: PropTypes.func.isRequired,
-    dispatchGetDatasets: PropTypes.func.isRequired,
+    dispatchGetAlgorithms: PropTypes.func.isRequired,
+    dispatchDeleteAlgorithm: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    classes: PropTypes.shape({
+      infoAlert: PropTypes.string.isRequired,
+    }).isRequired,
   };
-
-  static defaultProps = {
-    datasets: null,
-  };
-
-  state = (() => {
-    const { datasets } = this.props;
-    return {
-      datasetId: datasets?.first()?.id,
-    };
-  })();
 
   componentDidMount() {
-    const { dispatchGetDatasets } = this.props;
-    dispatchGetDatasets();
+    const { dispatchGetAlgorithms } = this.props;
+    dispatchGetAlgorithms();
   }
 
-  componentDidUpdate({ datasets: prevDatasets }) {
-    const { datasets } = this.props;
-    if (prevDatasets !== datasets && datasets.size) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ datasetId: datasets.first().id });
-    }
+  // eslint-disable-next-line class-methods-use-this
+  handleEdit() {
+    // TODO: implement editing functionality
   }
 
-  handleDatasetSelectOnChange = (e) => {
-    this.setState({ datasetId: e.target.value });
-  };
-
-  executePythonAlgorithm = () => {
-    const { datasetId } = this.state;
-    window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
-      id: 1,
-      datasetId,
-    });
-  };
+  handleDelete(id) {
+    const { dispatchDeleteAlgorithm } = this.props;
+    dispatchDeleteAlgorithm({ id });
+  }
 
   render() {
-    const { datasetId } = this.state;
-    const { datasets, t } = this.props;
+    const { algorithms, t, isLoading, classes } = this.props;
 
-    if (!datasets || !datasetId) {
+    if (isLoading) {
       return (
         <Main fullScreen>
           <Loader />
@@ -67,39 +60,98 @@ class Algorithms extends Component {
       );
     }
 
-    if (!datasets.size) {
-      return <Main fullScreen>{t('Load datasets first')}</Main>;
+    if (algorithms.size <= 0) {
+      return (
+        <Main>
+          <Alert severity="info" className={classes.infoAlert}>
+            {t('No algorithms are available')}
+          </Alert>
+        </Main>
+      );
     }
 
+    const columns = [
+      {
+        columnName: t('Algorithm'),
+        sortBy: 'name',
+        field: 'algorithm',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
+      {
+        columnName: t('Author'),
+        sortBy: 'author',
+        field: 'author',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
+      {
+        columnName: t('Language'),
+        sortBy: 'language',
+        field: 'language',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
+      {
+        columnName: t('Quick actions'),
+        field: 'quickActions',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+    ];
+
+    const rows = algorithms.map((algorithm) => {
+      const { id, name, description, author, language } = algorithm;
+      return {
+        key: id,
+        name,
+        algorithm: [
+          <Typography variant="subtitle1" key="name">
+            {name}
+          </Typography>,
+          <Typography variant="caption" key="description">
+            {description}
+          </Typography>,
+        ],
+        author,
+        language,
+        quickActions: [
+          <Tooltip title={t('Edit algorithm')} key="edit">
+            <IconButton aria-label="edit" onClick={this.handleEdit}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Delete algorithm')} key="delete">
+            <IconButton
+              aria-label="delete"
+              onClick={() => this.handleDelete(id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+        ],
+      };
+    });
+
     return (
-      <Main fullScreen>
-        {/* todo: turn this into a list showing different algorithms that can be executed */}
-        <Typography color="inherit" style={{ margin: '2rem' }}>
-          {t('Execute algorithm 1 (Hash user ids) on')}
-        </Typography>
-        <Select value={datasetId} onChange={this.handleDatasetSelectOnChange}>
-          {datasets.map(({ id, name }) => {
-            return <MenuItem value={id}>{name}</MenuItem>;
-          })}
-        </Select>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={this.executePythonAlgorithm}
-        >
-          {t('Run Algorithm')}
-        </Button>
+      <Main>
+        <Container>
+          <h1>{t('Algorithms')}</h1>
+          <Table columns={columns} rows={rows} />
+        </Container>
       </Main>
     );
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
-  datasets: dataset.get('datasets'),
+const mapStateToProps = ({ algorithms }) => ({
+  algorithms: algorithms.get('algorithms'),
+  isLoading: algorithms.getIn(['activity']).size > 0,
 });
 
 const mapDispatchToProps = {
-  dispatchGetDatasets: getDatasets,
+  dispatchGetAlgorithms: getAlgorithms,
+  dispatchDeleteAlgorithm: deleteAlgorithm,
 };
 
 const ConnectedComponent = connect(
@@ -107,4 +159,8 @@ const ConnectedComponent = connect(
   mapDispatchToProps,
 )(Algorithms);
 
-export default withTranslation()(ConnectedComponent);
+const StyledComponent = withStyles(styles, { withTheme: true })(
+  ConnectedComponent,
+);
+
+export default withTranslation()(StyledComponent);

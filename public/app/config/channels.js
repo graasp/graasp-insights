@@ -6,7 +6,7 @@ module.exports = {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:show',
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:respond',
   LOAD_DATASET_CHANNEL: 'dataset:load',
-  EXECUTE_PYTHON_ALGORITHM_CHANNEL: 'algorithm:python:execute',
+  EXECUTE_PYTHON_ALGORITHM_CHANNEL: 'execute:python',
   GET_DATASET_CHANNEL: 'dataset:get',
   GET_DATASETS_CHANNEL: 'datasets:get',
   GET_DATABASE_CHANNEL: 'developer:database:get',
@@ -18,4 +18,6 @@ module.exports = {
   DELETE_RESULT_CHANNEL: 'result:delete',
   GET_RESULT_CHANNEL: 'result:get',
   GET_RESULTS_CHANNEL: 'results:get',
+  GET_ALGORITHMS_CHANNEL: 'algorithms:get',
+  DELETE_ALGORITHM_CHANNEL: 'algorithm:delete',
 };

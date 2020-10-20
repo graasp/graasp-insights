@@ -37,6 +37,19 @@
     "(Optional)": "(Optional)",
     "Description": "Description",
     "Cancel": "Cancel",
-    "Add dataset": "Add dataset"
+    "Add dataset": "Add dataset",
+    "Execute algorithm on a dataset": "Execute algorithm on a dataset",
+    "Edit algorithm": "Edit algorithm",
+    "Delete algorithm": "Delete algorithm",
+    "Dataset": "Dataset",
+    "Algorithm": "Algorithm",
+    "Load a dataset first": "Load a dataset first",
+    "No algorithms are available": "No algorithms are available",
+    "Execute": "Execute",
+    "Executions": "Executions",
+    "Author": "Author",
+    "Results": "Results",
+    "Result from": "Result from",
+    "No results available": "No results available"
   }
 }
