@@ -59,6 +59,8 @@
     "User Count": "User Count",
     "Country Count": "Country Count",
     "Information": "Information",
-    "Back":"Back"
+    "Back": "Back",
+    "An unexpected error happened while opening the dataset.": "An unexpected error happened while opening the dataset.",
+    "Content": "Content"
   }
 }

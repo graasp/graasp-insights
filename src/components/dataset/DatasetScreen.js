@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
+import Alert from '@material-ui/lab/Alert';
+import Container from '@material-ui/core/Container';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -24,6 +26,17 @@ const styles = (theme) => ({
   wrapper: {
     padding: theme.spacing(2),
   },
+  infoAlert: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  backButton: {
+    float: 'left',
+    position: 'absolute',
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
 });
 
 class DatasetScreen extends Component {
@@ -40,6 +53,9 @@ class DatasetScreen extends Component {
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       wrapper: PropTypes.string.isRequired,
+      infoAlert: PropTypes.string.isRequired,
+      backButton: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -110,9 +126,7 @@ class DatasetScreen extends Component {
               <TableCell component="th" scope="row">
                 {t('Subspace Count')}
               </TableCell>
-              <TableCell align="right">
-                {subSpaceCount || 0}
-              </TableCell>
+              <TableCell align="right">{subSpaceCount || 0}</TableCell>
             </TableRow>
             <TableRow key="dateRange">
               <TableCell component="th" scope="row">
@@ -150,22 +164,55 @@ class DatasetScreen extends Component {
     );
   };
 
+  renderBackButton = ({ className } = {}) => {
+    const { t } = this.props;
+    return (
+      <Button
+        className={className}
+        variant="contained"
+        color="primary"
+        onClick={this.handleBack}
+      >
+        {t('Back')}
+      </Button>
+    );
+  };
+
   render() {
     const { dataset, activity, t, classes } = this.props;
 
     if (activity) {
-      return <Loader />;
+      return (
+        <Main fullScreen>
+          <Loader />
+        </Main>
+      );
     }
-    if (dataset.isEmpty()) {
-      return null;
+    if (!dataset || dataset.isEmpty()) {
+      return (
+        <Main>
+          <Container>
+            <Alert severity="error" className={classes.infoAlert}>
+              {t('An unexpected error happened while opening the dataset.')}
+            </Alert>
+            {this.renderBackButton()}
+          </Container>
+        </Main>
+      );
     }
 
     return (
       <Main>
         <div className={classes.wrapper}>
           <Grid container>
+            <Grid item xs={12}>
+              {this.renderBackButton({ className: classes.backButton })}
+              <Typography className={classes.title} variant="h4" align="center">
+                {dataset.get('name')}
+              </Typography>
+            </Grid>
             <Grid item xs={6}>
-              <Typography variant="h4">{dataset.get('name')}</Typography>
+              <Typography variant="h5">{t('Content')}</Typography>
               <JSONFileReader
                 size={dataset.get('size')}
                 content={dataset.get('content')}
@@ -177,9 +224,6 @@ class DatasetScreen extends Component {
               {this.renderDatasetInformation()}
             </Grid>
           </Grid>
-          <Button variant="contained" color="primary" onClick={this.handleBack}>
-            {t('Back')}
-          </Button>
         </div>
       </Main>
     );

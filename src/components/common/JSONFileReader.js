@@ -49,17 +49,19 @@ class JSONFileReader extends Component {
     const { content, size, t, collapsed } = this.props;
     const { json } = this.state;
 
-    if (!content || !json) {
-      return <Loader />;
-    }
-
     if (size > MAX_FILE_SIZE) {
       return (
         <Typography>{t('This file is too big to be displayed.')}</Typography>
       );
     }
 
-    return <ReactJson collapsed={collapsed} src={json} />;
+    if (!content || !json) {
+      return <Loader />;
+    }
+
+    return (
+      <ReactJson groupArraysAfterLength={50} collapsed={collapsed} src={json} />
+    );
   }
 }
 
