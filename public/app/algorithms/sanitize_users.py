@@ -29,14 +29,14 @@ def find_and_replace(dataset, substitution_map):
                     traverse(v)
                 elif isinstance(v, str):
                     current_data[idx] = regex_replace(v)
-        
+
         elif isinstance(current_data, dict):
             for key, v in current_data.items():
                 if isinstance(v, dict) or isinstance(v, list):
                     traverse(v)
                 elif isinstance(v, str):
                     current_data[key] = regex_replace(v)
-    
+
     traverse(dataset)
 
 def get_regex(name):
@@ -75,7 +75,7 @@ def main():
                 }
 
             action['user'] = id_substitutions[userid]['substitution']
-    
+
     # replace the user ids in appInstanceResources
     for app_instance_res in dataset['data']['appInstanceResources']:
         if 'user' in app_instance_res:

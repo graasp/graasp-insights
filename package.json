@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/graasp/graasp-insights"
   },
+  "bugs": {
+    "url": "https://github.com/graasp/graasp-insights/issues"
+  },
   "author": "Graasp",
   "contributors": [
     "Juan Carlos Farah",
@@ -72,7 +75,7 @@
     "cpy-cli": "3.1.1",
     "cross-env": "7.0.2",
     "electron": "10.1.4",
-    "electron-builder": "22.8.1",
+    "electron-builder": "22.9.1",
     "env-cmd": "10.1.0",
     "enzyme-to-json": "3.5.0",
     "eslint-config-airbnb": "18.2.0",
@@ -94,15 +97,14 @@
     "wait-on": "5.2.0"
   },
   "scripts": {
-    "prebuild": "yarn prepare",
-    "build": "concurrently \"env-cmd -f ./.env.local react-scripts build\"",
+    "prebuild": "yarn prepare && env-cmd -f ./.env.local node scripts/setup.js",
+    "build": "env-cmd -f ./.env.local react-scripts build",
+    "predist": "yarn build",
     "dist": "env-cmd -f ./.env.local electron-builder",
     "dist:win": "env-cmd -f ./.env.local electron-builder -w --x64 --ia32",
-    "dist:mac": "env-cmd -f ./.env electron-builder -m",
-    "dist:linux": "env-cmd -f ./.env electron-builder -l",
-    "dist:posix": "env-cmd -f ./.env electron-builder -ml",
-    "dist:win:docker": "./scripts/buildWindowsWithDocker.sh",
-    "dist:all": "run-s dist:posix dist:win",
+    "dist:mac": "env-cmd -f ./.env.local electron-builder -m",
+    "dist:linux": "env-cmd -f ./.env.local electron-builder -l",
+    "dist:posix": "env-cmd -f ./.env.local electron-builder -ml",
     "lint": "eslint .",
     "prestart": "yarn prepare && env-cmd -f ./.env.local node scripts/setup.js",
     "start": "concurrently \"env-cmd -f ./.env.local react-scripts start\" \"wait-on http://localhost:3000 && env-cmd -f ./.env.local electron .\"",
@@ -129,6 +131,52 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "com.graasp",
+    "compression": "normal",
+    "productName": "Graasp Insights",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "mac": {
+      "icon": "assets/icon.icns",
+      "type": "distribution",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.education",
+      "publish": [
+        "github"
+      ],
+      "gatekeeperAssess": true
+    },
+    "mas": {
+      "entitlements": "assets/entitlements.mas.plist",
+      "entitlementsInherit": "assets/entitlements.mas.inherit.plist",
+      "provisioningProfile": "assets/embedded.provisionprofile"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico",
+      "publish": [
+        "github"
+      ]
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": [
+        "snap",
+        "AppImage"
+      ],
+      "description": "Desktop application for processing Graasp datasets.",
+      "category": "Network;Feed",
+      "publish": [
+        "github"
+      ]
+    }
   },
   "jest": {
     "snapshotSerializers": [
