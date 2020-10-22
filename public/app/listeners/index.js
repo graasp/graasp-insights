@@ -13,6 +13,7 @@ const getResults = require('./getResults');
 const deleteResult = require('./deleteResult');
 const getAlgorithms = require('./getAlgorithms');
 const deleteAlgorithm = require('./deleteAlgorithm');
+const getDatabase = require('./getDatabase');
 
 module.exports = {
   getDataset,
@@ -30,4 +31,5 @@ module.exports = {
   deleteResult,
   getAlgorithms,
   deleteAlgorithm,
+  getDatabase,
 };

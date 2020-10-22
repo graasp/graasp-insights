@@ -1,7 +1,12 @@
 const fs = require('fs');
-const { GET_DATASET_CHANNEL } = require('../config/channels');
+const { GET_DATASET_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { DATASETS_COLLECTION } = require('../db');
+const {
+  GET_DATASET_SUCCESS,
+  GET_DATASET_ERROR,
+} = require('../../shared/types');
+const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
 
 const getDataset = (mainWindow, db) => async (event, { id }) => {
   try {
@@ -12,13 +17,23 @@ const getDataset = (mainWindow, db) => async (event, { id }) => {
     const { filepath } = dataset;
     content = fs.readFileSync(filepath, 'utf8');
 
-    mainWindow.webContents.send(GET_DATASET_CHANNEL, { ...dataset, content });
+    return mainWindow.webContents.send(GET_DATASET_CHANNEL, {
+      type: GET_DATASET_SUCCESS,
+      payload: { ...dataset, content },
+    });
   } catch (err) {
     if (err.code === 'ENOENT') {
       logger.error('File not found!');
+      return mainWindow.webContents.send(GET_DATASET_CHANNEL, {
+        type: GET_DATASET_ERROR,
+        error: ERROR_MISSING_FILE,
+      });
     }
     logger.error(err);
-    mainWindow.webContents.send(GET_DATASET_CHANNEL, null);
+    return mainWindow.webContents.send(GET_DATASET_CHANNEL, {
+      type: GET_DATASET_ERROR,
+      error: ERROR_GENERAL,
+    });
   }
 };
 

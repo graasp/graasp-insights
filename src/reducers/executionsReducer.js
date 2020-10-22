@@ -1,6 +1,9 @@
 import { Map, List } from 'immutable';
 import { updateActivityList } from './common';
-import { FLAG_EXECUTING_ALGORITHM, EXECUTE_ALGORITHM_SUCCESS } from '../types';
+import {
+  FLAG_EXECUTING_ALGORITHM,
+  EXECUTE_ALGORITHM_SUCCESS,
+} from '../shared/types';
 
 const INITIAL_STATE = Map({
   activity: List(),

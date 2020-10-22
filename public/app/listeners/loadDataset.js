@@ -3,8 +3,13 @@ const fs = require('fs');
 const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/config');
+const { ERROR_GENERAL } = require('../../shared/errors');
 const { DATASETS_COLLECTION } = require('../db');
-const { LOAD_DATASET_CHANNEL } = require('../config/channels');
+const { LOAD_DATASET_CHANNEL } = require('../../shared/channels');
+const {
+  LOAD_DATASET_SUCCESS,
+  LOAD_DATASET_ERROR,
+} = require('../../shared/types');
 
 const createNewDataset = ({ name, filepath, description, folderPath }) => {
   // create and get file data
@@ -51,14 +56,23 @@ const loadDataset = (mainWindow, db) => async (event, args) => {
       // save file in lowdb
       db.get(DATASETS_COLLECTION).push(newDataset).write();
       // send message with created dataset
-      mainWindow.webContents.send(LOAD_DATASET_CHANNEL, newDataset);
+      mainWindow.webContents.send(LOAD_DATASET_CHANNEL, {
+        type: LOAD_DATASET_SUCCESS,
+        payload: newDataset,
+      });
     } catch (err) {
       logger.log(err);
-      mainWindow.webContents.send(LOAD_DATASET_CHANNEL);
+      mainWindow.webContents.send(LOAD_DATASET_CHANNEL, {
+        type: LOAD_DATASET_ERROR,
+        error: ERROR_GENERAL,
+      });
     }
   } else {
     // empty message will be read by /actions/dataset.js as !dataset, and hence trigger an error
-    mainWindow.webContents.send(LOAD_DATASET_CHANNEL);
+    mainWindow.webContents.send(LOAD_DATASET_CHANNEL, {
+      type: LOAD_DATASET_ERROR,
+      error: ERROR_GENERAL,
+    });
   }
 };
 

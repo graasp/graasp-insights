@@ -1,7 +1,12 @@
 const fs = require('fs');
-const { DELETE_RESULT_CHANNEL } = require('../config/channels');
+const { DELETE_RESULT_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { RESULTS_COLLECTION } = require('../db');
+const {
+  DELETE_RESULT_SUCCESS,
+  DELETE_RESULT_ERROR,
+} = require('../../shared/types');
+const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
 
 const deleteResult = (mainWindow, db) => async (event, { id }) => {
   try {
@@ -15,13 +20,23 @@ const deleteResult = (mainWindow, db) => async (event, { id }) => {
 
     db.get(RESULTS_COLLECTION).remove({ id }).write();
 
-    mainWindow.webContents.send(DELETE_RESULT_CHANNEL);
+    return mainWindow.webContents.send(DELETE_RESULT_CHANNEL, {
+      type: DELETE_RESULT_SUCCESS,
+      payload: id,
+    });
   } catch (err) {
     if (err.code === 'ENOENT') {
       logger.error('File not found!');
+      return mainWindow.webContents.send(DELETE_RESULT_CHANNEL, {
+        type: DELETE_RESULT_ERROR,
+        error: ERROR_MISSING_FILE,
+      });
     }
     logger.error(err);
-    mainWindow.webContents.send(DELETE_RESULT_CHANNEL);
+    return mainWindow.webContents.send(DELETE_RESULT_CHANNEL, {
+      type: DELETE_RESULT_ERROR,
+      error: ERROR_GENERAL,
+    });
   }
 };
 

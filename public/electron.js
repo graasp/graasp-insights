@@ -21,7 +21,6 @@ const isMac = require('./app/utils/isMac');
 const {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET_CHANNEL,
-  EXECUTE_PYTHON_ALGORITHM_CHANNEL,
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
   GET_DATABASE_CHANNEL,
@@ -35,7 +34,8 @@ const {
   GET_RESULT_CHANNEL,
   GET_ALGORITHMS_CHANNEL,
   DELETE_ALGORITHM_CHANNEL,
-} = require('./app/config/channels');
+  EXECUTE_PYTHON_ALGORITHM_CHANNEL,
+} = require('./shared/channels');
 const {
   showLoadDatasetPrompt,
   loadDataset,
@@ -52,6 +52,7 @@ const {
   deleteResult,
   getAlgorithms,
   deleteAlgorithm,
+  getDatabase,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -298,15 +299,7 @@ app.on('ready', async () => {
   );
 
   // called when getting the database
-  ipcMain.on(GET_DATABASE_CHANNEL, async () => {
-    try {
-      const database = db.getState();
-      mainWindow.webContents.send(GET_DATABASE_CHANNEL, database);
-    } catch (err) {
-      logger.error(err);
-      mainWindow.webContents.send(GET_DATABASE_CHANNEL, null);
-    }
-  });
+  ipcMain.on(GET_DATABASE_CHANNEL, getDatabase(mainWindow, db));
 
   // called when setting the sample database
   ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, setSampleDatabase(mainWindow, db));

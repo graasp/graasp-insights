@@ -1,6 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { dialog } = require('electron');
-const { RESPOND_LOAD_DATASET_PROMPT_CHANNEL } = require('../config/channels');
+const {
+  RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
+} = require('../../shared/channels');
 const logger = require('../logger');
 
 const showLoadDatasetPrompt = (mainWindow) => () => {

@@ -14,7 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
-} from '../config/channels';
+} from '../shared/channels';
 import { loadDataset } from '../actions';
 
 const styles = () => ({

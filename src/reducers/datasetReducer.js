@@ -7,7 +7,7 @@ import {
   GET_DATASETS_SUCCESS,
   LOAD_DATASET_SUCCESS,
   DELETE_DATASET_SUCCESS,
-} from '../types';
+} from '../shared/types';
 
 const INITIAL_STATE = Map({
   current: Map({
