@@ -12,11 +12,13 @@ class JSONFileReader extends Component {
     content: PropTypes.string,
     size: PropTypes.number,
     t: PropTypes.func.isRequired,
+    collapsed: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
   };
 
   static defaultProps = {
     content: Map(),
     size: 0,
+    collapsed: true,
   };
 
   state = {
@@ -44,12 +46,8 @@ class JSONFileReader extends Component {
   };
 
   render() {
-    const { content, size, t } = this.props;
+    const { content, size, t, collapsed } = this.props;
     const { json } = this.state;
-
-    if (!content) {
-      return <Loader />;
-    }
 
     if (size > MAX_FILE_SIZE) {
       return (
@@ -57,7 +55,13 @@ class JSONFileReader extends Component {
       );
     }
 
-    return <ReactJson collapsed src={json} />;
+    if (!content || !json) {
+      return <Loader />;
+    }
+
+    return (
+      <ReactJson groupArraysAfterLength={50} collapsed={collapsed} src={json} />
+    );
   }
 }
 

@@ -50,6 +50,17 @@
     "Author": "Author",
     "Results": "Results",
     "Result from": "Result from",
-    "No results available": "No results available"
+    "No results available": "No results available",
+    "Space ID": "Space ID",
+    "Space Name": "Space Name",
+    "Subspace Count": "Subspace Count",
+    "Date Range": "Date Range",
+    "Action Count": "Action Count",
+    "User Count": "User Count",
+    "Country Count": "Country Count",
+    "Information": "Information",
+    "Back": "Back",
+    "An unexpected error happened while opening the dataset.": "An unexpected error happened while opening the dataset.",
+    "Content": "Content"
   }
 }

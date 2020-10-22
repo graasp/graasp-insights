@@ -12,10 +12,12 @@ export const ORDER_BY = {
   DESC: 'desc',
 };
 
-export const MAX_FILE_SIZE = 400;
+export const MAX_FILE_SIZE = 1000;
 
 export const DEFAULT_LOCALE_DATE = 'en-US';
 
 export const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
 };
+
+export const DEFAULT_NUMBER_FORMAT = 'en';
