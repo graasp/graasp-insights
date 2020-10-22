@@ -20,7 +20,10 @@ import JSONFileReader from '../common/JSONFileReader';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
 import { getDataset } from '../../actions';
-import { DEFAULT_LOCALE_DATE } from '../../config/constants';
+import {
+  DEFAULT_LOCALE_DATE,
+  DEFAULT_NUMBER_FORMAT,
+} from '../../config/constants';
 
 const styles = (theme) => ({
   wrapper: {
@@ -87,8 +90,10 @@ class DatasetScreen extends Component {
     const parsedContent = JSON.parse(content)?.data;
 
     const { actions = [] } = parsedContent;
-    const actionCount = actions?.length;
-    const userCount = parsedContent?.users?.length;
+    const actionCount = actions?.length.toLocaleString(DEFAULT_NUMBER_FORMAT);
+    const userCount = parsedContent?.users?.length.toLocaleString(
+      DEFAULT_NUMBER_FORMAT,
+    );
     const spaceInfo = parsedContent?.metadata?.spaceTree;
     const mainSpace = spaceInfo?.[0];
     const subSpaceCount = spaceInfo?.slice(1).length;
@@ -97,7 +102,9 @@ class DatasetScreen extends Component {
     const countriesSet = new Set(
       actions?.map(({ geolocation }) => geolocation?.country),
     );
-    const countryCount = [...countriesSet].length;
+    const countryCount = [...countriesSet].length.toLocaleString(
+      DEFAULT_NUMBER_FORMAT,
+    );
 
     const dateRange =
       actions

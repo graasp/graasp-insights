@@ -19,3 +19,5 @@ export const DEFAULT_LOCALE_DATE = 'en-US';
 export const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
 };
+
+export const DEFAULT_NUMBER_FORMAT = 'en';
