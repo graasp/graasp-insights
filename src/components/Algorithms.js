@@ -20,6 +20,10 @@ const styles = (theme) => ({
   infoAlert: {
     margin: theme.spacing(2),
   },
+  description: {
+    display: 'block',
+    maxWidth: '600px',
+  },
 });
 
 class Algorithms extends Component {
@@ -31,6 +35,7 @@ class Algorithms extends Component {
     isLoading: PropTypes.bool.isRequired,
     classes: PropTypes.shape({
       infoAlert: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -109,7 +114,11 @@ class Algorithms extends Component {
           <Typography variant="subtitle1" key="name">
             {name}
           </Typography>,
-          <Typography variant="caption" key="description">
+          <Typography
+            variant="caption"
+            key="description"
+            className={classes.description}
+          >
             {description}
           </Typography>,
         ],

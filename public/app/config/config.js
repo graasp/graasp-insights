@@ -34,7 +34,8 @@ const GRAASP_ALGORITHMS = [
   {
     id: ObjectId().str,
     name: 'Hash users',
-    description: 'Hashes the user fields',
+    description:
+      "Hash the userId field from the 'actions' and 'appInstanceResources'",
     filename: 'hash_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'hash_users.py'),
     author: DEFAULT_AUTHOR,
@@ -44,7 +45,7 @@ const GRAASP_ALGORITHMS = [
     id: ObjectId().str,
     name: 'Sanitize users',
     description:
-      'Replaces the occurances of usernames and user IDs (userid) by the hash of the userid',
+      'Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID',
     filename: 'sanitize_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'sanitize_users.py'),
     author: DEFAULT_AUTHOR,
@@ -53,7 +54,7 @@ const GRAASP_ALGORITHMS = [
   {
     id: ObjectId().str,
     name: 'Suppress geolocation',
-    description: 'Suppress the geolocation fields from a dataset',
+    description: "Suppress the 'geolocation' field from the 'actions'",
     filename: 'suppress_geolocation.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_geolocation.py'),
     author: DEFAULT_AUTHOR,
@@ -62,7 +63,7 @@ const GRAASP_ALGORITHMS = [
   {
     id: ObjectId().str,
     name: 'Suppress data',
-    description: 'Suppress the data fields from a dataset',
+    description: "Suppress the 'data' field from the 'actions'",
     filename: 'suppress_data.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_data.py'),
     author: DEFAULT_AUTHOR,
@@ -71,7 +72,7 @@ const GRAASP_ALGORITHMS = [
   {
     id: ObjectId().str,
     name: 'Suppress users',
-    description: 'Suppress the users field from a dataset',
+    description: "Suppress the 'users' field from a dataset",
     filename: 'suppress_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_users.py'),
     author: DEFAULT_AUTHOR,
@@ -80,8 +81,7 @@ const GRAASP_ALGORITHMS = [
   {
     id: ObjectId().str,
     name: 'Suppress appInstances settings',
-    description:
-      'Suppress the settings field of each appInstance from a dataset',
+    description: "Suppress the 'settings' field from the 'appInstances'",
     filename: 'suppress_appInstances_settings.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_appInstances_settings.py'),
     author: DEFAULT_AUTHOR,
@@ -90,8 +90,7 @@ const GRAASP_ALGORITHMS = [
   {
     id: ObjectId().str,
     name: 'Suppress appInstancesResources data',
-    description:
-      'Suppress the data field of each appInstanceResource from a dataset',
+    description: "Suppress the 'data' field from the 'appInstanceResource'",
     filename: 'suppress_appInstanceResources_data.py',
     filepath: path.join(
       ALGORITHMS_FOLDER,
@@ -102,11 +101,11 @@ const GRAASP_ALGORITHMS = [
   },
   {
     id: ObjectId().str,
-    name: '2-Anonimize geolocation',
-    description:
-      'Mask country, region and city attributes when necessary so that no user can be uniquely identified',
-    filename: 'two_anonimize_geolocations.py',
-    filepath: path.join(ALGORITHMS_FOLDER, 'two_anonimize_geolocations.py'),
+    name: '2-Anonymize geolocation',
+    description: `Ensure that for every combination of 'country', 'region', and 'city', there are at least two users containing that combination.
+      The corresponding fields are suppressed (from 'city' to 'country') when necessary`,
+    filename: 'two_anonymize_geolocations.py',
+    filepath: path.join(ALGORITHMS_FOLDER, 'two_anonymize_geolocations.py'),
     author: DEFAULT_AUTHOR,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },

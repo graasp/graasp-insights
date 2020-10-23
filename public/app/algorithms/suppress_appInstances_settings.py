@@ -1,4 +1,4 @@
-''' Suppress the settings field of each appInstance from a dataset '''
+''' Suppress the 'settings' field from the 'appInstances' '''
 
 import json, argparse
 
@@ -15,7 +15,7 @@ def save_dataset(dataset, dest_path):
 
 def parse_arguments():
     ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(description='Suppress the settings field of each appInstance from a dataset')
+    parser = argparse.ArgumentParser(description="Suppress the 'settings' field from the 'appInstances'")
     parser.add_argument('dataset_path', help='path to the json dataset')
     parser.add_argument('output_path', default='output.json',
         help='destination path (including file name) for the output')
@@ -30,7 +30,8 @@ def main():
     app_instances = dataset['data']['appInstances']
 
     for app_instance in app_instances:
-        del app_instance['settings']
+        if 'settings' in app_instance:
+            del app_instance['settings']
 
     save_dataset(dataset, args.output_path)
 

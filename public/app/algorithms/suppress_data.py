@@ -1,4 +1,4 @@
-''' Suppress the data fields from a dataset '''
+''' Suppress the 'data' field from the 'actions' '''
 
 import json, argparse
 
@@ -15,7 +15,7 @@ def save_dataset(dataset, dest_path):
 
 def parse_arguments():
     ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(description='Suppress the data fields from a dataset')
+    parser = argparse.ArgumentParser(description="Suppress the 'data' field from the 'actions'")
     parser.add_argument('dataset_path', help='path to the json dataset')
     parser.add_argument('output_path', default='output.json',
         help='destination path (including file name) for the output')
@@ -30,7 +30,8 @@ def main():
     actions = dataset['data']['actions']
 
     for action in actions:
-        del action['data']
+        if 'data' in action:
+            del action['data']
 
     save_dataset(dataset, args.output_path)
 

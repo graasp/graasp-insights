@@ -1,9 +1,10 @@
-''' Replaces the occurances of username and userid by the hash of the userid '''
+''' Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID '''
 
 import json
 import argparse
 import re
 from itertools import combinations
+import hashlib
 
 def load_dataset(dataset_path):
     with open(dataset_path) as json_file:
@@ -14,7 +15,7 @@ def save_dataset(dataset, dest_path):
         json.dump(dataset, dest_file, indent=2)
 
 def find_and_replace(dataset, substitution_map):
-    '''Traverses the whole a dataset, finds and replaces all occurences
+    '''Traverses the whole a dataset, finds and replaces all occurrences
     based on regular expressions.
 
     Args:
@@ -49,7 +50,7 @@ def find_and_replace(dataset, substitution_map):
 
 def parse_arguments():
     ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(description='Replaces the occurances of username and userid by the hash of the userid')
+    parser = argparse.ArgumentParser(description='Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID')
     parser.add_argument('dataset_path', help='path to the json dataset')
     parser.add_argument('output_path', default='output.json',
         help='destination path (including file name) for the output')
@@ -61,6 +62,9 @@ def get_regex(name):
     # accepts up to 3 characters between each word and ignores case
     return '(?i)' + '.{0,3}'.join(name.split())
 
+def sha256_hash(value):
+    return hashlib.sha256(value.encode()).hexdigest()
+
 def main():
     args = parse_arguments()
 
@@ -71,7 +75,7 @@ def main():
     # prepare id and name substitutions
     # id substitution = hash(id)
     id_substitutions = { user['_id']: {
-        'substitution': format(hash(user['_id']), 'x'),
+        'substitution': sha256_hash(user['_id']),
         'regex': user['_id']
     } for user in users}
     name_substitutions = { user['name']: {
@@ -87,7 +91,7 @@ def main():
             userid = action['user']
             if userid not in id_substitutions:
                 id_substitutions[userid] = {
-                    'substitution': format(hash(userid), 'x'),
+                    'substitution': sha256_hash(userid),
                     'regex': userid
                 }
 
@@ -99,14 +103,14 @@ def main():
             userid = app_instance_res['user']
             if userid not in id_substitutions:
                 id_substitutions[userid] = {
-                    'substitution': format(hash(userid), 'x'),
+                    'substitution': sha256_hash(userid),
                     'regex': userid
                 }
 
             app_instance_res['user'] = id_substitutions[userid]['substitution']
 
 
-    # generically search and replace occurences of usernames and ids
+    # generically search and replace occurrences of usernames and ids
     find_and_replace(dataset, name_substitutions)
     find_and_replace(dataset, id_substitutions)
 

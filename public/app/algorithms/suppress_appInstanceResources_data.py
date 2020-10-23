@@ -1,4 +1,4 @@
-''' Suppress the data field of each appInstanceResource from a dataset '''
+''' Suppress the 'data' field from the 'appInstanceResource' '''
 
 import json, argparse
 
@@ -15,7 +15,7 @@ def save_dataset(dataset, dest_path):
 
 def parse_arguments():
     ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(description='Suppress the data field of each appInstanceResource from a dataset')
+    parser = argparse.ArgumentParser(description="Suppress the 'data' field from the 'appInstanceResource'")
     parser.add_argument('dataset_path', help='path to the json dataset')
     parser.add_argument('output_path', default='output.json',
         help='destination path (including file name) for the output')
@@ -29,8 +29,9 @@ def main():
 
     app_instance_resources = dataset['data']['appInstanceResources']
 
-    for app_instances_resource in app_instance_resources:
-        del app_instances_resource['data']
+    for app_instance_resource in app_instance_resources:
+        if 'data' in app_instance_resource:
+            del app_instance_resource['data']
 
     save_dataset(dataset, args.output_path)
 

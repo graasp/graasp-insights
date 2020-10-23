@@ -1,4 +1,6 @@
-''' Mask country, region and city attributes when necessary so that no user can be uniquely identified '''
+''' Ensure that for every combination of 'country', 'region', and 'city',
+    there are at least two users containing that combination.
+    The corresponding fields are suppressed (from 'city' to 'country') when necessary '''
 
 import json, argparse
 
@@ -14,7 +16,10 @@ def save_dataset(dataset, dest_path):
 
 def parse_arguments():
     ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(description='Mask country, region and city attributes when necessary so that no user can be uniquely identified')
+    parser = argparse.ArgumentParser(
+        description="Ensure that for every combination of 'country', 'region', and 'city',"
+            "there are at least two users containing that combination. "
+            "The corresponding fields are suppressed (from 'city' to 'country') when necessary")
     parser.add_argument('dataset_path', help='path to the json dataset')
     parser.add_argument('output_path', default='output.json',
         help='destination path (including file name) for the output')
@@ -32,7 +37,7 @@ def main():
     geolocations = {}
     for action in actions:
         user = action['user']
-        if user not in geolocations:
+        if user not in geolocations and 'geolocation' in action:
             geolocations[user] = action['geolocation']
             geolocations[user]['range'] = [0,0]
             geolocations[user]['timezone'] = ''
@@ -80,8 +85,9 @@ def main():
 
     # update with new values
     for action in actions:
-        user = action['user']
-        action['geolocation'] = geolocations[user]
+        if 'geolocation' in action:
+            user = action['user']
+            action['geolocation'] = geolocations[user]
 
     save_dataset(dataset, args.output_path)
 
