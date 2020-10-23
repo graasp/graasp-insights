@@ -21,6 +21,7 @@ import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getResults, deleteResult, getAlgorithms } from '../actions';
 import { buildResultPath } from '../config/paths';
 import Table from './common/Table';
+import { formatFileSize } from '../utils/formatting';
 
 const styles = (theme) => ({
   addButton: {
@@ -162,7 +163,7 @@ class Results extends Component {
         description = '',
       } = result;
 
-      const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
+      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
