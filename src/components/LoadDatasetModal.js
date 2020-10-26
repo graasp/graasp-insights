@@ -16,6 +16,13 @@ import {
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
 } from '../shared/channels';
 import { loadDataset } from '../actions';
+import {
+  LOAD_DATASET_FILEPATH_ID,
+  LOAD_DATASET_CANCEL_BUTTON_ID,
+  LOAD_DATASET_NAME_ID,
+  LOAD_DATASET_ACCEPT_ID,
+  LOAD_DATASET_DESCRIPTION_ID,
+} from '../config/selectors';
 
 const styles = () => ({
   dialogContent: {
@@ -111,7 +118,7 @@ class LoadDatasetModal extends Component {
             <TextField
               autoFocus
               margin="dense"
-              id="browse"
+              id={LOAD_DATASET_FILEPATH_ID}
               label={t('Select dataset')}
               fullWidth
               onChange={this.handleLocationInput}
@@ -126,7 +133,7 @@ class LoadDatasetModal extends Component {
 
           <TextField
             margin="dense"
-            id="name"
+            id={LOAD_DATASET_NAME_ID}
             label={t('Dataset name')}
             value={fileCustomName}
             onChange={this.handleCustomNameInput}
@@ -136,7 +143,7 @@ class LoadDatasetModal extends Component {
 
           <TextField
             margin="dense"
-            id="description"
+            id={LOAD_DATASET_DESCRIPTION_ID}
             label={t('Description')}
             value={fileDescription}
             onChange={this.handleDescriptionInput}
@@ -149,6 +156,7 @@ class LoadDatasetModal extends Component {
         </DialogContent>
         <DialogActions>
           <Button
+            id={LOAD_DATASET_CANCEL_BUTTON_ID}
             onClick={() => {
               this.setState({
                 fileLocation: '',
@@ -162,6 +170,7 @@ class LoadDatasetModal extends Component {
             {t('Cancel')}
           </Button>
           <Button
+            id={LOAD_DATASET_ACCEPT_ID}
             onClick={() => {
               this.handleFileSubmit();
               this.setState({

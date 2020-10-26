@@ -14,6 +14,10 @@ import Main from '../common/Main';
 import { getDataset } from '../../actions';
 import DatasetInformationTable from './DatasetInformationTable';
 import Loader from '../common/Loader';
+import {
+  DATASET_BACK_BUTTON_ID,
+  DATASET_NAME_ID,
+} from '../../config/selectors';
 
 const styles = (theme) => ({
   wrapper: {
@@ -84,6 +88,7 @@ class DatasetScreen extends Component {
     const { t } = this.props;
     return (
       <Button
+        id={DATASET_BACK_BUTTON_ID}
         className={className}
         variant="contained"
         color="primary"
@@ -132,7 +137,12 @@ class DatasetScreen extends Component {
           <Grid container>
             <Grid item xs={12}>
               {this.renderBackButton({ className: classes.backButton })}
-              <Typography className={classes.title} variant="h4" align="center">
+              <Typography
+                id={DATASET_NAME_ID}
+                className={classes.title}
+                variant="h4"
+                align="center"
+              >
                 {datasetName}
               </Typography>
             </Grid>

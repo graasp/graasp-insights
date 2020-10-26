@@ -14,6 +14,15 @@ import {
   DEFAULT_LOCALE_DATE,
   DEFAULT_NUMBER_FORMAT,
 } from '../../config/constants';
+import {
+  DATASET_TABLE_SPACE_NAME_ID,
+  DATASET_TABLE_SUBSPACE_COUNT_ID,
+  DATASET_TABLE_COUNTRY_COUNT_ID,
+  DATASET_TABLE_ACTION_COUNT_ID,
+  DATASET_TABLE_USER_COUNT_ID,
+  DATASET_TABLE_INFORMATION_ID,
+  DATASET_TABLE_SPACE_ID_ID,
+} from '../../config/selectors';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class DatasetInformationTable extends Component {
@@ -69,26 +78,32 @@ class DatasetInformationTable extends Component {
         .sort() || [];
 
     return (
-      <TableContainer component={Paper}>
+      <TableContainer id={DATASET_TABLE_INFORMATION_ID} component={Paper}>
         <Table size="small">
           <TableBody>
             <TableRow key="spaceId">
               <TableCell component="th" scope="row">
                 {t('Space ID')}
               </TableCell>
-              <TableCell align="right">{spaceId || t('Unknown')}</TableCell>
+              <TableCell id={DATASET_TABLE_SPACE_ID_ID} align="right">
+                {spaceId || t('Unknown')}
+              </TableCell>
             </TableRow>
             <TableRow key="spaceName">
               <TableCell component="th" scope="row">
                 {t('Space Name')}
               </TableCell>
-              <TableCell align="right">{spaceName || t('Unknown')}</TableCell>
+              <TableCell id={DATASET_TABLE_SPACE_NAME_ID} align="right">
+                {spaceName || t('Unknown')}
+              </TableCell>
             </TableRow>
             <TableRow key="subSpaceCount">
               <TableCell component="th" scope="row">
                 {t('Subspace Count')}
               </TableCell>
-              <TableCell align="right">{subSpaceCount || 0}</TableCell>
+              <TableCell id={DATASET_TABLE_SUBSPACE_COUNT_ID} align="right">
+                {subSpaceCount || 0}
+              </TableCell>
             </TableRow>
             <TableRow key="dateRange">
               <TableCell component="th" scope="row">
@@ -104,19 +119,23 @@ class DatasetInformationTable extends Component {
               <TableCell component="th" scope="row">
                 {t('Action Count')}
               </TableCell>
-              <TableCell align="right">{actionCount || t('Unknown')}</TableCell>
+              <TableCell id={DATASET_TABLE_ACTION_COUNT_ID} align="right">
+                {actionCount || t('Unknown')}
+              </TableCell>
             </TableRow>
             <TableRow key="userCount">
               <TableCell component="th" scope="row">
                 {t('User Count')}
               </TableCell>
-              <TableCell align="right">{userCount || t('Unknown')}</TableCell>
+              <TableCell id={DATASET_TABLE_USER_COUNT_ID} align="right">
+                {userCount || t('Unknown')}
+              </TableCell>
             </TableRow>
             <TableRow key="countryCount">
               <TableCell component="th" scope="row">
                 {t('Country Count')}
               </TableCell>
-              <TableCell align="right">
+              <TableCell id={DATASET_TABLE_COUNTRY_COUNT_ID} align="right">
                 {countryCount || t('Unknown')}
               </TableCell>
             </TableRow>

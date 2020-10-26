@@ -25,6 +25,13 @@ import { formatFileSize } from '../utils/formatting';
 import ExportButton from './common/ExportButton';
 import { FLAG_EXPORTING_DATASET } from '../shared/types';
 import { EXPORT_DATASET_CHANNEL } from '../shared/channels';
+import {
+  DATASETS_EMPTY_ALERT_ID,
+  buildDatasetsListViewButtonClass,
+  buildDatasetsListNameClass,
+  buildDatasetsListDescriptionClass,
+  buildDatasetsListDeleteButtonClass,
+} from '../config/selectors';
 
 const styles = (theme) => ({
   addButton: {
@@ -108,7 +115,11 @@ class Datasets extends Component {
     if (!datasets.size) {
       return (
         <Main>
-          <Alert severity="info" className={classes.infoAlert}>
+          <Alert
+            id={DATASETS_EMPTY_ALERT_ID}
+            severity="info"
+            className={classes.infoAlert}
+          >
             {t('Add a dataset by clicking on the icon below.')}
           </Alert>
           <LoadDatasetButton />
@@ -173,10 +184,18 @@ class Datasets extends Component {
         key: id,
         name,
         dataset: [
-          <Typography variant="subtitle1" key="name">
+          <Typography
+            className={buildDatasetsListNameClass(name)}
+            variant="subtitle1"
+            key="name"
+          >
             {name}
           </Typography>,
-          <Typography variant="caption" key="description">
+          <Typography
+            className={buildDatasetsListDescriptionClass(name)}
+            variant="caption"
+            key="description"
+          >
             {description}
           </Typography>,
         ],
@@ -187,6 +206,7 @@ class Datasets extends Component {
         quickActions: [
           <Tooltip title={t('View dataset')} key="view">
             <IconButton
+              className={buildDatasetsListViewButtonClass(name)}
               aria-label="view"
               onClick={() => this.handleView(dataset)}
             >
@@ -203,6 +223,7 @@ class Datasets extends Component {
           />,
           <Tooltip title={t('Remove dataset')} key="delete">
             <IconButton
+              className={buildDatasetsListDeleteButtonClass(name)}
               aria-label="delete"
               onClick={() => this.handleDelete(dataset)}
             >

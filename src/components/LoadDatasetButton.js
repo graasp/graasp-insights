@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
 import LoadDatasetModal from './LoadDatasetModal';
+import { LOAD_DATASET_BUTTON_ID } from '../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +38,7 @@ const LoadDatasetButton = () => {
     <div className={classes.root}>
       <Tooltip placement="left" title="Add dataset" arrow>
         <IconButton
+          id={LOAD_DATASET_BUTTON_ID}
           variant="contained"
           className={classes.addButton}
           onClick={handleClickOpen}

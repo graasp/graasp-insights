@@ -105,7 +105,7 @@
     "hooks:uninstall": "node node_modules/husky/husky.js uninstall",
     "hooks:install": "node node_modules/husky/husky.js install",
     "ci": "react-scripts test --env=jsdom --coverage",
-    "prepare": "mkdirp public/src/shared && cpy \"src/shared/**/*.js\" \"public/shared\"",
+    "prepare": "mkdirp public/shared && cpy \"src/shared/**/*.js\" \"public/shared\"",
     "setup": "node scripts/setup.js",
     "test:once": "cross-env CI=true env-cmd -f ./.env.test react-scripts test --env=jsdom",
     "test": "react-scripts test"
