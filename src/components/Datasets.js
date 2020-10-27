@@ -22,6 +22,7 @@ import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
 import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
+import { formatFileSize } from '../utils/formatting';
 
 const styles = (theme) => ({
   addButton: {
@@ -159,7 +160,7 @@ class Datasets extends Component {
         createdAt,
         description = '',
       } = dataset;
-      const sizeString = size ? `${size}${t('KB')}` : t('Unknown');
+      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
