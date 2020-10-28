@@ -1,7 +1,12 @@
 const fs = require('fs');
-const { DELETE_ALGORITHM_CHANNEL } = require('../config/channels');
+const { DELETE_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { ALGORITHMS_COLLECTION } = require('../db');
+const { ERROR_GENERAL } = require('../../shared/errors');
+const {
+  DELETE_ALGORITHM_ERROR,
+  DELETE_ALGORITHM_SUCCESS,
+} = require('../../shared/types');
 
 const deleteAlgorithm = (mainWindow, db) => async (event, { id }) => {
   try {
@@ -16,14 +21,24 @@ const deleteAlgorithm = (mainWindow, db) => async (event, { id }) => {
     fs.unlinkSync(filepath);
     logger.debug(`Deleted the algorithm ${name} with id ${id} at ${filepath}`);
 
-    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, id);
+    mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, {
+      type: DELETE_ALGORITHM_SUCCESS,
+      payload: id,
+    });
   } catch (err) {
     if (err.code === 'ENOENT') {
       logger.error('File not found!');
-      mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, id);
+      // the file was already successfully deleted
+      mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, {
+        type: DELETE_ALGORITHM_SUCCESS,
+        payload: id,
+      });
     } else {
       logger.error(err);
-      mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, null);
+      mainWindow.webContents.send(DELETE_ALGORITHM_CHANNEL, {
+        type: DELETE_ALGORITHM_ERROR,
+        error: ERROR_GENERAL,
+      });
     }
   }
 };

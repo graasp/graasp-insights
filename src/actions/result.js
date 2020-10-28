@@ -4,21 +4,18 @@ import {
   GET_RESULT_CHANNEL,
   GET_RESULTS_CHANNEL,
   DELETE_RESULT_CHANNEL,
-} from '../config/channels';
+} from '../shared/channels';
 import {
-  GET_RESULT_SUCCESS,
   FLAG_GETTING_RESULT,
-  GET_RESULTS_SUCCESS,
   FLAG_GETTING_RESULTS,
-  DELETE_RESULT_SUCCESS,
   FLAG_DELETING_RESULT,
-} from '../types';
+} from '../shared/types';
 import {
   ERROR_GETTING_RESULT_MESSAGE,
   ERROR_MESSAGE_HEADER,
   ERROR_GETTING_RESULTS_MESSAGE,
   ERROR_DELETING_RESULT_MESSAGE,
-} from '../config/messages';
+} from '../shared/messages';
 
 export const getResults = () => (dispatch) => {
   const flagGettingResults = createFlag(FLAG_GETTING_RESULTS);
@@ -26,16 +23,8 @@ export const getResults = () => (dispatch) => {
     dispatch(flagGettingResults(true));
     // tell electron to get results
     window.ipcRenderer.send(GET_RESULTS_CHANNEL);
-    window.ipcRenderer.once(GET_RESULTS_CHANNEL, async (event, results) => {
-      // if there is no result, show error
-      if (!results) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_RESULTS_MESSAGE);
-      } else {
-        dispatch({
-          type: GET_RESULTS_SUCCESS,
-          payload: results,
-        });
-      }
+    window.ipcRenderer.once(GET_RESULTS_CHANNEL, async (event, response) => {
+      dispatch(response);
       return dispatch(flagGettingResults(false));
     });
   } catch (err) {
@@ -51,16 +40,8 @@ export const getResult = ({ id }) => (dispatch) => {
 
     // tell electron to get a result
     window.ipcRenderer.send(GET_RESULT_CHANNEL, { id });
-    window.ipcRenderer.once(GET_RESULT_CHANNEL, async (event, result) => {
-      // if there is no result, show error
-      if (!result) {
-        toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_RESULT_MESSAGE);
-      } else {
-        dispatch({
-          type: GET_RESULT_SUCCESS,
-          payload: result,
-        });
-      }
+    window.ipcRenderer.once(GET_RESULT_CHANNEL, async (event, response) => {
+      dispatch(response);
       return dispatch(flagGettingResult(false));
     });
   } catch (err) {
@@ -75,10 +56,8 @@ export const deleteResult = ({ id }) => (dispatch) => {
     dispatch(flagDeletingResult(true));
 
     window.ipcRenderer.send(DELETE_RESULT_CHANNEL, { id });
-    window.ipcRenderer.once(DELETE_RESULT_CHANNEL, async () => {
-      dispatch({
-        type: DELETE_RESULT_SUCCESS,
-      });
+    window.ipcRenderer.once(DELETE_RESULT_CHANNEL, async (event, response) => {
+      dispatch(response);
       dispatch(flagDeletingResult(false));
       return getResults()(dispatch);
     });

@@ -1,14 +1,12 @@
 import { toastr } from 'react-redux-toastr';
 import { createFlag } from './common';
-import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../config/channels';
-import { FLAG_EXECUTING_ALGORITHM, EXECUTE_ALGORITHM_SUCCESS } from '../types';
+import { EXECUTE_PYTHON_ALGORITHM_CHANNEL } from '../shared/channels';
+import { FLAG_EXECUTING_ALGORITHM } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
-  SUCCESS_MESSAGE_HEADER,
   ERROR_EXECUTING_ALGORITHM_MESSAGE,
   UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
-  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
-} from '../config/messages';
+} from '../shared/messages';
 import { PROGRAMMING_LANGUAGES } from '../config/constants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -27,24 +25,8 @@ export const executeAlgorithm = ({ datasetId, algorithmId, language }) => (
         });
         window.ipcRenderer.once(
           EXECUTE_PYTHON_ALGORITHM_CHANNEL,
-          async (event, id) => {
-            if (id) {
-              // success
-              dispatch({
-                type: EXECUTE_ALGORITHM_SUCCESS,
-              });
-              toastr.success(
-                SUCCESS_MESSAGE_HEADER,
-                SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
-              );
-            } else {
-              // failure
-              toastr.error(
-                ERROR_MESSAGE_HEADER,
-                ERROR_EXECUTING_ALGORITHM_MESSAGE,
-              );
-            }
-
+          async (event, response) => {
+            dispatch(response);
             return dispatch(flagExecutingAlgorithm(false));
           },
         );

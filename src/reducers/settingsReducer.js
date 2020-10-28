@@ -5,7 +5,7 @@ import {
   SET_LANGUAGE_SUCCESS,
   FLAG_GETTING_LANGUAGE,
   FLAG_SETTING_LANGUAGE,
-} from '../types';
+} from '../shared/types';
 import { DEFAULT_LANGUAGE } from '../config/constants';
 
 const INITIAL_STATE = Map({

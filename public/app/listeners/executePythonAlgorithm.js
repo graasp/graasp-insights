@@ -10,7 +10,12 @@ const {
   RESULTS_COLLECTION,
   ALGORITHMS_COLLECTION,
 } = require('../db');
-const { EXECUTE_PYTHON_ALGORITHM_CHANNEL } = require('../config/channels');
+const { EXECUTE_PYTHON_ALGORITHM_CHANNEL } = require('../../shared/channels');
+const {
+  EXECUTE_PYTHON_ALGORITHM_SUCCESS,
+  EXECUTE_PYTHON_ALGORITHM_ERROR,
+} = require('../../shared/types');
+const { PYTHON_PROCESS_ERROR } = require('../../shared/errors');
 
 const createNewResultDataset = ({
   name,
@@ -62,7 +67,11 @@ const executePythonAlgorithm = (mainWindow, db) => (
     process.on('close', (code) => {
       if (code !== 0) {
         logger.error(`python process exited with code ${code}`);
-        mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, null);
+        mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
+          type: EXECUTE_PYTHON_ALGORITHM_ERROR,
+          error: PYTHON_PROCESS_ERROR,
+          payload: { code },
+        });
       } else {
         // save result in db
         const newDataset = createNewResultDataset({
@@ -75,10 +84,10 @@ const executePythonAlgorithm = (mainWindow, db) => (
 
         logger.debug(`save resulting dataset at ${newDataset.filepath}`);
 
-        mainWindow.webContents.send(
-          EXECUTE_PYTHON_ALGORITHM_CHANNEL,
-          newDataset.id,
-        );
+        mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
+          type: EXECUTE_PYTHON_ALGORITHM_SUCCESS,
+          payload: newDataset.id,
+        });
       }
 
       // delete tmp file
@@ -88,7 +97,10 @@ const executePythonAlgorithm = (mainWindow, db) => (
     });
   } catch (err) {
     logger.error(err);
-    mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, null);
+    mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
+      type: EXECUTE_PYTHON_ALGORITHM_ERROR,
+      error: err,
+    });
   }
 };
 

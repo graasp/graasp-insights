@@ -1,7 +1,9 @@
 const fs = require('fs');
-const { GET_RESULT_CHANNEL } = require('../config/channels');
+const { GET_RESULT_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { RESULTS_COLLECTION } = require('../db');
+const { GET_RESULT_SUCCESS, GET_RESULT_ERROR } = require('../../shared/types');
+const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
 
 const getResult = (mainWindow, db) => async (event, { id }) => {
   try {
@@ -12,13 +14,23 @@ const getResult = (mainWindow, db) => async (event, { id }) => {
     const { filepath } = result;
     content = fs.readFileSync(filepath, 'utf8');
 
-    mainWindow.webContents.send(GET_RESULT_CHANNEL, { ...result, content });
+    return mainWindow.webContents.send(GET_RESULT_CHANNEL, {
+      type: GET_RESULT_SUCCESS,
+      payload: { ...result, content },
+    });
   } catch (err) {
     if (err.code === 'ENOENT') {
       logger.error('File not found!');
+      return mainWindow.webContents.send(GET_RESULT_CHANNEL, {
+        type: GET_RESULT_ERROR,
+        error: ERROR_MISSING_FILE,
+      });
     }
     logger.error(err);
-    mainWindow.webContents.send(GET_RESULT_CHANNEL, null);
+    return mainWindow.webContents.send(GET_RESULT_CHANNEL, {
+      type: GET_RESULT_ERROR,
+      error: ERROR_GENERAL,
+    });
   }
 };
 

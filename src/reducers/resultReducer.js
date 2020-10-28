@@ -6,7 +6,7 @@ import {
   GET_RESULT_SUCCESS,
   GET_RESULTS_SUCCESS,
   DELETE_RESULT_SUCCESS,
-} from '../types';
+} from '../shared/types';
 
 const INITIAL_STATE = Map({
   current: Map({

@@ -5,7 +5,7 @@ import {
   FLAG_GETTING_ALGORITHMS,
   DELETE_ALGORITHM_SUCCESS,
   FLAG_DELETING_ALGORITHM,
-} from '../types';
+} from '../shared/types';
 
 const INITIAL_STATE = Map({
   algorithms: List(),
