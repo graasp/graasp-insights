@@ -31,10 +31,14 @@ const ERROR_DELETING_DATASET_MESSAGE =
 const SUCCESS_DELETING_DATASET_MESSAGE = 'The dataset was deleted successfully';
 const SUCCESS_DELETING_RESULT_MESSAGE =
   'The result dataset was deleted successfully';
-  const SUCCESS_DELETING_ALGORITHM_MESSAGE =
+const SUCCESS_DELETING_ALGORITHM_MESSAGE =
   'The algorithm was deleted successfully';
 const ERROR_DELETING_RESULT_MESSAGE =
   'There was an error deleting the result dataset';
+const ERROR_PYTHON_NOT_INSTALLED_MESSAGE =
+  'Python is not installed on your system';
+const buildPythonWrongVersionMessage = (version) =>
+  `Your system's python version (${version}) is not supported`;
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -56,5 +60,7 @@ module.exports = {
   ERROR_DELETING_RESULT_MESSAGE,
   ERROR_GETTING_ALGORITHMS_MESSAGE,
   ERROR_GETTING_ALGORITHM_MESSAGE,
-  SUCCESS_DELETING_ALGORITHM_MESSAGE
+  SUCCESS_DELETING_ALGORITHM_MESSAGE,
+  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+  buildPythonWrongVersionMessage,
 };

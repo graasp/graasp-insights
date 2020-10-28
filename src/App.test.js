@@ -10,6 +10,7 @@ describe('<App />', () => {
     },
     t: jest.fn(),
     dispatchGetLanguage: jest.fn(),
+    dispatchCheckPythonInstallation: jest.fn(),
     lang: 'en',
   };
 

@@ -36,11 +36,14 @@ export const deleteAlgorithm = ({ id }) => (dispatch) => {
     dispatch(flagDeletingAlgorithm(true));
 
     window.ipcRenderer.send(DELETE_ALGORITHM_CHANNEL, { id });
-    window.ipcRenderer.once(DELETE_ALGORITHM_CHANNEL, async (event, response) => {
-      dispatch(response);
-      dispatch(flagDeletingAlgorithm(false));
-      return getAlgorithms()(dispatch);
-    });
+    window.ipcRenderer.once(
+      DELETE_ALGORITHM_CHANNEL,
+      async (event, response) => {
+        dispatch(response);
+        dispatch(flagDeletingAlgorithm(false));
+        return getAlgorithms()(dispatch);
+      },
+    );
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_ALGORITHM_MESSAGE);
     dispatch(flagDeletingAlgorithm(false));

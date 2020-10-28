@@ -14,6 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 import Main from './common/Main';
 import { getDatasets, getAlgorithms, executeAlgorithm } from '../actions';
 import Loader from './common/Loader';
+import PythonLogo from './execution/PythonLogo';
 
 const styles = (theme) => ({
   formControl: {
@@ -33,6 +34,11 @@ const styles = (theme) => ({
     margin: '0 auto',
     marginTop: theme.spacing(2),
   },
+  pythonLogo: {
+    position: 'fixed',
+    right: 0,
+    marginRight: theme.spacing(2),
+  },
 });
 
 class Executions extends Component {
@@ -49,6 +55,7 @@ class Executions extends Component {
       infoAlert: PropTypes.string.isRequired,
       container: PropTypes.string.isRequired,
       button: PropTypes.string.isRequired,
+      pythonLogo: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -120,6 +127,9 @@ class Executions extends Component {
     return (
       <Main>
         <div className={classes.container}>
+          <div className={classes.pythonLogo}>
+            <PythonLogo />
+          </div>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="dataset-select">Dataset</InputLabel>
             <Select

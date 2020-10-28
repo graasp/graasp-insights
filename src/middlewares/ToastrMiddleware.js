@@ -17,7 +17,9 @@ import {
   GET_ALGORITHMS_ERROR,
   GET_ALGORITHM_ERROR,
   DELETE_ALGORITHM_ERROR,
-  DELETE_ALGORITHM_SUCCESS
+  DELETE_ALGORITHM_SUCCESS,
+  CHECK_PYTHON_INSTALLATION_ERROR,
+  PYTHON_WRONG_VERSION_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -40,6 +42,8 @@ import {
   ERROR_DELETING_RESULT_MESSAGE,
   ERROR_DELETING_ALGORITHM_MESSAGE,
   SUCCESS_DELETING_ALGORITHM_MESSAGE,
+  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+  buildPythonWrongVersionMessage,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -86,15 +90,22 @@ const middleware = () => (next) => (action) => {
     case GET_DATABASE_ERROR:
       message = ERROR_GETTING_DATABASE_MESSAGE;
       break;
-      case DELETE_DATASET_ERROR:
-        message = ERROR_DELETING_DATASET_MESSAGE;
-        break;
-      case DELETE_RESULT_ERROR:
-        message = ERROR_DELETING_RESULT_MESSAGE;
-        break;
-        case DELETE_ALGORITHM_ERROR:
-          message = ERROR_DELETING_ALGORITHM_MESSAGE;
-          break;
+    case DELETE_DATASET_ERROR:
+      message = ERROR_DELETING_DATASET_MESSAGE;
+      break;
+    case DELETE_RESULT_ERROR:
+      message = ERROR_DELETING_RESULT_MESSAGE;
+      break;
+    case DELETE_ALGORITHM_ERROR:
+      message = ERROR_DELETING_ALGORITHM_MESSAGE;
+      break;
+    case CHECK_PYTHON_INSTALLATION_ERROR:
+      if (error === PYTHON_WRONG_VERSION_ERROR && payload?.version) {
+        message = buildPythonWrongVersionMessage(payload.version);
+      } else {
+        message = ERROR_PYTHON_NOT_INSTALLED_MESSAGE;
+      }
+      break;
 
     // success messages
     case LOAD_DATASET_SUCCESS:
@@ -106,12 +117,12 @@ const middleware = () => (next) => (action) => {
     case DELETE_DATASET_SUCCESS:
       message = SUCCESS_DELETING_DATASET_MESSAGE;
       break;
-      case DELETE_RESULT_SUCCESS:
-        message = SUCCESS_DELETING_RESULT_MESSAGE;
-        break;
-        case DELETE_ALGORITHM_SUCCESS:
-          message = SUCCESS_DELETING_ALGORITHM_MESSAGE;
-          break;
+    case DELETE_RESULT_SUCCESS:
+      message = SUCCESS_DELETING_RESULT_MESSAGE;
+      break;
+    case DELETE_ALGORITHM_SUCCESS:
+      message = SUCCESS_DELETING_ALGORITHM_MESSAGE;
+      break;
     default:
       break;
   }
