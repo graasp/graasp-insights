@@ -108,8 +108,6 @@ const mapDispatchToProps = {
   dispatchCheckPythonInstallation: checkPythonInstallation,
 };
 
-// const StyledApp = withStyles(styles, { withTheme: true })(App);
-
 const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
 
 const TranslatedApp = withTranslation()(ConnectedApp);

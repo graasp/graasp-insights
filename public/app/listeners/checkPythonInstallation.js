@@ -4,14 +4,18 @@ const { CHECK_PYTHON_INSTALLATION_CHANNEL } = require('../../shared/channels');
 const {
   CHECK_PYTHON_INSTALLATION_SUCCESS,
   CHECK_PYTHON_INSTALLATION_ERROR,
-  PYTHON_WRONG_VERSION_ERROR,
-  PYTHON_NOT_INSTALLED_ERROR,
 } = require('../../shared/types');
+const {
+  ERROR_PYTHON_UNSUPPORTED_VERSION,
+  ERROR_PYTHON_NOT_INSTALLED,
+  ERROR_GENERAL,
+} = require('../../shared/errors');
+const { ACCEPTED_PYTHON_VERSIONS } = require('../config/config');
 
 const isPythonVersionValid = (version) => {
-  // accept all python versions for now
-  const parsedFormat = version.split('.').map(parseInt);
-  return parsedFormat[0] === 2 || parsedFormat[0] === 3;
+  return ACCEPTED_PYTHON_VERSIONS.some((acceptedVersion) =>
+    version.startsWith(acceptedVersion),
+  );
 };
 
 const checkPythonInstallation = (mainWindow) => () => {
@@ -33,14 +37,14 @@ const checkPythonInstallation = (mainWindow) => () => {
       } else {
         mainWindow.webContents.send(CHECK_PYTHON_INSTALLATION_CHANNEL, {
           type: CHECK_PYTHON_INSTALLATION_ERROR,
-          error: PYTHON_WRONG_VERSION_ERROR,
+          error: ERROR_PYTHON_UNSUPPORTED_VERSION,
           payload,
         });
       }
     });
 
     process.stderr.on('data', (data) => {
-      logger.error(data.toString());
+      logger.debug(data.toString());
     });
 
     process.on('close', (code) => {
@@ -48,7 +52,7 @@ const checkPythonInstallation = (mainWindow) => () => {
         logger.error(`python process exited with code ${code}`);
         mainWindow.webContents.send(CHECK_PYTHON_INSTALLATION_CHANNEL, {
           type: CHECK_PYTHON_INSTALLATION_ERROR,
-          error: PYTHON_NOT_INSTALLED_ERROR,
+          error: ERROR_PYTHON_NOT_INSTALLED,
           payload: { valid: false },
         });
       }
@@ -57,7 +61,7 @@ const checkPythonInstallation = (mainWindow) => () => {
     logger.error(err);
     mainWindow.webContents.send(CHECK_PYTHON_INSTALLATION_CHANNEL, {
       type: CHECK_PYTHON_INSTALLATION_ERROR,
-      error: PYTHON_NOT_INSTALLED_ERROR,
+      error: ERROR_GENERAL,
       payload: { valid: false },
     });
   }

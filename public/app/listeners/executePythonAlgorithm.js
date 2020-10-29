@@ -15,7 +15,7 @@ const {
   EXECUTE_PYTHON_ALGORITHM_SUCCESS,
   EXECUTE_PYTHON_ALGORITHM_ERROR,
 } = require('../../shared/types');
-const { PYTHON_PROCESS_ERROR } = require('../../shared/errors');
+const { ERROR_PYTHON_PROCESS } = require('../../shared/errors');
 
 const createNewResultDataset = ({
   name,
@@ -69,7 +69,7 @@ const executePythonAlgorithm = (mainWindow, db) => (
         logger.error(`python process exited with code ${code}`);
         mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
           type: EXECUTE_PYTHON_ALGORITHM_ERROR,
-          error: PYTHON_PROCESS_ERROR,
+          error: ERROR_PYTHON_PROCESS,
           payload: { code },
         });
       } else {

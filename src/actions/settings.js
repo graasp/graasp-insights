@@ -8,7 +8,7 @@ import {
   ERROR_MESSAGE_HEADER,
   ERROR_GETTING_LANGUAGE_MESSAGE,
   ERROR_SETTING_LANGUAGE_MESSAGE,
-  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+  ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE,
 } from '../shared/messages';
 import {
   FLAG_GETTING_LANGUAGE,
@@ -67,7 +67,10 @@ const checkPythonInstallation = () => (dispatch) => {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(err);
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_PYTHON_NOT_INSTALLED_MESSAGE);
+    toastr.error(
+      ERROR_MESSAGE_HEADER,
+      ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE,
+    );
     dispatch(flagCheckingPythonVersion(false));
   }
 };

@@ -111,6 +111,8 @@ const GRAASP_ALGORITHMS = [
   },
 ];
 
+const ACCEPTED_PYTHON_VERSIONS = ['2', '3'];
+
 module.exports = {
   DEFAULT_LOGGING_LEVEL,
   DATABASE_PATH,
@@ -127,4 +129,5 @@ module.exports = {
   GRAASP_ALGORITHMS,
   ALGORITHMS_FOLDER_NAME,
   escapeEscapeCharacter,
+  ACCEPTED_PYTHON_VERSIONS,
 };

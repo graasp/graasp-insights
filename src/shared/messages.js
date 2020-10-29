@@ -39,6 +39,22 @@ const ERROR_PYTHON_NOT_INSTALLED_MESSAGE =
   'Python is not installed on your system';
 const buildPythonWrongVersionMessage = (version) =>
   `Your system's python version (${version}) is not supported`;
+const ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE =
+  'There was an error checking the installation of python';
+const ERROR_GETTING_LANGUAGE_MESSAGE =
+  'There was an error retrieving the language';
+const ERROR_SETTING_LANGUAGE_MESSAGE =
+  'There was an error setting the language';
+const ERROR_DELETING_ALGORITHM_MESSAGE =
+  'There was an error deleting the algorithm';
+const ERROR_EXECUTING_ALGORITHM_MESSAGE =
+  'There was an error while executing the algorithm';
+const UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
+  'The programming language of the algorithm is not supported';
+const ERROR_GETTING_RESULTS_MESSAGE =
+  'There was an error retrieving the datasets';
+const ERROR_GETTING_RESULT_MESSAGE =
+  'There was an error retrieving the dataset';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -63,4 +79,12 @@ module.exports = {
   SUCCESS_DELETING_ALGORITHM_MESSAGE,
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
   buildPythonWrongVersionMessage,
+  ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE,
+  ERROR_GETTING_LANGUAGE_MESSAGE,
+  ERROR_SETTING_LANGUAGE_MESSAGE,
+  ERROR_DELETING_ALGORITHM_MESSAGE,
+  ERROR_EXECUTING_ALGORITHM_MESSAGE,
+  UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
+  ERROR_GETTING_RESULTS_MESSAGE,
+  ERROR_GETTING_RESULT_MESSAGE,
 };

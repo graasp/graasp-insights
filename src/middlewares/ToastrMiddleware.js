@@ -1,11 +1,15 @@
 import { toastr } from 'react-redux-toastr';
-import { ERROR_MISSING_FILE } from '../shared/errors';
+import {
+  ERROR_MISSING_FILE,
+  ERROR_PYTHON_UNSUPPORTED_VERSION,
+  ERROR_PYTHON_NOT_INSTALLED,
+  ERROR_PYTHON_PROCESS,
+} from '../shared/errors';
 import {
   LOAD_DATASET_SUCCESS,
   LOAD_DATASET_ERROR,
   GET_DATASETS_ERROR,
   GET_DATASET_ERROR,
-  PYTHON_PROCESS_ERROR,
   EXECUTE_PYTHON_ALGORITHM_ERROR,
   SET_DATABASE_ERROR,
   GET_DATABASE_ERROR,
@@ -19,7 +23,8 @@ import {
   DELETE_ALGORITHM_ERROR,
   DELETE_ALGORITHM_SUCCESS,
   CHECK_PYTHON_INSTALLATION_ERROR,
-  PYTHON_WRONG_VERSION_ERROR,
+  GET_RESULT_ERROR,
+  GET_RESULTS_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -44,6 +49,9 @@ import {
   SUCCESS_DELETING_ALGORITHM_MESSAGE,
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
   buildPythonWrongVersionMessage,
+  ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE,
+  ERROR_GETTING_RESULT_MESSAGE,
+  ERROR_GETTING_RESULTS_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -78,7 +86,7 @@ const middleware = () => (next) => (action) => {
       }
       break;
     case EXECUTE_PYTHON_ALGORITHM_ERROR:
-      if (error === PYTHON_PROCESS_ERROR && payload?.code) {
+      if (error === ERROR_PYTHON_PROCESS && payload?.code) {
         message = buildPythonProcessErrorMessage(payload.code);
       } else {
         message = ERROR_EXECUTING_PYTHON_ALGORITHM_MESSAGE;
@@ -100,11 +108,23 @@ const middleware = () => (next) => (action) => {
       message = ERROR_DELETING_ALGORITHM_MESSAGE;
       break;
     case CHECK_PYTHON_INSTALLATION_ERROR:
-      if (error === PYTHON_WRONG_VERSION_ERROR && payload?.version) {
+      if (error === ERROR_PYTHON_UNSUPPORTED_VERSION && payload?.version) {
         message = buildPythonWrongVersionMessage(payload.version);
-      } else {
+      } else if (error === ERROR_PYTHON_NOT_INSTALLED) {
         message = ERROR_PYTHON_NOT_INSTALLED_MESSAGE;
+      } else {
+        message = ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE;
       }
+      break;
+    case GET_RESULT_ERROR:
+      if (error === ERROR_MISSING_FILE) {
+        message = ERROR_MISSING_FILE_MESSAGE;
+      } else {
+        message = ERROR_GETTING_RESULT_MESSAGE;
+      }
+      break;
+    case GET_RESULTS_ERROR:
+      message = ERROR_GETTING_RESULTS_MESSAGE;
       break;
 
     // success messages

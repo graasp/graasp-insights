@@ -19,5 +19,5 @@ module.exports = {
   GET_RESULTS_CHANNEL: 'results:get',
   GET_ALGORITHMS_CHANNEL: 'algorithms:get',
   DELETE_ALGORITHM_CHANNEL: 'algorithm:delete',
-  CHECK_PYTHON_INSTALLATION_CHANNEL: 'settings:check:python',
+  CHECK_PYTHON_INSTALLATION_CHANNEL: 'settings:python:check',
 };
