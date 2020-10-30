@@ -202,14 +202,6 @@ class Results extends Component {
               <CodeIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Edit result')} key="edit">
-            <IconButton
-              aria-label="edit"
-              onClick={() => this.handleEdit(result)}
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>,
           <ExportButton
             id={id}
             name={`${name}.json`}
@@ -217,20 +209,30 @@ class Results extends Component {
             channel={EXPORT_RESULT_CHANNEL}
             tooltipText={t('Export result')}
           />,
-          <Tooltip title={t('Publish result')} key="publish">
-            <IconButton
-              aria-label="publish"
-              onClick={() => this.handlePublish(result)}
-            >
-              <PublishIcon />
-            </IconButton>
-          </Tooltip>,
           <Tooltip title={t('Remove result')} key="delete">
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete(result)}
             >
               <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Edit result')} key="edit">
+            <IconButton
+              disabled
+              aria-label="edit"
+              onClick={() => this.handleEdit(result)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Publish result')} key="publish">
+            <IconButton
+              disabled
+              aria-label="publish"
+              onClick={() => this.handlePublish(result)}
+            >
+              <PublishIcon />
             </IconButton>
           </Tooltip>,
         ],

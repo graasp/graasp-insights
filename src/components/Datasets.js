@@ -193,14 +193,6 @@ class Datasets extends Component {
               <CodeIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Edit dataset')} key="edit">
-            <IconButton
-              aria-label="edit"
-              onClick={() => this.handleEdit(dataset)}
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>,
           <ExportButton
             id={id}
             name={`${name}.json`}
@@ -208,20 +200,30 @@ class Datasets extends Component {
             channel={EXPORT_DATASET_CHANNEL}
             tooltipText={t('Export dataset')}
           />,
-          <Tooltip title={t('Publish dataset')} key="publish">
-            <IconButton
-              aria-label="publish"
-              onClick={() => this.handlePublish(dataset)}
-            >
-              <PublishIcon />
-            </IconButton>
-          </Tooltip>,
           <Tooltip title={t('Remove dataset')} key="delete">
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete(dataset)}
             >
               <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Edit dataset')} key="edit">
+            <IconButton
+              disabled
+              aria-label="edit"
+              onClick={() => this.handleEdit(dataset)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Publish dataset')} key="publish">
+            <IconButton
+              disabled
+              aria-label="publish"
+              onClick={() => this.handlePublish(dataset)}
+            >
+              <PublishIcon />
             </IconButton>
           </Tooltip>,
         ],
