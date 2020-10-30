@@ -239,7 +239,7 @@ class DatasetScreen extends Component {
 
 const mapStateToProps = ({ dataset }) => ({
   dataset: dataset.getIn(['current', 'content']),
-  activity: Boolean(dataset.getIn(['current', 'activity']).size),
+  activity: Boolean(dataset.getIn(['activity']).size),
 });
 
 const mapDispatchToProps = {

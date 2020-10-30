@@ -74,7 +74,7 @@ class ResultScreen extends Component {
 
 const mapStateToProps = ({ result }) => ({
   result: result.getIn(['current', 'content']),
-  activity: result.getIn(['current', 'activity']).size,
+  activity: Boolean(result.getIn(['activity']).size),
 });
 
 const mapDispatchToProps = {
