@@ -2,8 +2,6 @@
 // the original file is located in src/shared and is duplicated in public/shared
 
 module.exports = {
-  SHOW_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:show',
-  RESPOND_LOAD_DATASET_PROMPT_CHANNEL: 'prompt:dataset:load:respond',
   LOAD_DATASET_CHANNEL: 'dataset:load',
   EXECUTE_PYTHON_ALGORITHM_CHANNEL: 'execute:python',
   GET_DATASET_CHANNEL: 'dataset:get',
@@ -24,4 +22,8 @@ module.exports = {
   CHECK_PYTHON_INSTALLATION_CHANNEL: 'settings:python:check',
   EXPORT_DATASET_CHANNEL: 'dataset:export',
   EXPORT_RESULT_CHANNEL: 'result:export',
+  GET_ALGORITHM_CHANNEL: 'algorithm:get',
+  SAVE_ALGORITHM_CHANNEL: 'algorithm:save',
+  ADD_ALGORITHM_CHANNEL: 'algorithm:add',
+  BROWSE_FILE_CHANNEL: 'browse:file',
 };

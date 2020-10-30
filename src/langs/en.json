@@ -65,6 +65,15 @@
     "export": "export",
     "Export dataset": "Export dataset",
     "version": "version",
-    "Save As...": "Save As..."
+    "Save As...": "Save As...",
+    "Add algorithm": "Add algorithm",
+    "Algorithm name": "Algorithm name",
+    "Load algorithm from a file": "Load algorithm from a file",
+    "Write algorithm": "Write algorithm",
+    "Select algorithm": "Select algorithm",
+    "Save": "Save",
+    "An unexpected error happened while opening the algorithm.": "An unexpected error happened while opening the algorithm.",
+    "Editing algorithm": "Editing algorithm",
+    "your code goes here": "your code goes here"
   }
 }

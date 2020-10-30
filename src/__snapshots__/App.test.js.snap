@@ -354,6 +354,16 @@ exports[`<App /> renders correctly 1`] = `
           exact={true}
           path="/executions"
         />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/edit-algorithm/:id"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/add-algorithm"
+        />
       </Switch>
     </div>
   </HashRouter>

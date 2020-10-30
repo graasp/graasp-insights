@@ -4,8 +4,6 @@ import {
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
   DELETE_DATASET_CHANNEL,
-  SHOW_LOAD_DATASET_PROMPT_CHANNEL,
-  RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET_CHANNEL,
   SET_DATASET_FILE_CHANNEL,
 } from '../shared/channels';
@@ -96,22 +94,6 @@ export const deleteDataset = ({ id }) => (dispatch) => {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_DATASET_MESSAGE);
     dispatch(flagDeletingDataset(false));
   }
-};
-
-export const showPromptLoadDataset = (handleFileLocation) => () => {
-  const options = {
-    filters: [{ name: 'json', extensions: ['json'] }],
-  };
-  window.ipcRenderer.send(SHOW_LOAD_DATASET_PROMPT_CHANNEL, options);
-  window.ipcRenderer.once(
-    RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
-    (event, filePaths) => {
-      if (filePaths && filePaths.length) {
-        // currently we select only one file
-        handleFileLocation(filePaths[0]);
-      }
-    },
-  );
 };
 
 export const setDatasetFile = async (payload) => (dispatch) => {

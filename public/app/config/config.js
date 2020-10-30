@@ -130,4 +130,5 @@ module.exports = {
   ALGORITHMS_FOLDER_NAME,
   escapeEscapeCharacter,
   ACCEPTED_PYTHON_VERSIONS,
+  PROGRAMMING_LANGUAGES,
 };

@@ -15,11 +15,15 @@ import {
   RESULTS_PATH,
   RESULT_PATH,
   EXECUTIONS_PATH,
+  EDIT_ALGORITHM_PATH,
+  ADD_ALGORITHM_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
 import DeveloperScreen from './components/developer/DeveloperScreen';
-import Algorithms from './components/Algorithms';
+import Algorithms from './components/algorithm/Algorithms';
+import EditAlgorithm from './components/algorithm/EditAlgorithm';
+import AddAlgorithm from './components/algorithm/AddAlgorithm';
 import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
 import SettingsModal from './components/SettingsModal';
@@ -91,6 +95,12 @@ export class App extends Component {
               <Route exact path={HOME_PATH} component={Datasets} />
               <Route exact path={SETTINGS_PATH} component={SettingsModal} />
               <Route exact path={EXECUTIONS_PATH} component={Executions} />
+              <Route
+                exact
+                path={EDIT_ALGORITHM_PATH}
+                component={EditAlgorithm}
+              />
+              <Route exact path={ADD_ALGORITHM_PATH} component={AddAlgorithm} />
             </Switch>
           </div>
         </Router>

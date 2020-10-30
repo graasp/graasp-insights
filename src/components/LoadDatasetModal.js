@@ -9,12 +9,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import {
-  SHOW_LOAD_DATASET_PROMPT_CHANNEL,
-  RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
-} from '../shared/channels';
 import { loadDataset } from '../actions';
 import {
   LOAD_DATASET_FILEPATH_ID,
@@ -23,6 +17,7 @@ import {
   LOAD_DATASET_ACCEPT_ID,
   LOAD_DATASET_DESCRIPTION_ID,
 } from '../config/selectors';
+import BrowseFileButton from './common/BrowseFileButton';
 
 const styles = () => ({
   dialogContent: {
@@ -58,8 +53,7 @@ class LoadDatasetModal extends Component {
   };
 
   handleLocationInput = (event) => {
-    const filePath = event.target ? event.target.value : event;
-    this.setState({ fileLocation: filePath });
+    this.setState({ fileLocation: event.target.value });
   };
 
   handleCustomNameInput = (event) => {
@@ -70,20 +64,12 @@ class LoadDatasetModal extends Component {
     this.setState({ fileDescription: event.target.value });
   };
 
-  handleBrowse = () => {
-    const options = {
-      filters: [{ name: 'json', extensions: ['json'] }],
-    };
-    window.ipcRenderer.send(SHOW_LOAD_DATASET_PROMPT_CHANNEL, options);
-    window.ipcRenderer.once(
-      RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
-      (event, filePaths) => {
-        if (filePaths && filePaths.length) {
-          // currently we select only one file
-          this.handleLocationInput(filePaths[0]);
-        }
-      },
-    );
+  handleBrowseFileCallback = (filePaths) => {
+    // currently we select only one file
+    const filePath = filePaths[0];
+    if (filePath) {
+      this.setState({ fileLocation: filePath });
+    }
   };
 
   handleFileSubmit = () => {
@@ -126,9 +112,12 @@ class LoadDatasetModal extends Component {
               helperText={t('(Required)')}
               required
             />
-            <IconButton onClick={this.handleBrowse}>
-              <SearchIcon />
-            </IconButton>
+            <BrowseFileButton
+              options={{
+                filters: [{ name: 'json', extensions: ['json'] }],
+              }}
+              onBrowseFileCallback={this.handleBrowseFileCallback}
+            />
           </div>
 
           <TextField

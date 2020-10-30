@@ -47,6 +47,10 @@ const styles = (theme) => ({
   infoAlert: {
     margin: theme.spacing(2),
   },
+  content: {
+    // adds bottom space so that button doesn't stay above table when fully scrolled
+    marginBottom: theme.spacing(10),
+  },
 });
 
 class Datasets extends Component {
@@ -59,6 +63,7 @@ class Datasets extends Component {
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
@@ -254,7 +259,7 @@ class Datasets extends Component {
 
     return (
       <Main>
-        <Container>
+        <Container className={classes.content}>
           <h1>{t('Datasets')}</h1>
           <Table rows={rows} columns={columns} />
           <LoadDatasetButton />

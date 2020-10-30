@@ -19,7 +19,6 @@ const {
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
 const {
-  SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET_CHANNEL,
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
@@ -33,16 +32,19 @@ const {
   GET_RESULTS_CHANNEL,
   GET_RESULT_CHANNEL,
   GET_ALGORITHMS_CHANNEL,
+  GET_ALGORITHM_CHANNEL,
   DELETE_ALGORITHM_CHANNEL,
   EXPORT_DATASET_CHANNEL,
   EXECUTE_PYTHON_ALGORITHM_CHANNEL,
   CHECK_PYTHON_INSTALLATION_CHANNEL,
   SHOW_SAVE_AS_PROMPT_CHANNEL,
   EXPORT_RESULT_CHANNEL,
+  SAVE_ALGORITHM_CHANNEL,
+  ADD_ALGORITHM_CHANNEL,
+  BROWSE_FILE_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
-  showLoadDatasetPrompt,
   loadDataset,
   executePythonAlgorithm,
   getDataset,
@@ -63,6 +65,10 @@ const {
   showSaveAsPrompt,
   exportResult,
   setDatasetFile,
+  getAlgorithm,
+  saveAlgorithm,
+  addAlgorithm,
+  browseFile,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -281,12 +287,6 @@ app.on('ready', async () => {
 
   ipcMain.on(SHOW_SAVE_AS_PROMPT_CHANNEL, showSaveAsPrompt(mainWindow));
 
-  // prompt when loading a dataset
-  ipcMain.on(
-    SHOW_LOAD_DATASET_PROMPT_CHANNEL,
-    showLoadDatasetPrompt(mainWindow),
-  );
-
   // called when getting datasets
   ipcMain.on(GET_DATASETS_CHANNEL, getDatasets(mainWindow, db));
 
@@ -342,6 +342,17 @@ app.on('ready', async () => {
     CHECK_PYTHON_INSTALLATION_CHANNEL,
     checkPythonInstallation(mainWindow, db),
   );
+  // called when getting an algorithm
+  ipcMain.on(GET_ALGORITHM_CHANNEL, getAlgorithm(mainWindow, db));
+
+  // called when saving an algorithm
+  ipcMain.on(SAVE_ALGORITHM_CHANNEL, saveAlgorithm(mainWindow, db));
+
+  // called when adding an algorithm
+  ipcMain.on(ADD_ALGORITHM_CHANNEL, addAlgorithm(mainWindow, db));
+
+  // called when browsing a file
+  ipcMain.on(BROWSE_FILE_CHANNEL, browseFile(mainWindow));
 });
 
 app.on('activate', () => {

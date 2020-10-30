@@ -5,16 +5,19 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+import { withRouter } from 'react-router';
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
-import Main from './common/Main';
-import { getAlgorithms, deleteAlgorithm } from '../actions';
-import Loader from './common/Loader';
-import Table from './common/Table';
+import Main from '../common/Main';
+import { getAlgorithms, deleteAlgorithm } from '../../actions';
+import Loader from '../common/Loader';
+import Table from '../common/Table';
+import { buildEditAlgorithmPath, ADD_ALGORITHM_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -23,6 +26,20 @@ const styles = (theme) => ({
   description: {
     display: 'block',
     maxWidth: '600px',
+  },
+  addButton: {
+    color: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
+    position: 'fixed',
+    right: theme.spacing(2),
+    bottom: theme.spacing(2),
+    '&:hover, &.Mui-focusVisible': {
+      backgroundColor: theme.palette.primary.main,
+    },
+  },
+  content: {
+    // adds bottom space so that button doesn't stay above table when fully scrolled
+    marginBottom: theme.spacing(10),
   },
 });
 
@@ -36,6 +53,11 @@ class Algorithms extends Component {
     classes: PropTypes.shape({
       infoAlert: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
+      addButton: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+    }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
     }).isRequired,
   };
 
@@ -44,14 +66,36 @@ class Algorithms extends Component {
     dispatchGetAlgorithms();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  handleEdit() {
-    // TODO: implement editing functionality
-  }
+  handleAdd = () => {
+    const {
+      history: { push },
+    } = this.props;
+    push(ADD_ALGORITHM_PATH);
+  };
 
   handleDelete(id) {
     const { dispatchDeleteAlgorithm } = this.props;
     dispatchDeleteAlgorithm({ id });
+  }
+
+  handleEdit(id) {
+    const {
+      history: { push },
+    } = this.props;
+    push(buildEditAlgorithmPath(id));
+  }
+
+  renderAddButon() {
+    const { classes } = this.props;
+    return (
+      <IconButton
+        variant="contained"
+        className={classes.addButton}
+        onClick={this.handleAdd}
+      >
+        <AddIcon />
+      </IconButton>
+    );
   }
 
   render() {
@@ -65,12 +109,13 @@ class Algorithms extends Component {
       );
     }
 
-    if (algorithms.size <= 0) {
+    if (!algorithms.size) {
       return (
         <Main>
           <Alert severity="info" className={classes.infoAlert}>
             {t('No algorithms are available')}
           </Alert>
+          {this.renderAddButon()}
         </Main>
       );
     }
@@ -126,7 +171,7 @@ class Algorithms extends Component {
         language,
         quickActions: [
           <Tooltip title={t('Edit algorithm')} key="edit">
-            <IconButton aria-label="edit" onClick={this.handleEdit}>
+            <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
               <EditIcon />
             </IconButton>
           </Tooltip>,
@@ -144,10 +189,11 @@ class Algorithms extends Component {
 
     return (
       <Main>
-        <Container>
+        <Container className={classes.content}>
           <h1>{t('Algorithms')}</h1>
           <Table columns={columns} rows={rows} />
         </Container>
+        {this.renderAddButon()}
       </Main>
     );
   }
@@ -172,4 +218,6 @@ const StyledComponent = withStyles(styles, { withTheme: true })(
   ConnectedComponent,
 );
 
-export default withTranslation()(StyledComponent);
+const TranslatedComponent = withTranslation()(StyledComponent);
+
+export default withRouter(TranslatedComponent);
