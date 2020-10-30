@@ -111,7 +111,7 @@ const GRAASP_ALGORITHMS = [
   },
 ];
 
-const ACCEPTED_PYTHON_VERSIONS = ['2', '3'];
+const ACCEPTED_PYTHON_VERSIONS = ['2.7', '3'];
 
 module.exports = {
   DEFAULT_LOGGING_LEVEL,

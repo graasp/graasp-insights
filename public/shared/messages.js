@@ -36,11 +36,11 @@ const SUCCESS_DELETING_ALGORITHM_MESSAGE =
 const ERROR_DELETING_RESULT_MESSAGE =
   'There was an error deleting the result dataset';
 const ERROR_PYTHON_NOT_INSTALLED_MESSAGE =
-  'Python is not installed on your system';
+  'Python was not found on your system. Please make sure you have Python 2.7.0 or better installed';
 const buildPythonWrongVersionMessage = (version) =>
-  `Your system's python version (${version}) is not supported`;
+  `Your system is running Python version ${version}, which is not supported by this application. Please upgrade to Python 2.7.0 or better`;
 const ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE =
-  'There was an error checking the installation of python';
+  'There was an error verifying the installation of Python on your system. Try restarting the application. If the error persists, try reinstalling Python';
 const ERROR_GETTING_LANGUAGE_MESSAGE =
   'There was an error retrieving the language';
 const ERROR_SETTING_LANGUAGE_MESSAGE =

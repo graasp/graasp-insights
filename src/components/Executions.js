@@ -57,6 +57,9 @@ class Executions extends Component {
       button: PropTypes.string.isRequired,
       pythonLogo: PropTypes.string.isRequired,
     }).isRequired,
+    pythonVersion: PropTypes.shape({
+      valid: PropTypes.bool,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -94,7 +97,14 @@ class Executions extends Component {
 
   render() {
     const { datasetId, algorithmId } = this.state;
-    const { datasets, algorithms, t, classes, isLoading } = this.props;
+    const {
+      datasets,
+      algorithms,
+      t,
+      classes,
+      isLoading,
+      pythonVersion,
+    } = this.props;
 
     if (isLoading) {
       return (
@@ -165,7 +175,7 @@ class Executions extends Component {
             color="primary"
             onClick={this.executeAlgorithm}
             className={classes.button}
-            disabled={!datasetId || !algorithmId}
+            disabled={!datasetId || !algorithmId || !pythonVersion?.valid}
           >
             {t('Execute')}
           </Button>
@@ -175,12 +185,13 @@ class Executions extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset, algorithms }) => ({
+const mapStateToProps = ({ dataset, algorithms, settings }) => ({
   datasets: dataset.get('datasets'),
   algorithms: algorithms.get('algorithms'),
   isLoading:
     dataset.getIn(['current', 'activity']).size > 0 &&
     algorithms.getIn(['activity']).size > 0,
+  pythonVersion: settings.get('pythonVersion'),
 });
 
 const mapDispatchToProps = {
