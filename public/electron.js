@@ -35,6 +35,7 @@ const {
   GET_ALGORITHMS_CHANNEL,
   DELETE_ALGORITHM_CHANNEL,
   EXECUTE_PYTHON_ALGORITHM_CHANNEL,
+  CHECK_PYTHON_INSTALLATION_CHANNEL,
 } = require('./shared/channels');
 const {
   showLoadDatasetPrompt,
@@ -53,6 +54,7 @@ const {
   getAlgorithms,
   deleteAlgorithm,
   getDatabase,
+  checkPythonInstallation,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -315,6 +317,11 @@ app.on('ready', async () => {
 
   // called when deleting an algorithm
   ipcMain.on(DELETE_ALGORITHM_CHANNEL, deleteAlgorithm(mainWindow, db));
+
+  ipcMain.on(
+    CHECK_PYTHON_INSTALLATION_CHANNEL,
+    checkPythonInstallation(mainWindow, db),
+  );
 });
 
 app.on('activate', () => {

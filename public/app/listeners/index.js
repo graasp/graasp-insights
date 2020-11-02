@@ -14,6 +14,7 @@ const deleteResult = require('./deleteResult');
 const getAlgorithms = require('./getAlgorithms');
 const deleteAlgorithm = require('./deleteAlgorithm');
 const getDatabase = require('./getDatabase');
+const checkPythonInstallation = require('./checkPythonInstallation');
 
 module.exports = {
   getDataset,
@@ -32,4 +33,5 @@ module.exports = {
   getAlgorithms,
   deleteAlgorithm,
   getDatabase,
+  checkPythonInstallation,
 };

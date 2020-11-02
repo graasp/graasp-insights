@@ -23,7 +23,7 @@ import Algorithms from './components/Algorithms';
 import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
 import SettingsModal from './components/SettingsModal';
-import { getLanguage } from './actions';
+import { getLanguage, checkPythonInstallation } from './actions';
 import Results from './components/Results';
 import ResultScreen from './components/result/ResultScreen';
 import Executions from './components/Executions';
@@ -33,6 +33,7 @@ export class App extends Component {
 
   static propTypes = {
     dispatchGetLanguage: PropTypes.func.isRequired,
+    dispatchCheckPythonInstallation: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     i18n: PropTypes.shape({
       changeLanguage: PropTypes.func.isRequired,
@@ -49,6 +50,8 @@ export class App extends Component {
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    const { dispatchCheckPythonInstallation } = this.props;
+    dispatchCheckPythonInstallation();
   }
 
   componentDidUpdate({ lang: prevLang }) {
@@ -102,9 +105,8 @@ const mapStateToProps = ({ settings }) => ({
 
 const mapDispatchToProps = {
   dispatchGetLanguage: getLanguage,
+  dispatchCheckPythonInstallation: checkPythonInstallation,
 };
-
-// const StyledApp = withStyles(styles, { withTheme: true })(App);
 
 const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
 

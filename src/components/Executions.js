@@ -10,10 +10,16 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Alert from '@material-ui/lab/Alert';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Main from './common/Main';
 import { getDatasets, getAlgorithms, executeAlgorithm } from '../actions';
 import Loader from './common/Loader';
+import PythonLogo from './execution/PythonLogo';
+import {
+  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+  buildPythonWrongVersionMessage,
+} from '../shared/messages';
 
 const styles = (theme) => ({
   formControl: {
@@ -28,10 +34,17 @@ const styles = (theme) => ({
     margin: '0 auto',
     marginTop: theme.spacing(2),
   },
-  button: {
-    display: 'block',
-    margin: '0 auto',
+  buttonContainer: {
+    textAlign: 'center',
     marginTop: theme.spacing(2),
+  },
+  buttonWrapper: {
+    display: 'inline-block',
+  },
+  pythonLogo: {
+    position: 'fixed',
+    right: 0,
+    marginRight: theme.spacing(2),
   },
 });
 
@@ -48,7 +61,13 @@ class Executions extends Component {
       formControl: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       container: PropTypes.string.isRequired,
-      button: PropTypes.string.isRequired,
+      buttonContainer: PropTypes.string.isRequired,
+      buttonWrapper: PropTypes.string.isRequired,
+      pythonLogo: PropTypes.string.isRequired,
+    }).isRequired,
+    pythonVersion: PropTypes.shape({
+      valid: PropTypes.bool,
+      version: PropTypes.string,
     }).isRequired,
   };
 
@@ -83,6 +102,47 @@ class Executions extends Component {
     if (language) {
       dispatchExecuteAlgorithm({ datasetId, algorithmId, language });
     }
+  };
+
+  renderExecuteButton = () => {
+    const { datasetId, algorithmId } = this.state;
+    const { t, pythonVersion, classes } = this.props;
+    const button = (
+      <div className={classes.buttonWrapper}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.executeAlgorithm}
+          disabled={!datasetId || !algorithmId || !pythonVersion?.valid}
+        >
+          {t('Execute')}
+        </Button>
+      </div>
+    );
+
+    if (!pythonVersion?.version) {
+      return (
+        <div className={classes.buttonContainer}>
+          <Tooltip title={t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE)}>
+            {button}
+          </Tooltip>
+        </div>
+      );
+    }
+
+    if (!pythonVersion.valid) {
+      return (
+        <div className={classes.buttonContainer}>
+          <Tooltip
+            title={t(buildPythonWrongVersionMessage(pythonVersion.version))}
+          >
+            {button}
+          </Tooltip>
+        </div>
+      );
+    }
+
+    return <div className={classes.buttonContainer}>{button}</div>;
   };
 
   render() {
@@ -120,6 +180,9 @@ class Executions extends Component {
     return (
       <Main>
         <div className={classes.container}>
+          <div className={classes.pythonLogo}>
+            <PythonLogo />
+          </div>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="dataset-select">Dataset</InputLabel>
             <Select
@@ -150,27 +213,20 @@ class Executions extends Component {
               ))}
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.executeAlgorithm}
-            className={classes.button}
-            disabled={!datasetId || !algorithmId}
-          >
-            {t('Execute')}
-          </Button>
+          {this.renderExecuteButton()}
         </div>
       </Main>
     );
   }
 }
 
-const mapStateToProps = ({ dataset, algorithms }) => ({
+const mapStateToProps = ({ dataset, algorithms, settings }) => ({
   datasets: dataset.get('datasets'),
   algorithms: algorithms.get('algorithms'),
   isLoading:
     dataset.getIn(['current', 'activity']).size > 0 &&
     algorithms.getIn(['activity']).size > 0,
+  pythonVersion: settings.get('pythonVersion'),
 });
 
 const mapDispatchToProps = {
