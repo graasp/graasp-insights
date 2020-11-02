@@ -8,6 +8,7 @@ module.exports = {
   EXECUTE_PYTHON_ALGORITHM_CHANNEL: 'execute:python',
   GET_DATASET_CHANNEL: 'dataset:get',
   GET_DATASETS_CHANNEL: 'datasets:get',
+  SET_DATASET_FILE_CHANNEL: 'dataset:file:set',
   GET_DATABASE_CHANNEL: 'developer:database:get',
   SET_DATABASE_CHANNEL: 'developer:database:set',
   SET_SAMPLE_DATABASE_CHANNEL: 'developer:database:sample:set',

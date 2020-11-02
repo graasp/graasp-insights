@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { withTranslation } from 'react-i18next';
-import JSONFileReader from '../common/JSONFileReader';
+import JSONFileEditor from '../common/JSONFileEditor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
 import { getDataset } from '../../actions';
@@ -86,10 +86,13 @@ class DatasetScreen extends Component {
 
   renderDatasetInformation = () => {
     const { dataset, t } = this.props;
-    const content = dataset?.get('content') || '';
-    const parsedContent = JSON.parse(content)?.data;
+    const content = dataset?.get('content');
+    if (!content) {
+      return null;
+    }
+    const parsedContent = JSON.parse(content)?.data || {};
 
-    const { actions = [] } = parsedContent;
+    const actions = parsedContent?.actions.filter((action) => action) || [];
     const actionCount = actions?.length.toLocaleString(DEFAULT_NUMBER_FORMAT);
     const userCount = parsedContent?.users?.length.toLocaleString(
       DEFAULT_NUMBER_FORMAT,
@@ -220,10 +223,12 @@ class DatasetScreen extends Component {
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h5">{t('Content')}</Typography>
-              <JSONFileReader
+              <JSONFileEditor
+                id={dataset.get('id')}
                 size={dataset.get('size')}
                 content={dataset.get('content')}
                 collapsed={2}
+                editEnabled
               />
             </Grid>
             <Grid item>

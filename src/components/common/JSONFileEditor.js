@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
+import { connect } from 'react-redux';
 import { Map } from 'immutable';
 import ReactJson from 'react-json-view';
 import { withTranslation } from 'react-i18next';
 import Loader from './Loader';
 import { MAX_FILE_SIZE } from '../../config/constants';
+import { setDatasetFile } from '../../actions';
 
-class JSONFileReader extends Component {
+class JSONFileEditor extends Component {
   static propTypes = {
     content: PropTypes.string,
     size: PropTypes.number,
     t: PropTypes.func.isRequired,
     collapsed: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+    dispatchSetDatasetFile: PropTypes.func.isRequired,
+    id: PropTypes.string,
+    editEnabled: PropTypes.bool,
   };
 
   static defaultProps = {
     content: Map(),
     size: 0,
     collapsed: true,
+    id: null,
+    editEnabled: false,
   };
 
   state = {
@@ -41,12 +48,19 @@ class JSONFileReader extends Component {
 
   loadFile = () => {
     const { content } = this.props;
-    const parsedContent = JSON.parse(content);
-    this.setState({ json: parsedContent });
+    if (content) {
+      const parsedContent = JSON.parse(content);
+      this.setState({ json: parsedContent });
+    }
+  };
+
+  handleEdit = ({ updated_src: content }) => {
+    const { dispatchSetDatasetFile, id } = this.props;
+    dispatchSetDatasetFile({ id, content });
   };
 
   render() {
-    const { content, size, t, collapsed } = this.props;
+    const { content, size, t, collapsed, editEnabled } = this.props;
     const { json } = this.state;
 
     if (size > MAX_FILE_SIZE) {
@@ -59,10 +73,29 @@ class JSONFileReader extends Component {
       return <Loader />;
     }
 
+    const editProps = editEnabled
+      ? {
+          onEdit: this.handleEdit,
+          onAdd: this.handleEdit,
+          onDelete: this.handleEdit,
+        }
+      : {};
+
     return (
-      <ReactJson groupArraysAfterLength={50} collapsed={collapsed} src={json} />
+      <ReactJson
+        groupArraysAfterLength={50}
+        collapsed={collapsed}
+        src={json}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...editProps}
+      />
     );
   }
 }
+const mapDispatchToProps = {
+  dispatchSetDatasetFile: setDatasetFile,
+};
 
-export default withTranslation()(JSONFileReader);
+const ConnectedComponent = connect(null, mapDispatchToProps)(JSONFileEditor);
+
+export default withTranslation()(ConnectedComponent);

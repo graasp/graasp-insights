@@ -7,12 +7,14 @@ import {
   SHOW_LOAD_DATASET_PROMPT_CHANNEL,
   RESPOND_LOAD_DATASET_PROMPT_CHANNEL,
   LOAD_DATASET_CHANNEL,
+  SET_DATASET_FILE_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_DATASET,
   FLAG_GETTING_DATASETS,
   FLAG_DELETING_DATASET,
   FLAG_LOADING_DATASET,
+  FLAG_SETTING_DATASET_FILE,
 } from '../shared/types';
 import {
   ERROR_GETTING_DATASET_MESSAGE,
@@ -20,6 +22,7 @@ import {
   ERROR_GETTING_DATASETS_MESSAGE,
   ERROR_DELETING_DATASET_MESSAGE,
   ERROR_LOADING_DATASET_MESSAGE,
+  ERROR_SETTING_DATASET_MESSAGE,
 } from '../shared/messages';
 
 export const getDatasets = () => (dispatch) => {
@@ -109,4 +112,23 @@ export const showPromptLoadDataset = (handleFileLocation) => () => {
       }
     },
   );
+};
+
+export const setDatasetFile = async (payload) => (dispatch) => {
+  const flagSettingDatasetFile = createFlag(FLAG_SETTING_DATASET_FILE);
+  try {
+    dispatch(flagSettingDatasetFile(true));
+    window.ipcRenderer.send(SET_DATASET_FILE_CHANNEL, payload);
+    window.ipcRenderer.once(
+      SET_DATASET_FILE_CHANNEL,
+      async (event, response) => {
+        dispatch(response);
+        dispatch(flagSettingDatasetFile(false));
+        return dispatch(getDataset({ id: payload?.id }));
+      },
+    );
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATASET_MESSAGE);
+    dispatch(flagSettingDatasetFile(false));
+  }
 };
