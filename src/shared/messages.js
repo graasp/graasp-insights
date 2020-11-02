@@ -21,11 +21,11 @@ const SUCCESS_LOADING_DATASET_MESSAGE = 'Dataset loaded successfully';
 const ERROR_LOADING_DATASET_MESSAGE = 'There was an error loading the dataset';
 const ERROR_MISSING_FILE_MESSAGE = 'The corresponding file was not found';
 const buildPythonProcessErrorMessage = (code) =>
-  `The python process exited with code ${code}`;
+  `The Python process exited with code ${code}`;
 const ERROR_EXECUTING_PYTHON_ALGORITHM_MESSAGE =
-  'There was an error executing the python algorithm';
+  'There was an error executing the Python algorithm';
 const SUCCESS_EXECUTING_PYTHON_ALGORITHM_MESSAGE =
-  'The python algorithm was executed successfully';
+  'The Python algorithm was executed successfully';
 const ERROR_DELETING_DATASET_MESSAGE =
   'There was an error deleting the dataset';
 const SUCCESS_DELETING_DATASET_MESSAGE = 'The dataset was deleted successfully';

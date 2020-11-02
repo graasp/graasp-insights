@@ -4,6 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+import { ERROR_PYTHON_NOT_INSTALLED_MESSAGE } from '../../shared/messages';
 
 const styles = (theme) => ({
   pythonLogo: {
@@ -26,7 +27,9 @@ const PythonLogo = ({ t, pythonVersion, classes }) => {
   return (
     <Tooltip
       title={`Python (${
-        version ? `${t('version')} ${version}` : t('not installed')
+        version
+          ? `${t('version')} ${version}`
+          : t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE)
       })`}
     >
       <div className={classes.pythonLogo}>

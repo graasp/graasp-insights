@@ -10,11 +10,16 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Alert from '@material-ui/lab/Alert';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Main from './common/Main';
 import { getDatasets, getAlgorithms, executeAlgorithm } from '../actions';
 import Loader from './common/Loader';
 import PythonLogo from './execution/PythonLogo';
+import {
+  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+  buildPythonWrongVersionMessage,
+} from '../shared/messages';
 
 const styles = (theme) => ({
   formControl: {
@@ -29,10 +34,12 @@ const styles = (theme) => ({
     margin: '0 auto',
     marginTop: theme.spacing(2),
   },
-  button: {
-    display: 'block',
-    margin: '0 auto',
+  buttonContainer: {
+    textAlign: 'center',
     marginTop: theme.spacing(2),
+  },
+  buttonWrapper: {
+    display: 'inline-block',
   },
   pythonLogo: {
     position: 'fixed',
@@ -54,11 +61,13 @@ class Executions extends Component {
       formControl: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       container: PropTypes.string.isRequired,
-      button: PropTypes.string.isRequired,
+      buttonContainer: PropTypes.string.isRequired,
+      buttonWrapper: PropTypes.string.isRequired,
       pythonLogo: PropTypes.string.isRequired,
     }).isRequired,
     pythonVersion: PropTypes.shape({
       valid: PropTypes.bool,
+      version: PropTypes.string,
     }).isRequired,
   };
 
@@ -95,16 +104,50 @@ class Executions extends Component {
     }
   };
 
+  renderExecuteButton = () => {
+    const { datasetId, algorithmId } = this.state;
+    const { t, pythonVersion, classes } = this.props;
+    const button = (
+      <div className={classes.buttonWrapper}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.executeAlgorithm}
+          disabled={!datasetId || !algorithmId || !pythonVersion?.valid}
+        >
+          {t('Execute')}
+        </Button>
+      </div>
+    );
+
+    if (!pythonVersion?.version) {
+      return (
+        <div className={classes.buttonContainer}>
+          <Tooltip title={t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE)}>
+            {button}
+          </Tooltip>
+        </div>
+      );
+    }
+
+    if (!pythonVersion.valid) {
+      return (
+        <div className={classes.buttonContainer}>
+          <Tooltip
+            title={t(buildPythonWrongVersionMessage(pythonVersion.version))}
+          >
+            {button}
+          </Tooltip>
+        </div>
+      );
+    }
+
+    return <div className={classes.buttonContainer}>{button}</div>;
+  };
+
   render() {
     const { datasetId, algorithmId } = this.state;
-    const {
-      datasets,
-      algorithms,
-      t,
-      classes,
-      isLoading,
-      pythonVersion,
-    } = this.props;
+    const { datasets, algorithms, t, classes, isLoading } = this.props;
 
     if (isLoading) {
       return (
@@ -170,15 +213,7 @@ class Executions extends Component {
               ))}
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.executeAlgorithm}
-            className={classes.button}
-            disabled={!datasetId || !algorithmId || !pythonVersion?.valid}
-          >
-            {t('Execute')}
-          </Button>
+          {this.renderExecuteButton()}
         </div>
       </Main>
     );
