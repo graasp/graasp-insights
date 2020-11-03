@@ -20,4 +20,7 @@ export const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
 };
 
+export const AUTHOR_GRAASP = 'Graasp';
+export const AUTHOR_USER = 'User';
+
 export const DEFAULT_NUMBER_FORMAT = 'en';

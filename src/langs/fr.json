@@ -73,6 +73,7 @@
     "Select algorithm": "Sélectionner un algorithme",
     "Save": "Enregistrer",
     "An unexpected error happened while opening the algorithm.": "Une erreur s'est produite lors de l'ouverture de l'algorithme.",
-    "your code goes here": "écrivez votre code ici"
+    "your code goes here": "écrivez votre code ici",
+    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous modifiez un algorithme de Graasp. Enregistrer créera un nouveau fichier."
   }
 }

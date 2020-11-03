@@ -21,6 +21,7 @@ import BrowseFileButton from '../common/BrowseFileButton';
 import Editor from '../common/Editor';
 import { addAlgorithm } from '../../actions';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
+import { AUTHOR_USER } from '../../config/constants';
 
 const styles = (theme) => ({
   buttons: {
@@ -35,7 +36,6 @@ class AddAlgorithm extends Component {
   state = {
     name: '',
     description: '',
-    author: '',
     fileLocation: '',
     code: PYTHON_TEMPLATE_CODE,
     option: OPTION_FILE,
@@ -58,10 +58,6 @@ class AddAlgorithm extends Component {
 
   handleDescriptionOnChange = (event) => {
     this.setState({ description: event.target.value });
-  };
-
-  handleAuthorOnChange = (event) => {
-    this.setState({ author: event.target.value });
   };
 
   handleLocationInput = (event) => {
@@ -93,14 +89,8 @@ class AddAlgorithm extends Component {
 
   handleSave = () => {
     const { dispatchAddAlgorithm } = this.props;
-    const {
-      name,
-      description,
-      author,
-      fileLocation,
-      code,
-      option,
-    } = this.state;
+    const { name, description, fileLocation, code, option } = this.state;
+    const author = AUTHOR_USER;
     const payload =
       option === OPTION_FILE
         ? { name, description, author, fileLocation }
@@ -112,50 +102,14 @@ class AddAlgorithm extends Component {
 
   render() {
     const { t, classes } = this.props;
-    const {
-      name,
-      description,
-      author,
-      option,
-      fileLocation,
-      code,
-    } = this.state;
+    const { name, description, option, fileLocation, code } = this.state;
 
     return (
       <Main>
         <Container>
           <h1>{t('Add algorithm')}</h1>
           <Grid container spacing={5}>
-            <Grid item xs={5}>
-              <TextField
-                margin="dense"
-                label={t('Algorithm name')}
-                value={name}
-                onChange={this.handleNameOnChange}
-                helperText={t('(Required)')}
-                required
-                fullWidth
-              />
-              <TextField
-                margin="dense"
-                label={t('Description')}
-                value={description}
-                onChange={this.handleDescriptionOnChange}
-                multiline
-                rowsMax={4}
-                helperText={t('(Optional)')}
-                fullWidth
-              />
-              <TextField
-                margin="dense"
-                label={t('Author')}
-                value={author}
-                onChange={this.handleAuthorOnChange}
-                helperText={t('(Optional)')}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={option === OPTION_FILE ? 5 : 7}>
               <FormControl component="fieldset">
                 <RadioGroup
                   aria-label="add option"
@@ -177,7 +131,7 @@ class AddAlgorithm extends Component {
               </FormControl>
               {option === OPTION_FILE ? (
                 <Grid container alignItems="center">
-                  <Grid item xs={8}>
+                  <Grid item xs={11}>
                     <TextField
                       margin="dense"
                       label={t('Select algorithm')}
@@ -188,7 +142,7 @@ class AddAlgorithm extends Component {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item xs={1}>
                     <BrowseFileButton
                       options={{
                         filters: [{ name: 'python', extensions: ['py'] }],
@@ -204,6 +158,27 @@ class AddAlgorithm extends Component {
                   onCodeChange={this.handleCodeOnChange}
                 />
               )}
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                margin="dense"
+                label={t('Algorithm name')}
+                value={name}
+                onChange={this.handleNameOnChange}
+                helperText={t('(Required)')}
+                required
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                label={t('Description')}
+                value={description}
+                onChange={this.handleDescriptionOnChange}
+                multiline
+                rowsMax={4}
+                helperText={t('(Optional)')}
+                fullWidth
+              />
             </Grid>
           </Grid>
           <Grid

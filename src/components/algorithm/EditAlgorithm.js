@@ -17,7 +17,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Editor from '../common/Editor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
-import { getAlgorithm, saveAlgorithm } from '../../actions';
+import { addAlgorithm, getAlgorithm, saveAlgorithm } from '../../actions';
+import { AUTHOR_GRAASP, AUTHOR_USER } from '../../config/constants';
 
 const styles = (theme) => ({
   button: {
@@ -33,7 +34,6 @@ class EditAlgorithm extends Component {
   state = {
     name: '',
     description: '',
-    author: '',
     code: '',
   };
 
@@ -49,6 +49,7 @@ class EditAlgorithm extends Component {
     }).isRequired,
     dispatchGetAlgorithm: PropTypes.func.isRequired,
     dispatchSaveAlgorithm: PropTypes.func.isRequired,
+    dispatchAddAlgorithm: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       button: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
@@ -75,7 +76,6 @@ class EditAlgorithm extends Component {
       this.setState({
         name: algorithm.get('name'),
         description: algorithm.get('description'),
-        author: algorithm.get('author'),
         code: algorithm.get('code'),
       });
     }
@@ -87,10 +87,6 @@ class EditAlgorithm extends Component {
 
   handleDescriptionOnChange = (event) => {
     this.setState({ description: event.target.value });
-  };
-
-  handleAuthorOnChange = (event) => {
-    this.setState({ author: event.target.value });
   };
 
   handleCodeOnChange = (code) => {
@@ -105,11 +101,23 @@ class EditAlgorithm extends Component {
   };
 
   handleSave = () => {
-    const { dispatchSaveAlgorithm, algorithm } = this.props;
-    const { name, description, author, code } = this.state;
-    const metadata = { ...algorithm?.toObject(), name, description, author };
-    if (name) {
-      dispatchSaveAlgorithm({ metadata, code });
+    const {
+      dispatchSaveAlgorithm,
+      dispatchAddAlgorithm,
+      algorithm,
+    } = this.props;
+    const { name, description, code } = this.state;
+    if (algorithm && name) {
+      const author = algorithm.get('author');
+
+      if (author === AUTHOR_GRAASP) {
+        // add as a new algorithm instead
+        const payload = { name, description, author: AUTHOR_USER, code };
+        dispatchAddAlgorithm(payload);
+      } else {
+        const metadata = { ...algorithm?.toObject(), name, description };
+        dispatchSaveAlgorithm({ metadata, code });
+      }
     }
   };
 
@@ -131,7 +139,7 @@ class EditAlgorithm extends Component {
 
   render() {
     const { t, classes, algorithm, activity } = this.props;
-    const { name, description, author, code } = this.state;
+    const { name, description, code } = this.state;
 
     if (activity) {
       return (
@@ -154,10 +162,19 @@ class EditAlgorithm extends Component {
       );
     }
 
+    const author = algorithm.get('author');
+
     return (
       <Main>
         <Container>
           <h1>{t('Edit algorithm')}</h1>
+          {author === AUTHOR_GRAASP && (
+            <Alert severity="info" className={classes.infoAlert}>
+              {t(
+                `You are modifying a Graasp algorithm. Saving will create a new file instead.`,
+              )}
+            </Alert>
+          )}
           <Grid container spacing={2} justify="center">
             <Grid item xs={7}>
               <Editor
@@ -183,14 +200,6 @@ class EditAlgorithm extends Component {
                 onChange={this.handleDescriptionOnChange}
                 multiline
                 rowsMax={4}
-                helperText={t('(Optional)')}
-                fullWidth
-              />
-              <TextField
-                margin="dense"
-                label={t('Author')}
-                value={author}
-                onChange={this.handleAuthorOnChange}
                 helperText={t('(Optional)')}
                 fullWidth
               />
@@ -222,6 +231,7 @@ const mapStateToProps = ({ algorithms }) => ({
 const mapDispatchToProps = {
   dispatchGetAlgorithm: getAlgorithm,
   dispatchSaveAlgorithm: saveAlgorithm,
+  dispatchAddAlgorithm: addAlgorithm,
 };
 
 const ConnectedComponent = connect(

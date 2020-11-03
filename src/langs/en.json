@@ -74,6 +74,7 @@
     "Save": "Save",
     "An unexpected error happened while opening the algorithm.": "An unexpected error happened while opening the algorithm.",
     "Editing algorithm": "Editing algorithm",
-    "your code goes here": "your code goes here"
+    "your code goes here": "your code goes here",
+    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "You are modifying a Graasp algorithm. Saving will create a new file instead."
   }
 }
