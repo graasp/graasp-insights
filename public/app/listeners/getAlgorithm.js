@@ -2,8 +2,10 @@ const fs = require('fs');
 const { GET_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { ALGORITHMS_COLLECTION } = require('../db');
-const { GET_ALGORITHM_SUCCESS } = require('../../shared/types');
-const { GET_ALGORITHM_ERROR } = require('../../shared/types');
+const {
+  GET_ALGORITHM_ERROR,
+  GET_ALGORITHM_SUCCESS,
+} = require('../../shared/types');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
 
 const getAlgorithm = (mainWindow, db) => async (event, { id }) => {

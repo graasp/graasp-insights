@@ -9,7 +9,6 @@ import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,7 +20,13 @@ import BrowseFileButton from '../common/BrowseFileButton';
 import Editor from '../common/Editor';
 import { addAlgorithm } from '../../actions';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
-import { AUTHOR_USER } from '../../config/constants';
+import {
+  AUTHOR_USER,
+  FILE_FILTERS,
+  EDITOR_PROGRAMMING_LANGUAGES,
+  ADD_OPTIONS,
+} from '../../config/constants';
+import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
   buttons: {
@@ -29,26 +34,24 @@ const styles = (theme) => ({
   },
 });
 
-const OPTION_FILE = 'OPTION_FILE';
-const OPTION_EDITOR = 'OPTION_EDITOR';
-
 class AddAlgorithm extends Component {
   state = {
     name: '',
     description: '',
     fileLocation: '',
     code: PYTHON_TEMPLATE_CODE,
-    option: OPTION_FILE,
+    option: ADD_OPTIONS.FILE,
+    programmingLanguage: EDITOR_PROGRAMMING_LANGUAGES.PYTHON,
   };
 
   static propTypes = {
-    history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
-    }).isRequired,
     dispatchAddAlgorithm: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       buttons: PropTypes.string.isRequired,
+    }).isRequired,
+    history: PropTypes.shape({
+      goBack: PropTypes.func.isRequired,
     }).isRequired,
   };
 
@@ -80,56 +83,59 @@ class AddAlgorithm extends Component {
     this.setState({ option: event.target.value });
   };
 
-  handleBack = () => {
+  handleSave = () => {
     const {
+      dispatchAddAlgorithm,
       history: { goBack },
     } = this.props;
-    goBack();
-  };
-
-  handleSave = () => {
-    const { dispatchAddAlgorithm } = this.props;
     const { name, description, fileLocation, code, option } = this.state;
     const author = AUTHOR_USER;
     const payload =
-      option === OPTION_FILE
+      option === ADD_OPTIONS.FILE
         ? { name, description, author, fileLocation }
         : { name, description, author, code };
-    if (name) {
-      dispatchAddAlgorithm(payload);
-    }
+
+    const onSuccess = goBack;
+
+    dispatchAddAlgorithm({ payload, onSuccess });
   };
 
   render() {
     const { t, classes } = this.props;
-    const { name, description, option, fileLocation, code } = this.state;
+    const {
+      name,
+      description,
+      option,
+      fileLocation,
+      code,
+      programmingLanguage,
+    } = this.state;
 
     return (
       <Main>
         <Container>
           <h1>{t('Add algorithm')}</h1>
           <Grid container spacing={5}>
-            <Grid item xs={option === OPTION_FILE ? 5 : 7}>
+            <Grid item xs={option === ADD_OPTIONS.FILE ? 5 : 7}>
               <FormControl component="fieldset">
                 <RadioGroup
-                  aria-label="add option"
-                  name="add option"
+                  aria-label="add-option"
                   value={option}
                   onChange={this.handleOptionOnChange}
                 >
                   <FormControlLabel
-                    value={OPTION_FILE}
+                    value={ADD_OPTIONS.FILE}
                     control={<Radio color="primary" />}
                     label={t('Load algorithm from a file')}
                   />
                   <FormControlLabel
-                    value={OPTION_EDITOR}
+                    value={ADD_OPTIONS.EDITOR}
                     control={<Radio color="primary" />}
                     label={t('Write algorithm')}
                   />
                 </RadioGroup>
               </FormControl>
-              {option === OPTION_FILE ? (
+              {option === ADD_OPTIONS.FILE ? (
                 <Grid container alignItems="center">
                   <Grid item xs={11}>
                     <TextField
@@ -144,16 +150,14 @@ class AddAlgorithm extends Component {
                   </Grid>
                   <Grid item xs={1}>
                     <BrowseFileButton
-                      options={{
-                        filters: [{ name: 'python', extensions: ['py'] }],
-                      }}
+                      filters={[FILE_FILTERS.PYTHON, FILE_FILTERS.ALL]}
                       onBrowseFileCallback={this.handleBrowseFileCallback}
                     />
                   </Grid>
                 </Grid>
               ) : (
                 <Editor
-                  programmingLanguage="python"
+                  programmingLanguage={programmingLanguage}
                   code={code}
                   onCodeChange={this.handleCodeOnChange}
                 />
@@ -188,14 +192,7 @@ class AddAlgorithm extends Component {
             className={classes.buttons}
           >
             <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<ArrowBackIcon />}
-                onClick={this.handleBack}
-              >
-                {t('Back')}
-              </Button>
+              <BackButton />
             </Grid>
             <Grid item>
               <Button
@@ -203,6 +200,9 @@ class AddAlgorithm extends Component {
                 color="primary"
                 startIcon={<SaveIcon />}
                 onClick={this.handleSave}
+                disabled={
+                  !name || (option === ADD_OPTIONS.FILE && !fileLocation)
+                }
               >
                 {t('Save')}
               </Button>
@@ -214,16 +214,11 @@ class AddAlgorithm extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
-
 const mapDispatchToProps = {
   dispatchAddAlgorithm: addAlgorithm,
 };
 
-const ConnectedComponent = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AddAlgorithm);
+const ConnectedComponent = connect(null, mapDispatchToProps)(AddAlgorithm);
 
 const StyledComponent = withStyles(styles, { withTheme: true })(
   ConnectedComponent,

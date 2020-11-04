@@ -8,8 +8,8 @@ import { BROWSE_FILE_CHANNEL } from '../../shared/channels';
 
 const BrowseFileButton = (props) => {
   const handleBrowse = () => {
-    const { options, onBrowseFileCallback } = props;
-    window.ipcRenderer.send(BROWSE_FILE_CHANNEL, options);
+    const { filters, onBrowseFileCallback } = props;
+    window.ipcRenderer.send(BROWSE_FILE_CHANNEL, filters);
     window.ipcRenderer.once(BROWSE_FILE_CHANNEL, (event, filePaths) => {
       onBrowseFileCallback(filePaths);
     });
@@ -23,14 +23,12 @@ const BrowseFileButton = (props) => {
 };
 
 BrowseFileButton.propTypes = {
-  options: PropTypes.shape({
-    filters: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        extensions: PropTypes.arrayOf(PropTypes.string).isRequired,
-      }),
-    ).isRequired,
-  }).isRequired,
+  filters: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      extensions: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }),
+  ).isRequired,
   onBrowseFileCallback: PropTypes.func.isRequired,
 };
 

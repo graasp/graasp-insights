@@ -12,13 +12,17 @@ import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import Editor from '../common/Editor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
 import { addAlgorithm, getAlgorithm, saveAlgorithm } from '../../actions';
-import { AUTHOR_GRAASP, AUTHOR_USER } from '../../config/constants';
+import {
+  AUTHOR_GRAASP,
+  AUTHOR_USER,
+  EDITOR_PROGRAMMING_LANGUAGES,
+} from '../../config/constants';
+import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
   button: {
@@ -93,18 +97,12 @@ class EditAlgorithm extends Component {
     this.setState({ code });
   };
 
-  handleBack = () => {
-    const {
-      history: { goBack },
-    } = this.props;
-    goBack();
-  };
-
   handleSave = () => {
     const {
       dispatchSaveAlgorithm,
       dispatchAddAlgorithm,
       algorithm,
+      history: { goBack },
     } = this.props;
     const { name, description, code } = this.state;
     if (algorithm && name) {
@@ -113,28 +111,13 @@ class EditAlgorithm extends Component {
       if (author === AUTHOR_GRAASP) {
         // add as a new algorithm instead
         const payload = { name, description, author: AUTHOR_USER, code };
-        dispatchAddAlgorithm(payload);
+        const onSuccess = goBack;
+        dispatchAddAlgorithm({ payload, onSuccess });
       } else {
         const metadata = { ...algorithm?.toObject(), name, description };
         dispatchSaveAlgorithm({ metadata, code });
       }
     }
-  };
-
-  renderBackButton = () => {
-    const { classes, t } = this.props;
-
-    return (
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={<ArrowBackIcon />}
-        onClick={this.handleBack}
-      >
-        {t('Back')}
-      </Button>
-    );
   };
 
   render() {
@@ -156,7 +139,7 @@ class EditAlgorithm extends Component {
             <Alert severity="error" className={classes.infoAlert}>
               {t('An unexpected error happened while opening the algorithm.')}
             </Alert>
-            {this.renderBackButton()}
+            <BackButton />
           </Container>
         </Main>
       );
@@ -178,7 +161,7 @@ class EditAlgorithm extends Component {
           <Grid container spacing={2} justify="center">
             <Grid item xs={7}>
               <Editor
-                programmingLanguage="python"
+                programmingLanguage={EDITOR_PROGRAMMING_LANGUAGES.PYTHON}
                 code={code}
                 onCodeChange={this.handleCodeOnChange}
               />
@@ -205,13 +188,14 @@ class EditAlgorithm extends Component {
               />
             </Grid>
             <Grid item>
-              {this.renderBackButton()}
+              <BackButton />
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 startIcon={<SaveIcon />}
                 onClick={this.handleSave}
+                disabled={!name}
               >
                 {t('Save')}
               </Button>
@@ -225,7 +209,7 @@ class EditAlgorithm extends Component {
 
 const mapStateToProps = ({ algorithms }) => ({
   algorithm: algorithms.getIn(['current', 'content']),
-  activity: algorithms.getIn(['current', 'activity']).size > 0,
+  activity: Boolean(algorithms.getIn(['current', 'activity']).size),
 });
 
 const mapDispatchToProps = {

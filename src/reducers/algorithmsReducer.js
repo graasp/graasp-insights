@@ -34,7 +34,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case GET_ALGORITHM_ERROR:
-      return state.setIn(['current', 'content'], List());
+      return state.setIn(['current', 'content'], Map());
     case DELETE_ALGORITHM_SUCCESS:
     default:
       return state;

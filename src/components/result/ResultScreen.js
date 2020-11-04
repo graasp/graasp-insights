@@ -7,12 +7,12 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import Button from '@material-ui/core/Button';
 import { withTranslation } from 'react-i18next';
 import Loader from '../common/Loader';
 import JSONFileEditor from '../common/JSONFileEditor';
 import Main from '../common/Main';
 import { getResult } from '../../actions';
+import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
   wrapper: {
@@ -38,9 +38,6 @@ class ResultScreen extends Component {
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
     dispatchGetResult: PropTypes.func.isRequired,
-    history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
-    }).isRequired,
     activity: PropTypes.bool.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
@@ -66,27 +63,6 @@ class ResultScreen extends Component {
     dispatchGetResult({ id });
   }
 
-  handleBack = () => {
-    const {
-      history: { goBack },
-    } = this.props;
-    goBack();
-  };
-
-  renderBackButton = ({ className } = {}) => {
-    const { t } = this.props;
-    return (
-      <Button
-        className={className}
-        variant="contained"
-        color="primary"
-        onClick={this.handleBack}
-      >
-        {t('Back')}
-      </Button>
-    );
-  };
-
   render() {
     const { result, activity, t, classes } = this.props;
 
@@ -104,7 +80,7 @@ class ResultScreen extends Component {
             <Alert severity="error" className={classes.infoAlert}>
               {t('An unexpected error happened while opening the result.')}
             </Alert>
-            {this.renderBackButton()}
+            <BackButton />
           </Container>
         </Main>
       );
@@ -113,7 +89,7 @@ class ResultScreen extends Component {
     return (
       <Main>
         <div className={classes.wrapper}>
-          {this.renderBackButton({ className: classes.backButton })}
+          <BackButton className={classes.backButton} />
           <Typography className={classes.title} variant="h4" align="center">
             {result.get('name')}
           </Typography>

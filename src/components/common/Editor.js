@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import AceEditor from 'react-ace';
-import PropTypes from 'prop-types';
-import { withTranslation } from 'react-i18next';
-
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-xcode';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import PropTypes from 'prop-types';
+import { withTranslation } from 'react-i18next';
+import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
 
 class Editor extends Component {
   static propTypes = {
@@ -17,7 +17,7 @@ class Editor extends Component {
 
   static defaultProps = {
     code: '',
-    programmingLanguage: 'python',
+    programmingLanguage: EDITOR_PROGRAMMING_LANGUAGES.PYTHON,
     onCodeChange: () => {},
   };
 
@@ -29,7 +29,14 @@ class Editor extends Component {
   render() {
     const { t, code, programmingLanguage } = this.props;
 
-    const commentPrefix = programmingLanguage === 'python' ? '#' : '//';
+    if (
+      !Object.values(EDITOR_PROGRAMMING_LANGUAGES).includes(programmingLanguage)
+    ) {
+      return null;
+    }
+
+    const commentPrefix =
+      programmingLanguage === EDITOR_PROGRAMMING_LANGUAGES.PYTHON ? '#' : '//';
     return (
       <AceEditor
         placeholder={`${commentPrefix} ${t('your code goes here')}`}

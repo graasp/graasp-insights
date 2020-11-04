@@ -7,7 +7,6 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import Button from '@material-ui/core/Button';
 import { withTranslation } from 'react-i18next';
 import JSONFileEditor from '../common/JSONFileEditor';
 import Main from '../common/Main';
@@ -18,6 +17,7 @@ import {
   DATASET_BACK_BUTTON_ID,
   DATASET_NAME_ID,
 } from '../../config/selectors';
+import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
   wrapper: {
@@ -42,9 +42,6 @@ class DatasetScreen extends Component {
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
     dispatchGetDataset: PropTypes.func.isRequired,
-    history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
-    }).isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       wrapper: PropTypes.string.isRequired,
@@ -77,28 +74,6 @@ class DatasetScreen extends Component {
     dispatchGetDataset({ id });
   }
 
-  handleBack = () => {
-    const {
-      history: { goBack },
-    } = this.props;
-    goBack();
-  };
-
-  renderBackButton = ({ className } = {}) => {
-    const { t } = this.props;
-    return (
-      <Button
-        id={DATASET_BACK_BUTTON_ID}
-        className={className}
-        variant="contained"
-        color="primary"
-        onClick={this.handleBack}
-      >
-        {t('Back')}
-      </Button>
-    );
-  };
-
   render() {
     const {
       t,
@@ -125,7 +100,7 @@ class DatasetScreen extends Component {
             <Alert severity="error" className={classes.infoAlert}>
               {t('An unexpected error happened while opening the dataset.')}
             </Alert>
-            {this.renderBackButton()}
+            <BackButton id={DATASET_BACK_BUTTON_ID} />
           </Container>
         </Main>
       );
@@ -136,7 +111,7 @@ class DatasetScreen extends Component {
         <div className={classes.wrapper}>
           <Grid container>
             <Grid item xs={12}>
-              {this.renderBackButton({ className: classes.backButton })}
+              <BackButton id={DATASET_BACK_BUTTON_ID} className={classes.backButton} />
               <Typography
                 id={DATASET_NAME_ID}
                 className={classes.title}

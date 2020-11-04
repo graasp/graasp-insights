@@ -25,5 +25,5 @@ module.exports = {
   GET_ALGORITHM_CHANNEL: 'algorithm:get',
   SAVE_ALGORITHM_CHANNEL: 'algorithm:save',
   ADD_ALGORITHM_CHANNEL: 'algorithm:add',
-  BROWSE_FILE_CHANNEL: 'browse:file',
+  BROWSE_FILE_CHANNEL: 'file:browse',
 };

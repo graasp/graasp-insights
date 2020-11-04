@@ -24,3 +24,17 @@ export const AUTHOR_GRAASP = 'Graasp';
 export const AUTHOR_USER = 'User';
 
 export const DEFAULT_NUMBER_FORMAT = 'en';
+export const FILE_FILTERS = {
+  PYTHON: { name: 'Python', extensions: ['py', 'pyx'] },
+  JSON: { name: 'JSON', extensions: ['json'] },
+  ALL: { name: 'All files', extensions: ['*'] },
+};
+
+export const EDITOR_PROGRAMMING_LANGUAGES = {
+  PYTHON: 'python',
+};
+
+export const ADD_OPTIONS = {
+  FILE: 'file',
+  EDITOR: 'editor',
+};

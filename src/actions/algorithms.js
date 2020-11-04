@@ -89,13 +89,16 @@ export const saveAlgorithm = (algorithm) => (dispatch) => {
   }
 };
 
-export const addAlgorithm = (algorithm) => (dispatch) => {
+export const addAlgorithm = ({ payload, onSuccess }) => (dispatch) => {
   const flagAddingAlgorithm = createFlag(FLAG_ADDING_ALGORITHM);
   try {
     dispatch(flagAddingAlgorithm(true));
-    window.ipcRenderer.send(ADD_ALGORITHM_CHANNEL, algorithm);
+    window.ipcRenderer.send(ADD_ALGORITHM_CHANNEL, payload);
     window.ipcRenderer.once(ADD_ALGORITHM_CHANNEL, async (event, response) => {
       dispatch(response);
+      if (onSuccess) {
+        onSuccess();
+      }
       return dispatch(flagAddingAlgorithm(false));
     });
   } catch (err) {

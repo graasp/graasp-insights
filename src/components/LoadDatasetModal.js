@@ -18,6 +18,7 @@ import {
   LOAD_DATASET_DESCRIPTION_ID,
 } from '../config/selectors';
 import BrowseFileButton from './common/BrowseFileButton';
+import { FILE_FILTERS } from '../config/constants';
 
 const styles = () => ({
   dialogContent: {
@@ -113,9 +114,7 @@ class LoadDatasetModal extends Component {
               required
             />
             <BrowseFileButton
-              options={{
-                filters: [{ name: 'json', extensions: ['json'] }],
-              }}
+              filters={[FILE_FILTERS.JSON, FILE_FILTERS.ALL]}
               onBrowseFileCallback={this.handleBrowseFileCallback}
             />
           </div>
