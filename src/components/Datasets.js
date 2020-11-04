@@ -9,7 +9,6 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import PublishIcon from '@material-ui/icons/Publish';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -23,6 +22,9 @@ import { getDatasets, deleteDataset } from '../actions';
 import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../utils/formatting';
+import ExportButton from './common/ExportButton';
+import { FLAG_EXPORTING_DATASET } from '../shared/types';
+import { EXPORT_DATASET_CHANNEL } from '../shared/channels';
 
 const styles = (theme) => ({
   addButton: {
@@ -76,10 +78,6 @@ class Datasets extends Component {
     // TODO: implement publish functionality
   };
 
-  handleVisualize = () => {
-    // TODO: implement visualize functionality
-  };
-
   handleEdit = () => {
     // TODO: implement edit functionality
   };
@@ -100,7 +98,11 @@ class Datasets extends Component {
     const { classes, t, datasets, isLoading } = this.props;
 
     if (isLoading) {
-      return <Loader />;
+      return (
+        <Main fullScreen>
+          <Loader />
+        </Main>
+      );
     }
 
     if (!datasets.size) {
@@ -191,36 +193,38 @@ class Datasets extends Component {
               <CodeIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Edit dataset')} key="edit">
-            <IconButton
-              aria-label="edit"
-              onClick={() => this.handleEdit(dataset)}
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Visualize dataset')} key="visualize">
-            <IconButton
-              aria-label="visualize"
-              onClick={() => this.handleVisualize(dataset)}
-            >
-              <EqualizerIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Publish dataset')} key="publish">
-            <IconButton
-              aria-label="publish"
-              onClick={() => this.handlePublish(dataset)}
-            >
-              <PublishIcon />
-            </IconButton>
-          </Tooltip>,
+          <ExportButton
+            key="export"
+            id={id}
+            name={`${name}.json`}
+            flagType={FLAG_EXPORTING_DATASET}
+            channel={EXPORT_DATASET_CHANNEL}
+            tooltipText={t('Export dataset')}
+          />,
           <Tooltip title={t('Remove dataset')} key="delete">
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete(dataset)}
             >
               <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Edit dataset')} key="edit">
+            <IconButton
+              disabled
+              aria-label="edit"
+              onClick={() => this.handleEdit(dataset)}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Publish dataset')} key="publish">
+            <IconButton
+              disabled
+              aria-label="publish"
+              onClick={() => this.handlePublish(dataset)}
+            >
+              <PublishIcon />
             </IconButton>
           </Tooltip>,
         ],
@@ -241,7 +245,7 @@ class Datasets extends Component {
 
 const mapStateToProps = ({ dataset }) => ({
   datasets: dataset.getIn(['datasets']),
-  isLoading: dataset.getIn(['current', 'activity']).size > 0,
+  isLoading: dataset.getIn(['activity']).size > 0,
 });
 
 const mapDispatchToProps = {

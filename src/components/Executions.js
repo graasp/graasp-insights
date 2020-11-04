@@ -224,7 +224,7 @@ const mapStateToProps = ({ dataset, algorithms, settings }) => ({
   datasets: dataset.get('datasets'),
   algorithms: algorithms.get('algorithms'),
   isLoading:
-    dataset.getIn(['current', 'activity']).size > 0 &&
+    dataset.getIn(['activity']).size > 0 &&
     algorithms.getIn(['activity']).size > 0,
   pythonVersion: settings.get('pythonVersion'),
 });

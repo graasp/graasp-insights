@@ -5,13 +5,14 @@ import {
   FLAG_GETTING_RESULTS,
   GET_RESULT_SUCCESS,
   GET_RESULTS_SUCCESS,
-  DELETE_RESULT_SUCCESS,
+  FLAG_EXPORTING_RESULT,
+  FLAG_DELETING_RESULT,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
+  activity: List(),
   current: Map({
     content: Map(),
-    activity: List(),
   }),
   results: List(),
 });
@@ -20,15 +21,13 @@ export default (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
     case FLAG_GETTING_RESULT:
     case FLAG_GETTING_RESULTS:
-      return state.updateIn(
-        ['current', 'activity'],
-        updateActivityList(payload),
-      );
+    case FLAG_EXPORTING_RESULT:
+    case FLAG_DELETING_RESULT:
+      return state.updateIn(['activity'], updateActivityList(payload));
     case GET_RESULT_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case GET_RESULTS_SUCCESS:
       return state.setIn(['results'], List(payload));
-    case DELETE_RESULT_SUCCESS:
     default:
       return state;
   }

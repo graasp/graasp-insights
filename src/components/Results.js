@@ -11,7 +11,6 @@ import Alert from '@material-ui/lab/Alert';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import PublishIcon from '@material-ui/icons/Publish';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
 import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -22,6 +21,9 @@ import { getResults, deleteResult, getAlgorithms } from '../actions';
 import { buildResultPath } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../utils/formatting';
+import ExportButton from './common/ExportButton';
+import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
+import { FLAG_EXPORTING_RESULT } from '../shared/types';
 
 const styles = (theme) => ({
   addButton: {
@@ -54,6 +56,7 @@ class Results extends Component {
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
     algorithms: PropTypes.instanceOf(List),
+    activity: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -78,10 +81,6 @@ class Results extends Component {
     // TODO: implement publish functionality
   };
 
-  handleVisualize = () => {
-    // TODO: implement anonymize functionality
-  };
-
   handleEdit = () => {
     // TODO: implement edit functionality
   };
@@ -92,10 +91,14 @@ class Results extends Component {
   };
 
   render() {
-    const { classes, t, results, algorithms } = this.props;
+    const { activity, classes, t, results, algorithms } = this.props;
 
-    if (!results) {
-      return <Loader />;
+    if (activity || !results) {
+      return (
+        <Main fullScreen>
+          <Loader />
+        </Main>
+      );
     }
 
     if (!results.size) {
@@ -112,7 +115,7 @@ class Results extends Component {
       {
         columnName: t('Name'),
         sortBy: 'name',
-        field: 'dataset',
+        field: 'result',
         alignColumn: 'left',
         alignField: 'left',
       },
@@ -178,7 +181,7 @@ class Results extends Component {
         key: id,
         name,
         algorithmName,
-        dataset: [
+        result: [
           <Typography variant="subtitle1" key="name">
             {name}
           </Typography>,
@@ -191,7 +194,7 @@ class Results extends Component {
         createdAt: createdAtString,
         lastModified: lastModifiedString,
         quickActions: [
-          <Tooltip title={t('View dataset')} key="view">
+          <Tooltip title={t('View result')} key="view">
             <IconButton
               aria-label="view"
               onClick={() => this.handleView(result)}
@@ -199,36 +202,37 @@ class Results extends Component {
               <CodeIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Edit dataset')} key="edit">
+          <ExportButton
+            id={id}
+            name={`${name}.json`}
+            flagType={FLAG_EXPORTING_RESULT}
+            channel={EXPORT_RESULT_CHANNEL}
+            tooltipText={t('Export result')}
+          />,
+          <Tooltip title={t('Remove result')} key="delete">
             <IconButton
+              aria-label="delete"
+              onClick={() => this.handleDelete(result)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Edit result')} key="edit">
+            <IconButton
+              disabled
               aria-label="edit"
               onClick={() => this.handleEdit(result)}
             >
               <EditIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Visualize dataset')} key="visualize">
+          <Tooltip title={t('Publish result')} key="publish">
             <IconButton
-              aria-label="visualize"
-              onClick={() => this.handleVisualize(result)}
-            >
-              <EqualizerIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Publish dataset')} key="publish">
-            <IconButton
+              disabled
               aria-label="publish"
               onClick={() => this.handlePublish(result)}
             >
               <PublishIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Remove dataset')} key="delete">
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete(result)}
-            >
-              <DeleteIcon />
             </IconButton>
           </Tooltip>,
         ],
@@ -249,6 +253,7 @@ class Results extends Component {
 const mapStateToProps = ({ result, algorithms }) => ({
   results: result.getIn(['results']),
   algorithms: algorithms.getIn(['algorithms']),
+  activity: Boolean(result.get('activity').size),
 });
 
 const mapDispatchToProps = {

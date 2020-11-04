@@ -34,8 +34,11 @@ const {
   GET_RESULT_CHANNEL,
   GET_ALGORITHMS_CHANNEL,
   DELETE_ALGORITHM_CHANNEL,
+  EXPORT_DATASET_CHANNEL,
   EXECUTE_PYTHON_ALGORITHM_CHANNEL,
   CHECK_PYTHON_INSTALLATION_CHANNEL,
+  SHOW_SAVE_AS_PROMPT_CHANNEL,
+  EXPORT_RESULT_CHANNEL,
 } = require('./shared/channels');
 const {
   showLoadDatasetPrompt,
@@ -55,6 +58,9 @@ const {
   deleteAlgorithm,
   getDatabase,
   checkPythonInstallation,
+  exportDataset,
+  showSaveAsPrompt,
+  exportResult,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -269,6 +275,9 @@ app.on('ready', async () => {
 
   createWindow();
   generateMenu();
+
+  ipcMain.on(SHOW_SAVE_AS_PROMPT_CHANNEL, showSaveAsPrompt(mainWindow));
+
   // prompt when loading a dataset
   ipcMain.on(
     SHOW_LOAD_DATASET_PROMPT_CHANNEL,
@@ -286,6 +295,9 @@ app.on('ready', async () => {
   // called when deleting a dataset
   ipcMain.on(DELETE_DATASET_CHANNEL, deleteDataset(mainWindow, db));
 
+  // called when deleting a dataset
+  ipcMain.on(EXPORT_DATASET_CHANNEL, exportDataset(mainWindow, db));
+
   // called when getting results
   ipcMain.on(GET_RESULTS_CHANNEL, getResults(mainWindow, db));
 
@@ -294,6 +306,9 @@ app.on('ready', async () => {
 
   // called when deleting a result
   ipcMain.on(DELETE_RESULT_CHANNEL, deleteResult(mainWindow, db));
+
+  // called when deleting a dataset
+  ipcMain.on(EXPORT_RESULT_CHANNEL, exportResult(mainWindow, db));
 
   ipcMain.on(
     EXECUTE_PYTHON_ALGORITHM_CHANNEL,

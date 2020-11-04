@@ -55,6 +55,13 @@ const ERROR_GETTING_RESULTS_MESSAGE =
   'There was an error retrieving the datasets';
 const ERROR_GETTING_RESULT_MESSAGE =
   'There was an error retrieving the dataset';
+const ERROR_EXPORTING_DATASET_MESSAGE =
+  'There was an error exporting the dataset';
+const SUCCESS_EXPORTING_DATASET_MESSAGE =
+  'The dataset was exported successfully';
+const ERROR_EXPORTING_RESULT_MESSAGE =
+  'There was an error exporting the result';
+const SUCCESS_EXPORTING_RESULT_MESSAGE = 'The result was exported successfully';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -87,4 +94,8 @@ module.exports = {
   UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
   ERROR_GETTING_RESULTS_MESSAGE,
   ERROR_GETTING_RESULT_MESSAGE,
+  ERROR_EXPORTING_DATASET_MESSAGE,
+  SUCCESS_EXPORTING_DATASET_MESSAGE,
+  ERROR_EXPORTING_RESULT_MESSAGE,
+  SUCCESS_EXPORTING_RESULT_MESSAGE,
 };
