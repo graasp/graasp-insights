@@ -2,28 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
-import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import { withTranslation } from 'react-i18next';
 import JSONFileEditor from '../common/JSONFileEditor';
-import Loader from '../common/Loader';
 import Main from '../common/Main';
 import { getDataset } from '../../actions';
-import {
-  DEFAULT_LOCALE_DATE,
-  DEFAULT_NUMBER_FORMAT,
-} from '../../config/constants';
+import DatasetInformationTable from './DatasetInformationTable';
+import Loader from '../common/Loader';
 
 const styles = (theme) => ({
   wrapper: {
@@ -44,7 +34,6 @@ const styles = (theme) => ({
 
 class DatasetScreen extends Component {
   static propTypes = {
-    dataset: PropTypes.instanceOf(Map),
     match: PropTypes.shape({
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
@@ -52,7 +41,6 @@ class DatasetScreen extends Component {
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
     }).isRequired,
-    activity: PropTypes.bool.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       wrapper: PropTypes.string.isRequired,
@@ -60,10 +48,18 @@ class DatasetScreen extends Component {
       backButton: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
     }).isRequired,
+    datasetName: PropTypes.string,
+    datasetId: PropTypes.string,
+    datasetContent: PropTypes.string,
+    datasetSize: PropTypes.number,
+    activity: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
-    dataset: Map(),
+    datasetName: null,
+    datasetId: null,
+    datasetContent: null,
+    datasetSize: null,
   };
 
   componentDidMount() {
@@ -84,96 +80,6 @@ class DatasetScreen extends Component {
     goBack();
   };
 
-  renderDatasetInformation = () => {
-    const { dataset, t } = this.props;
-    const content = dataset?.get('content');
-    if (!content) {
-      return null;
-    }
-    const parsedContent = JSON.parse(content)?.data || {};
-
-    const actions = parsedContent?.actions.filter((action) => action) || [];
-    const actionCount = actions?.length.toLocaleString(DEFAULT_NUMBER_FORMAT);
-    const userCount = parsedContent?.users?.length.toLocaleString(
-      DEFAULT_NUMBER_FORMAT,
-    );
-    const spaceInfo = parsedContent?.metadata?.spaceTree;
-    const mainSpace = spaceInfo?.[0];
-    const subSpaceCount = spaceInfo?.slice(1).length;
-    const spaceName = mainSpace?.name || t('Unknown');
-    const spaceId = mainSpace?.id;
-    const countriesSet = new Set(
-      actions?.map(({ geolocation }) => geolocation?.country),
-    );
-    const countryCount = [...countriesSet].length.toLocaleString(
-      DEFAULT_NUMBER_FORMAT,
-    );
-
-    const dateRange =
-      actions
-        ?.map(({ createdAt }) =>
-          new Date(createdAt).toLocaleDateString(DEFAULT_LOCALE_DATE),
-        )
-        .sort() || [];
-
-    return (
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableBody>
-            <TableRow key="spaceId">
-              <TableCell component="th" scope="row">
-                {t('Space ID')}
-              </TableCell>
-              <TableCell align="right">{spaceId || t('Unknown')}</TableCell>
-            </TableRow>
-            <TableRow key="spaceName">
-              <TableCell component="th" scope="row">
-                {t('Space Name')}
-              </TableCell>
-              <TableCell align="right">{spaceName || t('Unknown')}</TableCell>
-            </TableRow>
-            <TableRow key="subSpaceCount">
-              <TableCell component="th" scope="row">
-                {t('Subspace Count')}
-              </TableCell>
-              <TableCell align="right">{subSpaceCount || 0}</TableCell>
-            </TableRow>
-            <TableRow key="dateRange">
-              <TableCell component="th" scope="row">
-                {t('Date Range')}
-              </TableCell>
-              <TableCell align="right">
-                {dateRange.length
-                  ? `${dateRange[0]} - ${dateRange[dateRange.length - 1]}`
-                  : t('Unknown')}
-              </TableCell>
-            </TableRow>
-            <TableRow key="actionCount">
-              <TableCell component="th" scope="row">
-                {t('Action Count')}
-              </TableCell>
-              <TableCell align="right">{actionCount || t('Unknown')}</TableCell>
-            </TableRow>
-            <TableRow key="userCount">
-              <TableCell component="th" scope="row">
-                {t('User Count')}
-              </TableCell>
-              <TableCell align="right">{userCount || t('Unknown')}</TableCell>
-            </TableRow>
-            <TableRow key="countryCount">
-              <TableCell component="th" scope="row">
-                {t('Country Count')}
-              </TableCell>
-              <TableCell align="right">
-                {countryCount || t('Unknown')}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-
   renderBackButton = ({ className } = {}) => {
     const { t } = this.props;
     return (
@@ -189,7 +95,15 @@ class DatasetScreen extends Component {
   };
 
   render() {
-    const { dataset, activity, t, classes } = this.props;
+    const {
+      t,
+      classes,
+      datasetName,
+      datasetSize,
+      datasetId,
+      datasetContent,
+      activity,
+    } = this.props;
 
     if (activity) {
       return (
@@ -198,7 +112,8 @@ class DatasetScreen extends Component {
         </Main>
       );
     }
-    if (!dataset || dataset.isEmpty()) {
+
+    if (!datasetId) {
       return (
         <Main>
           <Container>
@@ -218,22 +133,25 @@ class DatasetScreen extends Component {
             <Grid item xs={12}>
               {this.renderBackButton({ className: classes.backButton })}
               <Typography className={classes.title} variant="h4" align="center">
-                {dataset.get('name')}
+                {datasetName}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h5">{t('Content')}</Typography>
               <JSONFileEditor
-                id={dataset.get('id')}
-                size={dataset.get('size')}
-                content={dataset.get('content')}
+                size={datasetSize}
+                id={datasetId}
+                content={datasetContent}
                 collapsed={2}
                 editEnabled
               />
             </Grid>
             <Grid item>
               <Typography variant="h5">{t('Information')}</Typography>
-              {this.renderDatasetInformation()}
+              <DatasetInformationTable
+                content={datasetContent}
+                id={datasetId}
+              />
             </Grid>
           </Grid>
         </div>
@@ -243,7 +161,10 @@ class DatasetScreen extends Component {
 }
 
 const mapStateToProps = ({ dataset }) => ({
-  dataset: dataset.getIn(['current', 'content']),
+  datasetName: dataset.getIn(['current', 'content', 'name']),
+  datasetId: dataset.getIn(['current', 'content', 'id']),
+  datasetContent: dataset.getIn(['current', 'content', 'content']),
+  datasetSize: dataset.getIn(['current', 'content', 'size']),
   activity: Boolean(dataset.getIn(['activity']).size),
 });
 

@@ -123,8 +123,7 @@ export const setDatasetFile = async (payload) => (dispatch) => {
       SET_DATASET_FILE_CHANNEL,
       async (event, response) => {
         dispatch(response);
-        dispatch(flagSettingDatasetFile(false));
-        return dispatch(getDataset({ id: payload?.id }));
+        return dispatch(flagSettingDatasetFile(false));
       },
     );
   } catch (err) {

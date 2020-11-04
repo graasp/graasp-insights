@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
-import { Map } from 'immutable';
 import ReactJson from 'react-json-view';
 import { withTranslation } from 'react-i18next';
 import Loader from './Loader';
@@ -21,7 +20,7 @@ class JSONFileEditor extends Component {
   };
 
   static defaultProps = {
-    content: Map(),
+    content: null,
     size: 0,
     collapsed: true,
     id: null,
@@ -92,6 +91,7 @@ class JSONFileEditor extends Component {
     );
   }
 }
+
 const mapDispatchToProps = {
   dispatchSetDatasetFile: setDatasetFile,
 };

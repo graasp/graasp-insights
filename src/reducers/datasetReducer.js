@@ -8,6 +8,7 @@ import {
   LOAD_DATASET_SUCCESS,
   FLAG_DELETING_DATASET,
   FLAG_EXPORTING_DATASET,
+  SET_DATASET_FILE_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -31,6 +32,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['datasets'], List(payload));
     case LOAD_DATASET_SUCCESS:
       return state.updateIn(['datasets'], pushDatasetToList(payload));
+    case SET_DATASET_FILE_SUCCESS:
+      return state.setIn(['current', 'content', 'content'], payload);
     default:
       return state;
   }
