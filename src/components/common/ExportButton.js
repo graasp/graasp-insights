@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
+import { withTranslation } from 'react-i18next';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
 import { SHOW_SAVE_AS_PROMPT_CHANNEL } from '../../shared/channels';
@@ -36,6 +37,7 @@ class ExportButton extends Component {
     channel: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     tooltipText: PropTypes.string,
+    t: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -49,10 +51,10 @@ class ExportButton extends Component {
   };
 
   render() {
-    const { tooltipText } = this.props;
+    const { tooltipText, t } = this.props;
     return (
-      <Tooltip title={tooltipText} key="visualize">
-        <IconButton aria-label="export" onClick={this.handleExport}>
+      <Tooltip title={tooltipText}>
+        <IconButton aria-label={t('export')} onClick={this.handleExport}>
           <SaveIcon />
         </IconButton>
       </Tooltip>
@@ -65,5 +67,5 @@ const mapDispatchToProps = {
 };
 
 const ConnectedComponent = connect(null, mapDispatchToProps)(ExportButton);
-
-export default ConnectedComponent;
+const TranslatedComponent = withTranslation()(ConnectedComponent);
+export default TranslatedComponent;

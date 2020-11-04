@@ -13,7 +13,7 @@ const exportResult = (mainWindow, db) => async (event, { id, path }) => {
     // get dataset from local db
     const { filepath } = db.get(RESULTS_COLLECTION).find({ id }).value();
 
-    if (!filepath && fs.existsSync(filepath)) {
+    if (!filepath || !fs.existsSync(filepath)) {
       return mainWindow.webContents.send(EXPORT_RESULT_CHANNEL, {
         type: EXPORT_RESULT_ERROR,
         error: ERROR_MISSING_FILE,

@@ -194,7 +194,7 @@ class Results extends Component {
         createdAt: createdAtString,
         lastModified: lastModifiedString,
         quickActions: [
-          <Tooltip title={t('View result')} key="view">
+          <Tooltip title={t('View result')}>
             <IconButton
               aria-label="view"
               onClick={() => this.handleView(result)}
@@ -209,7 +209,7 @@ class Results extends Component {
             channel={EXPORT_RESULT_CHANNEL}
             tooltipText={t('Export result')}
           />,
-          <Tooltip title={t('Remove result')} key="delete">
+          <Tooltip title={t('Remove result')}>
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete(result)}
@@ -217,7 +217,7 @@ class Results extends Component {
               <DeleteIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Edit result')} key="edit">
+          <Tooltip title={t('Edit result')}>
             <IconButton
               disabled
               aria-label="edit"
@@ -226,7 +226,7 @@ class Results extends Component {
               <EditIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Publish result')} key="publish">
+          <Tooltip title={t('Publish result')}>
             <IconButton
               disabled
               aria-label="publish"

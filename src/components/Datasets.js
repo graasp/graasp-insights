@@ -185,7 +185,7 @@ class Datasets extends Component {
         createdAt: createdAtString,
         lastModified: lastModifiedString,
         quickActions: [
-          <Tooltip title={t('View dataset')} key="view">
+          <Tooltip title={t('View dataset')}>
             <IconButton
               aria-label="view"
               onClick={() => this.handleView(dataset)}
@@ -200,7 +200,7 @@ class Datasets extends Component {
             channel={EXPORT_DATASET_CHANNEL}
             tooltipText={t('Export dataset')}
           />,
-          <Tooltip title={t('Remove dataset')} key="delete">
+          <Tooltip title={t('Remove dataset')}>
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete(dataset)}
@@ -208,7 +208,7 @@ class Datasets extends Component {
               <DeleteIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Edit dataset')} key="edit">
+          <Tooltip title={t('Edit dataset')}>
             <IconButton
               disabled
               aria-label="edit"
@@ -217,7 +217,7 @@ class Datasets extends Component {
               <EditIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Publish dataset')} key="publish">
+          <Tooltip title={t('Publish dataset')}>
             <IconButton
               disabled
               aria-label="publish"
