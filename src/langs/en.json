@@ -61,6 +61,8 @@
     "Information": "Information",
     "Back": "Back",
     "An unexpected error happened while opening the dataset.": "An unexpected error happened while opening the dataset.",
-    "Content": "Content"
+    "Content": "Content",
+    "export": "exporter",
+    "Export dataset": "Export dataset"
   }
 }

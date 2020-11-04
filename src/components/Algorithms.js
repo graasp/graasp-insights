@@ -125,12 +125,12 @@ class Algorithms extends Component {
         author,
         language,
         quickActions: [
-          <Tooltip title={t('Edit algorithm')}>
+          <Tooltip title={t('Edit algorithm')} key="edit">
             <IconButton aria-label="edit" onClick={this.handleEdit}>
               <EditIcon />
             </IconButton>
           </Tooltip>,
-          <Tooltip title={t('Delete algorithm')}>
+          <Tooltip title={t('Delete algorithm')} key="delete">
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete(id)}
