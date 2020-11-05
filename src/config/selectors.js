@@ -56,3 +56,11 @@ export const EDIT_ALGORITHM_MAIN_ID = 'editAlgorithmMain';
 export const DATASET_SCREEN_MAIN_ID = 'datasetScreenMain';
 export const EXECUTION_TABLE_ROW_BUTTON_CLASS = 'executionTableRowButton';
 export const EXECUTION_FORM_NAME_INPUT_ID = 'executionFormNameInput';
+export const ALGORITHM_TABLE_ID = 'algorithmTable';
+export const ALGORITHM_NAME_CLASS = 'algorithmName';
+export const ALGORITHM_DELETE_CLASS = 'algorithmDelete';
+export const buildAlgorithmRowClass = (name) =>
+  `algorithmRow-${parseName(name)}`;
+export const ALGORITHM_DESCRIPTION_CLASS = 'algorithmDescription';
+export const ALGORITHM_AUTHOR_CLASS = 'algorithmAuthor';
+export const ALGORITHM_LANGUAGE_CLASS = 'algorithmLanguage';
