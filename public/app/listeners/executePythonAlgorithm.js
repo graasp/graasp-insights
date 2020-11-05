@@ -35,7 +35,7 @@ const createNewResultDataset = ({
 
 const executePythonAlgorithm = (mainWindow, db) => (
   event,
-  { datasetId, algorithmId },
+  { datasetId, algorithmId, filename },
 ) => {
   try {
     // get corresponding dataset
@@ -75,7 +75,7 @@ const executePythonAlgorithm = (mainWindow, db) => (
       } else {
         // save result in db
         const newDataset = createNewResultDataset({
-          name: `${datasetName}_${algorithmName}`,
+          name: filename?.length ? filename : `${datasetName}_${algorithmName}`,
           filepath: tmpPath,
           algorithmId,
           description,
