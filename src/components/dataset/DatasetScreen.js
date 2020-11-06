@@ -6,11 +6,10 @@ import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import JSONFileEditor from '../common/JSONFileEditor';
 import Main from '../common/Main';
-import { getDataset } from '../../actions';
+import { getDataset, clearDataset } from '../../actions';
 import DatasetInformationTable from './DatasetInformationTable';
 import Loader from '../common/Loader';
 import {
@@ -42,6 +41,7 @@ class DatasetScreen extends Component {
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
     dispatchGetDataset: PropTypes.func.isRequired,
+    dispatchClearDataset: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       wrapper: PropTypes.string.isRequired,
@@ -72,6 +72,11 @@ class DatasetScreen extends Component {
     } = this.props;
 
     dispatchGetDataset({ id });
+  }
+
+  componentWillUnmount() {
+    const { dispatchClearDataset } = this.props;
+    dispatchClearDataset();
   }
 
   render() {
@@ -158,6 +163,7 @@ const mapStateToProps = ({ dataset }) => ({
 
 const mapDispatchToProps = {
   dispatchGetDataset: getDataset,
+  dispatchClearDataset: clearDataset,
 };
 
 const ConnectedComponent = connect(
@@ -170,4 +176,4 @@ const StyledComponent = withStyles(styles, { withTheme: true })(
 );
 
 const TranslatedComponent = withTranslation()(StyledComponent);
-export default withRouter(TranslatedComponent);
+export default TranslatedComponent;

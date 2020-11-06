@@ -8,6 +8,7 @@ import {
   FLAG_EXPORTING_RESULT,
   FLAG_DELETING_RESULT,
   EXECUTE_PYTHON_ALGORITHM_SUCCESS,
+  CLEAR_RESULT_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -31,6 +32,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['results'], List(payload));
     case EXECUTE_PYTHON_ALGORITHM_SUCCESS:
       return state.update('results', (results) => results.push(payload));
+    case CLEAR_RESULT_SUCCESS:
+      return state.setIn(['current', 'content'], Map());
     default:
       return state;
   }
