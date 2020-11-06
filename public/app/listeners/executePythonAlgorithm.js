@@ -35,14 +35,13 @@ const createNewResultDataset = ({
 
 const executePythonAlgorithm = (mainWindow, db) => (
   event,
-  { datasetId, algorithmId, filename },
+  { sourceId, algorithmId, filename },
 ) => {
   try {
-    // get corresponding dataset
-    const { filepath, name: datasetName, description } = db
-      .get(DATASETS_COLLECTION)
-      .find({ id: datasetId })
-      .value();
+    // get corresponding dataset or result
+    const { filepath, name: datasetName, description } =
+      db.get(DATASETS_COLLECTION).find({ id: sourceId }).value() ||
+      db.get(RESULTS_COLLECTION).find({ id: sourceId }).value();
 
     // get the corresponding algorithm
     const { filepath: algorithmFilepath, name: algorithmName } = db
@@ -86,7 +85,7 @@ const executePythonAlgorithm = (mainWindow, db) => (
 
         mainWindow.webContents.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
           type: EXECUTE_PYTHON_ALGORITHM_SUCCESS,
-          payload: newDataset.id,
+          payload: newDataset,
         });
       }
 

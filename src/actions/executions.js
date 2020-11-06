@@ -11,7 +11,7 @@ import { PROGRAMMING_LANGUAGES } from '../config/constants';
 
 // eslint-disable-next-line import/prefer-default-export
 export const executeAlgorithm = ({
-  datasetId,
+  sourceId,
   algorithmId,
   language,
   filename,
@@ -23,7 +23,7 @@ export const executeAlgorithm = ({
       try {
         dispatch(flagExecutingAlgorithm(true));
         window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
-          datasetId,
+          sourceId,
           algorithmId,
           filename,
         });
