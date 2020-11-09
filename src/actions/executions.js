@@ -14,7 +14,7 @@ export const executeAlgorithm = ({
   sourceId,
   algorithmId,
   language,
-  filename,
+  userProvidedFilename,
 }) => (dispatch) => {
   const flagExecutingAlgorithm = createFlag(FLAG_EXECUTING_ALGORITHM);
 
@@ -25,7 +25,7 @@ export const executeAlgorithm = ({
         window.ipcRenderer.send(EXECUTE_PYTHON_ALGORITHM_CHANNEL, {
           sourceId,
           algorithmId,
-          filename,
+          userProvidedFilename,
         });
         window.ipcRenderer.once(
           EXECUTE_PYTHON_ALGORITHM_CHANNEL,

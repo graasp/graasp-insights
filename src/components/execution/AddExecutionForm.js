@@ -24,6 +24,7 @@ import {
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
   buildPythonWrongVersionMessage,
 } from '../../shared/messages';
+import { APP_BACKGROUND_COLOR } from '../../shared/constants';
 
 const styles = (theme) => ({
   formControl: {
@@ -43,6 +44,9 @@ const styles = (theme) => ({
   menuItem: {
     padding: theme.spacing(0.5, 4),
   },
+  inputLabel: {
+    backgroundColor: APP_BACKGROUND_COLOR,
+  },
 });
 
 class AddExecutionForm extends Component {
@@ -61,6 +65,7 @@ class AddExecutionForm extends Component {
       buttonContainer: PropTypes.string.isRequired,
       buttonWrapper: PropTypes.string.isRequired,
       menuItem: PropTypes.string.isRequired,
+      inputLabel: PropTypes.string.isRequired,
     }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     pythonVersion: PropTypes.shape({
@@ -78,7 +83,7 @@ class AddExecutionForm extends Component {
   state = {
     sourceId: '',
     algorithmId: '',
-    filename: '',
+    userProvidedFilename: '',
   };
 
   componentDidMount() {
@@ -101,15 +106,20 @@ class AddExecutionForm extends Component {
   };
 
   handleNameOnChange = (e) => {
-    this.setState({ filename: e.target.value });
+    this.setState({ userProvidedFilename: e.target.value });
   };
 
   executeAlgorithm = () => {
     const { dispatchExecuteAlgorithm, algorithms } = this.props;
-    const { sourceId, algorithmId, filename } = this.state;
+    const { sourceId, algorithmId, userProvidedFilename } = this.state;
     const { language } = algorithms.find(({ id }) => id === algorithmId);
     if (language) {
-      dispatchExecuteAlgorithm({ sourceId, algorithmId, language, filename });
+      dispatchExecuteAlgorithm({
+        sourceId,
+        algorithmId,
+        language,
+        userProvidedFilename,
+      });
     }
   };
 
@@ -139,7 +149,7 @@ class AddExecutionForm extends Component {
 
     return (
       <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="dataset-select">
+        <InputLabel className={classes.inputLabel} id="dataset-select">
           {`${t('Dataset')} ${t('(Required)')}`}
         </InputLabel>
         <Select
@@ -200,7 +210,7 @@ class AddExecutionForm extends Component {
 
   render() {
     const { algorithms, datasets, classes, t, isLoading } = this.props;
-    const { algorithmId, filename } = this.state;
+    const { algorithmId, userProvidedFilename } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -226,7 +236,7 @@ class AddExecutionForm extends Component {
       <>
         {this.renderDatasetsAndResultsSelect()}
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="algorithm-select">
+          <InputLabel id="algorithm-select" className={classes.inputLabel}>
             {`${t('Algorithm')} ${t('(Required)')}`}
           </InputLabel>
           <Select
@@ -247,7 +257,7 @@ class AddExecutionForm extends Component {
             onChange={this.handleNameOnChange}
             label={t('Save As...')}
             variant="outlined"
-            value={filename}
+            value={userProvidedFilename}
           />
         </FormControl>
 
