@@ -13,6 +13,7 @@ import {
   FLAG_GETTING_ALGORITHM,
   FLAG_SAVING_ALGORITHM,
   FLAG_ADDING_ALGORITHM,
+  CLEAR_ALGORITHM,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -96,13 +97,18 @@ export const addAlgorithm = ({ payload, onSuccess }) => (dispatch) => {
     window.ipcRenderer.send(ADD_ALGORITHM_CHANNEL, payload);
     window.ipcRenderer.once(ADD_ALGORITHM_CHANNEL, async (event, response) => {
       dispatch(response);
-      if (onSuccess) {
-        onSuccess();
-      }
+      // eslint-disable-next-line no-unused-expressions
+      onSuccess?.();
       return dispatch(flagAddingAlgorithm(false));
     });
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_ADDING_ALGORITHM_MESSAGE);
     dispatch(flagAddingAlgorithm(false));
   }
+};
+
+export const clearAlgorithm = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_ALGORITHM,
+  });
 };

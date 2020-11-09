@@ -7,7 +7,7 @@ import {
   FLAG_DELETING_ALGORITHM,
   GET_ALGORITHM_SUCCESS,
   FLAG_GETTING_ALGORITHM,
-  GET_ALGORITHM_ERROR,
+  CLEAR_ALGORITHM,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -33,7 +33,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['algorithms'], List(payload));
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
-    case GET_ALGORITHM_ERROR:
+    case CLEAR_ALGORITHM:
       return state.setIn(['current', 'content'], Map());
     case DELETE_ALGORITHM_SUCCESS:
     default:

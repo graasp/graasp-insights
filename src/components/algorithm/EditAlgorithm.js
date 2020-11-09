@@ -16,7 +16,12 @@ import SaveIcon from '@material-ui/icons/Save';
 import Editor from '../common/Editor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
-import { addAlgorithm, getAlgorithm, saveAlgorithm } from '../../actions';
+import {
+  addAlgorithm,
+  getAlgorithm,
+  saveAlgorithm,
+  clearAlgorithm,
+} from '../../actions';
 import {
   AUTHOR_GRAASP,
   AUTHOR_USER,
@@ -54,6 +59,7 @@ class EditAlgorithm extends Component {
     dispatchGetAlgorithm: PropTypes.func.isRequired,
     dispatchSaveAlgorithm: PropTypes.func.isRequired,
     dispatchAddAlgorithm: PropTypes.func.isRequired,
+    dispatchClearAlgorithm: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       button: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
@@ -83,6 +89,11 @@ class EditAlgorithm extends Component {
         code: algorithm.get('code'),
       });
     }
+  }
+
+  componentWillUnmount() {
+    const { dispatchClearAlgorithm } = this.props;
+    dispatchClearAlgorithm();
   }
 
   handleNameOnChange = (event) => {
@@ -216,6 +227,7 @@ const mapDispatchToProps = {
   dispatchGetAlgorithm: getAlgorithm,
   dispatchSaveAlgorithm: saveAlgorithm,
   dispatchAddAlgorithm: addAlgorithm,
+  dispatchClearAlgorithm: clearAlgorithm,
 };
 
 const ConnectedComponent = connect(
