@@ -30,6 +30,7 @@
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.4",
     "fs-extra": "9.0.1",
+    "google-map-react": "2.1.9",
     "history": "5.0.0",
     "i18next": "19.6.3",
     "immutable": "4.0.0-rc.12",
@@ -48,10 +49,14 @@
     "react-redux-toastr": "7.6.5",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
+    "react-select": "3.1.0",
+    "recharts": "1.8.5",
     "redux": "4.0.5",
     "redux-devtools-extension": "2.13.8",
     "redux-promise": "0.6.0",
-    "redux-thunk": "2.3.0"
+    "redux-thunk": "2.3.0",
+    "supercluster": "7.1.0",
+    "use-supercluster": "0.2.9"
   },
   "devDependencies": {
     "@babel/cli": "7.8.4",
