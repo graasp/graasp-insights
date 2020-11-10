@@ -1,18 +1,9 @@
 ''' Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID '''
 
-import json
-import argparse
 import re
 from itertools import combinations
-import hashlib
 
-def load_dataset(dataset_path):
-    with open(dataset_path) as json_file:
-        return json.load(json_file)
-
-def save_dataset(dataset, dest_path):
-    with open(dest_path, 'w') as dest_file:
-        json.dump(dataset, dest_file, indent=2)
+from utils import load_dataset, save_dataset, sha256_hash, parse_arguments
 
 def find_and_replace(dataset, substitution_map):
     '''Traverses the whole a dataset, finds and replaces all occurrences
@@ -48,22 +39,10 @@ def find_and_replace(dataset, substitution_map):
     
     traverse(dataset)
 
-def parse_arguments():
-    ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(description='Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID')
-    parser.add_argument('dataset_path', help='path to the json dataset')
-    parser.add_argument('output_path', default='output.json',
-        help='destination path (including file name) for the output')
-
-    return parser.parse_args()
-
 def get_regex(name):
     ''' Creates a regex to match the name or any similar version '''
     # accepts up to 3 characters between each word and ignores case
     return '(?i)' + '.{0,3}'.join(name.split())
-
-def sha256_hash(value):
-    return hashlib.sha256(value.encode()).hexdigest()
 
 def main():
     args = parse_arguments()

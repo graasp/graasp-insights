@@ -1,19 +1,21 @@
 ''' Hash the userId field from the 'actions' and 'appInstanceResources' '''
-import sys
-import json
-import hashlib
 
-def sha256_hash(value):
-    return hashlib.sha256(value.encode()).hexdigest()
+from utils import load_dataset, save_dataset, sha256_hash, parse_arguments
 
-# expects sys.argv[1] to be path for json file, formatted as per graasp research
-with open(sys.argv[1]) as json_file:
-    allData = json.load(json_file)
-    with open(sys.argv[2], 'w+') as anonymizedFile:
-        for action in allData['data']['actions']:
-            if 'user' in action:
-                action['user'] = sha256_hash(action['user'])
-        for appInstanceResource in allData['data']['appInstanceResources']:
-            if 'user' in appInstanceResource:
-                appInstanceResource['user'] = sha256_hash(appInstanceResource['user'])
-        json.dump(allData, anonymizedFile, indent=2)
+def main():
+    args = parse_arguments()
+
+    dataset = load_dataset(args.dataset_path)
+
+    for action in dataset['data']['actions']:
+        if 'user' in action:
+            action['user'] = sha256_hash(action['user'])
+
+    for appInstanceResource in dataset['data']['appInstanceResources']:
+        if 'user' in appInstanceResource:
+            appInstanceResource['user'] = sha256_hash(appInstanceResource['user'])
+
+    save_dataset(dataset, args.output_path)
+
+if __name__ == '__main__':
+    main()

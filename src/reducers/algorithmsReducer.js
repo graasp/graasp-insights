@@ -10,6 +10,7 @@ import {
   CLEAR_ALGORITHM_SUCCESS,
   FLAG_CLEARING_ALGORITHM,
 } from '../shared/types';
+import { ALGORITHM_TYPES } from '../shared/constants';
 
 const INITIAL_STATE = Map({
   algorithms: List(),
@@ -18,6 +19,7 @@ const INITIAL_STATE = Map({
     content: Map(),
     activity: List(),
   }),
+  utils: List(),
 });
 
 export default (state = INITIAL_STATE, { type, payload }) => {
@@ -32,7 +34,23 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         updateActivityList(payload),
       );
     case GET_ALGORITHMS_SUCCESS:
-      return state.setIn(['algorithms'], List(payload));
+      return state
+        .setIn(
+          ['algorithms'],
+          List(
+            payload.filter(
+              ({ type: algoType }) => algoType !== ALGORITHM_TYPES.UTILS,
+            ),
+          ),
+        )
+        .setIn(
+          ['utils'],
+          List(
+            payload.filter(
+              ({ type: algoType }) => algoType === ALGORITHM_TYPES.UTILS,
+            ),
+          ),
+        );
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case CLEAR_ALGORITHM_SUCCESS:

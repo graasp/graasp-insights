@@ -2,6 +2,7 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const low = require('lowdb');
 const fs = require('fs');
+const ObjectId = require('bson-objectid');
 const FileSync = require('lowdb/adapters/FileSync');
 const logger = require('./logger');
 const {
@@ -82,7 +83,10 @@ const ensureAlgorithmsExist = async (
 
       // check if algo entry is in metadata db
       if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-        db.get(ALGORITHMS_COLLECTION).push(algo).write();
+        const id = ObjectId().str;
+        db.get(ALGORITHMS_COLLECTION)
+          .push({ ...algo, id })
+          .write();
       }
     }
   });

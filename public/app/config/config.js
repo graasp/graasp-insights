@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { app } = require('electron');
 const path = require('path');
-const ObjectId = require('bson-objectid');
 const isWindows = require('../utils/isWindows');
+const { ALGORITHM_TYPES } = require('../../shared/constants');
 
 // resolve path for windows '\'
 const escapeEscapeCharacter = (str) => {
@@ -33,7 +33,6 @@ const PROGRAMMING_LANGUAGES = {
 
 const GRAASP_ALGORITHMS = [
   {
-    id: ObjectId().str,
     name: 'Hash users',
     description:
       "Hash the userId field from the 'actions' and 'appInstanceResources'",
@@ -41,9 +40,9 @@ const GRAASP_ALGORITHMS = [
     filepath: path.join(ALGORITHMS_FOLDER, 'hash_users.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: 'Sanitize users',
     description:
       'Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID',
@@ -51,45 +50,45 @@ const GRAASP_ALGORITHMS = [
     filepath: path.join(ALGORITHMS_FOLDER, 'sanitize_users.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: 'Suppress geolocation',
     description: "Suppress the 'geolocation' field from the 'actions'",
     filename: 'suppress_geolocation.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_geolocation.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: 'Suppress data',
     description: "Suppress the 'data' field from the 'actions'",
     filename: 'suppress_data.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_data.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: 'Suppress users',
     description: "Suppress the 'users' field from a dataset",
     filename: 'suppress_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_users.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: 'Suppress appInstances settings',
     description: "Suppress the 'settings' field from the 'appInstances'",
     filename: 'suppress_appInstances_settings.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_appInstances_settings.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: 'Suppress appInstancesResources data',
     description: "Suppress the 'data' field from the 'appInstanceResource'",
     filename: 'suppress_appInstanceResources_data.py',
@@ -99,9 +98,9 @@ const GRAASP_ALGORITHMS = [
     ),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
-    id: ObjectId().str,
     name: '2-Anonymize geolocation',
     description: `Ensure that for every combination of 'country', 'region', and 'city', there are at least two users containing that combination.
       The corresponding fields are suppressed (from 'city' to 'country') when necessary`,
@@ -109,6 +108,16 @@ const GRAASP_ALGORITHMS = [
     filepath: path.join(ALGORITHMS_FOLDER, 'two_anonymize_geolocations.py'),
     author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
+  },
+  {
+    name: 'Python utils',
+    description: 'Python utility functions used in multiple scripts',
+    filename: 'utils.py',
+    filepath: path.join(ALGORITHMS_FOLDER, 'utils.py'),
+    author: AUTHOR_GRAASP,
+    language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.UTILS,
   },
 ];
 

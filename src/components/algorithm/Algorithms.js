@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
 import Main from '../common/Main';
 import { getAlgorithms, deleteAlgorithm } from '../../actions';
 import Loader from '../common/Loader';
@@ -41,11 +42,15 @@ const styles = (theme) => ({
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
+  utilsButton: {
+    float: 'right',
+  },
 });
 
 class Algorithms extends Component {
   static propTypes = {
     algorithms: PropTypes.instanceOf(List).isRequired,
+    utils: PropTypes.instanceOf(List).isRequired,
     t: PropTypes.func.isRequired,
     dispatchGetAlgorithms: PropTypes.func.isRequired,
     dispatchDeleteAlgorithm: PropTypes.func.isRequired,
@@ -55,6 +60,7 @@ class Algorithms extends Component {
       description: PropTypes.string.isRequired,
       addButton: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
+      utilsButton: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -85,6 +91,12 @@ class Algorithms extends Component {
     push(buildEditAlgorithmPath(id));
   }
 
+  handleUtilsEdit() {
+    const { utils } = this.props;
+    const { id } = utils.first();
+    this.handleEdit(id);
+  }
+
   renderAddButon() {
     const { classes } = this.props;
     return (
@@ -99,7 +111,7 @@ class Algorithms extends Component {
   }
 
   render() {
-    const { algorithms, t, isLoading, classes } = this.props;
+    const { algorithms, utils, t, isLoading, classes } = this.props;
 
     if (isLoading) {
       return (
@@ -190,6 +202,15 @@ class Algorithms extends Component {
     return (
       <Main>
         <Container className={classes.content}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.utilsButton}
+            onClick={() => this.handleUtilsEdit()}
+            disabled={!utils.size}
+          >
+            {t('Edit utils')}
+          </Button>
           <h1>{t('Algorithms')}</h1>
           <Table columns={columns} rows={rows} />
         </Container>
@@ -201,6 +222,7 @@ class Algorithms extends Component {
 
 const mapStateToProps = ({ algorithms }) => ({
   algorithms: algorithms.get('algorithms'),
+  utils: algorithms.get('utils'),
   isLoading: algorithms.getIn(['activity']).size > 0,
 });
 
