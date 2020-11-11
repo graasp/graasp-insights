@@ -40,6 +40,7 @@ const {
   SHOW_SAVE_AS_PROMPT_CHANNEL,
   EXPORT_RESULT_CHANNEL,
 } = require('./shared/channels');
+const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
   showLoadDatasetPrompt,
   loadDataset,
@@ -82,7 +83,7 @@ const createWindow = () => {
   logger.debug('create window');
 
   mainWindow = new BrowserWindow({
-    backgroundColor: '#F7F7F7',
+    backgroundColor: APP_BACKGROUND_COLOR,
     minWidth: 880,
     show: false,
     movable: true,

@@ -63,6 +63,8 @@
     "An unexpected error happened while opening the dataset.": "Une erreur s'est produite lors de l'ouverture du dataset.",
     "Content": "Contenu",
     "export": "exporter",
-    "Export dataset": "Exporter le dataset"
+    "Export dataset": "Exporter le dataset",
+    "version": "version",
+    "Save As...": "Enregistrer sous..."
   }
 }
