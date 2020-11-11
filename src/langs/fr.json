@@ -43,7 +43,7 @@
     "Delete algorithm": "Supprimer l'algorithme",
     "Dataset": "Dataset",
     "Algorithm": "Algorithme",
-    "Load a dataset first": "Veuillez importer un dataset",
+    "Load a dataset first!": "Veuillez importer un dataset!",
     "No algorithms are available": "Aucun algorithme n'est disponible",
     "Execute": "Exécuter",
     "Executions": "Exécutions",
@@ -74,6 +74,18 @@
     "Save": "Enregistrer",
     "An unexpected error happened while opening the algorithm.": "Une erreur s'est produite lors de l'ouverture de l'algorithme.",
     "your code goes here": "écrivez votre code ici",
-    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous modifiez un algorithme de Graasp. L'enregistrer créera un nouveau fichier."
+    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous modifiez un algorithme de Graasp. L'enregistrer créera un nouveau fichier.",
+    "Select All": "",
+    "Filter by user...": "",
+    "No actions to show for these users": "",
+    "No actions to show for this user": "",
+    "Visualize": "Visualiser",
+    "Actions by Location": "",
+    "Actions by Verb": "",
+    "Actions by Time of Day": "",
+    "Actions by Day": "",
+    "Many users selected...": "{{firstSelection}}, {{secondSelection}}, et {{alsoSelectedCount}} autre{{plural}}...",
+    "There was an error visualizing this dataset.": "",
+    "This dataset does not contain any actions.": ""
   }
 }

@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     background: theme.palette.primary.main,
     borderRadius: '50%',
-    padding: 12,
+    padding: theme.spacing(1.5),
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   typography: {
     textAlign: 'center',
+    marginTop: theme.spacing(4),
   },
   mapContainer: {
     width: '100%',
@@ -85,6 +86,8 @@ const ActionsMap = ({ actions, allUsersConsolidated, usersToFilter }) => {
     options: { radius: CLUSTER_RADIUS, maxZoom: MAX_CLUSTER_ZOOM },
   });
 
+  // function used to calculate size (in px) of clusters drawn on the map
+  // based on total count of points in a cluster divided by total point count
   const calculateClusterRadius = (
     clusterCount,
     totalCount,

@@ -91,3 +91,6 @@ export const COLORS = [
   '#B54A3F',
   '#FFFFAF',
 ];
+
+// used to define yaxis and xaxis tick sizes in ActionsByDayChart and ActionsByTimeOfDayChart
+export const TICK_FONT_SIZE = 14;

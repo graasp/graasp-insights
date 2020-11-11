@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { CONTAINER_HEIGHT } from '../../config/constants';
 
-const useStyles = makeStyles(() => ({
-  typography: { textAlign: 'center' },
+const useStyles = makeStyles((theme) => ({
+  typography: { textAlign: 'center', marginTop: theme.spacing(4) },
   emptyChartAlert: {
     display: 'flex',
     justifyContent: 'center',

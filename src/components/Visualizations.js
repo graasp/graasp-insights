@@ -25,7 +25,7 @@ const Visualizations = () => {
 
   // on component load, dispatch getDatasets action
   useEffect(() => {
-    dispatch(getDatasets);
+    dispatch(getDatasets());
   }, [dispatch]);
 
   // retrieve datasets from redux store

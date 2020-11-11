@@ -8,7 +8,6 @@ import CustomValueContainer from './custom/CustomValueContainer';
 const useStyles = makeStyles((theme) => ({
   container: {
     marginRight: theme.spacing(3),
-    marginBottom: theme.spacing(4),
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -65,7 +64,7 @@ const UsersSelect = ({ allUsersConsolidated, setUsersToFilter }) => {
         hideSelectedOptions={false}
         allowSelectAll
         getOptionLabel={(option) => option.name}
-        placeholder="Filter by user..."
+        placeholder={t('Filter by user...')}
         value={selectedUsers}
         onChange={(selected) => {
           if (
