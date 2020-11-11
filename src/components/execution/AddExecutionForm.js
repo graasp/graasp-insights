@@ -24,7 +24,6 @@ import {
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
   buildPythonWrongVersionMessage,
 } from '../../shared/messages';
-import { APP_BACKGROUND_COLOR } from '../../shared/constants';
 
 const styles = (theme) => ({
   formControl: {
@@ -44,9 +43,6 @@ const styles = (theme) => ({
   menuItem: {
     padding: theme.spacing(0.5, 4),
   },
-  inputLabel: {
-    backgroundColor: APP_BACKGROUND_COLOR,
-  },
 });
 
 class AddExecutionForm extends Component {
@@ -65,7 +61,6 @@ class AddExecutionForm extends Component {
       buttonContainer: PropTypes.string.isRequired,
       buttonWrapper: PropTypes.string.isRequired,
       menuItem: PropTypes.string.isRequired,
-      inputLabel: PropTypes.string.isRequired,
     }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     pythonVersion: PropTypes.shape({
@@ -127,10 +122,6 @@ class AddExecutionForm extends Component {
     const { sourceId } = this.state;
     const { classes, t, datasets, results } = this.props;
 
-    if (datasets?.isEmpty() || results?.isEmpty()) {
-      return <Loader />;
-    }
-
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
       .map(({ id, name }) => (
@@ -147,20 +138,24 @@ class AddExecutionForm extends Component {
         </MenuItem>
       ));
 
+    const label = `${t('Dataset')} ${t('(Required)')}`;
+
     return (
       <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel className={classes.inputLabel} id="dataset-select">
-          {`${t('Dataset')} ${t('(Required)')}`}
-        </InputLabel>
+        <InputLabel id="dataset-select">{label}</InputLabel>
         <Select
           labelId="dataset-select"
           value={sourceId}
           onChange={this.handleDatasetSelectOnChange}
-          label={t('Dataset')}
+          label={label}
         >
-          <ListSubheader>{t('Datasets')}</ListSubheader>
+          {!datasetMenuItems.isEmpty() && (
+            <ListSubheader>{t('Datasets')}</ListSubheader>
+          )}
           {datasetMenuItems}
-          <ListSubheader>{t('Results')}</ListSubheader>
+          {!resultMenuItems.isEmpty() && (
+            <ListSubheader>{t('Results')}</ListSubheader>
+          )}
           {resultMenuItems}
         </Select>
       </FormControl>
@@ -209,14 +204,14 @@ class AddExecutionForm extends Component {
   };
 
   render() {
-    const { algorithms, datasets, classes, t, isLoading } = this.props;
+    const { algorithms, datasets, classes, t, isLoading, results } = this.props;
     const { algorithmId, userProvidedFilename } = this.state;
 
     if (isLoading) {
       return <Loader />;
     }
 
-    if (!datasets.size) {
+    if (datasets.isEmpty() && results.isEmpty()) {
       return (
         <Alert severity="info" className={classes.infoAlert}>
           {t('Load a dataset first')}
@@ -232,18 +227,18 @@ class AddExecutionForm extends Component {
       );
     }
 
+    const algorithmLabel = `${t('Algorithm')} ${t('(Required)')}`;
+
     return (
       <>
         {this.renderDatasetsAndResultsSelect()}
         <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="algorithm-select" className={classes.inputLabel}>
-            {`${t('Algorithm')} ${t('(Required)')}`}
-          </InputLabel>
+          <InputLabel>{algorithmLabel}</InputLabel>
           <Select
             labelId="algorithm-select"
             value={algorithmId}
             onChange={this.handleAlgorithmSelectOnChange}
-            label={t('Algorithm')}
+            label={algorithmLabel}
           >
             {algorithms.map(({ id, name }) => (
               <MenuItem value={id} key={id}>
