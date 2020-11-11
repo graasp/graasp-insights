@@ -13,10 +13,10 @@ const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
     const { filepath } = db.get(DATASETS_COLLECTION).find({ id }).value();
 
     if (!fs.existsSync(filepath)) {
-      return mainWindow.webContents.send(
-        SET_DATASET_FILE_CHANNEL,
-        ERROR_MISSING_FILE,
-      );
+      return mainWindow.webContents.send(SET_DATASET_FILE_CHANNEL, {
+        type: SET_DATASET_FILE_ERROR,
+        error: ERROR_MISSING_FILE,
+      });
     }
     const contentAsString = JSON.stringify(content, null, 2);
     fs.writeFileSync(filepath, contentAsString);
