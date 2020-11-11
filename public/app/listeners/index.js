@@ -14,6 +14,7 @@ const deleteResult = require('./deleteResult');
 const getAlgorithms = require('./getAlgorithms');
 const deleteAlgorithm = require('./deleteAlgorithm');
 const getDatabase = require('./getDatabase');
+const setDatasetFile = require('./setDatasetFile');
 const checkPythonInstallation = require('./checkPythonInstallation');
 const exportDataset = require('./exportDataset');
 const showSaveAsPrompt = require('./showSaveAsPrompt');
@@ -40,4 +41,5 @@ module.exports = {
   exportDataset,
   showSaveAsPrompt,
   exportResult,
+  setDatasetFile,
 };

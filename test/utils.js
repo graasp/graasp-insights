@@ -13,7 +13,7 @@ export const mochaAsync = (fn) => {
 };
 
 export const openDrawer = async (client) => {
-  const drawerButton = await client.$(`#${DRAWER_BUTTON_ID}`)
+  const drawerButton = await client.$(`#${DRAWER_BUTTON_ID}`);
   if (await drawerButton.isClickable()) {
     await drawerButton.click();
   }
@@ -21,7 +21,7 @@ export const openDrawer = async (client) => {
 };
 
 export const expectElementToExist = async (client, elementSelector) => {
-  const el = await client.$(elementSelector)
+  const el = await client.$(elementSelector);
   const found = await el.isExisting();
   if (!found) {
     /* eslint-disable-next-line no-console */
@@ -31,7 +31,7 @@ export const expectElementToExist = async (client, elementSelector) => {
 };
 
 export const expectElementToNotExist = async (client, elementSelector) => {
-  const el = await client.$(elementSelector)
+  const el = await client.$(elementSelector);
   const found = await el.isExisting();
   expect(found).to.be.false;
 };

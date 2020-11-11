@@ -29,6 +29,7 @@ import {
   EXPORT_DATASET_SUCCESS,
   EXPORT_RESULT_ERROR,
   EXPORT_RESULT_SUCCESS,
+  SET_DATASET_FILE_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -60,6 +61,7 @@ import {
   SUCCESS_EXPORTING_DATASET_MESSAGE,
   ERROR_EXPORTING_RESULT_MESSAGE,
   SUCCESS_EXPORTING_RESULT_MESSAGE,
+  ERROR_SETTING_DATASET_FILE_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -88,6 +90,13 @@ const middleware = () => (next) => (action) => {
         message = ERROR_MISSING_FILE_MESSAGE;
       } else {
         message = ERROR_EXPORTING_DATASET_MESSAGE;
+      }
+      break;
+    case SET_DATASET_FILE_ERROR:
+      if (error === ERROR_MISSING_FILE) {
+        message = ERROR_MISSING_FILE_MESSAGE;
+      } else {
+        message = ERROR_SETTING_DATASET_FILE_MESSAGE;
       }
       break;
     case GET_ALGORITHMS_ERROR:

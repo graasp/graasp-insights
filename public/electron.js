@@ -61,6 +61,7 @@ const {
   exportDataset,
   showSaveAsPrompt,
   exportResult,
+  setDatasetFile,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -68,6 +69,7 @@ const {
   bootstrapDatabase,
   ensureAlgorithmsExist,
 } = require('./app/db');
+const { SET_DATASET_FILE_CHANNEL } = require('../src/shared/channels');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -295,8 +297,10 @@ app.on('ready', async () => {
   // called when deleting a dataset
   ipcMain.on(DELETE_DATASET_CHANNEL, deleteDataset(mainWindow, db));
 
-  // called when deleting a dataset
+  // called when exporting a dataset
   ipcMain.on(EXPORT_DATASET_CHANNEL, exportDataset(mainWindow, db));
+
+  ipcMain.on(SET_DATASET_FILE_CHANNEL, setDatasetFile(mainWindow, db));
 
   // called when getting results
   ipcMain.on(GET_RESULTS_CHANNEL, getResults(mainWindow, db));

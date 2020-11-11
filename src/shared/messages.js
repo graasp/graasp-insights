@@ -62,6 +62,8 @@ const SUCCESS_EXPORTING_DATASET_MESSAGE =
 const ERROR_EXPORTING_RESULT_MESSAGE =
   'There was an error exporting the result';
 const SUCCESS_EXPORTING_RESULT_MESSAGE = 'The result was exported successfully';
+const ERROR_SETTING_DATASET_FILE_MESSAGE =
+  'There was an error editing the dataset';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -98,4 +100,5 @@ module.exports = {
   SUCCESS_EXPORTING_DATASET_MESSAGE,
   ERROR_EXPORTING_RESULT_MESSAGE,
   SUCCESS_EXPORTING_RESULT_MESSAGE,
+  ERROR_SETTING_DATASET_FILE_MESSAGE,
 };
