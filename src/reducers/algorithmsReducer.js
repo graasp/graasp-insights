@@ -7,7 +7,8 @@ import {
   FLAG_DELETING_ALGORITHM,
   GET_ALGORITHM_SUCCESS,
   FLAG_GETTING_ALGORITHM,
-  CLEAR_ALGORITHM,
+  CLEAR_ALGORITHM_SUCCESS,
+  FLAG_CLEARING_ALGORITHM,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -25,6 +26,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case FLAG_DELETING_ALGORITHM:
       return state.updateIn(['activity'], updateActivityList(payload));
     case FLAG_GETTING_ALGORITHM:
+    case FLAG_CLEARING_ALGORITHM:
       return state.updateIn(
         ['current', 'activity'],
         updateActivityList(payload),
@@ -33,7 +35,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['algorithms'], List(payload));
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
-    case CLEAR_ALGORITHM:
+    case CLEAR_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map());
     case DELETE_ALGORITHM_SUCCESS:
     default:

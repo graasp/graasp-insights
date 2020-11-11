@@ -9,6 +9,7 @@ import {
   FLAG_DELETING_RESULT,
   EXECUTE_PYTHON_ALGORITHM_SUCCESS,
   CLEAR_RESULT_SUCCESS,
+  FLAG_CLEARING_RESULT,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -25,6 +26,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case FLAG_GETTING_RESULTS:
     case FLAG_EXPORTING_RESULT:
     case FLAG_DELETING_RESULT:
+    case FLAG_CLEARING_RESULT:
       return state.updateIn(['activity'], updateActivityList(payload));
     case GET_RESULT_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
