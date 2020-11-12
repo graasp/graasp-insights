@@ -29,8 +29,14 @@ import {
 import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
-  buttons: {
+  saveButton: {
     marginTop: theme.spacing(2),
+    textAlign: 'center',
+  },
+  backButton: {
+    position: 'fixed',
+    right: theme.spacing(2),
+    bottom: theme.spacing(2),
   },
 });
 
@@ -48,7 +54,8 @@ class AddAlgorithm extends Component {
     dispatchAddAlgorithm: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
-      buttons: PropTypes.string.isRequired,
+      saveButton: PropTypes.string.isRequired,
+      backButton: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
@@ -114,8 +121,8 @@ class AddAlgorithm extends Component {
     return (
       <Main>
         <Container>
-          <h1>{t('Add algorithm')}</h1>
-          <Grid container spacing={5}>
+          <h1>{t('Add Algorithm')}</h1>
+          <Grid container spacing={5} justify="space-between">
             <Grid item xs={option === ADD_OPTIONS.FILE ? 5 : 7}>
               <FormControl component="fieldset">
                 <RadioGroup
@@ -185,30 +192,19 @@ class AddAlgorithm extends Component {
               />
             </Grid>
           </Grid>
-          <Grid
-            container
-            spacing={2}
-            justify="center"
-            className={classes.buttons}
-          >
-            <Grid item>
-              <BackButton />
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-                onClick={this.handleSave}
-                disabled={
-                  !name || (option === ADD_OPTIONS.FILE && !fileLocation)
-                }
-              >
-                {t('Save')}
-              </Button>
-            </Grid>
-          </Grid>
+          <div className={classes.saveButton}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<SaveIcon />}
+              onClick={this.handleSave}
+              disabled={!name || (option === ADD_OPTIONS.FILE && !fileLocation)}
+            >
+              {t('Save')}
+            </Button>
+          </div>
         </Container>
+        <BackButton className={classes.backButton} />
       </Main>
     );
   }

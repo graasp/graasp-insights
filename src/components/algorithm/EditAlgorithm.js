@@ -30,12 +30,14 @@ import {
 import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
-  button: {
-    margin: theme.spacing(1),
-  },
   infoAlert: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+  },
+  backButton: {
+    position: 'fixed',
+    right: theme.spacing(2),
+    bottom: theme.spacing(2),
   },
 });
 
@@ -61,8 +63,8 @@ class EditAlgorithm extends Component {
     dispatchAddAlgorithm: PropTypes.func.isRequired,
     dispatchClearAlgorithm: PropTypes.func.isRequired,
     classes: PropTypes.shape({
-      button: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      backButton: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     activity: PropTypes.bool.isRequired,
@@ -161,7 +163,7 @@ class EditAlgorithm extends Component {
     return (
       <Main>
         <Container>
-          <h1>{t('Edit algorithm')}</h1>
+          <h1>{t('Edit Algorithm')}</h1>
           {author === AUTHOR_GRAASP && (
             <Alert severity="info" className={classes.infoAlert}>
               {t(
@@ -199,11 +201,9 @@ class EditAlgorithm extends Component {
               />
             </Grid>
             <Grid item>
-              <BackButton />
               <Button
                 variant="contained"
                 color="primary"
-                className={classes.button}
                 startIcon={<SaveIcon />}
                 onClick={this.handleSave}
                 disabled={!name}
@@ -213,6 +213,7 @@ class EditAlgorithm extends Component {
             </Grid>
           </Grid>
         </Container>
+        <BackButton className={classes.backButton} />
       </Main>
     );
   }

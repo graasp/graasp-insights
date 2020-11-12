@@ -170,7 +170,7 @@ class Algorithms extends Component {
         author,
         language,
         quickActions: [
-          <Tooltip title={t('Edit algorithm')} key="edit">
+          <Tooltip title={t('Edit Algorithm')} key="edit">
             <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
               <EditIcon />
             </IconButton>

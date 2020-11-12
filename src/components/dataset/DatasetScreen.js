@@ -111,7 +111,10 @@ class DatasetScreen extends Component {
         <div className={classes.wrapper}>
           <Grid container>
             <Grid item xs={12}>
-              <BackButton id={DATASET_BACK_BUTTON_ID} className={classes.backButton} />
+              <BackButton
+                id={DATASET_BACK_BUTTON_ID}
+                className={classes.backButton}
+              />
               <Typography
                 id={DATASET_NAME_ID}
                 className={classes.title}
