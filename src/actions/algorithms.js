@@ -1,17 +1,27 @@
 import { toastr } from 'react-redux-toastr';
 import { createFlag } from './common';
 import {
+  GET_ALGORITHM_CHANNEL,
   GET_ALGORITHMS_CHANNEL,
   DELETE_ALGORITHM_CHANNEL,
+  SAVE_ALGORITHM_CHANNEL,
+  ADD_ALGORITHM_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_ALGORITHMS,
   FLAG_DELETING_ALGORITHM,
+  FLAG_GETTING_ALGORITHM,
+  FLAG_SAVING_ALGORITHM,
+  FLAG_ADDING_ALGORITHM,
+  CLEAR_ALGORITHM,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
   ERROR_GETTING_ALGORITHMS_MESSAGE,
   ERROR_DELETING_ALGORITHM_MESSAGE,
+  ERROR_GETTING_ALGORITHM_MESSAGE,
+  ERROR_SAVING_ALGORITHM_MESSAGE,
+  ERROR_ADDING_ALGORITHM_MESSAGE,
 } from '../shared/messages';
 
 export const getAlgorithms = () => (dispatch) => {
@@ -48,4 +58,57 @@ export const deleteAlgorithm = ({ id }) => (dispatch) => {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_ALGORITHM_MESSAGE);
     dispatch(flagDeletingAlgorithm(false));
   }
+};
+
+export const getAlgorithm = ({ id }) => (dispatch) => {
+  const flagGettingAlgorithm = createFlag(FLAG_GETTING_ALGORITHM);
+  try {
+    dispatch(flagGettingAlgorithm(true));
+    window.ipcRenderer.send(GET_ALGORITHM_CHANNEL, { id });
+    window.ipcRenderer.once(GET_ALGORITHM_CHANNEL, async (event, response) => {
+      dispatch(response);
+      return dispatch(flagGettingAlgorithm(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_ALGORITHM_MESSAGE);
+    dispatch(flagGettingAlgorithm(false));
+  }
+};
+
+export const saveAlgorithm = (algorithm) => (dispatch) => {
+  const flagSavingAlgorithm = createFlag(FLAG_SAVING_ALGORITHM);
+  try {
+    dispatch(flagSavingAlgorithm(true));
+    window.ipcRenderer.send(SAVE_ALGORITHM_CHANNEL, algorithm);
+    window.ipcRenderer.once(SAVE_ALGORITHM_CHANNEL, async (event, response) => {
+      dispatch(response);
+      return dispatch(flagSavingAlgorithm(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SAVING_ALGORITHM_MESSAGE);
+    dispatch(flagSavingAlgorithm(false));
+  }
+};
+
+export const addAlgorithm = ({ payload, onSuccess }) => (dispatch) => {
+  const flagAddingAlgorithm = createFlag(FLAG_ADDING_ALGORITHM);
+  try {
+    dispatch(flagAddingAlgorithm(true));
+    window.ipcRenderer.send(ADD_ALGORITHM_CHANNEL, payload);
+    window.ipcRenderer.once(ADD_ALGORITHM_CHANNEL, async (event, response) => {
+      dispatch(response);
+      // eslint-disable-next-line no-unused-expressions
+      onSuccess?.();
+      return dispatch(flagAddingAlgorithm(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_ADDING_ALGORITHM_MESSAGE);
+    dispatch(flagAddingAlgorithm(false));
+  }
+};
+
+export const clearAlgorithm = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_ALGORITHM,
+  });
 };

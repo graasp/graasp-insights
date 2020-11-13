@@ -39,7 +39,7 @@
     "Cancel": "Annuler",
     "Add dataset": "Ajouter le dataset",
     "Execute algorithm on a dataset": "Exécuter l'algorithme sur un dataset",
-    "Edit algorithm": "Éditer l'algorithme",
+    "Edit Algorithm": "Modifier l'Algorithme",
     "Delete algorithm": "Supprimer l'algorithme",
     "Dataset": "Dataset",
     "Algorithm": "Algorithme",
@@ -65,6 +65,15 @@
     "export": "exporter",
     "Export dataset": "Exporter le dataset",
     "version": "version",
-    "Save As...": "Enregistrer sous..."
+    "Save As...": "Enregistrer sous...",
+    "Add Algorithm": "Ajouter un Algorithme",
+    "Algorithm name": "Nom de l'algorithme",
+    "Load algorithm from a file": "Ajouter un algorithme depuis un fichier",
+    "Write algorithm": "Écrire un algorithme",
+    "Select algorithm": "Sélectionner un algorithme",
+    "Save": "Enregistrer",
+    "An unexpected error happened while opening the algorithm.": "Une erreur s'est produite lors de l'ouverture de l'algorithme.",
+    "your code goes here": "écrivez votre code ici",
+    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous modifiez un algorithme de Graasp. L'enregistrer créera un nouveau fichier."
   }
 }

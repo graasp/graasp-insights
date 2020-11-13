@@ -1,4 +1,3 @@
-const showLoadDatasetPrompt = require('./showLoadDatasetPrompt');
 const { loadDataset } = require('./loadDataset');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const getDataset = require('./getDataset');
@@ -19,12 +18,15 @@ const checkPythonInstallation = require('./checkPythonInstallation');
 const exportDataset = require('./exportDataset');
 const showSaveAsPrompt = require('./showSaveAsPrompt');
 const exportResult = require('./exportResult');
+const getAlgorithm = require('./getAlgorithm');
+const saveAlgorithm = require('./saveAlgorithm');
+const addAlgorithm = require('./addAlgorithm');
+const browseFile = require('./browseFile');
 
 module.exports = {
   getDataset,
   getDatasets,
   deleteDataset,
-  showLoadDatasetPrompt,
   executePythonAlgorithm,
   loadDataset,
   setDatabase,
@@ -42,4 +44,8 @@ module.exports = {
   showSaveAsPrompt,
   exportResult,
   setDatasetFile,
+  getAlgorithm,
+  saveAlgorithm,
+  addAlgorithm,
+  browseFile,
 };

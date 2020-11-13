@@ -30,6 +30,7 @@ const getDatabase = async () => (dispatch) => {
       dispatch(flagGettingDatabase(false));
     });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_DATABASE_MESSAGE);
     dispatch(flagGettingDatabase(false));
@@ -46,6 +47,7 @@ const setDatabase = async (database) => (dispatch) => {
       dispatch(flagSettingDatabase(false));
     });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATABASE_MESSAGE);
     dispatch(flagSettingDatabase(false));
@@ -61,6 +63,7 @@ const setSampleDatabase = async () => (dispatch) => {
       dispatch(flagSettingSampleDatabase(false));
     });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_SAMPLE_DATABASE_MESSAGE);
     dispatch(flagSettingSampleDatabase(false));

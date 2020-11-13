@@ -45,8 +45,6 @@ const ERROR_GETTING_LANGUAGE_MESSAGE =
   'There was an error retrieving the language';
 const ERROR_SETTING_LANGUAGE_MESSAGE =
   'There was an error setting the language';
-const ERROR_DELETING_ALGORITHM_MESSAGE =
-  'There was an error deleting the algorithm';
 const ERROR_EXECUTING_ALGORITHM_MESSAGE =
   'There was an error while executing the algorithm';
 const UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
@@ -64,6 +62,14 @@ const ERROR_EXPORTING_RESULT_MESSAGE =
 const SUCCESS_EXPORTING_RESULT_MESSAGE = 'The result was exported successfully';
 const ERROR_SETTING_DATASET_FILE_MESSAGE =
   'There was an error editing the dataset';
+const ERROR_DELETING_ALGORITHM_MESSAGE =
+  'There was an error deleting the algorithm';
+const ERROR_ADDING_ALGORITHM_MESSAGE =
+  'There was an error adding the algorithm';
+const SUCCESS_ADDING_ALGORITHM_MESSAGE = 'The algorithm was added successfully';
+const ERROR_SAVING_ALGORITHM_MESSAGE =
+  'There was an error saving the algorithm';
+const SUCCESS_SAVING_ALGORITHM_MESSAGE = 'The algorithm was saved successfully';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -91,7 +97,6 @@ module.exports = {
   ERROR_CHECKING_PYTHON_INSTALLATION_MESSAGE,
   ERROR_GETTING_LANGUAGE_MESSAGE,
   ERROR_SETTING_LANGUAGE_MESSAGE,
-  ERROR_DELETING_ALGORITHM_MESSAGE,
   ERROR_EXECUTING_ALGORITHM_MESSAGE,
   UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
   ERROR_GETTING_RESULTS_MESSAGE,
@@ -101,4 +106,9 @@ module.exports = {
   ERROR_EXPORTING_RESULT_MESSAGE,
   SUCCESS_EXPORTING_RESULT_MESSAGE,
   ERROR_SETTING_DATASET_FILE_MESSAGE,
+  ERROR_ADDING_ALGORITHM_MESSAGE,
+  SUCCESS_ADDING_ALGORITHM_MESSAGE,
+  ERROR_DELETING_ALGORITHM_MESSAGE,
+  ERROR_SAVING_ALGORITHM_MESSAGE,
+  SUCCESS_SAVING_ALGORITHM_MESSAGE,
 };

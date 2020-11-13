@@ -24,7 +24,8 @@ const ALGORITHMS_FOLDER_NAME = 'algorithms';
 const PRODUCT_NAME = 'Graasp Insights';
 const TMP_FOLDER = 'tmp';
 const DEFAULT_LANG = 'en';
-const DEFAULT_AUTHOR = 'Graasp';
+const AUTHOR_GRAASP = 'Graasp';
+const AUTHOR_USER = 'User';
 
 const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
@@ -38,7 +39,7 @@ const GRAASP_ALGORITHMS = [
       "Hash the userId field from the 'actions' and 'appInstanceResources'",
     filename: 'hash_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'hash_users.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -48,7 +49,7 @@ const GRAASP_ALGORITHMS = [
       'Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID',
     filename: 'sanitize_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'sanitize_users.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -57,7 +58,7 @@ const GRAASP_ALGORITHMS = [
     description: "Suppress the 'geolocation' field from the 'actions'",
     filename: 'suppress_geolocation.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_geolocation.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -66,7 +67,7 @@ const GRAASP_ALGORITHMS = [
     description: "Suppress the 'data' field from the 'actions'",
     filename: 'suppress_data.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_data.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -75,7 +76,7 @@ const GRAASP_ALGORITHMS = [
     description: "Suppress the 'users' field from a dataset",
     filename: 'suppress_users.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_users.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -84,7 +85,7 @@ const GRAASP_ALGORITHMS = [
     description: "Suppress the 'settings' field from the 'appInstances'",
     filename: 'suppress_appInstances_settings.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'suppress_appInstances_settings.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -96,7 +97,7 @@ const GRAASP_ALGORITHMS = [
       ALGORITHMS_FOLDER,
       'suppress_appInstanceResources_data.py',
     ),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
   {
@@ -106,7 +107,7 @@ const GRAASP_ALGORITHMS = [
       The corresponding fields are suppressed (from 'city' to 'country') when necessary`,
     filename: 'two_anonymize_geolocations.py',
     filepath: path.join(ALGORITHMS_FOLDER, 'two_anonymize_geolocations.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 ];
@@ -130,4 +131,7 @@ module.exports = {
   ALGORITHMS_FOLDER_NAME,
   escapeEscapeCharacter,
   ACCEPTED_PYTHON_VERSIONS,
+  PROGRAMMING_LANGUAGES,
+  AUTHOR_GRAASP,
+  AUTHOR_USER,
 };
