@@ -7,6 +7,7 @@ const {
   SAMPLE_DATASET_FILEPATH,
   GRAASP_ALGORITHMS,
 } = require('../config/config');
+const { SCHEMA_TYPES } = require('../../shared/constants');
 
 module.exports = {
   [DATASETS_COLLECTION]: [
@@ -17,6 +18,7 @@ module.exports = {
       size: 45,
       createdAt: Date.now(),
       lastModified: Date.now(),
+      schemaType: SCHEMA_TYPES.GRAASP,
     },
   ],
   [RESULTS_COLLECTION]: [],

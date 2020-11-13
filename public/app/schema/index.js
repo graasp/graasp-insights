@@ -1,7 +1,8 @@
 const Ajv = require('ajv');
 const GRAASP_SCHEMA = require('./graasp');
+const { SCHEMA_TYPES } = require('../../shared/constants');
 
-const ajv = new Ajv({ allErrors: true });
+const ajv = new Ajv();
 
 const validateSchema = (schemaValidator) => (data) => {
   const valid = schemaValidator(data);
@@ -12,6 +13,18 @@ const validateSchema = (schemaValidator) => (data) => {
 const graaspSchemaValidator = ajv.compile(GRAASP_SCHEMA);
 const validateGraaspSchema = validateSchema(graaspSchemaValidator);
 
+const schemaValidators = [
+  { type: SCHEMA_TYPES.GRAASP, validator: graaspSchemaValidator },
+];
+
+const detectSchema = (data) => {
+  return (
+    schemaValidators.find(({ validator }) => validator(data))?.type ||
+    SCHEMA_TYPES.NONE
+  );
+};
+
 module.exports = {
+  detectSchema,
   validateGraaspSchema,
 };

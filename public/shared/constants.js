@@ -1,5 +1,11 @@
 const APP_BACKGROUND_COLOR = '#F7F7F7';
 
+const SCHEMA_TYPES = {
+  GRAASP: 'GRAASP',
+  NONE: 'NONE',
+};
+
 module.exports = {
   APP_BACKGROUND_COLOR,
+  SCHEMA_TYPES,
 };
