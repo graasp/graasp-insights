@@ -1,3 +1,5 @@
+const { SCHEMA_TYPES } = require('../shared/constants');
+
 export const DATASETS_COLLECTION = 'datasets';
 export const SETTINGS_COLLECTION = 'settings';
 
@@ -94,3 +96,8 @@ export const COLORS = [
 
 // used to define yaxis and xaxis tick sizes in ActionsByDayChart and ActionsByTimeOfDayChart
 export const TICK_FONT_SIZE = 14;
+
+export const SCHEMA_LABELS = {
+  [SCHEMA_TYPES.GRAASP]: 'Graasp',
+  [SCHEMA_TYPES.NONE]: 'Unknown',
+};

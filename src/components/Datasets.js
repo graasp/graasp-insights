@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,10 +15,11 @@ import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import Alert from '@material-ui/lab/Alert';
+import Chip from '@material-ui/core/Chip';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import LoadDatasetButton from './LoadDatasetButton';
-import { DEFAULT_LOCALE_DATE } from '../config/constants';
+import { DEFAULT_LOCALE_DATE, SCHEMA_LABELS } from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
 import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
@@ -32,6 +34,7 @@ import {
   buildDatasetsListDescriptionClass,
   buildDatasetsListDeleteButtonClass,
 } from '../config/selectors';
+import { SCHEMA_TYPES } from '../shared/constants';
 
 const styles = (theme) => ({
   addButton: {
@@ -177,6 +180,7 @@ class Datasets extends Component {
         lastModified,
         createdAt,
         description = '',
+        schemaType,
       } = dataset;
       const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
@@ -188,22 +192,37 @@ class Datasets extends Component {
       return {
         key: id,
         name,
-        dataset: [
-          <Typography
-            className={buildDatasetsListNameClass(name)}
-            variant="subtitle1"
-            key="name"
-          >
-            {name}
-          </Typography>,
-          <Typography
-            className={buildDatasetsListDescriptionClass(name)}
-            variant="caption"
-            key="description"
-          >
-            {description}
-          </Typography>,
-        ],
+        dataset: (
+          <>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item>
+                <Typography
+                  className={buildDatasetsListNameClass(name)}
+                  variant="subtitle1"
+                  key="name"
+                >
+                  {name}
+                </Typography>
+              </Grid>
+              {schemaType !== SCHEMA_TYPES.NONE && (
+                <Grid item>
+                  <Chip
+                    size="small"
+                    color="primary"
+                    label={SCHEMA_LABELS[schemaType]}
+                  />
+                </Grid>
+              )}
+            </Grid>
+            <Typography
+              className={buildDatasetsListDescriptionClass(name)}
+              variant="caption"
+              key="description"
+            >
+              {description}
+            </Typography>
+          </>
+        ),
         size: sizeString,
         sizeNumeric: size,
         createdAt: createdAtString,
