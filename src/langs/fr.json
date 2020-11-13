@@ -75,17 +75,17 @@
     "An unexpected error happened while opening the algorithm.": "Une erreur s'est produite lors de l'ouverture de l'algorithme.",
     "your code goes here": "écrivez votre code ici",
     "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous modifiez un algorithme de Graasp. L'enregistrer créera un nouveau fichier.",
-    "Select All": "",
-    "Filter by user...": "",
-    "No actions to show for these users": "",
-    "No actions to show for this user": "",
+    "Select All": "Tout sélectionner",
+    "Filter by user...": "Trier par utilisateur...",
+    "No actions to show for these users": "Aucune action à afficher pour ces utilisateurs",
+    "No actions to show for this user": "Aucune action à afficher pour cet utilisateur",
     "Visualize": "Visualiser",
-    "Actions by Location": "",
-    "Actions by Verb": "",
-    "Actions by Time of Day": "",
-    "Actions by Day": "",
+    "Actions by Location": "Actions par localisation",
+    "Actions by Verb": "Actions par verbe",
+    "Actions by Time of Day": "Actions par moment de la journée",
+    "Actions by Day": "Actions par jour",
     "Many users selected...": "{{firstSelection}}, {{secondSelection}}, et {{alsoSelectedCount}} autre{{plural}}...",
-    "There was an error visualizing this dataset.": "",
-    "This dataset does not contain any actions.": ""
+    "There was an error visualizing this dataset.": "Une erreur s'est produise en visualisant ce dataset",
+    "This dataset does not contain any actions.": "Ce dataset ne contient aucune action"
   }
 }

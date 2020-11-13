@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
   mapContainer: {
     width: '100%',
     height: 400,
-    marginTop: 30,
-    marginBottom: 30,
+    marginTop: theme.spacing(3.75),
+    marginBottom: theme.spacing(3.75),
   },
 }));
 

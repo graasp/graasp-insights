@@ -24,7 +24,12 @@ import { TICK_FONT_SIZE, CONTAINER_HEIGHT } from '../../config/constants';
 
 const useStyles = makeStyles((theme) => ({
   typography: { textAlign: 'center', marginTop: theme.spacing(4) },
-  chart: { marginTop: 30, marginRight: 20, marginBottom: 20, marginLeft: 20 },
+  chart: {
+    marginTop: theme.spacing(3.75),
+    marginRight: theme.spacing(2.5),
+    marginBottom: theme.spacing(2.5),
+    marginLeft: theme.spacing(2.5),
+  },
 }));
 
 const ActionsByTimeOfDayChart = ({

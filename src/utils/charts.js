@@ -31,13 +31,13 @@ export const formatActionsByDay = (actionsByDayObject) => {
   const sortedActionsByDay = actionsByDayArray.sort(
     (entryA, entryB) => Date.parse(entryA[0]) - Date.parse(entryB[0]),
   );
-  return sortedActionsByDay.map((entry) => {
-    const entryDate = new Date(entry[0]);
+  return sortedActionsByDay.map(([date, count]) => {
+    const entryDate = new Date(date);
     return {
       date: `${entryDate.getDate()}-${
         entryDate.getMonth() + 1
       }-${entryDate.getFullYear()}`,
-      count: entry[1],
+      count,
     };
   });
 };
@@ -103,10 +103,10 @@ export const getActionsByTimeOfDay = (actions) => {
 // returns a date-sorted array in Recharts.js format
 export const formatActionsByTimeOfDay = (actionsByTimeOfDayObject) => {
   const actionsByTimeOfDayArray = Object.entries(actionsByTimeOfDayObject);
-  return actionsByTimeOfDayArray.map((entry) => {
+  return actionsByTimeOfDayArray.map(([timeOfDay, count]) => {
     return {
-      timeOfDay: entry[0],
-      count: entry[1],
+      timeOfDay,
+      count,
     };
   });
 };
@@ -132,11 +132,11 @@ export const formatActionsByVerb = (actionsByVerbObject) => {
 
   // capitalize verbs (entry[0][0]), convert 0.0x notation to x% and round to two decimal places (entry[0][1])
   const formattedActionsByVerbArray = actionsByVerbArray
-    .map((entry) => [
-      _.capitalize(entry[0]),
-      parseFloat((entry[1] * 100).toFixed(2)),
+    .map(([verb, ratio]) => [
+      _.capitalize(verb),
+      parseFloat((ratio * 100).toFixed(2)),
     ])
-    .filter((entry) => entry[1] >= MIN_PERCENTAGE_TO_SHOW_VERB);
+    .filter(([entry]) => entry[1] >= MIN_PERCENTAGE_TO_SHOW_VERB);
 
   // add ['other', x%] to cover all verbs that are filtered out of the array
   if (formattedActionsByVerbArray.length) {
@@ -156,10 +156,10 @@ export const formatActionsByVerb = (actionsByVerbObject) => {
   }
 
   // convert to recharts required format
-  return formattedActionsByVerbArray.map((entry) => {
+  return formattedActionsByVerbArray.map(([verb, percentage]) => {
     return {
-      verb: entry[0],
-      percentage: entry[1],
+      verb,
+      percentage,
     };
   });
 };
