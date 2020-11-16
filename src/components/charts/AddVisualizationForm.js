@@ -27,9 +27,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     width: '300px',
   },
-  inputLabel: {
-    backgroundColor: '#F7F7F7',
-  },
 }));
 
 const AddVisualizationForm = ({
@@ -49,9 +46,7 @@ const AddVisualizationForm = ({
           className={classes.formControl}
           margin="dense"
         >
-          <InputLabel id="dataset-select" className={classes.inputLabel}>
-            {t('Dataset')}
-          </InputLabel>
+          <InputLabel id="dataset-select">{t('Dataset')}</InputLabel>
           <Select
             labelId="dataset-select"
             value={selectedDatasetId}

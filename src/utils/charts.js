@@ -113,18 +113,32 @@ export const formatActionsByTimeOfDay = (actionsByTimeOfDayObject) => {
 
 // Takes array of action objects and returns an object with {key: value} pairs of {verb: %-of-actions}
 export const getActionsByVerb = (actions) => {
-  const totalActions = actions.length;
-  const actionsByVerb = {};
+  const totalActionsCount = actions.length;
+  const actionsByVerbCount = {};
   actions.forEach((action) => {
-    if (!actionsByVerb[action.verb]) {
-      // if verb is still not in the actionsByVerb object, add it and assign it to (1 / totalActions)
-      // we use (1 / totalActions) because in the end we want this object to be {verb: PERCENTAGE-of-total-actions}
-      actionsByVerb[action.verb] = 1 / totalActions;
+    if (!actionsByVerbCount[action.verb]) {
+      // if verb is still not in the actionsByVerbCount object, add it and initialize it to 1
+      actionsByVerbCount[action.verb] = 1;
+      // else increment existing count
     } else {
-      actionsByVerb[action.verb] += 1 / totalActions;
+      actionsByVerbCount[action.verb] += 1;
     }
   });
-  return actionsByVerb;
+
+  // we want to return an object with key-value pairs of {verb: PERCENTAGE-of-total-actions}
+  // therefore need to convert count of actions to a percentage
+  // (1) convert actionsByVerbCount to an array of 2d arrays with [verb, count] via Object.entries
+  // (2) map onto [verb, count / totalActionsCount]
+  // (3) convert back into an object via Object.fromEntries
+  const actionsByVerbCountArray = Object.entries(actionsByVerbCount);
+  const actionsByVerbPercentageArray = actionsByVerbCountArray.map(
+    ([verb, count]) => [verb, count / totalActionsCount],
+  );
+  const actionsByVerbPercentage = Object.fromEntries(
+    actionsByVerbPercentageArray,
+  );
+
+  return actionsByVerbPercentage;
 };
 
 export const formatActionsByVerb = (actionsByVerbObject) => {
@@ -136,7 +150,7 @@ export const formatActionsByVerb = (actionsByVerbObject) => {
       _.capitalize(verb),
       parseFloat((ratio * 100).toFixed(2)),
     ])
-    .filter(([entry]) => entry[1] >= MIN_PERCENTAGE_TO_SHOW_VERB);
+    .filter((entry) => entry[1] >= MIN_PERCENTAGE_TO_SHOW_VERB);
 
   // add ['other', x%] to cover all verbs that are filtered out of the array
   if (formattedActionsByVerbArray.length) {
@@ -156,12 +170,10 @@ export const formatActionsByVerb = (actionsByVerbObject) => {
   }
 
   // convert to recharts required format
-  return formattedActionsByVerbArray.map(([verb, percentage]) => {
-    return {
-      verb,
-      percentage,
-    };
-  });
+  return formattedActionsByVerbArray.map(([verb, percentage]) => ({
+    verb,
+    percentage,
+  }));
 };
 
 // 'usersArray' has the form [ { ids: [1, 2], name: 'Augie March', type: 'light', value: 'Augie March'}, {...}, ... ]

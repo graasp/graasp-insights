@@ -84,8 +84,9 @@
     "Actions by Verb": "Actions par verbe",
     "Actions by Time of Day": "Actions par moment de la journée",
     "Actions by Day": "Actions par jour",
-    "Many users selected...": "{{firstSelection}}, {{secondSelection}}, et {{alsoSelectedCount}} autre{{plural}}...",
-    "There was an error visualizing this dataset.": "Une erreur s'est produise en visualisant ce dataset",
+    "Many users selected...": "{{firstSelection}}, {{secondSelection}}, et un autre...",
+    "Many users selected..._plural": "{{firstSelection}}, {{secondSelection}}, et {{count}} autres...",
+    "There was an error visualizing this dataset.": "Une erreur s'est produite en visualisant ce dataset",
     "This dataset does not contain any actions.": "Ce dataset ne contient aucune action"
   }
 }

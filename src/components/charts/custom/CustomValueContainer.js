@@ -14,7 +14,6 @@ const CustomValueContainer = ({ children, ...props }) => {
 
   if (Array.isArray(values)) {
     const { length } = values;
-    const plural = length === 3 ? '' : 's';
     const alsoSelectedCount = length - 2;
     if (length === 1) {
       values = `${values[0].key}`;
@@ -26,8 +25,7 @@ const CustomValueContainer = ({ children, ...props }) => {
       values = t('Many users selected...', {
         firstSelection,
         secondSelection,
-        alsoSelectedCount,
-        plural,
+        count: alsoSelectedCount,
       });
     }
   }
