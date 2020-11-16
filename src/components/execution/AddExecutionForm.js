@@ -13,6 +13,7 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
 import Loader from '../common/Loader';
 import {
   getDatasets,
@@ -24,6 +25,8 @@ import {
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
   buildPythonWrongVersionMessage,
 } from '../../shared/messages';
+import { SCHEMA_TYPES } from '../../shared/constants';
+import { SCHEMA_LABELS, SCHEMA_COLORS } from '../../config/constants';
 
 const styles = (theme) => ({
   formControl: {
@@ -43,6 +46,10 @@ const styles = (theme) => ({
   menuItem: {
     padding: theme.spacing(0.5, 4),
   },
+  chip: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+  },
 });
 
 class AddExecutionForm extends Component {
@@ -61,6 +68,7 @@ class AddExecutionForm extends Component {
       buttonContainer: PropTypes.string.isRequired,
       buttonWrapper: PropTypes.string.isRequired,
       menuItem: PropTypes.string.isRequired,
+      chip: PropTypes.string.isRequired,
     }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     pythonVersion: PropTypes.shape({
@@ -124,9 +132,19 @@ class AddExecutionForm extends Component {
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name }) => (
+      .map(({ id, name, schemaType }) => (
         <MenuItem value={id} key={id} className={classes.menuItem}>
           {name}
+          {schemaType !== SCHEMA_TYPES.NONE && (
+            <Tooltip title={t('Dataset has Graasp schema')}>
+              <Chip
+                size="small"
+                label={SCHEMA_LABELS[schemaType]}
+                style={SCHEMA_COLORS[schemaType]}
+                className={classes.chip}
+              />
+            </Tooltip>
+          )}
         </MenuItem>
       ));
 

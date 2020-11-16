@@ -19,7 +19,11 @@ import Chip from '@material-ui/core/Chip';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import LoadDatasetButton from './LoadDatasetButton';
-import { DEFAULT_LOCALE_DATE, SCHEMA_LABELS } from '../config/constants';
+import {
+  DEFAULT_LOCALE_DATE,
+  SCHEMA_LABELS,
+  SCHEMA_COLORS,
+} from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
 import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
@@ -206,11 +210,13 @@ class Datasets extends Component {
               </Grid>
               {schemaType !== SCHEMA_TYPES.NONE && (
                 <Grid item>
-                  <Chip
-                    size="small"
-                    color="primary"
-                    label={SCHEMA_LABELS[schemaType]}
-                  />
+                  <Tooltip title={t('Dataset has Graasp schema')}>
+                    <Chip
+                      size="small"
+                      label={SCHEMA_LABELS[schemaType]}
+                      style={SCHEMA_COLORS[schemaType]}
+                    />
+                  </Tooltip>
                 </Grid>
               )}
             </Grid>
