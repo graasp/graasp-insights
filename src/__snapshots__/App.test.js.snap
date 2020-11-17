@@ -111,6 +111,11 @@ exports[`<App /> renders correctly 1`] = `
           "light": "#81c784",
           "main": "#4caf50",
         },
+        "tertiary": Object {
+          "dark": "#8884d8",
+          "light": "#8884d8",
+          "main": "#8884d8",
+        },
         "text": Object {
           "disabled": "rgba(0, 0, 0, 0.38)",
           "hint": "rgba(0, 0, 0, 0.38)",
@@ -363,6 +368,11 @@ exports[`<App /> renders correctly 1`] = `
           component={[Function]}
           exact={true}
           path="/add-algorithm"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/visualizations"
         />
       </Switch>
     </div>

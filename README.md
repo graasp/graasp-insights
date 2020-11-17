@@ -59,6 +59,7 @@ You will also need to create a file called `.env.local` with the following conte
 ```dotenv
 GH_TOKEN=
 BROWSER=none
+REACT_APP_GOOGLE_KEY=
 ```
 
 The `GH_TOKEN` environment variable is only used for releasing new versions of the Graasp Desktop

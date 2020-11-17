@@ -17,6 +17,7 @@ import {
   EXECUTIONS_PATH,
   EDIT_ALGORITHM_PATH,
   ADD_ALGORITHM_PATH,
+  VISUALIZATIONS_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -31,6 +32,7 @@ import { getLanguage, checkPythonInstallation } from './actions';
 import Results from './components/Results';
 import ResultScreen from './components/result/ResultScreen';
 import Executions from './components/Executions';
+import Visualizations from './components/Visualizations';
 
 export class App extends Component {
   state = { height: 0 };
@@ -101,6 +103,7 @@ export class App extends Component {
                 component={EditAlgorithm}
               />
               <Route exact path={ADD_ALGORITHM_PATH} component={AddAlgorithm} />
+              <Route exact path={VISUALIZATIONS_PATH} component={Visualizations} />
             </Switch>
           </div>
         </Router>

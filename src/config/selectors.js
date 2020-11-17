@@ -30,3 +30,4 @@ export const DATASET_TABLE_SUBSPACE_COUNT_ID = 'datasetTableSubspaceCount';
 export const DATASET_TABLE_ACTION_COUNT_ID = 'datasetTableActionCount';
 export const DATASET_TABLE_USER_COUNT_ID = 'datasetTableUserCount';
 export const DATASET_TABLE_COUNTRY_COUNT_ID = 'datasetTableCountryCount';
+export const VISUALIZATIONS_MENU_ITEM_ID = 'visualizationsMenuItem';

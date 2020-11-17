@@ -9,6 +9,7 @@ import PieChartIcon from '@material-ui/icons/PieChart';
 import CloseIcon from '@material-ui/icons/ExitToApp';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import CodeIcon from '@material-ui/icons/Code';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import TuneIcon from '@material-ui/icons/Tune';
 import { withTranslation } from 'react-i18next';
 import {
@@ -18,12 +19,14 @@ import {
   DEVELOPER_PATH,
   RESULTS_PATH,
   EXECUTIONS_PATH,
+  VISUALIZATIONS_PATH,
 } from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
   DATASETS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
   EXECUTIONS_MENU_ITEM_ID,
+  VISUALIZATIONS_MENU_ITEM_ID,
 } from '../../config/selectors';
 
 export class MainMenu extends Component {
@@ -89,6 +92,26 @@ export class MainMenu extends Component {
     return null;
   };
 
+  renderVisualizations = () => {
+    const {
+      match: { path },
+      t,
+    } = this.props;
+    return (
+      <MenuItem
+        id={VISUALIZATIONS_MENU_ITEM_ID}
+        onClick={() => this.handleClick(VISUALIZATIONS_PATH)}
+        selected={path === VISUALIZATIONS_PATH}
+        button
+      >
+        <ListItemIcon>
+          <TimelineIcon />
+        </ListItemIcon>
+        <ListItemText primary={t('Visualizations')} />
+      </MenuItem>
+    );
+  };
+
   render() {
     const {
       match: { path },
@@ -139,8 +162,8 @@ export class MainMenu extends Component {
           </ListItemIcon>
           <ListItemText primary={t('Results')} />
         </MenuItem>
+        {this.renderVisualizations()}
         {this.renderDeveloperItem()}
-
         {this.renderCloseApp()}
       </List>
     );
