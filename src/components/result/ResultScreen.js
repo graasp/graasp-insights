@@ -6,13 +6,12 @@ import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import Loader from '../common/Loader';
 import JSONFileEditor from '../common/JSONFileEditor';
 import Main from '../common/Main';
-import { getResult } from '../../actions';
 import BackButton from '../common/BackButton';
+import { clearResult, getResult } from '../../actions';
 
 const styles = (theme) => ({
   wrapper: {
@@ -38,6 +37,7 @@ class ResultScreen extends Component {
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
     dispatchGetResult: PropTypes.func.isRequired,
+    dispatchClearResult: PropTypes.func.isRequired,
     activity: PropTypes.bool.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
@@ -61,6 +61,11 @@ class ResultScreen extends Component {
     } = this.props;
 
     dispatchGetResult({ id });
+  }
+
+  componentWillUnmount() {
+    const { dispatchClearResult } = this.props;
+    dispatchClearResult();
   }
 
   render() {
@@ -112,6 +117,7 @@ const mapStateToProps = ({ result }) => ({
 
 const mapDispatchToProps = {
   dispatchGetResult: getResult,
+  dispatchClearResult: clearResult,
 };
 
 const ConnectedComponent = connect(
@@ -123,4 +129,4 @@ const StyledComponent = withStyles(styles, { withTheme: true })(
 );
 
 const TranslatedComponent = withTranslation()(StyledComponent);
-export default withRouter(TranslatedComponent);
+export default TranslatedComponent;

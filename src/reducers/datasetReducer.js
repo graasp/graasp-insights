@@ -9,6 +9,8 @@ import {
   FLAG_DELETING_DATASET,
   FLAG_EXPORTING_DATASET,
   SET_DATASET_FILE_SUCCESS,
+  FLAG_CLEARING_DATASET,
+  CLEAR_DATASET_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -25,6 +27,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case FLAG_GETTING_DATASETS:
     case FLAG_DELETING_DATASET:
     case FLAG_EXPORTING_DATASET:
+    case FLAG_CLEARING_DATASET:
       return state.updateIn(['activity'], updateActivityList(payload));
     case GET_DATASET_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
@@ -34,6 +37,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.updateIn(['datasets'], pushDatasetToList(payload));
     case SET_DATASET_FILE_SUCCESS:
       return state.setIn(['current', 'content', 'content'], payload);
+    case CLEAR_DATASET_SUCCESS:
+      return state.setIn(['current', 'content'], Map());
     default:
       return state;
   }

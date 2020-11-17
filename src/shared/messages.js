@@ -70,7 +70,11 @@ const SUCCESS_ADDING_ALGORITHM_MESSAGE = 'The algorithm was added successfully';
 const ERROR_SAVING_ALGORITHM_MESSAGE =
   'There was an error saving the algorithm';
 const SUCCESS_SAVING_ALGORITHM_MESSAGE = 'The algorithm was saved successfully';
-
+const ERROR_CLEARING_DATASET_MESSAGE =
+  'There was an error clearing the dataset';
+const ERROR_CLEARING_RESULT_MESSAGE = 'There was an error clearing the result';
+const ERROR_CLEARING_ALGORITHM_MESSAGE =
+  'There was an error clearing the algorithm';
 module.exports = {
   ERROR_MESSAGE_HEADER,
   SUCCESS_MESSAGE_HEADER,
@@ -111,4 +115,7 @@ module.exports = {
   ERROR_DELETING_ALGORITHM_MESSAGE,
   ERROR_SAVING_ALGORITHM_MESSAGE,
   SUCCESS_SAVING_ALGORITHM_MESSAGE,
+  ERROR_CLEARING_DATASET_MESSAGE,
+  ERROR_CLEARING_RESULT_MESSAGE,
+  ERROR_CLEARING_ALGORITHM_MESSAGE,
 };

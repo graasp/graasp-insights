@@ -9,12 +9,15 @@ import {
   FLAG_GETTING_RESULT,
   FLAG_GETTING_RESULTS,
   FLAG_DELETING_RESULT,
+  FLAG_CLEARING_RESULT,
+  CLEAR_RESULT_SUCCESS,
 } from '../shared/types';
 import {
   ERROR_GETTING_RESULT_MESSAGE,
   ERROR_MESSAGE_HEADER,
   ERROR_GETTING_RESULTS_MESSAGE,
   ERROR_DELETING_RESULT_MESSAGE,
+  ERROR_CLEARING_RESULT_MESSAGE,
 } from '../shared/messages';
 
 export const getResults = () => (dispatch) => {
@@ -64,5 +67,18 @@ export const deleteResult = ({ id }) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_RESULT_MESSAGE);
     dispatch(flagDeletingResult(false));
+  }
+};
+
+export const clearResult = () => (dispatch) => {
+  const flagClearingResult = createFlag(FLAG_CLEARING_RESULT);
+  try {
+    dispatch(flagClearingResult(true));
+    dispatch({ type: CLEAR_RESULT_SUCCESS });
+    dispatch(flagClearingResult(false));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(ERROR_CLEARING_RESULT_MESSAGE);
+    dispatch(flagClearingResult(false));
   }
 };

@@ -13,6 +13,8 @@ import {
   FLAG_DELETING_DATASET,
   FLAG_LOADING_DATASET,
   FLAG_SETTING_DATASET_FILE,
+  CLEAR_DATASET_SUCCESS,
+  FLAG_CLEARING_DATASET,
 } from '../shared/types';
 import {
   ERROR_GETTING_DATASET_MESSAGE,
@@ -21,6 +23,7 @@ import {
   ERROR_DELETING_DATASET_MESSAGE,
   ERROR_LOADING_DATASET_MESSAGE,
   ERROR_SETTING_DATASET_MESSAGE,
+  ERROR_CLEARING_DATASET_MESSAGE,
 } from '../shared/messages';
 
 export const getDatasets = () => (dispatch) => {
@@ -111,5 +114,18 @@ export const setDatasetFile = async (payload) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATASET_MESSAGE);
     dispatch(flagSettingDatasetFile(false));
+  }
+}
+
+export const clearDataset = () => (dispatch) => {
+  const flagClearingDataset = createFlag(FLAG_CLEARING_DATASET);
+  try {
+    dispatch(flagClearingDataset(true));
+    dispatch({ type: CLEAR_DATASET_SUCCESS });
+    dispatch(flagClearingDataset(false));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(ERROR_CLEARING_DATASET_MESSAGE);
+    dispatch(flagClearingDataset(false));
   }
 };

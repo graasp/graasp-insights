@@ -13,7 +13,8 @@ import {
   FLAG_GETTING_ALGORITHM,
   FLAG_SAVING_ALGORITHM,
   FLAG_ADDING_ALGORITHM,
-  CLEAR_ALGORITHM,
+  CLEAR_ALGORITHM_SUCCESS,
+  FLAG_CLEARING_ALGORITHM,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -22,6 +23,7 @@ import {
   ERROR_GETTING_ALGORITHM_MESSAGE,
   ERROR_SAVING_ALGORITHM_MESSAGE,
   ERROR_ADDING_ALGORITHM_MESSAGE,
+  ERROR_CLEARING_ALGORITHM_MESSAGE,
 } from '../shared/messages';
 
 export const getAlgorithms = () => (dispatch) => {
@@ -108,7 +110,14 @@ export const addAlgorithm = ({ payload, onSuccess }) => (dispatch) => {
 };
 
 export const clearAlgorithm = () => (dispatch) => {
-  dispatch({
-    type: CLEAR_ALGORITHM,
-  });
+  const flagClearingALGORITHM = createFlag(FLAG_CLEARING_ALGORITHM);
+  try {
+    dispatch(flagClearingALGORITHM(true));
+    dispatch({ type: CLEAR_ALGORITHM_SUCCESS });
+    dispatch(flagClearingALGORITHM(false));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(ERROR_CLEARING_ALGORITHM_MESSAGE);
+    dispatch(flagClearingALGORITHM(false));
+  }
 };
