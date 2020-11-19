@@ -28,7 +28,7 @@ const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
 
     return mainWindow.webContents.send(SET_DATASET_FILE_CHANNEL, {
       type: SET_DATASET_FILE_SUCCESS,
-      payload: contentAsString,
+      payload: { content: contentAsString, schemaType },
     });
   } catch (err) {
     logger.error(err);

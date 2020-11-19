@@ -6,8 +6,6 @@ import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
-import Tooltip from '@material-ui/core/Tooltip';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import JSONFileEditor from '../common/JSONFileEditor';
@@ -21,7 +19,7 @@ import {
 } from '../../config/selectors';
 import BackButton from '../common/BackButton';
 import { SCHEMA_TYPES } from '../../shared/constants';
-import { SCHEMA_LABELS, SCHEMA_COLORS } from '../../config/constants';
+import SchemaTag from '../common/SchemaTag';
 
 const styles = (theme) => ({
   wrapper: {
@@ -146,17 +144,11 @@ class DatasetScreen extends Component {
                 <Grid item>
                   <Typography variant="h5">{t('Content')}</Typography>
                 </Grid>
-                <Grid item>
-                  {datasetSchemaType !== SCHEMA_TYPES.NONE && (
-                    <Tooltip title={t('Dataset has Graasp schema')}>
-                      <Chip
-                        size="small"
-                        label={SCHEMA_LABELS[datasetSchemaType]}
-                        style={SCHEMA_COLORS[datasetSchemaType]}
-                      />
-                    </Tooltip>
-                  )}
-                </Grid>
+                {datasetSchemaType && datasetSchemaType !== SCHEMA_TYPES.NONE && (
+                  <Grid item>
+                    <SchemaTag schemaType={datasetSchemaType} />
+                  </Grid>
+                )}
               </Grid>
               <Paper className={classes.content}>
                 <JSONFileEditor

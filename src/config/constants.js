@@ -100,7 +100,6 @@ export const TICK_FONT_SIZE = 14;
 
 export const SCHEMA_LABELS = {
   [SCHEMA_TYPES.GRAASP]: 'Graasp',
-  [SCHEMA_TYPES.NONE]: 'Unknown',
 };
 
 export const SCHEMA_COLORS = {
@@ -108,4 +107,8 @@ export const SCHEMA_COLORS = {
     backgroundColor: theme.palette.primary.main,
     color: 'white',
   },
+};
+
+export const SCHEMA_TOOLTIPS = {
+  [SCHEMA_TYPES.GRAASP]: 'Graasp dataset detected',
 };

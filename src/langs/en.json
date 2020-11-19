@@ -89,6 +89,6 @@
     "Many users selected..._plural": "{{firstSelection}}, {{secondSelection}}, and {{count}} others selected",
     "There was an error visualizing this dataset.": "There was an error visualizing this dataset.",
     "This dataset does not contain any actions.": "This dataset does not contain any actions.",
-    "Dataset has Graasp schema": "Dataset has Graasp schema"
+    "Graasp dataset detected": "Graasp dataset detected"
   }
 }

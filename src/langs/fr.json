@@ -74,7 +74,7 @@
     "Save": "Enregistrer",
     "An unexpected error happened while opening the algorithm.": "Une erreur s'est produite lors de l'ouverture de l'algorithme.",
     "your code goes here": "écrivez votre code ici",
-    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous modifiez un algorithme de Graasp. L'enregistrer créera un nouveau fichier.",
+    "You are modifying a Graasp algorithm. Saving will create a new file instead.": "Vous êtes en train de modifier un algorithme de Graasp. L'enregistrer créera un nouveau fichier.",
     "Select All": "Tout sélectionner",
     "Filter by user...": "Trier par utilisateur...",
     "No actions to show for these users": "Aucune action à afficher pour ces utilisateurs",
@@ -88,6 +88,6 @@
     "Many users selected..._plural": "{{firstSelection}}, {{secondSelection}}, et {{count}} autres...",
     "There was an error visualizing this dataset.": "Une erreur s'est produite en visualisant ce dataset",
     "This dataset does not contain any actions.": "Ce dataset ne contient aucune action",
-    "Dataset has Graasp schema": "Le dataset a un schéma Graasp"
+    "Graasp dataset detected": "Dataset Graasp détecté"
   }
 }

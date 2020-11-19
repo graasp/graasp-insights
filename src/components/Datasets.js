@@ -15,15 +15,10 @@ import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import Alert from '@material-ui/lab/Alert';
-import Chip from '@material-ui/core/Chip';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import LoadDatasetButton from './LoadDatasetButton';
-import {
-  DEFAULT_LOCALE_DATE,
-  SCHEMA_LABELS,
-  SCHEMA_COLORS,
-} from '../config/constants';
+import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
 import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
@@ -39,6 +34,7 @@ import {
   buildDatasetsListDeleteButtonClass,
 } from '../config/selectors';
 import { SCHEMA_TYPES } from '../shared/constants';
+import SchemaTag from './common/SchemaTag';
 
 const styles = (theme) => ({
   addButton: {
@@ -208,15 +204,9 @@ class Datasets extends Component {
                   {name}
                 </Typography>
               </Grid>
-              {schemaType !== SCHEMA_TYPES.NONE && (
+              {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
                 <Grid item>
-                  <Tooltip title={t('Dataset has Graasp schema')}>
-                    <Chip
-                      size="small"
-                      label={SCHEMA_LABELS[schemaType]}
-                      style={SCHEMA_COLORS[schemaType]}
-                    />
-                  </Tooltip>
+                  <SchemaTag schemaType={schemaType} />
                 </Grid>
               )}
             </Grid>
