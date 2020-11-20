@@ -58,9 +58,23 @@ export const EXECUTION_TABLE_ROW_BUTTON_CLASS = 'executionTableRowButton';
 export const EXECUTION_FORM_NAME_INPUT_ID = 'executionFormNameInput';
 export const ALGORITHM_TABLE_ID = 'algorithmTable';
 export const ALGORITHM_NAME_CLASS = 'algorithmName';
-export const ALGORITHM_DELETE_CLASS = 'algorithmDelete';
+export const ALGORITHM_DELETE_BUTTON_CLASS = 'algorithmDeleteButton';
 export const buildAlgorithmRowClass = (name) =>
   `algorithmRow-${parseName(name)}`;
 export const ALGORITHM_DESCRIPTION_CLASS = 'algorithmDescription';
 export const ALGORITHM_AUTHOR_CLASS = 'algorithmAuthor';
 export const ALGORITHM_LANGUAGE_CLASS = 'algorithmLanguage';
+export const ALGORITHM_ADD_BUTTON_ID = 'algorithmAddButton';
+export const ALGORITHM_EDIT_BUTTON_CLASS = 'algorithmEditButton';
+export const ADD_ALGORITHM_NAME_ID = 'addAlgorithmName';
+export const ADD_ALGORITHM_DESCRIPTION_ID = 'addAlgorithmDescription';
+export const ADD_ALGORITHM_FILE_LOCATION_ID = 'addAlgorithmFileLocation';
+export const ADD_ALGORITHM_SAVE_BUTTON_ID = 'addAlgorithmSaveButton';
+export const ADD_ALGORITHM_BACK_BUTTON_ID = 'addAlgorithmBackButton';
+export const ADD_ALGORITHM_FROM_FILE_OPTION_ID = 'addAlgorithmFromFileOption';
+export const ADD_ALGORITHM_FROM_EDITOR_OPTION_ID =
+  'addAlgorithmFromEditorOption';
+export const EDIT_ALGORITHM_NAME_ID = 'editAlgorithmName';
+export const EDIT_ALGORITHM_DESCRIPTION_ID = 'editAlgorithmDescription';
+export const EDIT_ALGORITHM_SAVE_BUTTON_ID = 'editAlgorithmSaveButton';
+export const EDIT_ALGORITHM_BACK_BUTTON_ID = 'editAlgorithmBackButton';

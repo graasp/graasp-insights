@@ -32,7 +32,9 @@ import {
   ALGORITHM_DESCRIPTION_CLASS,
   ALGORITHM_AUTHOR_CLASS,
   ALGORITHM_LANGUAGE_CLASS,
-  ALGORITHM_DELETE_CLASS,
+  ALGORITHM_DELETE_BUTTON_CLASS,
+  ALGORITHM_ADD_BUTTON_ID,
+  ALGORITHM_EDIT_BUTTON_CLASS,
 } from '../../config/selectors';
 
 const styles = (theme) => ({
@@ -119,6 +121,7 @@ class Algorithms extends Component {
         variant="contained"
         className={classes.addButton}
         onClick={this.handleAdd}
+        id={ALGORITHM_ADD_BUTTON_ID}
       >
         <AddIcon />
       </IconButton>
@@ -182,7 +185,11 @@ class Algorithms extends Component {
       const isByGraasp = author === AUTHOR_GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
-          <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
+          <IconButton
+            aria-label="edit"
+            onClick={() => this.handleEdit(id)}
+            className={ALGORITHM_EDIT_BUTTON_CLASS}
+          >
             <EditIcon />
           </IconButton>
         </Tooltip>,
@@ -199,7 +206,7 @@ class Algorithms extends Component {
               aria-label="delete"
               onClick={() => this.handleDelete({ id, name })}
               disabled={isByGraasp}
-              className={ALGORITHM_DELETE_CLASS}
+              className={ALGORITHM_DELETE_BUTTON_CLASS}
             >
               <DeleteIcon />
             </IconButton>

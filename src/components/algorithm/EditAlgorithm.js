@@ -24,7 +24,13 @@ import {
 } from '../../actions';
 import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
 import BackButton from '../common/BackButton';
-import { EDIT_ALGORITHM_MAIN_ID } from '../../config/selectors';
+import {
+  EDIT_ALGORITHM_NAME_ID,
+  EDIT_ALGORITHM_DESCRIPTION_ID,
+  EDIT_ALGORITHM_SAVE_BUTTON_ID,
+  EDIT_ALGORITHM_BACK_BUTTON_ID,
+  EDIT_ALGORITHM_MAIN_ID,
+} from '../../config/selectors';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -186,6 +192,7 @@ class EditAlgorithm extends Component {
                 helperText={t('(Required)')}
                 required
                 fullWidth
+                id={EDIT_ALGORITHM_NAME_ID}
               />
               <TextField
                 margin="dense"
@@ -196,6 +203,7 @@ class EditAlgorithm extends Component {
                 rowsMax={4}
                 helperText={t('(Optional)')}
                 fullWidth
+                id={EDIT_ALGORITHM_DESCRIPTION_ID}
               />
             </Grid>
             <Grid item>
@@ -205,13 +213,17 @@ class EditAlgorithm extends Component {
                 startIcon={<SaveIcon />}
                 onClick={this.handleSave}
                 disabled={!name}
+                id={EDIT_ALGORITHM_SAVE_BUTTON_ID}
               >
                 {t('Save')}
               </Button>
             </Grid>
           </Grid>
         </Container>
-        <BackButton className={classes.backButton} />
+        <BackButton
+          className={classes.backButton}
+          id={EDIT_ALGORITHM_BACK_BUTTON_ID}
+        />
       </Main>
     );
   }
