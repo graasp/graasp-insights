@@ -91,7 +91,7 @@
     "Graasp dataset detected": "Dataset Graasp détecté",
     "Only Graasp datasets can be visualized": "Uniquement les datasets Graasp peuvent être visualisés",
     "Edit utils": "Modifier le fichier utils/utilitaire",
-    "This file is unmodifiable. Use the user file to write your own functions.": "Ce fichier n'est pas modifiable. Utilisez le fichier utilisateur pour écrire vos propres fonctions.",
+    "This file cannot be modified. Use the user file to write your own functions.": "Ce fichier ne peut pas être modifié. Utilisez le fichier utilisateur pour écrire vos propres fonctions.",
     "User": "Utilisateur"
   }
 }

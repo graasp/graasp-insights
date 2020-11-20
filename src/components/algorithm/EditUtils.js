@@ -147,7 +147,7 @@ class EditAlgorithm extends Component {
                 <Grid item key="alert">
                   <Alert severity="info">
                     {t(
-                      'This file is unmodifiable. Use the user file to write your own functions.',
+                      'This file cannot be modified. Use the user file to write your own functions.',
                     )}
                   </Alert>
                 </Grid>,

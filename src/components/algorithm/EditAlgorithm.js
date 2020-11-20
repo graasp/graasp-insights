@@ -163,7 +163,7 @@ class EditAlgorithm extends Component {
     return (
       <Main>
         <Container>
-          <h1>{t('Edit algorithm')}</h1>
+          <h1>{t('Edit Algorithm')}</h1>
           {author === AUTHOR_GRAASP && (
             <Alert severity="info" className={classes.infoAlert}>
               {t(
