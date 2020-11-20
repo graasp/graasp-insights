@@ -66,32 +66,40 @@ const ensureAlgorithmsExist = async (
   db,
   algorithmsFolder = ALGORITHMS_FOLDER,
 ) => {
-  // create the algorithms folder if it doesn't already exist
-  if (!fs.existsSync(algorithmsFolder)) {
-    await mkdirp(algorithmsFolder);
-  }
-
-  // set default algorithms
-  [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
-    const { filename } = algo;
-    const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
-    const destPath = path.join(algorithmsFolder, filename);
-
-    if (fs.existsSync(srcPath)) {
-      // check if file is in algorithms folder
-      if (!fs.existsSync(destPath)) {
-        fs.copyFileSync(srcPath, destPath);
-      }
-
-      // check if algo entry is in metadata db
-      if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-        const id = ObjectId().str;
-        db.get(ALGORITHMS_COLLECTION)
-          .push({ ...algo, id })
-          .write();
-      }
+  try {
+    // create the algorithms folder if it doesn't already exist
+    if (!fs.existsSync(algorithmsFolder)) {
+      await mkdirp(algorithmsFolder);
     }
-  });
+
+    // set default algorithms
+    [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
+      const { filename } = algo;
+      const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
+      const destPath = path.join(algorithmsFolder, filename);
+
+      if (fs.existsSync(srcPath)) {
+        // check if file is in algorithms folder
+        // or if the existing file is older than our last changes
+        if (
+          !fs.existsSync(destPath) ||
+          fs.statSync(destPath).mtime < fs.statSync(srcPath).mtime
+        ) {
+          fs.copyFileSync(srcPath, destPath);
+        }
+
+        // check if algo entry is in metadata db
+        if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
+          const id = ObjectId().str;
+          db.get(ALGORITHMS_COLLECTION)
+            .push({ ...algo, id })
+            .write();
+        }
+      }
+    });
+  } catch (e) {
+    logger.error(e);
+  }
 };
 
 module.exports = {
