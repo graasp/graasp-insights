@@ -49,6 +49,7 @@ const {
   CREATE_EXECUTION_CHANNEL,
   DELETE_EXECUTION_CHANNEL,
   STOP_EXECUTION_CHANNEL,
+  SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -83,6 +84,7 @@ const {
   getExecutions,
   cancelAllRunningExecutions,
   cancelExecution,
+  showConfirmDeletePrompt,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -303,6 +305,11 @@ app.on('ready', async () => {
   generateMenu();
 
   ipcMain.on(SHOW_SAVE_AS_PROMPT_CHANNEL, showSaveAsPrompt(mainWindow));
+
+  ipcMain.on(
+    SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+    showConfirmDeletePrompt(mainWindow),
+  );
 
   // called when getting datasets
   ipcMain.on(GET_DATASETS_CHANNEL, getDatasets(mainWindow, db));

@@ -6,6 +6,7 @@ import {
   DELETE_DATASET_CHANNEL,
   LOAD_DATASET_CHANNEL,
   SET_DATASET_FILE_CHANNEL,
+  SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_DATASET,
@@ -82,17 +83,27 @@ export const getDataset = ({ id }) => (dispatch) => {
   }
 };
 
-export const deleteDataset = ({ id }) => (dispatch) => {
+export const deleteDataset = ({ id, name }) => (dispatch) => {
   const flagDeletingDataset = createFlag(FLAG_DELETING_DATASET);
   try {
-    dispatch(flagDeletingDataset(true));
-
-    window.ipcRenderer.send(DELETE_DATASET_CHANNEL, { id });
-    window.ipcRenderer.once(DELETE_DATASET_CHANNEL, async (event, response) => {
-      dispatch(response);
-      dispatch(flagDeletingDataset(false));
-      return getDatasets()(dispatch);
-    });
+    window.ipcRenderer.send(SHOW_CONFIRM_DELETE_PROMPT_CHANNEL, { name });
+    window.ipcRenderer.once(
+      SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+      async (e, shouldDelete) => {
+        if (shouldDelete) {
+          dispatch(flagDeletingDataset(true));
+          window.ipcRenderer.send(DELETE_DATASET_CHANNEL, { id });
+          window.ipcRenderer.once(
+            DELETE_DATASET_CHANNEL,
+            async (event, response) => {
+              dispatch(response);
+              getDatasets()(dispatch);
+            },
+          );
+        }
+        dispatch(flagDeletingDataset(false));
+      },
+    );
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_DATASET_MESSAGE);
     dispatch(flagDeletingDataset(false));

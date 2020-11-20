@@ -4,6 +4,7 @@ import {
   GET_RESULT_CHANNEL,
   GET_RESULTS_CHANNEL,
   DELETE_RESULT_CHANNEL,
+  SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_RESULT,
@@ -53,17 +54,26 @@ export const getResult = ({ id }) => (dispatch) => {
   }
 };
 
-export const deleteResult = ({ id }) => (dispatch) => {
+export const deleteResult = ({ id, name }) => (dispatch) => {
   const flagDeletingResult = createFlag(FLAG_DELETING_RESULT);
   try {
-    dispatch(flagDeletingResult(true));
-
-    window.ipcRenderer.send(DELETE_RESULT_CHANNEL, { id });
-    window.ipcRenderer.once(DELETE_RESULT_CHANNEL, async (event, response) => {
-      dispatch(response);
-      dispatch(flagDeletingResult(false));
-      return getResults()(dispatch);
-    });
+    window.ipcRenderer.send(SHOW_CONFIRM_DELETE_PROMPT_CHANNEL, { name });
+    window.ipcRenderer.once(
+      SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+      (e, shouldDelete) => {
+        if (shouldDelete) {
+          dispatch(flagDeletingResult(true));
+          window.ipcRenderer.send(DELETE_RESULT_CHANNEL, { id });
+          window.ipcRenderer.once(
+            DELETE_RESULT_CHANNEL,
+            async (event, response) => {
+              dispatch(response);
+            },
+          );
+          dispatch(flagDeletingResult(false));
+        }
+      },
+    );
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_RESULT_MESSAGE);
     dispatch(flagDeletingResult(false));

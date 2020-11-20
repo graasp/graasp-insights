@@ -99,9 +99,9 @@ class Datasets extends Component {
     // TODO: implement edit functionality
   };
 
-  handleDelete = (dataset) => {
+  handleDelete = ({ id, name }) => {
     const { dispatchDeleteDataset } = this.props;
-    dispatchDeleteDataset({ id: dataset.id });
+    dispatchDeleteDataset({ id, name });
   };
 
   handleAdd = () => {
@@ -167,7 +167,7 @@ class Datasets extends Component {
         alignField: 'right',
       },
       {
-        columnName: t('Quick actions'),
+        columnName: t('Quick Actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',

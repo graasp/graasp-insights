@@ -35,6 +35,7 @@ const {
   cancelExecution,
   cancelAllRunningExecutions,
 } = require('./cancelExecution');
+const showConfirmDeletePrompt = require('./showConfirmDeletePrompt');
 
 module.exports = {
   getDataset,
@@ -70,4 +71,5 @@ module.exports = {
   cancelExecutionObject,
   cancelAllRunningExecutions,
   cancelExecution,
+  showConfirmDeletePrompt,
 };
