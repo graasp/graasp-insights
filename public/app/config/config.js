@@ -110,16 +110,21 @@ const GRAASP_ALGORITHMS = [
     language: PROGRAMMING_LANGUAGES.PYTHON,
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
-  {
-    name: 'Python utils',
-    description: 'Python utility functions used in multiple scripts',
-    filename: 'utils.py',
-    filepath: path.join(ALGORITHMS_FOLDER, 'utils.py'),
-    author: AUTHOR_GRAASP,
-    language: PROGRAMMING_LANGUAGES.PYTHON,
-    type: ALGORITHM_TYPES.UTILS,
-  },
 ];
+
+const GRAASP_UTILS = {
+  filename: 'graasp_utils.py',
+  filepath: path.join(ALGORITHMS_FOLDER, 'graasp_utils.py'),
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.UTILS,
+};
+
+const USER_UTILS = {
+  filename: 'utils.py',
+  filepath: path.join(ALGORITHMS_FOLDER, 'utils.py'),
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.UTILS,
+};
 
 const ACCEPTED_PYTHON_VERSIONS = ['2.7', '3'];
 
@@ -143,4 +148,6 @@ module.exports = {
   PROGRAMMING_LANGUAGES,
   AUTHOR_GRAASP,
   AUTHOR_USER,
+  GRAASP_UTILS,
+  USER_UTILS,
 };

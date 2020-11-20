@@ -1,4 +1,4 @@
-export default `from utils import load_dataset, save_dataset, parse_arguments
+export default `from graasp_utils import load_dataset, save_dataset, parse_arguments
 
 def main():
   args = parse_arguments()

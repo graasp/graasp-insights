@@ -13,6 +13,8 @@ const {
   VAR_FOLDER,
   GRAASP_ALGORITHMS,
   ALGORITHMS_FOLDER_NAME,
+  GRAASP_UTILS,
+  USER_UTILS,
 } = require('./config/config');
 
 const DATASETS_COLLECTION = 'datasets';
@@ -70,7 +72,7 @@ const ensureAlgorithmsExist = async (
   }
 
   // set default algorithms
-  GRAASP_ALGORITHMS.forEach((algo) => {
+  [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
     const { filename } = algo;
     const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
     const destPath = path.join(algorithmsFolder, filename);

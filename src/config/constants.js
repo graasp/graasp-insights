@@ -111,4 +111,9 @@ export const SCHEMA_COLORS = {
 
 export const SCHEMA_TOOLTIPS = {
   [SCHEMA_TYPES.GRAASP]: 'Graasp dataset detected',
+}
+
+export const UTILS_FILES = {
+  GRAASP: 'graasp',
+  USER: 'user',
 };

@@ -2,9 +2,9 @@
 // the original file is located in src/shared and is duplicated in public/shared
 
 const ALGORITHM_TYPES = {
-  ANONYMIZATION: 'ANONYMIZATION',
-  UTILS: 'UTILS',
-  VISUALIZATION: 'VISUALIZATION',
+  ANONYMIZATION: 'anonymization',
+  UTILS: 'utils',
+  VISUALIZATION: 'visualization',
 };
 
 const APP_BACKGROUND_COLOR = '#F7F7F7';

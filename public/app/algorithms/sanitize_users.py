@@ -3,7 +3,7 @@
 import re
 from itertools import combinations
 
-from utils import load_dataset, save_dataset, sha256_hash, parse_arguments
+from graasp_utils import load_dataset, save_dataset, sha256_hash, parse_arguments
 
 def find_and_replace(dataset, substitution_map):
     '''Traverses the whole a dataset, finds and replaces all occurrences

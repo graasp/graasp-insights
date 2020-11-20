@@ -90,6 +90,8 @@
     "This dataset does not contain any actions.": "Ce dataset ne contient aucune action",
     "Graasp dataset detected": "Dataset Graasp détecté",
     "Only Graasp datasets can be visualized": "Uniquement les datasets Graasp peuvent être visualisés",
-    "Edit utils": "Modifier utils"
+    "Edit utils": "Modifier le fichier utils/utilitaire",
+    "This file is unmodifiable. Use the user file to write your own functions.": "Ce fichier n'est pas modifiable. Utilisez le fichier utilisateur pour écrire vos propres fonctions.",
+    "User": "Utilisateur"
   }
 }

@@ -91,6 +91,8 @@
     "This dataset does not contain any actions.": "This dataset does not contain any actions.",
     "Graasp dataset detected": "Graasp dataset detected",
     "Only Graasp datasets can be visualized": "Only Graasp datasets can be visualized",
-    "Edit utils": "Edit utils"
+    "Edit utils": "Edit utils",
+    "This file is unmodifiable. Use the user file to write your own functions.": "This file is unmodifiable. Use the user file to write your own functions.",
+    "User": "User"
   }
 }

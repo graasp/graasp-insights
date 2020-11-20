@@ -18,7 +18,11 @@ import Main from '../common/Main';
 import { getAlgorithms, deleteAlgorithm } from '../../actions';
 import Loader from '../common/Loader';
 import Table from '../common/Table';
-import { buildEditAlgorithmPath, ADD_ALGORITHM_PATH } from '../../config/paths';
+import {
+  buildEditAlgorithmPath,
+  ADD_ALGORITHM_PATH,
+  EDIT_UTILS_PATH,
+} from '../../config/paths';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -50,7 +54,6 @@ const styles = (theme) => ({
 class Algorithms extends Component {
   static propTypes = {
     algorithms: PropTypes.instanceOf(List).isRequired,
-    utils: PropTypes.instanceOf(List).isRequired,
     t: PropTypes.func.isRequired,
     dispatchGetAlgorithms: PropTypes.func.isRequired,
     dispatchDeleteAlgorithm: PropTypes.func.isRequired,
@@ -92,9 +95,10 @@ class Algorithms extends Component {
   }
 
   handleUtilsEdit() {
-    const { utils } = this.props;
-    const { id } = utils.first();
-    this.handleEdit(id);
+    const {
+      history: { push },
+    } = this.props;
+    push(EDIT_UTILS_PATH);
   }
 
   renderAddButon() {
@@ -111,7 +115,7 @@ class Algorithms extends Component {
   }
 
   render() {
-    const { algorithms, utils, t, isLoading, classes } = this.props;
+    const { algorithms, t, isLoading, classes } = this.props;
 
     if (isLoading) {
       return (
@@ -207,7 +211,6 @@ class Algorithms extends Component {
             color="primary"
             className={classes.utilsButton}
             onClick={() => this.handleUtilsEdit()}
-            disabled={!utils.size}
           >
             {t('Edit utils')}
           </Button>
@@ -222,7 +225,6 @@ class Algorithms extends Component {
 
 const mapStateToProps = ({ algorithms }) => ({
   algorithms: algorithms.get('algorithms'),
-  utils: algorithms.get('utils'),
   isLoading: algorithms.getIn(['activity']).size > 0,
 });
 

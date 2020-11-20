@@ -13,12 +13,14 @@ class Editor extends Component {
     code: PropTypes.string,
     programmingLanguage: PropTypes.string,
     onCodeChange: PropTypes.func,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     code: '',
     programmingLanguage: EDITOR_PROGRAMMING_LANGUAGES.PYTHON,
     onCodeChange: () => {},
+    readOnly: false,
   };
 
   onChange = (code) => {
@@ -27,7 +29,7 @@ class Editor extends Component {
   };
 
   render() {
-    const { t, code, programmingLanguage } = this.props;
+    const { t, code, programmingLanguage, readOnly } = this.props;
 
     if (
       !Object.values(EDITOR_PROGRAMMING_LANGUAGES).includes(programmingLanguage)
@@ -48,6 +50,7 @@ class Editor extends Component {
         width="100%"
         enableBasicAutocompletion
         enableLiveAutocompletion
+        readOnly={readOnly}
         setOptions={{
           enableSnippets: true,
           showLineNumbers: true,

@@ -28,7 +28,6 @@ import {
   EDITOR_PROGRAMMING_LANGUAGES,
 } from '../../config/constants';
 import BackButton from '../common/BackButton';
-import { ALGORITHM_TYPES } from '../../shared/constants';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -121,9 +120,8 @@ class EditAlgorithm extends Component {
     const { name, description, code } = this.state;
     if (algorithm && name) {
       const author = algorithm.get('author');
-      const type = algorithm.get('type');
 
-      if (author === AUTHOR_GRAASP && type !== ALGORITHM_TYPES.UTILS) {
+      if (author === AUTHOR_GRAASP) {
         // add as a new algorithm instead
         const payload = { name, description, author: AUTHOR_USER, code };
         const onSuccess = goBack;
@@ -161,13 +159,12 @@ class EditAlgorithm extends Component {
     }
 
     const author = algorithm.get('author');
-    const type = algorithm.get('type');
 
     return (
       <Main>
         <Container>
           <h1>{t('Edit algorithm')}</h1>
-          {author === AUTHOR_GRAASP && type !== ALGORITHM_TYPES.UTILS && (
+          {author === AUTHOR_GRAASP && (
             <Alert severity="info" className={classes.infoAlert}>
               {t(
                 `You are modifying a Graasp algorithm. Saving will create a new file instead.`,

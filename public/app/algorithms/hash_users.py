@@ -1,6 +1,6 @@
 ''' Hash the userId field from the 'actions' and 'appInstanceResources' '''
 
-from utils import load_dataset, save_dataset, sha256_hash, parse_arguments
+from graasp_utils import load_dataset, save_dataset, sha256_hash, parse_arguments
 
 def main():
     args = parse_arguments()

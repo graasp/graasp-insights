@@ -1,6 +1,6 @@
 ''' Suppress the 'users' field from a dataset'''
 
-from utils import load_dataset, save_dataset, parse_arguments
+from graasp_utils import load_dataset, save_dataset, parse_arguments
 
 def main():
     args = parse_arguments()

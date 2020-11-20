@@ -34,6 +34,9 @@ import {
   SAVE_ALGORITHM_SUCCESS,
   ADD_ALGORITHM_SUCCESS,
   ADD_ALGORITHM_ERROR,
+  GET_UTILS_ERROR,
+  SAVE_UTILS_ERROR,
+  SAVE_UTILS_SUCCESS,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -70,6 +73,9 @@ import {
   SUCCESS_SAVING_ALGORITHM_MESSAGE,
   SUCCESS_ADDING_ALGORITHM_MESSAGE,
   ERROR_ADDING_ALGORITHM_MESSAGE,
+  ERROR_GETTING_UTILS_MESSAGE,
+  ERROR_SAVING_UTILS_MESSAGE,
+  SUCCESS_SAVING_UTILS_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -179,6 +185,16 @@ const middleware = () => (next) => (action) => {
         message = ERROR_ADDING_ALGORITHM_MESSAGE;
       }
       break;
+    case GET_UTILS_ERROR:
+      if (error === ERROR_MISSING_FILE) {
+        message = ERROR_MISSING_FILE_MESSAGE;
+      } else {
+        message = ERROR_GETTING_UTILS_MESSAGE;
+      }
+      break;
+    case SAVE_UTILS_ERROR:
+      message = ERROR_SAVING_UTILS_MESSAGE;
+      break;
 
     // success messages
     case LOAD_DATASET_SUCCESS:
@@ -207,6 +223,9 @@ const middleware = () => (next) => (action) => {
       break;
     case ADD_ALGORITHM_SUCCESS:
       message = SUCCESS_ADDING_ALGORITHM_MESSAGE;
+      break;
+    case SAVE_UTILS_SUCCESS:
+      message = SUCCESS_SAVING_UTILS_MESSAGE;
       break;
     default:
       break;
