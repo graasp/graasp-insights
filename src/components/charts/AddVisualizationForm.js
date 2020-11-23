@@ -7,7 +7,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import { List } from 'immutable';
+import SchemaTag from '../common/SchemaTag';
+import { SCHEMA_TYPES } from '../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     width: '300px',
   },
+  schemaTag: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+  },
 }));
 
 const AddVisualizationForm = ({
@@ -37,6 +44,20 @@ const AddVisualizationForm = ({
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
+
+  const selectedSchemaType = datasets.find(({ id }) => id === selectedDatasetId)
+    ?.schemaType;
+  const isGraasp = selectedSchemaType === SCHEMA_TYPES.GRAASP;
+  const button = (
+    <Button
+      variant="contained"
+      color="primary"
+      disabled={!isGraasp}
+      onClick={fetchDatasetToBeVisualized}
+    >
+      {t('Visualize')}
+    </Button>
+  );
 
   return (
     <div className={classes.container}>
@@ -54,22 +75,27 @@ const AddVisualizationForm = ({
             label={t('Dataset')}
             className={classes.select}
           >
-            {datasets.map(({ id, name }) => (
+            {datasets.map(({ id, name, schemaType }) => (
               <MenuItem value={id} key={id}>
                 {name}
+                {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
+                  <SchemaTag
+                    schemaType={schemaType}
+                    className={classes.schemaTag}
+                  />
+                )}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
         <div>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!selectedDatasetId}
-            onClick={fetchDatasetToBeVisualized}
-          >
-            {t('Visualize')}
-          </Button>
+          {!selectedDatasetId || isGraasp ? (
+            button
+          ) : (
+            <Tooltip title={t('Only Graasp datasets can be visualized')}>
+              <div>{button}</div>
+            </Tooltip>
+          )}
         </div>
       </div>
     </div>

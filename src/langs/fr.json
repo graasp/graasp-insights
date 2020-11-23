@@ -88,6 +88,7 @@
     "Many users selected..._plural": "{{firstSelection}}, {{secondSelection}}, et {{count}} autres...",
     "There was an error visualizing this dataset.": "Une erreur s'est produite en visualisant ce dataset",
     "This dataset does not contain any actions.": "Ce dataset ne contient aucune action",
-    "Graasp dataset detected": "Dataset Graasp détecté"
+    "Graasp dataset detected": "Dataset Graasp détecté",
+    "Only Graasp datasets can be visualized": "Uniquement les datasets Graasp peuvent être visualisés"
   }
 }
