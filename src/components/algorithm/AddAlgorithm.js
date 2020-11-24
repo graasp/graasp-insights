@@ -25,7 +25,6 @@ import {
   EDITOR_PROGRAMMING_LANGUAGES,
   ADD_OPTIONS,
 } from '../../config/constants';
-import { AUTHOR_USER } from '../../shared/constants';
 import BackButton from '../common/BackButton';
 import {
   ADD_ALGORITHM_NAME_ID,
@@ -36,6 +35,7 @@ import {
   ADD_ALGORITHM_FROM_FILE_OPTION_ID,
   ADD_ALGORITHM_FROM_EDITOR_OPTION_ID,
 } from '../../config/selectors';
+import { AUTHORS } from '../../shared/constants';
 
 const styles = (theme) => ({
   saveButton: {
@@ -105,7 +105,7 @@ class AddAlgorithm extends Component {
       history: { goBack },
     } = this.props;
     const { name, description, fileLocation, code, option } = this.state;
-    const author = AUTHOR_USER;
+    const author = AUTHORS.USER;
     const payload =
       option === ADD_OPTIONS.FILE
         ? { name, description, author, fileLocation }

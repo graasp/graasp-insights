@@ -24,7 +24,7 @@ import {
   ADD_ALGORITHM_PATH,
   EDIT_UTILS_PATH,
 } from '../../config/paths';
-import { AUTHOR_GRAASP } from '../../shared/constants';
+import { AUTHORS } from '../../shared/constants';
 import {
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -182,7 +182,7 @@ class Algorithms extends Component {
 
     const rows = algorithms.map((algorithm) => {
       const { id, name, description, author, language } = algorithm;
-      const isByGraasp = author === AUTHOR_GRAASP;
+      const isByGraasp = author === AUTHORS.GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
           <IconButton

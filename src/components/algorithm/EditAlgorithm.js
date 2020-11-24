@@ -1,36 +1,35 @@
-import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import SaveIcon from '@material-ui/icons/Save';
+import Alert from '@material-ui/lab/Alert';
+import { Map } from 'immutable';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
-import { Map } from 'immutable';
-
-import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
-import Alert from '@material-ui/lab/Alert';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save';
-import { AUTHOR_GRAASP, AUTHOR_USER } from '../../shared/constants';
+import {
+  addAlgorithm,
+  clearAlgorithm,
+  getAlgorithm,
+  saveAlgorithm,
+} from '../../actions';
+import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
+import {
+  EDIT_ALGORITHM_BACK_BUTTON_ID,
+  EDIT_ALGORITHM_DESCRIPTION_ID,
+  EDIT_ALGORITHM_MAIN_ID,
+  EDIT_ALGORITHM_NAME_ID,
+  EDIT_ALGORITHM_SAVE_BUTTON_ID,
+} from '../../config/selectors';
+import { AUTHORS } from '../../shared/constants';
+import BackButton from '../common/BackButton';
 import Editor from '../common/Editor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
-import {
-  addAlgorithm,
-  getAlgorithm,
-  saveAlgorithm,
-  clearAlgorithm,
-} from '../../actions';
-import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
-import BackButton from '../common/BackButton';
-import {
-  EDIT_ALGORITHM_NAME_ID,
-  EDIT_ALGORITHM_DESCRIPTION_ID,
-  EDIT_ALGORITHM_SAVE_BUTTON_ID,
-  EDIT_ALGORITHM_BACK_BUTTON_ID,
-  EDIT_ALGORITHM_MAIN_ID,
-} from '../../config/selectors';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -124,9 +123,9 @@ class EditAlgorithm extends Component {
     if (algorithm && name) {
       const author = algorithm.get('author');
 
-      if (author === AUTHOR_GRAASP) {
+      if (author === AUTHORS.GRAASP) {
         // add as a new algorithm instead
-        const payload = { name, description, author: AUTHOR_USER, code };
+        const payload = { name, description, author: AUTHORS.USER, code };
         const onSuccess = goBack;
         dispatchAddAlgorithm({ payload, onSuccess });
       } else {
@@ -167,7 +166,7 @@ class EditAlgorithm extends Component {
       <Main id={EDIT_ALGORITHM_MAIN_ID}>
         <Container>
           <h1>{t('Edit Algorithm')}</h1>
-          {author === AUTHOR_GRAASP && (
+          {author === AUTHORS.GRAASP && (
             <Alert severity="info" className={classes.infoAlert}>
               {t(
                 `You are modifying a Graasp algorithm. Saving will create a new file instead.`,

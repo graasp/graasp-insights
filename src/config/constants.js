@@ -19,10 +19,6 @@ export const MAX_FILE_SIZE = 1500;
 
 export const DEFAULT_LOCALE_DATE = 'en-US';
 
-export const PROGRAMMING_LANGUAGES = {
-  PYTHON: 'Python',
-};
-
 export const DEFAULT_NUMBER_FORMAT = 'en';
 
 export const FILE_FILTERS = {

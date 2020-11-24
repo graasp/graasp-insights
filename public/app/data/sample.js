@@ -3,10 +3,7 @@ const {
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
 } = require('../db');
-const {
-  SAMPLE_DATASET_FILEPATH,
-  GRAASP_ALGORITHMS,
-} = require('../config/config');
+const { SAMPLE_DATASET_FILEPATH } = require('../config/config');
 const { SCHEMA_TYPES, DATASET_TYPES } = require('../../shared/constants');
 
 module.exports = {
@@ -22,6 +19,6 @@ module.exports = {
       type: DATASET_TYPES.SOURCE,
     },
   ],
-  [ALGORITHMS_COLLECTION]: GRAASP_ALGORITHMS,
+  [ALGORITHMS_COLLECTION]: [],
   [EXECUTIONS_COLLECTION]: [],
 };

@@ -1,7 +1,7 @@
 import path from 'path';
 import { DATASET_TYPES, SCHEMA_TYPES } from '../../../public/shared/constants';
 import {
-  AUTHOR_USER,
+  AUTHORS,
   PROGRAMMING_LANGUAGES,
 } from '../../../src/shared/constants';
 
@@ -21,7 +21,7 @@ export const EXECUTION_FAST = {
     name: 'algorithm',
     description: `description`,
     filepath: path.join(__dirname, './executionFast_algorithm.py'),
-    author: AUTHOR_USER,
+    author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };
@@ -42,7 +42,7 @@ export const EXECUTION_SLOW = {
     name: 'slow algorithm',
     description: `description`,
     filepath: path.join(__dirname, './executionSlow_algorithm.py'),
-    author: AUTHOR_USER,
+    author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };
@@ -63,7 +63,7 @@ export const EXECUTION_FAST_ERROR = {
     name: 'algorithm error',
     description: `description`,
     filepath: path.join(__dirname, './executionFastError_algorithm.py'),
-    author: AUTHOR_USER,
+    author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };
@@ -84,7 +84,7 @@ export const EXECUTION_SLOW_ERROR = {
     name: 'slow algorithm error',
     description: `description`,
     filepath: path.join(__dirname, './executionSlowError_algorithm.py'),
-    author: AUTHOR_USER,
+    author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };

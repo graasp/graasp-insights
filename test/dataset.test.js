@@ -135,7 +135,7 @@ describe('Datasets Scenarios', function () {
   });
 
   it(
-    'Adding a non existing dataset does not add it to database',
+    'Using an incorrect dataset file location leads to error',
     mochaAsync(async () => {
       const { client } = app;
 

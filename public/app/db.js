@@ -11,12 +11,12 @@ const {
   DATASETS_FOLDER,
   ALGORITHMS_FOLDER,
   VAR_FOLDER,
-  GRAASP_ALGORITHMS,
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
-  AUTHOR_GRAASP,
 } = require('./config/config');
+const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
+const { AUTHORS } = require('../shared/constants');
 
 const DATASETS_COLLECTION = 'datasets';
 const ALGORITHMS_COLLECTION = 'algorithms';
@@ -58,14 +58,11 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   return db;
 };
 
-const ensureAlgorithmsExist = async (
-  db,
-  algorithmsFolder = ALGORITHMS_FOLDER,
-) => {
+const ensureAlgorithmsExist = async (db) => {
   try {
     // create the algorithms folder if it doesn't already exist
-    if (!fs.existsSync(algorithmsFolder)) {
-      await mkdirp(algorithmsFolder);
+    if (!fs.existsSync(ALGORITHMS_FOLDER)) {
+      await mkdirp(ALGORITHMS_FOLDER);
     }
 
     // compare version with last app's start
@@ -77,7 +74,7 @@ const ensureAlgorithmsExist = async (
     [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
       const { filename } = algo;
       const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
-      const destPath = path.join(algorithmsFolder, filename);
+      const destPath = path.join(ALGORITHMS_FOLDER, filename);
 
       // on dev update files with most recent changes
       const isDevWithModification =
@@ -87,7 +84,7 @@ const ensureAlgorithmsExist = async (
 
       // on prod replace files on first start of new version
       const isProdWithNewVersion =
-        app.isPackaged && algo.author === AUTHOR_GRAASP && isNewVersion;
+        app.isPackaged && algo.author === AUTHORS.GRAASP && isNewVersion;
 
       if (fs.existsSync(srcPath)) {
         // copy if file is not in algorithms folder
@@ -103,7 +100,7 @@ const ensureAlgorithmsExist = async (
         // check if algo entry is in metadata db
         if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
           db.get(ALGORITHMS_COLLECTION)
-            .push({ ...algo })
+            .push({ ...algo, filepath: destPath })
             .write();
         }
       }
