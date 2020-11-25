@@ -1,3 +1,6 @@
+import { SCHEMA_TYPES } from '../shared/constants';
+import theme from '../theme';
+
 export const DATASETS_COLLECTION = 'datasets';
 export const SETTINGS_COLLECTION = 'settings';
 
@@ -94,3 +97,18 @@ export const COLORS = [
 
 // used to define yaxis and xaxis tick sizes in ActionsByDayChart and ActionsByTimeOfDayChart
 export const TICK_FONT_SIZE = 14;
+
+export const SCHEMA_LABELS = {
+  [SCHEMA_TYPES.GRAASP]: 'Graasp',
+};
+
+export const SCHEMA_COLORS = {
+  [SCHEMA_TYPES.GRAASP]: {
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+  },
+};
+
+export const SCHEMA_TOOLTIPS = {
+  [SCHEMA_TYPES.GRAASP]: 'Graasp dataset detected',
+};

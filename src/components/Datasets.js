@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -32,6 +33,8 @@ import {
   buildDatasetsListDescriptionClass,
   buildDatasetsListDeleteButtonClass,
 } from '../config/selectors';
+import { SCHEMA_TYPES } from '../shared/constants';
+import SchemaTag from './common/SchemaTag';
 
 const styles = (theme) => ({
   addButton: {
@@ -177,6 +180,7 @@ class Datasets extends Component {
         lastModified,
         createdAt,
         description = '',
+        schemaType,
       } = dataset;
       const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
@@ -188,22 +192,33 @@ class Datasets extends Component {
       return {
         key: id,
         name,
-        dataset: [
-          <Typography
-            className={buildDatasetsListNameClass(name)}
-            variant="subtitle1"
-            key="name"
-          >
-            {name}
-          </Typography>,
-          <Typography
-            className={buildDatasetsListDescriptionClass(name)}
-            variant="caption"
-            key="description"
-          >
-            {description}
-          </Typography>,
-        ],
+        dataset: (
+          <>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item>
+                <Typography
+                  className={buildDatasetsListNameClass(name)}
+                  variant="subtitle1"
+                  key="name"
+                >
+                  {name}
+                </Typography>
+              </Grid>
+              {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
+                <Grid item>
+                  <SchemaTag schemaType={schemaType} />
+                </Grid>
+              )}
+            </Grid>
+            <Typography
+              className={buildDatasetsListDescriptionClass(name)}
+              variant="caption"
+              key="description"
+            >
+              {description}
+            </Typography>
+          </>
+        ),
         size: sizeString,
         sizeNumeric: size,
         createdAt: createdAtString,

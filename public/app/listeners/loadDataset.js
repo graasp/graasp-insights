@@ -10,6 +10,8 @@ const {
   LOAD_DATASET_SUCCESS,
   LOAD_DATASET_ERROR,
 } = require('../../shared/types');
+const { detectSchema } = require('../schema');
+const { SCHEMA_TYPES } = require('../../shared/constants');
 
 const createNewDataset = ({ name, filepath, description, folderPath }) => {
   // create and get file data
@@ -18,6 +20,15 @@ const createNewDataset = ({ name, filepath, description, folderPath }) => {
 
   // copy file
   fs.copyFileSync(filepath, destPath);
+
+  let schemaType;
+  try {
+    const content = fs.readFileSync(destPath, 'utf8');
+    const jsonContent = JSON.parse(content);
+    schemaType = detectSchema(jsonContent);
+  } catch {
+    schemaType = SCHEMA_TYPES.NONE;
+  }
 
   // get file data
   const stats = fs.statSync(destPath);
@@ -34,6 +45,7 @@ const createNewDataset = ({ name, filepath, description, folderPath }) => {
     size: sizeInKiloBytes,
     createdAt,
     lastModified,
+    schemaType,
   };
 };
 

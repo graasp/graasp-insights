@@ -115,7 +115,7 @@ export const setDatasetFile = async (payload) => (dispatch) => {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_DATASET_MESSAGE);
     dispatch(flagSettingDatasetFile(false));
   }
-}
+};
 
 export const clearDataset = () => (dispatch) => {
   const flagClearingDataset = createFlag(FLAG_CLEARING_DATASET);

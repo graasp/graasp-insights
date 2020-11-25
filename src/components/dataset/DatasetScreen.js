@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import JSONFileEditor from '../common/JSONFileEditor';
@@ -17,6 +18,8 @@ import {
   DATASET_NAME_ID,
 } from '../../config/selectors';
 import BackButton from '../common/BackButton';
+import { SCHEMA_TYPES } from '../../shared/constants';
+import SchemaTag from '../common/SchemaTag';
 
 const styles = (theme) => ({
   wrapper: {
@@ -33,6 +36,9 @@ const styles = (theme) => ({
   title: {
     marginBottom: theme.spacing(2),
   },
+  content: {
+    padding: theme.spacing(1),
+  },
 });
 
 class DatasetScreen extends Component {
@@ -48,11 +54,13 @@ class DatasetScreen extends Component {
       infoAlert: PropTypes.string.isRequired,
       backButton: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
     }).isRequired,
     datasetName: PropTypes.string,
     datasetId: PropTypes.string,
     datasetContent: PropTypes.string,
     datasetSize: PropTypes.number,
+    datasetSchemaType: PropTypes.string,
     activity: PropTypes.bool.isRequired,
   };
 
@@ -61,6 +69,7 @@ class DatasetScreen extends Component {
     datasetId: null,
     datasetContent: null,
     datasetSize: null,
+    datasetSchemaType: SCHEMA_TYPES.NONE,
   };
 
   componentDidMount() {
@@ -87,6 +96,7 @@ class DatasetScreen extends Component {
       datasetSize,
       datasetId,
       datasetContent,
+      datasetSchemaType,
       activity,
     } = this.props;
 
@@ -114,7 +124,7 @@ class DatasetScreen extends Component {
     return (
       <Main>
         <div className={classes.wrapper}>
-          <Grid container>
+          <Grid container justify="space-evenly">
             <Grid item xs={12}>
               <BackButton
                 id={DATASET_BACK_BUTTON_ID}
@@ -130,22 +140,35 @@ class DatasetScreen extends Component {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="h5">{t('Content')}</Typography>
-              <JSONFileEditor
-                size={datasetSize}
-                id={datasetId}
-                content={datasetContent}
-                collapsed={2}
-                editEnabled
-              />
+              <Grid container alignItems="center" spacing={2}>
+                <Grid item>
+                  <Typography variant="h5">{t('Content')}</Typography>
+                </Grid>
+                {datasetSchemaType && datasetSchemaType !== SCHEMA_TYPES.NONE && (
+                  <Grid item>
+                    <SchemaTag schemaType={datasetSchemaType} />
+                  </Grid>
+                )}
+              </Grid>
+              <Paper className={classes.content}>
+                <JSONFileEditor
+                  size={datasetSize}
+                  id={datasetId}
+                  content={datasetContent}
+                  collapsed={2}
+                  editEnabled
+                />
+              </Paper>
             </Grid>
-            <Grid item>
-              <Typography variant="h5">{t('Information')}</Typography>
-              <DatasetInformationTable
-                content={datasetContent}
-                id={datasetId}
-              />
-            </Grid>
+            {datasetSchemaType === SCHEMA_TYPES.GRAASP && (
+              <Grid item>
+                <Typography variant="h5">{t('Information')}</Typography>
+                <DatasetInformationTable
+                  content={datasetContent}
+                  id={datasetId}
+                />
+              </Grid>
+            )}
           </Grid>
         </div>
       </Main>
@@ -158,6 +181,7 @@ const mapStateToProps = ({ dataset }) => ({
   datasetId: dataset.getIn(['current', 'content', 'id']),
   datasetContent: dataset.getIn(['current', 'content', 'content']),
   datasetSize: dataset.getIn(['current', 'content', 'size']),
+  datasetSchemaType: dataset.getIn(['current', 'content', 'schemaType']),
   activity: Boolean(dataset.getIn(['activity']).size),
 });
 

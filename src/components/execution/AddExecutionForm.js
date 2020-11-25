@@ -24,6 +24,8 @@ import {
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
   buildPythonWrongVersionMessage,
 } from '../../shared/messages';
+import { SCHEMA_TYPES } from '../../shared/constants';
+import SchemaTag from '../common/SchemaTag';
 
 const styles = (theme) => ({
   formControl: {
@@ -43,6 +45,10 @@ const styles = (theme) => ({
   menuItem: {
     padding: theme.spacing(0.5, 4),
   },
+  schemaTag: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+  },
 });
 
 class AddExecutionForm extends Component {
@@ -61,6 +67,7 @@ class AddExecutionForm extends Component {
       buttonContainer: PropTypes.string.isRequired,
       buttonWrapper: PropTypes.string.isRequired,
       menuItem: PropTypes.string.isRequired,
+      schemaTag: PropTypes.string.isRequired,
     }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     pythonVersion: PropTypes.shape({
@@ -124,9 +131,12 @@ class AddExecutionForm extends Component {
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name }) => (
+      .map(({ id, name, schemaType }) => (
         <MenuItem value={id} key={id} className={classes.menuItem}>
           {name}
+          {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
+            <SchemaTag schemaType={schemaType} className={classes.schemaTag} />
+          )}
         </MenuItem>
       ));
 

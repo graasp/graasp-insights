@@ -7,6 +7,7 @@ const {
   GET_DATASET_ERROR,
 } = require('../../shared/types');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
+const { validateGraaspSchema } = require('../schema');
 
 const getDataset = (mainWindow, db) => async (event, { id }) => {
   try {
@@ -16,10 +17,15 @@ const getDataset = (mainWindow, db) => async (event, { id }) => {
     let content = null;
     const { filepath } = dataset;
     content = fs.readFileSync(filepath, 'utf8');
+    const jsonContent = JSON.parse(content);
+    const { valid, error } = validateGraaspSchema(jsonContent);
+    if (!valid) {
+      logger.debug(`Invalid schema: ${error}`);
+    }
 
     return mainWindow.webContents.send(GET_DATASET_CHANNEL, {
       type: GET_DATASET_SUCCESS,
-      payload: { ...dataset, content },
+      payload: { ...dataset, content, valid },
     });
   } catch (err) {
     if (err.code === 'ENOENT') {
