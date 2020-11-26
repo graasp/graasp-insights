@@ -206,14 +206,20 @@ class Algorithms extends Component {
     return (
       <Main>
         <Container className={classes.content}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.utilsButton}
-            onClick={() => this.handleUtilsEdit()}
+          <Tooltip
+            title={t(
+              "You can use the 'utils' file to write functions you want to use across your custom algorithms",
+            )}
           >
-            {t('Edit utils')}
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.utilsButton}
+              onClick={() => this.handleUtilsEdit()}
+            >
+              {t('Edit utils')}
+            </Button>
+          </Tooltip>
           <h1>{t('Algorithms')}</h1>
           <Table columns={columns} rows={rows} />
         </Container>

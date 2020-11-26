@@ -140,6 +140,7 @@ class EditAlgorithm extends Component {
                   programmingLanguage={EDITOR_PROGRAMMING_LANGUAGES.PYTHON}
                   code={userUtils}
                   onCodeChange={this.handleUserCodeOnChange}
+                  onSave={this.handleSave}
                 />
               </Grid>
             ) : (

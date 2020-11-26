@@ -92,6 +92,7 @@
     "Only Graasp datasets can be visualized": "Uniquement les datasets Graasp peuvent être visualisés",
     "Edit utils": "Modifier le fichier utils/utilitaire",
     "This file cannot be modified. Use the user file to write your own functions.": "Ce fichier ne peut pas être modifié. Utilisez le fichier utilisateur pour écrire vos propres fonctions.",
-    "User": "Utilisateur"
+    "User": "Utilisateur",
+    "You can use the 'utils' file to write functions you want to use across your custom algorithms": "Vous pouvez utiliser le fichier 'utils' pour écrire des fonctions que vous voulez utiliser à travers vos algorithmes personnalisés"
   }
 }

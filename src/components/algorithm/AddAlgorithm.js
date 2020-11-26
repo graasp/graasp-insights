@@ -167,6 +167,7 @@ class AddAlgorithm extends Component {
                   programmingLanguage={programmingLanguage}
                   code={code}
                   onCodeChange={this.handleCodeOnChange}
+                  onSave={this.handleSave}
                 />
               )}
             </Grid>
