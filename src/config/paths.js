@@ -2,6 +2,7 @@ export const HOME_PATH = '/';
 export const LOAD_DATASET_PATH = '/load-dataset';
 export const ALGORITHMS_PATH = '/algorithms';
 export const EDIT_ALGORITHM_PATH = '/edit-algorithm/:id';
+export const EDIT_UTILS_PATH = '/edit-utils';
 export const ADD_ALGORITHM_PATH = '/add-algorithm';
 export const DATASETS_PATH = '/datasets';
 export const DATASET_PATH = '/dataset/:id';

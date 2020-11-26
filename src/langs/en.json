@@ -90,6 +90,10 @@
     "There was an error visualizing this dataset.": "There was an error visualizing this dataset.",
     "This dataset does not contain any actions.": "This dataset does not contain any actions.",
     "Graasp dataset detected": "Graasp dataset detected",
-    "Only Graasp datasets can be visualized": "Only Graasp datasets can be visualized"
+    "Only Graasp datasets can be visualized": "Only Graasp datasets can be visualized",
+    "Edit utils": "Edit utils",
+    "This file cannot be modified. Use the user file to write your own functions.": "This file cannot be modified. Use the user file to write your own functions.",
+    "User": "User",
+    "You can use the 'utils' file to write functions you want to use across your custom algorithms": "You can use the 'utils' file to write functions you want to use across your custom algorithms"
   }
 }

@@ -42,6 +42,8 @@ const {
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
   BROWSE_FILE_CHANNEL,
+  GET_UTILS_CHANNEL,
+  SAVE_UTILS_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -69,6 +71,8 @@ const {
   saveAlgorithm,
   addAlgorithm,
   browseFile,
+  getUtils,
+  saveUtils,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -353,6 +357,12 @@ app.on('ready', async () => {
 
   // called when browsing a file
   ipcMain.on(BROWSE_FILE_CHANNEL, browseFile(mainWindow));
+
+  // called when getting utils
+  ipcMain.on(GET_UTILS_CHANNEL, getUtils(mainWindow));
+
+  // called when saving utils
+  ipcMain.on(SAVE_UTILS_CHANNEL, saveUtils(mainWindow));
 });
 
 app.on('activate', () => {

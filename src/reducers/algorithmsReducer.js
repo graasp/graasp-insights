@@ -9,6 +9,8 @@ import {
   FLAG_GETTING_ALGORITHM,
   CLEAR_ALGORITHM_SUCCESS,
   FLAG_CLEARING_ALGORITHM,
+  GET_UTILS_SUCCESS,
+  FLAG_GETTING_UTILS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -16,6 +18,11 @@ const INITIAL_STATE = Map({
   activity: List(),
   current: Map({
     content: Map(),
+    activity: List(),
+  }),
+  utils: Map({
+    user: '',
+    graasp: '',
     activity: List(),
   }),
 });
@@ -31,12 +38,20 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         ['current', 'activity'],
         updateActivityList(payload),
       );
+    case FLAG_GETTING_UTILS:
+      return state.updateIn(['utils', 'activity'], updateActivityList(payload));
     case GET_ALGORITHMS_SUCCESS:
       return state.setIn(['algorithms'], List(payload));
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case CLEAR_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map());
+    case GET_UTILS_SUCCESS: {
+      const { user, graasp } = payload;
+      return state
+        .setIn(['utils', 'user'], user)
+        .setIn(['utils', 'graasp'], graasp);
+    }
     case DELETE_ALGORITHM_SUCCESS:
     default:
       return state;

@@ -26,4 +26,6 @@ module.exports = {
   SAVE_ALGORITHM_CHANNEL: 'algorithm:save',
   ADD_ALGORITHM_CHANNEL: 'algorithm:add',
   BROWSE_FILE_CHANNEL: 'file:browse',
+  GET_UTILS_CHANNEL: 'utils:get',
+  SAVE_UTILS_CHANNEL: 'utils:save',
 };

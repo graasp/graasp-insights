@@ -13,11 +13,16 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
 import Main from '../common/Main';
 import { getAlgorithms, deleteAlgorithm } from '../../actions';
 import Loader from '../common/Loader';
 import Table from '../common/Table';
-import { buildEditAlgorithmPath, ADD_ALGORITHM_PATH } from '../../config/paths';
+import {
+  buildEditAlgorithmPath,
+  ADD_ALGORITHM_PATH,
+  EDIT_UTILS_PATH,
+} from '../../config/paths';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -41,6 +46,9 @@ const styles = (theme) => ({
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
+  utilsButton: {
+    float: 'right',
+  },
 });
 
 class Algorithms extends Component {
@@ -55,6 +63,7 @@ class Algorithms extends Component {
       description: PropTypes.string.isRequired,
       addButton: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
+      utilsButton: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -83,6 +92,13 @@ class Algorithms extends Component {
       history: { push },
     } = this.props;
     push(buildEditAlgorithmPath(id));
+  }
+
+  handleUtilsEdit() {
+    const {
+      history: { push },
+    } = this.props;
+    push(EDIT_UTILS_PATH);
   }
 
   renderAddButon() {
@@ -190,6 +206,20 @@ class Algorithms extends Component {
     return (
       <Main>
         <Container className={classes.content}>
+          <Tooltip
+            title={t(
+              "You can use the 'utils' file to write functions you want to use across your custom algorithms",
+            )}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.utilsButton}
+              onClick={() => this.handleUtilsEdit()}
+            >
+              {t('Edit utils')}
+            </Button>
+          </Tooltip>
           <h1>{t('Algorithms')}</h1>
           <Table columns={columns} rows={rows} />
         </Container>

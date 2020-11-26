@@ -6,6 +6,8 @@ import {
   DELETE_ALGORITHM_CHANNEL,
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
+  GET_UTILS_CHANNEL,
+  SAVE_UTILS_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_ALGORITHMS,
@@ -15,6 +17,8 @@ import {
   FLAG_ADDING_ALGORITHM,
   CLEAR_ALGORITHM_SUCCESS,
   FLAG_CLEARING_ALGORITHM,
+  FLAG_GETTING_UTILS,
+  FLAG_SAVING_UTILS,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -24,6 +28,8 @@ import {
   ERROR_SAVING_ALGORITHM_MESSAGE,
   ERROR_ADDING_ALGORITHM_MESSAGE,
   ERROR_CLEARING_ALGORITHM_MESSAGE,
+  ERROR_GETTING_UTILS_MESSAGE,
+  ERROR_SAVING_UTILS_MESSAGE,
 } from '../shared/messages';
 
 export const getAlgorithms = () => (dispatch) => {
@@ -119,5 +125,35 @@ export const clearAlgorithm = () => (dispatch) => {
     // eslint-disable-next-line no-console
     console.error(ERROR_CLEARING_ALGORITHM_MESSAGE);
     dispatch(flagClearingALGORITHM(false));
+  }
+};
+
+export const getUtils = () => (dispatch) => {
+  const flagGettingUtils = createFlag(FLAG_GETTING_UTILS);
+  try {
+    dispatch(flagGettingUtils(true));
+    window.ipcRenderer.send(GET_UTILS_CHANNEL);
+    window.ipcRenderer.once(GET_UTILS_CHANNEL, async (event, response) => {
+      dispatch(response);
+      return dispatch(flagGettingUtils(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_UTILS_MESSAGE);
+    dispatch(flagGettingUtils(false));
+  }
+};
+
+export const saveUtils = (userUtils) => (dispatch) => {
+  const flagSavingUtils = createFlag(FLAG_SAVING_UTILS);
+  try {
+    dispatch(flagSavingUtils(true));
+    window.ipcRenderer.send(SAVE_UTILS_CHANNEL, userUtils);
+    window.ipcRenderer.once(SAVE_UTILS_CHANNEL, async (event, response) => {
+      dispatch(response);
+      return dispatch(flagSavingUtils(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SAVING_UTILS_MESSAGE);
+    dispatch(flagSavingUtils(false));
   }
 };

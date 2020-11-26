@@ -22,6 +22,8 @@ const getAlgorithm = require('./getAlgorithm');
 const saveAlgorithm = require('./saveAlgorithm');
 const addAlgorithm = require('./addAlgorithm');
 const browseFile = require('./browseFile');
+const getUtils = require('./getUtils');
+const saveUtils = require('./saveUtils');
 
 module.exports = {
   getDataset,
@@ -48,4 +50,6 @@ module.exports = {
   saveAlgorithm,
   addAlgorithm,
   browseFile,
+  getUtils,
+  saveUtils,
 };

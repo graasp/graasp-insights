@@ -2,6 +2,7 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const low = require('lowdb');
 const fs = require('fs');
+const ObjectId = require('bson-objectid');
 const FileSync = require('lowdb/adapters/FileSync');
 const logger = require('./logger');
 const {
@@ -12,6 +13,8 @@ const {
   VAR_FOLDER,
   GRAASP_ALGORITHMS,
   ALGORITHMS_FOLDER_NAME,
+  GRAASP_UTILS,
+  USER_UTILS,
 } = require('./config/config');
 
 const DATASETS_COLLECTION = 'datasets';
@@ -69,7 +72,7 @@ const ensureAlgorithmsExist = async (
   }
 
   // set default algorithms
-  GRAASP_ALGORITHMS.forEach((algo) => {
+  [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
     const { filename } = algo;
     const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
     const destPath = path.join(algorithmsFolder, filename);
@@ -82,7 +85,10 @@ const ensureAlgorithmsExist = async (
 
       // check if algo entry is in metadata db
       if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-        db.get(ALGORITHMS_COLLECTION).push(algo).write();
+        const id = ObjectId().str;
+        db.get(ALGORITHMS_COLLECTION)
+          .push({ ...algo, id })
+          .write();
       }
     }
   });

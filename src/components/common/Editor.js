@@ -13,12 +13,16 @@ class Editor extends Component {
     code: PropTypes.string,
     programmingLanguage: PropTypes.string,
     onCodeChange: PropTypes.func,
+    readOnly: PropTypes.bool,
+    onSave: PropTypes.func,
   };
 
   static defaultProps = {
     code: '',
     programmingLanguage: EDITOR_PROGRAMMING_LANGUAGES.PYTHON,
     onCodeChange: () => {},
+    readOnly: false,
+    onSave: () => {},
   };
 
   onChange = (code) => {
@@ -27,7 +31,7 @@ class Editor extends Component {
   };
 
   render() {
-    const { t, code, programmingLanguage } = this.props;
+    const { t, code, programmingLanguage, readOnly, onSave } = this.props;
 
     if (
       !Object.values(EDITOR_PROGRAMMING_LANGUAGES).includes(programmingLanguage)
@@ -48,12 +52,20 @@ class Editor extends Component {
         width="100%"
         enableBasicAutocompletion
         enableLiveAutocompletion
+        readOnly={readOnly}
         setOptions={{
           enableSnippets: true,
           showLineNumbers: true,
           tabSize: 2,
         }}
         editorProps={{ $blockScrolling: true }}
+        commands={[
+          {
+            name: 'save',
+            bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
+            exec: onSave,
+          },
+        ]}
       />
     );
   }

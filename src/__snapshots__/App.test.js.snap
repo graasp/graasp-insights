@@ -367,6 +367,11 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
+          path="/edit-utils"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
           path="/add-algorithm"
         />
         <Route

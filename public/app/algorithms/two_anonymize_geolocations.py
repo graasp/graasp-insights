@@ -2,29 +2,7 @@
     there are at least two users containing that combination.
     The corresponding fields are suppressed (from 'city' to 'country') when necessary '''
 
-import json, argparse
-
-def load_dataset(dataset_path):
-    ''' Load a json dataset from the specified path '''
-    with open(dataset_path) as json_file:
-        return json.load(json_file)
-
-def save_dataset(dataset, dest_path):
-    ''' Save a json dataset to the specified path '''
-    with open(dest_path, 'w') as dest_file:
-        json.dump(dataset, dest_file, indent=2)
-
-def parse_arguments():
-    ''' Parses command-line arguments. '''
-    parser = argparse.ArgumentParser(
-        description="Ensure that for every combination of 'country', 'region', and 'city',"
-            "there are at least two users containing that combination. "
-            "The corresponding fields are suppressed (from 'city' to 'country') when necessary")
-    parser.add_argument('dataset_path', help='path to the json dataset')
-    parser.add_argument('output_path', default='output.json',
-        help='destination path (including file name) for the output')
-
-    return parser.parse_args()
+from graasp_utils import load_dataset, save_dataset, parse_arguments
 
 def main():
     args = parse_arguments()
