@@ -89,7 +89,8 @@ const ensureAlgorithmsExist = async (
       // on dev update files with most recent changes
       const isDevWithModification =
         !app.isPackaged &&
-        fs.statSync(destPath).mtime < fs.statSync(srcPath).mtime;
+        (!fs.existsSync(destPath) ||
+          fs.statSync(destPath).mtime < fs.statSync(srcPath).mtime);
 
       // on prod replace files on first start of new version
       const isProdWithNewVersion =
