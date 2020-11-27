@@ -111,6 +111,17 @@
     "Algorithms are saved in your computer at": "Algorithms are saved in your computer at",
     "Results are saved in your computer at": "Results are saved in your computer at",
     "Datasets are saved in your computer at": "Datasets are saved in your computer at",
-    "The submitted dataset will be copied in a dedicated folder for the application.": "The submitted dataset will be copied in a dedicated folder for the application."
+    "The submitted dataset will be copied in a dedicated folder for the application.": "The submitted dataset will be copied in a dedicated folder for the application.",
+    "Parameters": "Parameters",
+    "Add parameter": "Add parameter",
+    "Type": "Type",
+    "Integer": "Integer",
+    "Number": "Number",
+    "String": "String",
+    "Field Selector": "Field Selector",
+    "Default value": "Default value",
+    "Unselect all": "Unselect all",
+    "Please provide an integer": "Please provide an integer",
+    "Please provide a number": "Please provide a number"
   }
 }

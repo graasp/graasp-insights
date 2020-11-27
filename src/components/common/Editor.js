@@ -1,11 +1,11 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/theme-xcode';
-import 'ace-builds/src-noconflict/ext-language_tools';
-import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-xcode';
 
 class Editor extends Component {
   static propTypes = {
@@ -56,7 +56,7 @@ class Editor extends Component {
         setOptions={{
           enableSnippets: true,
           showLineNumbers: true,
-          tabSize: 2,
+          tabSize: 4,
         }}
         editorProps={{ $blockScrolling: true }}
         commands={[

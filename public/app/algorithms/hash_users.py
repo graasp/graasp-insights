@@ -1,6 +1,8 @@
 ''' Hash the userId field from the 'actions' and 'appInstanceResources' '''
 
-from graasp_utils import load_dataset, save_dataset, sha256_hash, parse_arguments
+from graasp_utils import (load_dataset, parse_arguments, save_dataset,
+                          sha256_hash)
+
 
 def main():
     args = parse_arguments()
@@ -13,9 +15,11 @@ def main():
 
     for appInstanceResource in dataset['data']['appInstanceResources']:
         if 'user' in appInstanceResource:
-            appInstanceResource['user'] = sha256_hash(appInstanceResource['user'])
+            appInstanceResource['user'] = sha256_hash(
+                appInstanceResource['user'])
 
     save_dataset(dataset, args.output_path)
+
 
 if __name__ == '__main__':
     main()

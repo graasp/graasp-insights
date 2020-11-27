@@ -1,31 +1,24 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { List } from 'immutable';
-import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withTranslation } from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Alert from '@material-ui/lab/Alert';
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Loader from '../common/Loader';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Alert from '@material-ui/lab/Alert';
+import { List } from 'immutable';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import {
-  getDatasets,
-  getAlgorithms,
-  getResults,
   createExecution,
+  getAlgorithms,
+  getDatasets,
+  getResults,
 } from '../../actions';
-import {
-  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
-  buildPythonWrongVersionMessage,
-} from '../../shared/messages';
-import { SCHEMA_TYPES } from '../../shared/constants';
-import SchemaTag from '../common/SchemaTag';
 import {
   buildExecutionAlgorithmOptionId,
   buildExecutionDatasetOptionId,
@@ -35,6 +28,15 @@ import {
   EXECUTIONS_EXECUTE_BUTTON_ID,
   EXECUTION_FORM_NAME_INPUT_ID,
 } from '../../config/selectors';
+import { SCHEMA_TYPES } from '../../shared/constants';
+import {
+  buildPythonWrongVersionMessage,
+  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+} from '../../shared/messages';
+import { areParametersValid } from '../../utils/parameter';
+import Loader from '../common/Loader';
+import SchemaTag from '../common/SchemaTag';
+import SelectParameters from '../parameter/SelectParameters';
 
 const styles = (theme) => ({
   wrapper: {
@@ -100,6 +102,7 @@ class AddExecutionForm extends Component {
     sourceId: '',
     algorithmId: '',
     userProvidedFilename: '',
+    parameters: [],
   };
 
   componentDidMount() {
@@ -118,7 +121,12 @@ class AddExecutionForm extends Component {
   };
 
   handleAlgorithmSelectOnChange = (e) => {
-    this.setState({ algorithmId: e.target.value });
+    const { algorithms } = this.props;
+    const algorithmId = e.target.value;
+    this.setState({
+      algorithmId,
+      parameters: algorithms.find(({ id }) => id === algorithmId)?.parameters,
+    });
   };
 
   handleNameOnChange = (e) => {
@@ -127,11 +135,17 @@ class AddExecutionForm extends Component {
 
   executeAlgorithm = () => {
     const { dispatchCreateExecution } = this.props;
-    const { sourceId, algorithmId, userProvidedFilename } = this.state;
+    const {
+      sourceId,
+      algorithmId,
+      userProvidedFilename,
+      parameters,
+    } = this.state;
     dispatchCreateExecution({
       sourceId,
       algorithmId,
       userProvidedFilename,
+      parameters,
     });
     this.setState({ userProvidedFilename: '' });
   };
@@ -195,8 +209,13 @@ class AddExecutionForm extends Component {
   };
 
   renderExecuteButton = () => {
-    const { sourceId, algorithmId } = this.state;
+    const { sourceId, algorithmId, parameters } = this.state;
     const { t, pythonVersion, classes } = this.props;
+    const valid =
+      sourceId &&
+      algorithmId &&
+      pythonVersion?.valid &&
+      (!parameters || areParametersValid(parameters));
     const button = (
       <div className={classes.buttonWrapper}>
         <Button
@@ -204,31 +223,24 @@ class AddExecutionForm extends Component {
           variant="contained"
           color="primary"
           onClick={this.executeAlgorithm}
-          disabled={!sourceId || !algorithmId || !pythonVersion?.valid}
+          disabled={!valid}
         >
           {t('Execute')}
         </Button>
       </div>
     );
 
+    let tooltip;
     if (!pythonVersion?.version) {
-      return (
-        <div className={classes.buttonContainer}>
-          <Tooltip title={t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE)}>
-            {button}
-          </Tooltip>
-        </div>
-      );
+      tooltip = t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE);
+    } else if (!pythonVersion?.valid) {
+      tooltip = t(buildPythonWrongVersionMessage(pythonVersion.version));
     }
 
-    if (!pythonVersion.valid) {
+    if (tooltip) {
       return (
         <div className={classes.buttonContainer}>
-          <Tooltip
-            title={t(buildPythonWrongVersionMessage(pythonVersion.version))}
-          >
-            {button}
-          </Tooltip>
+          <Tooltip title={tooltip}>{button}</Tooltip>
         </div>
       );
     }
@@ -236,9 +248,13 @@ class AddExecutionForm extends Component {
     return <div className={classes.buttonContainer}>{button}</div>;
   };
 
+  handleParametersOnChange = (newParams) => {
+    this.setState({ parameters: newParams });
+  };
+
   render() {
     const { algorithms, datasets, classes, t, isLoading, results } = this.props;
-    const { algorithmId, userProvidedFilename } = this.state;
+    const { algorithmId, userProvidedFilename, parameters } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -298,7 +314,12 @@ class AddExecutionForm extends Component {
             id={EXECUTION_FORM_NAME_INPUT_ID}
           />
         </FormControl>
-
+        {parameters && parameters.length > 0 && (
+          <SelectParameters
+            parameters={parameters}
+            onChange={this.handleParametersOnChange}
+          />
+        )}
         {this.renderExecuteButton()}
       </div>
     );

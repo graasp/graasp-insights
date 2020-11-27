@@ -1,11 +1,14 @@
 ''' Ensure that for every combination of 'country', 'region', and 'city',
-    there are at least two users containing that combination.
+    there are at least k users containing that combination.
     The corresponding fields are suppressed (from 'city' to 'country') when necessary '''
 
-from graasp_utils import load_dataset, save_dataset, parse_arguments
+from graasp_utils import load_dataset, parse_arguments, save_dataset
+
 
 def main():
-    args = parse_arguments()
+    args = parse_arguments([
+        {'name': 'k', 'type': int}
+    ])
 
     dataset = load_dataset(args.dataset_path)
 
@@ -17,9 +20,9 @@ def main():
         user = action['user']
         if user not in geolocations and 'geolocation' in action:
             geolocations[user] = action['geolocation']
-            geolocations[user]['range'] = [0,0]
+            geolocations[user]['range'] = [0, 0]
             geolocations[user]['timezone'] = ''
-            geolocations[user]['ll'] = [0,0]
+            geolocations[user]['ll'] = [0, 0]
             geolocations[user]['area'] = ''
             geolocations[user]['metro'] = ''
 
@@ -47,11 +50,11 @@ def main():
 
     # remove each value that is not represented twice
     for country, regions in grouped.items():
-        alone_country = len(regions) <= 1
+        alone_country = len(regions) < args.k
         for region, cities in regions.items():
-            alone_region = len(cities) <= 1
+            alone_region = len(cities) <= args.k
             for city, users in cities.items():
-                alone_city = len(users) <= 1
+                alone_city = len(users) <= args.k
                 if alone_city:
                     user = users[0]
                     geolocations[user]['city'] = ''
@@ -68,6 +71,7 @@ def main():
             action['geolocation'] = geolocations[user]
 
     save_dataset(dataset, args.output_path)
+
 
 if __name__ == '__main__':
     main()

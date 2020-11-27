@@ -18,6 +18,13 @@ const AUTHORS = {
   USER: 'User',
 };
 
+const PARAMETER_TYPES = {
+  FIELD_SELECTOR: 'Field Selector',
+  NUMBER_INPUT: 'Number',
+  INTEGER_INPUT: 'Integer',
+  STRING_INPUT: 'String',
+};
+
 const SCHEMA_TYPES = {
   GRAASP: 'GRAASP',
   NONE: 'NONE',
@@ -41,6 +48,7 @@ module.exports = {
   ALGORITHM_TYPES,
   APP_BACKGROUND_COLOR,
   AUTHORS,
+  PARAMETER_TYPES,
   SCHEMA_TYPES,
   PROGRAMMING_LANGUAGES,
   EXECUTION_STATUSES,

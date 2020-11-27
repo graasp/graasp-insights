@@ -3,7 +3,9 @@
 import re
 from itertools import combinations
 
-from graasp_utils import load_dataset, save_dataset, sha256_hash, parse_arguments
+from graasp_utils import (load_dataset, parse_arguments, save_dataset,
+                          sha256_hash)
+
 
 def find_and_replace(dataset, substitution_map):
     '''Traverses the whole a dataset, finds and replaces all occurrences
@@ -39,10 +41,12 @@ def find_and_replace(dataset, substitution_map):
 
     traverse(dataset)
 
+
 def get_regex(name):
     ''' Creates a regex to match the name or any similar version '''
     # accepts up to 3 characters between each word and ignores case
     return '(?i)' + '.{0,3}'.join(name.split())
+
 
 def main():
     args = parse_arguments()
@@ -53,11 +57,11 @@ def main():
 
     # prepare id and name substitutions
     # id substitution = hash(id)
-    id_substitutions = { user['_id']: {
+    id_substitutions = {user['_id']: {
         'substitution': sha256_hash(user['_id']),
         'regex': user['_id']
     } for user in users}
-    name_substitutions = { user['name']: {
+    name_substitutions = {user['name']: {
         # name substitution = id substitution
         'substitution': id_substitutions[user['_id']]['substitution'],
         'regex': get_regex(user['name'])
@@ -88,7 +92,6 @@ def main():
 
             app_instance_res['user'] = id_substitutions[userid]['substitution']
 
-
     # generically search and replace occurrences of usernames and ids
     find_and_replace(dataset, name_substitutions)
     find_and_replace(dataset, id_substitutions)
@@ -97,6 +100,7 @@ def main():
     dataset['data']['users'] = substitutions
 
     save_dataset(dataset, args.output_path)
+
 
 if __name__ == '__main__':
     main()

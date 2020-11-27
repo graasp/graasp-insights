@@ -14,7 +14,14 @@ const { PROGRAMMING_LANGUAGES } = require('../../shared/constants');
 
 const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
   try {
-    const { name, description, author, fileLocation, code } = algorithm;
+    const {
+      name,
+      description,
+      author,
+      fileLocation,
+      code,
+      parameters,
+    } = algorithm;
 
     const id = ObjectId().str;
     const filename = `${id}.py`;
@@ -28,6 +35,7 @@ const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
       filepath,
       author,
       language,
+      parameters,
     };
 
     // copy or create file

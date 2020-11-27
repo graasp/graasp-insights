@@ -110,6 +110,17 @@
     "Algorithms are saved in your computer at": "Les algorithms sont sauvegardés sur votre ordinateur dans",
     "Results are saved in your computer at": "Les résultats sont sauvegardés sur votre ordinateur dans",
     "Datasets are saved in your computer at": "Les datasets sont sauvegardés sur votre ordinateur dans",
-    "The submitted dataset will be copied in a dedicated folder for the application.": "Le dataset choisi sera copié dans un dossier dédié pour l'application."
+    "The submitted dataset will be copied in a dedicated folder for the application.": "Le dataset choisi sera copié dans un dossier dédié pour l'application.",
+    "Parameters": "Paramètres",
+    "Add parameter": "Ajouter un paramètre",
+    "Type": "Type",
+    "Integer": "Nombre entier",
+    "Number": "Nombre réel",
+    "String": "Chaîne de charactères",
+    "Field Selector": "Sélecteur de champs",
+    "Default value": "Valeur par défaut",
+    "Unselect all": "Tout déselectionner",
+    "Please provide an integer": "Veuillez entrer un nombre entier",
+    "Please provide a number": "Veuillez entrer un nombre réel"
   }
 }

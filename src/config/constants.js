@@ -1,4 +1,5 @@
-import { SCHEMA_TYPES } from '../shared/constants';
+import { PARAMETER_TYPES, SCHEMA_TYPES } from '../shared/constants';
+import defaultFieldSelectorParameters from '../shared/defaultFieldSelectorParameters';
 import theme from '../theme';
 
 export const DATASETS_COLLECTION = 'datasets';
@@ -113,3 +114,19 @@ export const CIRCLE_PROGRESS_SIZE = 26;
 
 export const FILE_SIZE_LIMIT_OPTIONS = [0, 500, 1000, 2500, 5000, 10000];
 export const DEFAULT_FILE_SIZE_LIMIT = FILE_SIZE_LIMIT_OPTIONS[2];
+
+export const PARAMETER_TYPES_PYTHON = {
+  [PARAMETER_TYPES.FIELD_SELECTOR]: 'str',
+  [PARAMETER_TYPES.NUMBER_INPUT]: 'float',
+  [PARAMETER_TYPES.INTEGER_INPUT]: 'int',
+  [PARAMETER_TYPES.STRING_INPUT]: 'str',
+};
+
+export const PARAMETER_TYPES_DEFAULT = {
+  [PARAMETER_TYPES.FIELD_SELECTOR]: defaultFieldSelectorParameters,
+  [PARAMETER_TYPES.NUMBER_INPUT]: 0.0,
+  [PARAMETER_TYPES.INTEGER_INPUT]: 0,
+  [PARAMETER_TYPES.STRING_INPUT]: '',
+};
+
+export const DEFAULT_PARAMETER_NAME = 'parameter_name';
