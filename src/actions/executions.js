@@ -5,12 +5,14 @@ import {
   GET_EXECUTIONS_CHANNEL,
   CREATE_EXECUTION_CHANNEL,
   DELETE_EXECUTION_CHANNEL,
+  STOP_EXECUTION_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_EXECUTING_ALGORITHM,
   FLAG_CREATING_EXECUTION,
   FLAG_GETTING_EXECUTIONS,
   FLAG_DELETING_EXECUTION,
+  FLAG_STOPPING_EXECUTION,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -57,8 +59,9 @@ export const executeAlgorithm = (execution) => (dispatch) => {
 
 export const createExecution = ({
   algorithmId,
-  datasetId,
+  sourceId,
   autoStart = true,
+  userProvidedFilename,
 }) => (dispatch) => {
   const flagCreatingExecution = createFlag(FLAG_CREATING_EXECUTION);
   try {
@@ -66,7 +69,8 @@ export const createExecution = ({
     // tell electron to get executions
     window.ipcRenderer.send(CREATE_EXECUTION_CHANNEL, {
       algorithmId,
-      datasetId,
+      sourceId,
+      userProvidedFilename,
     });
     window.ipcRenderer.once(
       CREATE_EXECUTION_CHANNEL,
@@ -100,5 +104,21 @@ export const deleteExecution = ({ id }) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_EXECUTION_MESSAGE);
     dispatch(flagDeletingExecution(false));
+  }
+};
+
+export const cancelExecution = ({ id }) => (dispatch) => {
+  const flagStoppingExecution = createFlag(FLAG_STOPPING_EXECUTION);
+  try {
+    dispatch(flagStoppingExecution(true));
+
+    window.ipcRenderer.send(STOP_EXECUTION_CHANNEL, { id });
+    window.ipcRenderer.once(STOP_EXECUTION_CHANNEL, async (e, payload) => {
+      dispatch(payload);
+      return dispatch(flagStoppingExecution(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_EXECUTION_MESSAGE);
+    dispatch(flagStoppingExecution(false));
   }
 };

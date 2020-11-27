@@ -48,6 +48,7 @@ const {
   GET_EXECUTIONS_CHANNEL,
   CREATE_EXECUTION_CHANNEL,
   DELETE_EXECUTION_CHANNEL,
+  STOP_EXECUTION_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -80,7 +81,8 @@ const {
   createExecution,
   deleteExecution,
   getExecutions,
-  stopAllRunningExecutions,
+  cancelAllRunningExecutions,
+  cancelExecution,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -338,6 +340,8 @@ app.on('ready', async () => {
 
   ipcMain.on(DELETE_EXECUTION_CHANNEL, deleteExecution(mainWindow, db));
 
+  ipcMain.on(STOP_EXECUTION_CHANNEL, cancelExecution(mainWindow, db));
+
   // called when getting the database
   ipcMain.on(GET_DATABASE_CHANNEL, getDatabase(mainWindow, db));
 
@@ -380,8 +384,7 @@ app.on('ready', async () => {
 
   app.on('window-all-closed', async () => {
     // kill all running executions
-    await stopAllRunningExecutions(db);
-
+    await cancelAllRunningExecutions(db);
     app.quit();
   });
 });

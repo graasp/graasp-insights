@@ -10,7 +10,7 @@ import {
   FLAG_DELETING_EXECUTION,
   FLAG_CREATING_EXECUTION,
 } from '../shared/types';
-import { EXECUTION_STATUSES } from '../config/constants';
+import { EXECUTION_STATUSES } from '../shared/constants';
 
 const INITIAL_STATE = Map({
   activity: List(),

@@ -2,6 +2,7 @@
 import { expect } from 'chai';
 import {
   EXECUTIONS_MENU_ITEM_ID,
+  QUIT_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
 } from '../src/config/selectors';
 import { openDrawer } from './utils';
@@ -21,6 +22,10 @@ export const setUpClientCommandes = ({ client }) => {
 
   client.addCommand('goToResults', async () => {
     await client.goTo(RESULTS_MENU_ITEM_ID);
+  });
+
+  client.addCommand('quit', async () => {
+    await client.goTo(QUIT_MENU_ITEM_ID);
   });
 
   client.addCommand('expectElementToExist', async (elementSelector) => {

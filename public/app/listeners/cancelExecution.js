@@ -35,18 +35,18 @@ const cancelExecution = (mainWindow, db) => async (e, { id }) => {
       error: ERROR_GENERAL,
     });
   }
+  // todo: stop associated process
 };
 
 const cancelAllRunningExecutions = async (db) => {
   const runningExecutions = db
     .get(EXECUTIONS_COLLECTION)
-    .filter(({ status }) =>
-      [EXECUTION_STATUSES.RUNNING, EXECUTION_STATUSES.PENDING].includes(status),
-    )
+    .filter({ status: EXECUTION_STATUSES.RUNNING })
     .value();
   // eslint-disable-next-line no-restricted-syntax
   for (const { id } of runningExecutions) {
-    cancelExecutionById(db, id);
+    // eslint-disable-next-line no-await-in-loop
+    await cancelExecutionById(db, id);
   }
 };
 

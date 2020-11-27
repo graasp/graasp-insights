@@ -1,6 +1,8 @@
 // this file needs to use module.exports as it is used both by react and electron
 // the original file is located in src/shared and is duplicated in public/shared
 
+const { EXECUTION_NAME_MAX_LENGTH } = require('./constants');
+
 const ERROR_MESSAGE_HEADER = 'Error';
 const SUCCESS_MESSAGE_HEADER = 'Success';
 const ERROR_GETTING_DATASET_MESSAGE =
@@ -85,6 +87,13 @@ const ERROR_DELETING_EXECUTION_MESSAGE =
   'There was an error deleting the execution';
 const SUCCESS_DELETING_EXECUTION_MESSAGE =
   'The execution was deleted successfully';
+const buidExecutingAlgorithmSuccessMessage = (name) => {
+  let splitName = name || '';
+  if (splitName.length > EXECUTION_NAME_MAX_LENGTH) {
+    splitName = `${splitName.slice(0, EXECUTION_NAME_MAX_LENGTH)}...`;
+  }
+  return `The execution ${splitName} was executed successfully`;
+};
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -135,4 +144,5 @@ module.exports = {
   ERROR_GETTING_EXECUTIONS_MESSAGE,
   ERROR_DELETING_EXECUTION_MESSAGE,
   SUCCESS_DELETING_EXECUTION_MESSAGE,
+  buidExecutingAlgorithmSuccessMessage,
 };

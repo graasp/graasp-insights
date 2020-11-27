@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { EXPORT_RESULT_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { RESULTS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION } = require('../db');
 const {
   EXPORT_RESULT_SUCCESS,
   EXPORT_RESULT_ERROR,
@@ -11,7 +11,7 @@ const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
 const exportResult = (mainWindow, db) => async (event, { id, path }) => {
   try {
     // get dataset from local db
-    const { filepath } = db.get(RESULTS_COLLECTION).find({ id }).value();
+    const { filepath } = db.get(DATASETS_COLLECTION).find({ id }).value();
 
     if (!filepath || !fs.existsSync(filepath)) {
       return mainWindow.webContents.send(EXPORT_RESULT_CHANNEL, {

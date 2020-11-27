@@ -23,6 +23,8 @@ export const buildDatasetsListDeleteButtonClass = (name) =>
   `datasetsListDeleteButton-${parseName(name)}`;
 export const DATASET_BACK_BUTTON_ID = 'datasetBackButton';
 export const DATASET_NAME_ID = 'datasetName';
+export const DATASETS_MAIN_ID = 'datasetsMain';
+export const DATASET_TABLE_ID = 'datasetTable';
 export const DATASET_TABLE_INFORMATION_ID = 'datasetTableInformation';
 export const DATASET_TABLE_SPACE_ID_ID = 'datasetTableSpaceId';
 export const DATASET_TABLE_SPACE_NAME_ID = 'datasetTableSpaceName';
@@ -44,3 +46,11 @@ export const buildExecutionAlgorithmOptionId = (id) =>
 export const RESULTS_MAIN_ID = 'resultsMain';
 export const EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS =
   'executionsExecutionDeleteButton';
+export const EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS =
+  'executionsExecutionCancelButton';
+export const buildExecutionRowSourceButtonId = (id) =>
+  `executionRowSourceButton-${id}`;
+export const buildExecutionRowAlgorithmButtonId = (id) =>
+  `executionRowAlgorithmButton-${id}`;
+export const EDIT_ALGORITHM_MAIN_ID = 'editAlgorithmMain';
+export const DATASET_SCREEN_MAIN_ID = 'datasetScreenMain';

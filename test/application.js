@@ -4,7 +4,7 @@ import path from 'path';
 import fse from 'fs-extra';
 import { setUpClientCommandes } from './commands';
 
-const getFormattedTime = () => {
+export const getVarFolder = () => {
   const today = new Date();
   const y = today.getFullYear();
   // JavaScript months are 0-based.
@@ -13,17 +13,18 @@ const getFormattedTime = () => {
   const h = today.getHours();
   const mi = today.getMinutes();
   const s = today.getSeconds();
-  return `${y}${m}${d}_${h}-${mi}-${s}`;
+  const time = `${y}${m}${d}_${h}-${mi}-${s}`;
+  return path.join(__dirname, 'tmp', time);
 };
 
 // eslint-disable-next-line no-unused-vars
-const setUpDatabase = async (database = {}) => {
-  const tmpDatabasePath = path.join(__dirname, 'tmp', getFormattedTime());
+const setUpDatabase = async (database = {}, varFolderPath) => {
+  const tmpDatabasePath = varFolderPath || getVarFolder();
   const varFolder = path.join(tmpDatabasePath, 'var');
   fse.ensureDirSync(`${varFolder}/datasets`);
   fse.ensureDirSync(`${varFolder}/algorithms`);
 
-  if (database) {
+  if (Object.keys(database).length !== 0) {
     const { datasets = [], algorithms = [] } = database;
     // eslint-disable-next-line no-restricted-syntax
     for (const dataset of datasets) {
@@ -44,11 +45,11 @@ const setUpDatabase = async (database = {}) => {
   return tmpDatabasePath;
 };
 
-const createApplication = async ({ database } = {}) => {
+const createApplication = async ({ database, varFolder } = {}) => {
   const env = { NODE_ENV: 'test', ELECTRON_IS_DEV: 0 };
 
   // set up database
-  const tmpDatabasePath = await setUpDatabase(database);
+  const tmpDatabasePath = await setUpDatabase(database, varFolder);
 
   const app = new Application({
     // Your electron path can be any binary

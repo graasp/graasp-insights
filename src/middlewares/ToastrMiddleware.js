@@ -54,7 +54,6 @@ import {
   ERROR_SETTING_DATABASE_MESSAGE,
   ERROR_GETTING_DATABASE_MESSAGE,
   buildProcessErrorMessage,
-  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
   ERROR_DELETING_DATASET_MESSAGE,
   SUCCESS_DELETING_DATASET_MESSAGE,
   SUCCESS_DELETING_RESULT_MESSAGE,
@@ -84,11 +83,13 @@ import {
   ERROR_GETTING_EXECUTIONS_MESSAGE,
   ERROR_DELETING_EXECUTION_MESSAGE,
   SUCCESS_DELETING_EXECUTION_MESSAGE,
+  buidExecutingAlgorithmSuccessMessage,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
 const middleware = () => (next) => (action) => {
-  const { type, error, payload } = action;
+  const { type, error, payload, log } = action;
+  const options = {};
 
   // display error message notification
   let message = null;
@@ -137,6 +138,8 @@ const middleware = () => (next) => (action) => {
       } else {
         message = ERROR_EXECUTING_ALGORITHM_MESSAGE;
       }
+      // allow to display duplicate message for executions
+      options.preventDuplicates = false;
       break;
     case CREATE_EXECUTION_ERROR:
       message = ERROR_CREATING_EXECUTION_MESSAGE;
@@ -218,7 +221,10 @@ const middleware = () => (next) => (action) => {
       message = SUCCESS_LOADING_DATASET_MESSAGE;
       break;
     case (type.match(new RegExp(`${EXECUTE_ALGORITHM_SUCCESS}`)) || {}).input:
-      message = SUCCESS_EXECUTING_ALGORITHM_MESSAGE;
+      message = buidExecutingAlgorithmSuccessMessage(payload.execution.name);
+
+      // allow to display duplicate message for executions
+      options.preventDuplicates = false;
       break;
     case DELETE_DATASET_SUCCESS:
       message = SUCCESS_DELETING_DATASET_MESSAGE;
@@ -252,10 +258,18 @@ const middleware = () => (next) => (action) => {
   }
 
   if (message && error) {
-    toastr.error(i18n.t(ERROR_MESSAGE_HEADER), i18n.t(message));
+    toastr.error(i18n.t(ERROR_MESSAGE_HEADER), i18n.t(message), options);
     // todo: avoid dispatching if not necessary
+    if (log) {
+      // eslint-disable-next-line no-console
+      console.error(log);
+    }
   } else if (message) {
-    toastr.success(i18n.t(SUCCESS_MESSAGE_HEADER), i18n.t(message));
+    toastr.success(i18n.t(SUCCESS_MESSAGE_HEADER), i18n.t(message), options);
+    if (log) {
+      // eslint-disable-next-line no-console
+      console.log(log);
+    }
   }
 
   if (!type) {

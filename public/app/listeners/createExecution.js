@@ -1,7 +1,11 @@
 const ObjectId = require('bson-objectid');
-const { EXECUTIONS_COLLECTION } = require('../db');
+const {
+  EXECUTIONS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+  DATASETS_COLLECTION,
+} = require('../db');
 const { CREATE_EXECUTION_CHANNEL } = require('../../shared/channels');
-const { EXECUTION_STATUSES } = require('../config/config');
+const { EXECUTION_STATUSES } = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   CREATE_EXECUTION_SUCCESS,
@@ -10,16 +14,26 @@ const {
 
 const createExecution = (mainWindow, db) => async (
   event,
-  { algorithmId, datasetId },
+  { algorithmId, sourceId, userProvidedFilename },
 ) => {
   try {
+    const { name: datasetName } = db
+      .get(DATASETS_COLLECTION)
+      .find({ id: sourceId })
+      .value();
+    const { name: algorithmName } = db
+      .get(ALGORITHMS_COLLECTION)
+      .find({ id: algorithmId })
+      .value();
+
     // add execution
     const execution = {
       id: ObjectId().str,
       algorithmId,
-      datasetId,
+      sourceId,
       executedAt: Date.now(),
       status: EXECUTION_STATUSES.PENDING,
+      name: userProvidedFilename || `${datasetName}_${algorithmName}`,
     };
     db.get(EXECUTIONS_COLLECTION).push(execution).write();
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {

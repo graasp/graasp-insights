@@ -16,6 +16,7 @@ import Loader from '../common/Loader';
 import {
   DATASET_BACK_BUTTON_ID,
   DATASET_NAME_ID,
+  DATASET_SCREEN_MAIN_ID,
 } from '../../config/selectors';
 import BackButton from '../common/BackButton';
 import { SCHEMA_TYPES } from '../../shared/constants';
@@ -122,7 +123,7 @@ class DatasetScreen extends Component {
     }
 
     return (
-      <Main>
+      <Main id={DATASET_SCREEN_MAIN_ID}>
         <div className={classes.wrapper}>
           <Grid container justify="space-evenly">
             <Grid item xs={12}>

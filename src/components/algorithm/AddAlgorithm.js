@@ -21,11 +21,11 @@ import Editor from '../common/Editor';
 import { addAlgorithm } from '../../actions';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
 import {
-  AUTHOR_USER,
   FILE_FILTERS,
   EDITOR_PROGRAMMING_LANGUAGES,
   ADD_OPTIONS,
 } from '../../config/constants';
+import { AUTHOR_USER } from '../../shared/constants';
 import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({

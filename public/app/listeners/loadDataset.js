@@ -11,12 +11,12 @@ const {
   LOAD_DATASET_ERROR,
 } = require('../../shared/types');
 const { detectSchema } = require('../schema');
-const { SCHEMA_TYPES } = require('../../shared/constants');
+const { SCHEMA_TYPES, DATASET_TYPES } = require('../../shared/constants');
 
-const createNewDataset = ({ name, filepath, description, folderPath }) => {
+const createNewDataset = ({ name, filepath, description, type }) => {
   // create and get file data
   const fileId = ObjectId().str;
-  const destPath = path.join(folderPath, `${fileId}.json`);
+  const destPath = path.join(DATASETS_FOLDER, `${fileId}.json`);
 
   // copy file
   fs.copyFileSync(filepath, destPath);
@@ -46,6 +46,7 @@ const createNewDataset = ({ name, filepath, description, folderPath }) => {
     createdAt,
     lastModified,
     schemaType,
+    type,
   };
 };
 
@@ -63,6 +64,7 @@ const loadDataset = (mainWindow, db) => async (event, args) => {
         filepath: fileLocation,
         description: fileDescription,
         folderPath: DATASETS_FOLDER,
+        type: DATASET_TYPES.SOURCE,
       });
       logger.debug(`load dataset at ${newDataset.filepath}`);
       // save file in lowdb

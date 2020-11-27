@@ -1,4 +1,4 @@
-const { RESULTS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION } = require('../db');
 const { GET_RESULTS_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const {
@@ -6,10 +6,14 @@ const {
   GET_RESULTS_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
+const { DATASET_TYPES } = require('../../../src/shared/constants');
 
 const getResults = (mainWindow, db) => async () => {
   try {
-    const results = db.get(RESULTS_COLLECTION).value();
+    const results = db
+      .get(DATASETS_COLLECTION)
+      .filter({ type: DATASET_TYPES.RESULT })
+      .value();
     mainWindow.webContents.send(GET_RESULTS_CHANNEL, {
       type: GET_RESULTS_SUCCESS,
       payload: results,

@@ -16,7 +16,9 @@ const SCHEMA_TYPES = {
   GRAASP: 'GRAASP',
   NONE: 'NONE',
 };
-const DEFAULT_AUTHOR = 'Graasp';
+
+const AUTHOR_GRAASP = 'Graasp';
+const AUTHOR_USER = 'User';
 
 const EXECUTION_STATUSES = {
   PENDING: 'pending',
@@ -25,11 +27,21 @@ const EXECUTION_STATUSES = {
   SUCCESS: 'success',
 };
 
+const DATASET_TYPES = {
+  SOURCE: 'source',
+  RESULT: 'result',
+};
+
+const EXECUTION_NAME_MAX_LENGTH = 25;
+
 module.exports = {
   ALGORITHM_TYPES,
   APP_BACKGROUND_COLOR,
   SCHEMA_TYPES,
   PROGRAMMING_LANGUAGES,
-  DEFAULT_AUTHOR,
   EXECUTION_STATUSES,
+  DATASET_TYPES,
+  AUTHOR_GRAASP,
+  AUTHOR_USER,
+  EXECUTION_NAME_MAX_LENGTH,
 };

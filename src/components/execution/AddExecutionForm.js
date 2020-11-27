@@ -17,8 +17,8 @@ import Loader from '../common/Loader';
 import {
   getDatasets,
   getAlgorithms,
-  executeAlgorithm,
   getResults,
+  createExecution,
 } from '../../actions';
 import {
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
@@ -36,6 +36,10 @@ import {
 } from '../../config/selectors';
 
 const styles = (theme) => ({
+  wrapper: {
+    width: '50%',
+    margin: theme.spacing(2, 'auto', 0),
+  },
   formControl: {
     margin: theme.spacing(1),
     width: '100%',
@@ -67,9 +71,10 @@ class AddExecutionForm extends Component {
     t: PropTypes.func.isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
     dispatchGetAlgorithms: PropTypes.func.isRequired,
-    dispatchExecuteAlgorithm: PropTypes.func.isRequired,
+    dispatchCreateExecution: PropTypes.func.isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
     classes: PropTypes.shape({
+      wrapper: PropTypes.string.isRequired,
       formControl: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       buttonContainer: PropTypes.string.isRequired,
@@ -120,17 +125,14 @@ class AddExecutionForm extends Component {
   };
 
   executeAlgorithm = () => {
-    const { dispatchExecuteAlgorithm, algorithms } = this.props;
+    const { dispatchCreateExecution } = this.props;
     const { sourceId, algorithmId, userProvidedFilename } = this.state;
-    const { language } = algorithms.find(({ id }) => id === algorithmId);
-    if (language) {
-      dispatchExecuteAlgorithm({
-        sourceId,
-        algorithmId,
-        language,
-        userProvidedFilename,
-      });
-    }
+    dispatchCreateExecution({
+      sourceId,
+      algorithmId,
+      userProvidedFilename,
+    });
+    this.setState({ userProvidedFilename: '' });
   };
 
   renderDatasetsAndResultsSelect = () => {
@@ -140,7 +142,12 @@ class AddExecutionForm extends Component {
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
       .map(({ id, name, schemaType }) => (
-        <MenuItem value={id} key={id} className={classes.menuItem}>
+        <MenuItem
+          value={id}
+          key={id}
+          className={classes.menuItem}
+          id={buildExecutionDatasetOptionId(id)}
+        >
           {name}
           {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
             <SchemaTag schemaType={schemaType} className={classes.schemaTag} />
@@ -259,7 +266,7 @@ class AddExecutionForm extends Component {
     const algorithmLabel = `${t('Algorithm')} ${t('(Required)')}`;
 
     return (
-      <>
+      <div className={classes.wrapper}>
         {this.renderDatasetsAndResultsSelect()}
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel>{algorithmLabel}</InputLabel>
@@ -291,7 +298,7 @@ class AddExecutionForm extends Component {
         </FormControl>
 
         {this.renderExecuteButton()}
-      </>
+      </div>
     );
   }
 }
@@ -311,7 +318,7 @@ const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
 const mapDispatchToProps = {
   dispatchGetDatasets: getDatasets,
   dispatchGetAlgorithms: getAlgorithms,
-  dispatchExecuteAlgorithm: executeAlgorithm,
+  dispatchCreateExecution: createExecution,
   dispatchGetResults: getResults,
 };
 

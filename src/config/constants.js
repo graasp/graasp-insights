@@ -23,9 +23,6 @@ export const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
 };
 
-export const AUTHOR_GRAASP = 'Graasp';
-export const AUTHOR_USER = 'User';
-
 export const DEFAULT_NUMBER_FORMAT = 'en';
 
 export const FILE_FILTERS = {
@@ -117,13 +114,6 @@ export const SCHEMA_TOOLTIPS = {
 export const UTILS_FILES = {
   GRAASP: 'graasp',
   USER: 'user',
-};
-
-export const EXECUTION_STATUSES = {
-  PENDING: 'pending',
-  RUNNING: 'running',
-  ERROR: 'error',
-  SUCCESS: 'success',
 };
 
 export const CIRCLE_PROGRESS_SIZE = 26;

@@ -97,6 +97,13 @@
     "From Algorithm": "De l'Algorithme",
     "An error occurred during execution": "Une erreur est survenue durant l'exécution",
     "Execution successful": "Execution réussie",
-    "Execution running...": "Execution en cours..."
+    "Execution running...": "Execution en cours...",
+    "Remove execution": "Effacer l'exécution",
+    "Status": "Statut",
+    "Executed": "Executé",
+    "Result": "Résultat",
+    "Visualizations": "Visualisations",
+    "Cancel execution": "Annuler l'exécution",
+    "Success": "Succès"
   }
 }

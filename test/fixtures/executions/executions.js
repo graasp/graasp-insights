@@ -1,6 +1,7 @@
 import path from 'path';
+import { DATASET_TYPES, SCHEMA_TYPES } from '../../../public/shared/constants';
 import {
-  DEFAULT_AUTHOR,
+  AUTHOR_USER,
   PROGRAMMING_LANGUAGES,
 } from '../../../src/shared/constants';
 
@@ -12,13 +13,15 @@ export const EXECUTION_FAST = {
     size: 45,
     createdAt: Date.now(),
     lastModified: Date.now(),
+    type: DATASET_TYPES.SOURCE,
+    schema: SCHEMA_TYPES.GRAASP,
   },
   algorithm: {
     id: 'exec-fast-algo',
     name: 'algorithm',
     description: `description`,
     filepath: path.join(__dirname, './executionFast_algorithm.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };
@@ -31,13 +34,15 @@ export const EXECUTION_SLOW = {
     size: 45,
     createdAt: Date.now(),
     lastModified: Date.now(),
+    type: DATASET_TYPES.SOURCE,
+    schema: SCHEMA_TYPES.GRAASP,
   },
   algorithm: {
     id: 'exec-slow-algo',
     name: 'slow algorithm',
     description: `description`,
     filepath: path.join(__dirname, './executionSlow_algorithm.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };
@@ -50,13 +55,15 @@ export const EXECUTION_FAST_ERROR = {
     size: 45,
     createdAt: Date.now(),
     lastModified: Date.now(),
+    type: DATASET_TYPES.SOURCE,
+    schema: SCHEMA_TYPES.GRAASP,
   },
   algorithm: {
     id: 'exec-fast-algo-error',
     name: 'algorithm error',
     description: `description`,
     filepath: path.join(__dirname, './executionFastError_algorithm.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };
@@ -69,13 +76,15 @@ export const EXECUTION_SLOW_ERROR = {
     size: 45,
     createdAt: Date.now(),
     lastModified: Date.now(),
+    type: DATASET_TYPES.SOURCE,
+    schema: SCHEMA_TYPES.GRAASP,
   },
   algorithm: {
     id: 'exec-slow-algo-error',
     name: 'slow algorithm error',
     description: `description`,
     filepath: path.join(__dirname, './executionSlowError_algorithm.py'),
-    author: DEFAULT_AUTHOR,
+    author: AUTHOR_USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
   },
 };

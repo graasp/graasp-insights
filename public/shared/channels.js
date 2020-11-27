@@ -31,4 +31,5 @@ module.exports = {
   CREATE_EXECUTION_CHANNEL: 'execution:create',
   DELETE_EXECUTION_CHANNEL: 'execution:delete',
   EXECUTE_ALGORITHM_CHANNEL: 'execution:execute',
+  STOP_EXECUTION_CHANNEL: 'execution:stop',
 };

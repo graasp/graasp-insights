@@ -98,6 +98,13 @@
     "From Algorithm": "From Algorithm",
     "An error occurred during execution": "An error occurred during execution",
     "Execution successful": "Execution successful",
-    "Execution running...": "Execution running..."
+    "Execution running...": "Execution running...",
+    "Remove execution": "Remove execution",
+    "Status": "Status",
+    "Executed": "Executed",
+    "Result": "Result",
+    "Visualizations": "Visualizations",
+    "Cancel execution": "Cancel execution",
+    "Success": "Success"
   }
 }

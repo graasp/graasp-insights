@@ -8,22 +8,17 @@ import PythonLogo from './execution/PythonLogo';
 import AddExecutionForm from './execution/AddExecutionForm';
 import ExecutionTable from './execution/ExecutionTable';
 import { EXECUTIONS_MAIN_ID } from '../config/selectors';
+import { DRAWER_HEADER_HEIGHT } from '../config/constants';
 
 const styles = (theme) => ({
   container: {
-    width: '50%',
-    margin: '0 auto',
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(4),
+    margin: theme.spacing(2),
   },
   pythonLogo: {
     position: 'absolute',
     right: 0,
+    top: DRAWER_HEADER_HEIGHT + 20,
     marginRight: theme.spacing(2),
-  },
-  link: {
-    textTransform: 'none',
-    textAlign: 'left',
   },
 });
 
@@ -34,7 +29,6 @@ class Executions extends Component {
       container: PropTypes.string.isRequired,
       pythonLogo: PropTypes.string.isRequired,
       button: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -43,11 +37,11 @@ class Executions extends Component {
 
     return (
       <Main id={EXECUTIONS_MAIN_ID}>
+        <div className={classes.pythonLogo}>
+          <PythonLogo />
+        </div>
+        <AddExecutionForm />
         <div className={classes.container}>
-          <div className={classes.pythonLogo}>
-            <PythonLogo />
-          </div>
-          <AddExecutionForm />
           <ExecutionTable />
         </div>
       </Main>

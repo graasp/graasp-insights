@@ -25,6 +25,7 @@ import {
   DATASET_TABLE_USER_COUNT_ID,
   buildDatasetsListDeleteButtonClass,
   LOAD_DATASET_CANCEL_BUTTON_ID,
+  DATASETS_MAIN_ID,
 } from '../src/config/selectors';
 import {
   SIMPLE_DATASET,
@@ -118,10 +119,14 @@ const deleteDataset = async (client, { name }) => {
   await deleteButton.click();
   // todo: validate confirm prompt
 
-  await client.expectElementToExist(`span.${buildDatasetsListNameClass(name)}`);
-  // await client.expectElementToNotExist(
-  //   `span.${buildDatasetsListDescriptionClass(name)}`,
-  // );
+  await client.expectElementToNotExist(
+    `#${DATASETS_MAIN_ID}`,
+    buildDatasetsListNameClass(name),
+  );
+  await client.expectElementToNotExist(
+    `#${DATASETS_MAIN_ID}`,
+    buildDatasetsListDescriptionClass(name),
+  );
 };
 
 describe('Datasets Scenarios', function () {

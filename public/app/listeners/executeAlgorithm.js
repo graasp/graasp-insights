@@ -1,11 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../logger');
-const { RESULTS_FOLDER } = require('../config/config');
+const { DATASETS_FOLDER } = require('../config/config');
 const { createNewDataset } = require('./loadDataset');
 const {
   DATASETS_COLLECTION,
-  RESULTS_COLLECTION,
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
 } = require('../db');
@@ -13,7 +12,8 @@ const { EXECUTE_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const {
   PROGRAMMING_LANGUAGES,
   EXECUTION_STATUSES,
-} = require('../config/config');
+  DATASET_TYPES,
+} = require('../../shared/constants');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const {
   UNKNOWN_PROGRAMMING_LANGUAGE,
@@ -23,7 +23,16 @@ const {
 const {
   EXECUTE_ALGORITHM_SUCCESS,
   EXECUTE_ALGORITHM_ERROR,
+  EXECUTE_ALGORITHM_STOP,
 } = require('../../shared/types');
+
+const cancelExecutionObject = (db, id) => {
+  db.get(EXECUTIONS_COLLECTION)
+    .find({ id })
+    .assign({ status: EXECUTION_STATUSES.ERROR })
+    .unset('pid')
+    .write();
+};
 
 const createNewResultDataset = ({
   name,
@@ -34,8 +43,8 @@ const createNewResultDataset = ({
   const result = createNewDataset({
     name,
     filepath,
-    folderPath: RESULTS_FOLDER,
     description,
+    type: DATASET_TYPES.RESULT,
   });
   result.algorithmId = algorithmId;
   return result;
@@ -43,20 +52,14 @@ const createNewResultDataset = ({
 
 const executeAlgorithm = (mainWindow, db) => (
   event,
-  { datasetId, algorithmId, id: executionId },
+  { sourceId, algorithmId, id: executionId, name },
 ) => {
   const channel = `${EXECUTE_ALGORITHM_CHANNEL}_${executionId}`;
   try {
-    // set execution as running
-    db.get(EXECUTIONS_COLLECTION)
-      .find({ id: executionId })
-      .assign({ status: EXECUTION_STATUSES.RUNNING })
-      .write();
-
     // get corresponding dataset
     const { filepath, name: datasetName, description } = db
       .get(DATASETS_COLLECTION)
-      .find({ id: datasetId })
+      .find({ id: sourceId })
       .value();
 
     // get the corresponding algorithm
@@ -66,7 +69,16 @@ const executeAlgorithm = (mainWindow, db) => (
       language,
     } = db.get(ALGORITHMS_COLLECTION).find({ id: algorithmId }).value();
 
-    const tmpPath = path.join(RESULTS_FOLDER, `tmp_${executionId}.json`);
+    const tmpPath = path.join(DATASETS_FOLDER, `tmp_${executionId}.json`);
+
+    // prepare onRun callback function
+    // set execution as running and pid
+    const onRun = ({ pid }) => {
+      db.get(EXECUTIONS_COLLECTION)
+        .find({ id: executionId })
+        .assign({ status: EXECUTION_STATUSES.RUNNING, pid })
+        .write();
+    };
 
     // prepare success callback function
     // copy tmp as new result dataset
@@ -74,25 +86,36 @@ const executeAlgorithm = (mainWindow, db) => (
     const onSuccess = () => {
       // save result in db
       const newResult = createNewResultDataset({
-        name: `${datasetName}_${algorithmName}`,
+        name: name?.length ? name : `${datasetName}_${algorithmName}`,
         filepath: tmpPath,
         algorithmId,
         description,
       });
-      db.get(RESULTS_COLLECTION).push(newResult).write();
+      db.get(DATASETS_COLLECTION).push(newResult).write();
 
-      const finalExecution = db
-        .get(EXECUTIONS_COLLECTION)
+      db.get(EXECUTIONS_COLLECTION)
         .find({ id: executionId })
         .assign({ resultId: newResult.id, status: EXECUTION_STATUSES.SUCCESS })
+        .unset('pid')
         .write();
 
       logger.debug(`save resulting dataset at ${newResult.filepath}`);
 
-      mainWindow.webContents.send(channel, {
-        type: EXECUTE_ALGORITHM_SUCCESS,
-        payload: { execution: finalExecution, result: newResult },
-      });
+      // check whether mainWindow still exist in case of
+      // the app quits before the process get killed
+      return (
+        !mainWindow.isDestroyed() &&
+        mainWindow?.webContents?.send(channel, {
+          type: EXECUTE_ALGORITHM_SUCCESS,
+          payload: {
+            execution: db
+              .get(EXECUTIONS_COLLECTION)
+              .find({ id: executionId })
+              .value(),
+            result: newResult,
+          },
+        })
+      );
     };
 
     // clean the tmp file at the end of the execution
@@ -102,43 +125,73 @@ const executeAlgorithm = (mainWindow, db) => (
       }
     };
 
+    const onStop = () => {
+      cancelExecutionObject(db, executionId);
+
+      // check whether mainWindow still exist in case of
+      // the app quits before the process get killed
+      return (
+        !mainWindow.isDestroyed() &&
+        mainWindow?.webContents?.send(channel, {
+          type: EXECUTE_ALGORITHM_STOP,
+        })
+      );
+    };
+
     // error handling when executing
-    const onError = (code) => {
+    const onError = ({ code, log }) => {
       logger.error(
         `process for execution ${executionId} exited with code ${code}`,
       );
       db.get(EXECUTIONS_COLLECTION)
         .find({ id: executionId })
-        .assign({ status: EXECUTION_STATUSES.ERROR })
+        .assign({ status: EXECUTION_STATUSES.ERROR, log })
+        .unset('pid')
         .value();
-      mainWindow.webContents.send(channel, {
-        type: EXECUTE_ALGORITHM_ERROR,
-        error: ERROR_EXECUTION_PROCESS,
-      });
+
+      // check whether mainWindow still exist in case of
+      // the app quits before the process get killed
+      return (
+        !mainWindow.isDestroyed() &&
+        mainWindow?.webContents?.send(channel, {
+          type: EXECUTE_ALGORITHM_ERROR,
+          error: ERROR_EXECUTION_PROCESS,
+          log,
+        })
+      );
     };
 
     switch (language) {
       case PROGRAMMING_LANGUAGES.PYTHON:
         return executePythonAlgorithm(
           { algorithmFilepath, filepath, tmpPath },
-          onSuccess,
-          onError,
-          clean,
+          { onRun, onStop, onSuccess, onError, clean },
         );
 
       default:
-        return mainWindow.webContents.send(channel, {
-          type: EXECUTE_ALGORITHM_ERROR,
-          error: UNKNOWN_PROGRAMMING_LANGUAGE,
-        });
+        // check whether mainWindow still exist in case of
+        // the app quits before the process get killed
+        return (
+          !mainWindow.isDestroyed() &&
+          mainWindow.webContents.send(channel, {
+            type: EXECUTE_ALGORITHM_ERROR,
+            error: UNKNOWN_PROGRAMMING_LANGUAGE,
+          })
+        );
     }
   } catch (err) {
     logger.error(err);
-    return mainWindow.webContents.send(channel, {
-      type: EXECUTE_ALGORITHM_ERROR,
-      error: ERROR_GENERAL,
-    });
+
+    // check whether mainWindow still exist in case of
+    // the app quits before the process get killed
+    return (
+      !mainWindow.isDestroyed() &&
+      mainWindow.webContents.send(channel, {
+        type: EXECUTE_ALGORITHM_ERROR,
+        error: ERROR_GENERAL,
+      })
+    );
   }
 };
 
-module.exports = executeAlgorithm;
+module.exports = { cancelExecutionObject, executeAlgorithm };

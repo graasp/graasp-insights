@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { List } from 'immutable';
+import { withRouter } from 'react-router';
+import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import SuccessIcon from '@material-ui/icons/Done';
 import ErrorIcon from '@material-ui/icons/Clear';
+import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Table from '../common/Table';
@@ -17,18 +21,33 @@ import {
   getExecutions,
   deleteExecution,
   getResults,
+  cancelExecution,
 } from '../../actions';
 import Loader from '../common/Loader';
 import {
   CIRCLE_PROGRESS_SIZE,
   DEFAULT_LOCALE_DATE,
-  EXECUTION_STATUSES,
 } from '../../config/constants';
-import { buildDatasetPath, buildResultPath } from '../../config/paths';
 import {
+  buildDatasetPath,
+  buildEditAlgorithmPath,
+  buildResultPath,
+} from '../../config/paths';
+import {
+  buildExecutionRowAlgorithmButtonId,
+  buildExecutionRowSourceButtonId,
+  EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
 } from '../../config/selectors';
+import { EXECUTION_STATUSES } from '../../shared/constants';
+
+const styles = () => ({
+  link: {
+    textTransform: 'none',
+    textAlign: 'left',
+  },
+});
 
 class ExecutionTable extends Component {
   static propTypes = {
@@ -45,6 +64,7 @@ class ExecutionTable extends Component {
     dispatchGetExecutions: PropTypes.func.isRequired,
     dispatchDeleteExecution: PropTypes.func.isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
+    dispatchCancelExecution: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     classes: PropTypes.shape({
       container: PropTypes.string.isRequired,
@@ -83,11 +103,23 @@ class ExecutionTable extends Component {
     dispatchDeleteExecution({ id: execution.id });
   };
 
+  handleCancel = (execution) => {
+    const { dispatchCancelExecution } = this.props;
+    dispatchCancelExecution({ id: execution.id });
+  };
+
   handleSourceView = (sourceId) => {
     const {
       history: { push },
     } = this.props;
     push(buildDatasetPath(sourceId));
+  };
+
+  handleAlgorithmView = (algorithmId) => {
+    const {
+      history: { push },
+    } = this.props;
+    push(buildEditAlgorithmPath(algorithmId));
   };
 
   handleResultView = (resultId) => {
@@ -183,6 +215,7 @@ class ExecutionTable extends Component {
       const sourceNameButton = sourceName ? (
         <Button
           className={classes.link}
+          id={buildExecutionRowSourceButtonId(sourceId)}
           onClick={() => this.handleSourceView(sourceId)}
         >
           {sourceName}
@@ -195,6 +228,18 @@ class ExecutionTable extends Component {
         algorithms.find(
           ({ id: thisAlgorithmId }) => thisAlgorithmId === algorithmId,
         )?.name || t('Unknown');
+
+      const algorithmButton = sourceName ? (
+        <Button
+          className={classes.link}
+          onClick={() => this.handleAlgorithmView(algorithmId)}
+          id={buildExecutionRowAlgorithmButtonId(algorithmId)}
+        >
+          {algorithmName}
+        </Button>
+      ) : (
+        t('Unknown')
+      );
 
       const resultButton = resultName ? (
         <Button
@@ -212,21 +257,24 @@ class ExecutionTable extends Component {
         case EXECUTION_STATUSES.SUCCESS:
           statusIcon = (
             <Tooltip title={t('Execution successful')}>
-              <SuccessIcon style={{ color: 'green' }} />
+              <SuccessIcon className={status} style={{ color: 'green' }} />
             </Tooltip>
           );
           break;
         case EXECUTION_STATUSES.ERROR:
           statusIcon = (
             <Tooltip title={t('An error occurred during execution')}>
-              <ErrorIcon style={{ color: 'red' }} />
+              <ErrorIcon className={status} style={{ color: 'red' }} />
             </Tooltip>
           );
           break;
         case EXECUTION_STATUSES.RUNNING:
           statusIcon = (
             <Tooltip title={t('Execution running...')}>
-              <CircularProgress size={CIRCLE_PROGRESS_SIZE} />
+              <CircularProgress
+                className={status}
+                size={CIRCLE_PROGRESS_SIZE}
+              />
             </Tooltip>
           );
           break;
@@ -234,23 +282,33 @@ class ExecutionTable extends Component {
           break;
       }
 
-      const quickActions = (
-        <Tooltip title={t('Remove execution')} key="delete">
-          <IconButton
-            className={EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}
-            disabled={status === EXECUTION_STATUSES.RUNNING}
-            aria-label="delete"
-            onClick={() => this.handleDelete(execution)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      );
+      const quickActions =
+        status === EXECUTION_STATUSES.RUNNING ? (
+          <Tooltip title={t('Cancel execution')} key="cancel">
+            <IconButton
+              className={EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS}
+              aria-label="cancel"
+              onClick={() => this.handleCancel(execution)}
+            >
+              <CancelIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title={t('Remove execution')} key="delete">
+            <IconButton
+              className={EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}
+              aria-label="delete"
+              onClick={() => this.handleDelete(execution)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        );
 
       return {
         key: id,
         sourceName: sourceNameButton,
-        algorithmName,
+        algorithmName: algorithmButton,
         resultId: resultButton,
         status: statusIcon,
         executedAt: executedAtString,
@@ -272,7 +330,7 @@ const mapStateToProps = ({
   datasets: dataset.get('datasets'),
   algorithms: algorithms.get('algorithms'),
   isLoading:
-    Boolean(dataset.getIn(['current', 'activity']).size) &&
+    Boolean(dataset.getIn(['activity']).size) &&
     Boolean(algorithms.getIn(['activity']).size) &&
     Boolean(executions.get('activity').size),
   pythonVersion: settings.get('pythonVersion'),
@@ -287,6 +345,7 @@ const mapDispatchToProps = {
   dispatchCreateExecution: createExecution,
   dispatchGetExecutions: getExecutions,
   dispatchDeleteExecution: deleteExecution,
+  dispatchCancelExecution: cancelExecution,
 };
 
 const ConnectedComponent = connect(
@@ -294,4 +353,8 @@ const ConnectedComponent = connect(
   mapDispatchToProps,
 )(ExecutionTable);
 
-export default ConnectedComponent;
+const StyledComponent = withStyles(styles)(ConnectedComponent);
+
+const TranslatedComponent = withTranslation()(StyledComponent);
+
+export default withRouter(TranslatedComponent);

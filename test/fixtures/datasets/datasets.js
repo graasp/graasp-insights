@@ -2,7 +2,7 @@ import path from 'path';
 
 // eslint-disable-next-line import/prefer-default-export
 export const SIMPLE_DATASET = {
-  name: 'name',
+  name: 'simple-dataset-name',
   description: 'description',
   filepath: path.resolve(__dirname, './sampleDataset.json'),
   spaceId: '5ed5f92233c8a33f3d5d87a5',
