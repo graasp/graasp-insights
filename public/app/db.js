@@ -17,7 +17,6 @@ const {
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
-  VERSION_FILE,
   AUTHOR_GRAASP,
 } = require('./config/config');
 
@@ -77,9 +76,7 @@ const ensureAlgorithmsExist = async (
     }
 
     // compare version with last app's start
-    const lastVersion = fs.existsSync(VERSION_FILE)
-      ? fs.readFileSync(VERSION_FILE)
-      : null;
+    const lastVersion = db.get('version').value();
     const currentVersion = app.getVersion();
     const isNewVersion = lastVersion !== currentVersion;
 

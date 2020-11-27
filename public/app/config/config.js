@@ -12,7 +12,6 @@ const escapeEscapeCharacter = (str) => {
 const DEFAULT_LOGGING_LEVEL = 'info';
 const DEFAULT_PROTOCOL = 'https';
 const VAR_FOLDER = `${escapeEscapeCharacter(app.getPath('userData'))}/var`;
-const VERSION_FILE = `${VAR_FOLDER}/version`;
 const DATABASE_PATH = `${VAR_FOLDER}/db.json`;
 const ICON_PATH = 'app/assets/icon.png';
 const DATASETS_FOLDER = `${VAR_FOLDER}/datasets`;
@@ -152,5 +151,4 @@ module.exports = {
   AUTHOR_USER,
   GRAASP_UTILS,
   USER_UTILS,
-  VERSION_FILE,
 };

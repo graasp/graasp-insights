@@ -1,4 +1,4 @@
-import json, hashlib, argparse
+import json, hashlib, argparse, platform
 
 def open_file(file, permission = 'r'):
     version = platform.python_version()[0]
