@@ -6,6 +6,7 @@ const {
   Menu,
   // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
@@ -16,6 +17,7 @@ const {
   DATABASE_PATH,
   ALGORITHMS_FOLDER,
   escapeEscapeCharacter,
+  VERSION_FILE,
 } = require('./app/config/config');
 const isMac = require('./app/utils/isMac');
 const {
@@ -285,6 +287,10 @@ app.on('ready', async () => {
   await ensureDatabaseExists(DATABASE_PATH);
   const db = bootstrapDatabase(DATABASE_PATH);
   await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
+
+  // set version file in var folder
+  // used to detect first install
+  fs.writeFileSync(VERSION_FILE, `${app.getVersion()}${app.isPackaged}`);
 
   createWindow();
   generateMenu();

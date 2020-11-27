@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { app } = require('electron');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const low = require('lowdb');
@@ -15,6 +17,8 @@ const {
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
+  VERSION_FILE,
+  AUTHOR_GRAASP,
 } = require('./config/config');
 
 const DATASETS_COLLECTION = 'datasets';
@@ -72,18 +76,35 @@ const ensureAlgorithmsExist = async (
       await mkdirp(algorithmsFolder);
     }
 
+    // compare version with last app's start
+    const lastVersion = fs.existsSync(VERSION_FILE)
+      ? fs.readFileSync(VERSION_FILE)
+      : null;
+    const currentVersion = app.getVersion();
+    const isNewVersion = lastVersion !== currentVersion;
+
     // set default algorithms
     [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
       const { filename } = algo;
       const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
       const destPath = path.join(algorithmsFolder, filename);
 
+      // on dev update files with most recent changes
+      const isDevWithModification =
+        !app.isPackaged &&
+        fs.statSync(destPath).mtime < fs.statSync(srcPath).mtime;
+
+      // on prod replace files on first start of new version
+      const isProdWithNewVersion =
+        app.isPackaged && algo.author === AUTHOR_GRAASP && isNewVersion;
+
       if (fs.existsSync(srcPath)) {
-        // check if file is in algorithms folder
-        // or if the existing file is older than our last changes
+        // copy if file is not in algorithms folder
+        // or depending on dev and prod env
         if (
           !fs.existsSync(destPath) ||
-          fs.statSync(destPath).mtime < fs.statSync(srcPath).mtime
+          isDevWithModification ||
+          isProdWithNewVersion
         ) {
           fs.copyFileSync(srcPath, destPath);
         }
