@@ -29,20 +29,20 @@ def main():
         country = geo['country']
         region = geo['region']
         city = geo['city']
-        
+
         if country not in grouped:
             grouped[country] = {}
-            
+
         country_group = grouped[country]
-            
+
         if region not in country_group:
             country_group[region] = {}
-            
+
         region_group = country_group[region]
-            
+
         if city not in region_group:
             region_group[city] = []
-            
+
         region_group[city].append(user)
 
     # remove each value that is not represented twice

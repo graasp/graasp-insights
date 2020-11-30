@@ -124,6 +124,7 @@ const USER_UTILS = {
   filepath: path.join(ALGORITHMS_FOLDER, 'utils.py'),
   language: PROGRAMMING_LANGUAGES.PYTHON,
   type: ALGORITHM_TYPES.UTILS,
+  author: AUTHOR_USER,
 };
 
 const ACCEPTED_PYTHON_VERSIONS = ['2.7', '3'];

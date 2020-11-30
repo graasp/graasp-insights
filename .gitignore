@@ -36,6 +36,7 @@ build/*
 
 # testing
 /coverage
+test/tmp
 
 # exclude unused coverage information
 .nyc_output

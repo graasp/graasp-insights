@@ -44,6 +44,7 @@ const {
   BROWSE_FILE_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
+  SET_DATASET_FILE_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -80,7 +81,6 @@ const {
   bootstrapDatabase,
   ensureAlgorithmsExist,
 } = require('./app/db');
-const { SET_DATASET_FILE_CHANNEL } = require('../src/shared/channels');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -285,6 +285,10 @@ app.on('ready', async () => {
   await ensureDatabaseExists(DATABASE_PATH);
   const db = bootstrapDatabase(DATABASE_PATH);
   await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
+
+  // set version file in var folder
+  // used to detect first install
+  db.set('version', app.getVersion()).write();
 
   createWindow();
   generateMenu();

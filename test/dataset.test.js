@@ -65,6 +65,7 @@ const addDataset = async (client, dataset) => {
     `.${buildDatasetsListDescriptionClass(name)}`,
   );
   if (nameTextEl.length > 1 || descriptionTextEl.length > 1) {
+    // eslint-disable-next-line no-console
     console.warning('two datasets have the same name, this can lead to errors');
   }
   expect(await nameTextEl[0].getText()).to.equal(name);
