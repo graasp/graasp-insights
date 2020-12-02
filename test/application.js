@@ -2,7 +2,7 @@ import { Application } from 'spectron';
 import electronPath from 'electron'; // Require Electron from the binaries included in node_modules.
 import path from 'path';
 import fse from 'fs-extra';
-import { setUpClientCommandes } from './commands';
+import { setUpClientCommands } from './commands';
 
 export const getVarFolder = () => {
   const today = new Date();
@@ -77,7 +77,7 @@ const createApplication = async ({ database, varFolder } = {}) => {
 
   await app.start();
 
-  setUpClientCommandes(app);
+  setUpClientCommands(app);
   await app.client.pause(1000);
   return app;
 };

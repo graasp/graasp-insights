@@ -83,7 +83,7 @@ import {
   ERROR_GETTING_EXECUTIONS_MESSAGE,
   ERROR_DELETING_EXECUTION_MESSAGE,
   SUCCESS_DELETING_EXECUTION_MESSAGE,
-  buidExecutingAlgorithmSuccessMessage,
+  buildExecutingAlgorithmSuccessMessage,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -221,7 +221,7 @@ const middleware = () => (next) => (action) => {
       message = SUCCESS_LOADING_DATASET_MESSAGE;
       break;
     case (type.match(new RegExp(`${EXECUTE_ALGORITHM_SUCCESS}`)) || {}).input:
-      message = buidExecutingAlgorithmSuccessMessage(payload.execution.name);
+      message = buildExecutingAlgorithmSuccessMessage(payload.execution.name);
 
       // allow to display duplicate message for executions
       options.preventDuplicates = false;

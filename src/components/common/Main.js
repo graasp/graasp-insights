@@ -62,11 +62,12 @@ class Main extends Component {
     }).isRequired,
     children: PropTypes.node.isRequired,
     fullScreen: PropTypes.bool,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
   };
 
   static defaultProps = {
     fullScreen: false,
+    id: '',
   };
 
   handleDrawerOpen = () => {

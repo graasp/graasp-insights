@@ -8,7 +8,7 @@ const {
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
 } = require('../db');
-const { EXECUTE_ALGORITHM_CHANNEL } = require('../../shared/channels');
+const { buildExecuteAlgorithmChannel } = require('../../shared/channels');
 const {
   PROGRAMMING_LANGUAGES,
   EXECUTION_STATUSES,
@@ -16,7 +16,7 @@ const {
 } = require('../../shared/constants');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const {
-  UNKNOWN_PROGRAMMING_LANGUAGE,
+  ERROR_UNKNOWN_PROGRAMMING_LANGUAGE,
   ERROR_EXECUTION_PROCESS,
   ERROR_GENERAL,
 } = require('../../shared/errors');
@@ -25,14 +25,7 @@ const {
   EXECUTE_ALGORITHM_ERROR,
   EXECUTE_ALGORITHM_STOP,
 } = require('../../shared/types');
-
-const cancelExecutionObject = (db, id) => {
-  db.get(EXECUTIONS_COLLECTION)
-    .find({ id })
-    .assign({ status: EXECUTION_STATUSES.ERROR })
-    .unset('pid')
-    .write();
-};
+const { cancelExecutionObject } = require('./cancelExecution');
 
 const createNewResultDataset = ({
   name,
@@ -54,7 +47,7 @@ const executeAlgorithm = (mainWindow, db) => (
   event,
   { sourceId, algorithmId, id: executionId, name },
 ) => {
-  const channel = `${EXECUTE_ALGORITHM_CHANNEL}_${executionId}`;
+  const channel = buildExecuteAlgorithmChannel(executionId);
   try {
     // get corresponding dataset
     const { filepath, name: datasetName, description } = db
@@ -175,7 +168,7 @@ const executeAlgorithm = (mainWindow, db) => (
           !mainWindow.isDestroyed() &&
           mainWindow.webContents.send(channel, {
             type: EXECUTE_ALGORITHM_ERROR,
-            error: UNKNOWN_PROGRAMMING_LANGUAGE,
+            error: ERROR_UNKNOWN_PROGRAMMING_LANGUAGE,
           })
         );
     }

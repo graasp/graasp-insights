@@ -11,8 +11,6 @@ const deleteExecution = (mainWindow, db) => async (event, { id }) => {
   try {
     db.get(EXECUTIONS_COLLECTION).remove({ id }).write();
 
-    // todo: kill process
-
     logger.debug(`Execution ${id} successfully deleted`);
 
     mainWindow.webContents.send(DELETE_EXECUTION_CHANNEL, {

@@ -6,7 +6,7 @@ const {
   GET_RESULTS_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
-const { DATASET_TYPES } = require('../../../src/shared/constants');
+const { DATASET_TYPES } = require('../../shared/constants');
 
 const getResults = (mainWindow, db) => async () => {
   try {

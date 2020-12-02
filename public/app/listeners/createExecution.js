@@ -11,6 +11,7 @@ const {
   CREATE_EXECUTION_SUCCESS,
   CREATE_EXECUTION_ERROR,
 } = require('../../shared/types');
+const logger = require('../logger');
 
 const createExecution = (mainWindow, db) => async (
   event,
@@ -41,6 +42,7 @@ const createExecution = (mainWindow, db) => async (
       payload: execution,
     });
   } catch (e) {
+    logger.error(e);
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {
       type: CREATE_EXECUTION_ERROR,
       error: ERROR_GENERAL,

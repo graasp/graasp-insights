@@ -8,7 +8,7 @@ import {
 import { openDrawer } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export
-export const setUpClientCommandes = ({ client }) => {
+export const setUpClientCommands = ({ client }) => {
   client.addCommand('goTo', async (menuItemId) => {
     // open menu if it is closed
     await openDrawer(client);

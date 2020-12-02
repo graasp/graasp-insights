@@ -24,8 +24,6 @@ const ERROR_LOADING_DATASET_MESSAGE = 'There was an error loading the dataset';
 const ERROR_MISSING_FILE_MESSAGE = 'The corresponding file was not found';
 const buildProcessErrorMessage = (code) =>
   `The process exited with code ${code}`;
-const SUCCESS_EXECUTING_ALGORITHM_MESSAGE =
-  'The execution was executed successfully';
 const ERROR_DELETING_DATASET_MESSAGE =
   'There was an error deleting the dataset';
 const SUCCESS_DELETING_DATASET_MESSAGE = 'The dataset was deleted successfully';
@@ -49,7 +47,7 @@ const ERROR_EXECUTING_ALGORITHM_MESSAGE =
   'There was an error while executing the algorithm';
 const ERROR_DELETING_ALGORITHM_MESSAGE =
   'There was an error deleting the algorithm';
-const UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
+const ERROR_UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE =
   'The programming language of the algorithm is not supported';
 const ERROR_GETTING_RESULTS_MESSAGE =
   'There was an error retrieving the datasets';
@@ -87,13 +85,15 @@ const ERROR_DELETING_EXECUTION_MESSAGE =
   'There was an error deleting the execution';
 const SUCCESS_DELETING_EXECUTION_MESSAGE =
   'The execution was deleted successfully';
-const buidExecutingAlgorithmSuccessMessage = (name) => {
+const buildExecutingAlgorithmSuccessMessage = (name) => {
   let splitName = name || '';
   if (splitName.length > EXECUTION_NAME_MAX_LENGTH) {
     splitName = `${splitName.slice(0, EXECUTION_NAME_MAX_LENGTH)}...`;
   }
   return `The execution ${splitName} was executed successfully`;
 };
+const ERROR_CANCELING_EXECUTION_MESSAGE =
+  'There was an error canceling the execution';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -107,7 +107,6 @@ module.exports = {
   ERROR_LOADING_DATASET_MESSAGE,
   ERROR_MISSING_FILE_MESSAGE,
   buildProcessErrorMessage,
-  SUCCESS_EXECUTING_ALGORITHM_MESSAGE,
   ERROR_DELETING_DATASET_MESSAGE,
   SUCCESS_DELETING_DATASET_MESSAGE,
   SUCCESS_DELETING_RESULT_MESSAGE,
@@ -121,7 +120,7 @@ module.exports = {
   ERROR_GETTING_LANGUAGE_MESSAGE,
   ERROR_SETTING_LANGUAGE_MESSAGE,
   ERROR_EXECUTING_ALGORITHM_MESSAGE,
-  UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
+  ERROR_UNKNOWN_PROGRAMMING_LANGUAGE_MESSAGE,
   ERROR_GETTING_RESULTS_MESSAGE,
   ERROR_GETTING_RESULT_MESSAGE,
   ERROR_EXPORTING_DATASET_MESSAGE,
@@ -144,5 +143,6 @@ module.exports = {
   ERROR_GETTING_EXECUTIONS_MESSAGE,
   ERROR_DELETING_EXECUTION_MESSAGE,
   SUCCESS_DELETING_EXECUTION_MESSAGE,
-  buidExecutingAlgorithmSuccessMessage,
+  buildExecutingAlgorithmSuccessMessage,
+  ERROR_CANCELING_EXECUTION_MESSAGE,
 };

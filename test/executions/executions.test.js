@@ -430,7 +430,7 @@ describe('Executions Scenarios', function () {
         );
       });
       describe('Two applications', () => {
-        it(
+        it.only(
           'Quitting application stops all running executions',
           mochaAsync(async () => {
             const varFolder = getVarFolder();

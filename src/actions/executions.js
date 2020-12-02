@@ -6,6 +6,7 @@ import {
   CREATE_EXECUTION_CHANNEL,
   DELETE_EXECUTION_CHANNEL,
   STOP_EXECUTION_CHANNEL,
+  buildExecuteAlgorithmChannel,
 } from '../shared/channels';
 import {
   FLAG_EXECUTING_ALGORITHM,
@@ -19,6 +20,8 @@ import {
   ERROR_EXECUTING_ALGORITHM_MESSAGE,
   ERROR_GETTING_EXECUTIONS_MESSAGE,
   ERROR_DELETING_EXECUTION_MESSAGE,
+  ERROR_CANCELING_EXECUTION_MESSAGE,
+  ERROR_CREATING_EXECUTION_MESSAGE,
 } from '../shared/messages';
 
 export const getExecutions = () => (dispatch) => {
@@ -44,7 +47,7 @@ export const executeAlgorithm = (execution) => (dispatch) => {
     dispatch(flagExecutingAlgorithm(true));
     window.ipcRenderer.send(EXECUTE_ALGORITHM_CHANNEL, execution);
     window.ipcRenderer.once(
-      `${EXECUTE_ALGORITHM_CHANNEL}_${execution.id}`,
+      buildExecuteAlgorithmChannel(execution.id),
       async (event, payload) => {
         dispatch(payload);
         dispatch(flagExecutingAlgorithm(false));
@@ -86,7 +89,7 @@ export const createExecution = ({
       },
     );
   } catch (err) {
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_EXECUTIONS_MESSAGE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_CREATING_EXECUTION_MESSAGE);
     dispatch(flagCreatingExecution(false));
   }
 };
@@ -118,7 +121,7 @@ export const cancelExecution = ({ id }) => (dispatch) => {
       return dispatch(flagStoppingExecution(false));
     });
   } catch (err) {
-    toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_EXECUTION_MESSAGE);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_CANCELING_EXECUTION_MESSAGE);
     dispatch(flagStoppingExecution(false));
   }
 };

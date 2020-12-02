@@ -1,6 +1,10 @@
 // this file needs to use module.exports as it is used both by react and electron
 // the original file is located in src/shared and is duplicated in public/shared
 
+const EXECUTE_ALGORITHM_CHANNEL = 'execution:execute';
+const buildExecuteAlgorithmChannel = (id) =>
+  `${EXECUTE_ALGORITHM_CHANNEL}_${id}`;
+
 module.exports = {
   LOAD_DATASET_CHANNEL: 'dataset:load',
   GET_DATASET_CHANNEL: 'dataset:get',
@@ -30,6 +34,7 @@ module.exports = {
   GET_EXECUTIONS_CHANNEL: 'executions:get',
   CREATE_EXECUTION_CHANNEL: 'execution:create',
   DELETE_EXECUTION_CHANNEL: 'execution:delete',
-  EXECUTE_ALGORITHM_CHANNEL: 'execution:execute',
   STOP_EXECUTION_CHANNEL: 'execution:stop',
+  EXECUTE_ALGORITHM_CHANNEL,
+  buildExecuteAlgorithmChannel,
 };

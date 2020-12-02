@@ -8,7 +8,14 @@ const {
   STOP_EXECUTION_SUCCESS,
   STOP_EXECUTION_ERROR,
 } = require('../../shared/types');
-const { cancelExecutionObject } = require('./executeAlgorithm');
+
+const cancelExecutionObject = (db, id) => {
+  db.get(EXECUTIONS_COLLECTION)
+    .find({ id })
+    .assign({ status: EXECUTION_STATUSES.ERROR })
+    .unset('pid')
+    .write();
+};
 
 const cancelExecutionById = (db, id) => {
   const execution = db.get(EXECUTIONS_COLLECTION).find({ id });
@@ -29,7 +36,7 @@ const cancelExecution = (mainWindow, db) => async (e, { id }) => {
       type: STOP_EXECUTION_SUCCESS,
     });
   } catch (err) {
-    logger.log(err);
+    logger.error(err);
     mainWindow.webContents.send(STOP_EXECUTION_CHANNEL, {
       type: STOP_EXECUTION_ERROR,
       error: ERROR_GENERAL,
@@ -50,4 +57,9 @@ const cancelAllRunningExecutions = async (db) => {
   }
 };
 
-module.exports = { cancelExecution, cancelAllRunningExecutions };
+module.exports = {
+  cancelExecution,
+  cancelAllRunningExecutions,
+  cancelExecutionById,
+  cancelExecutionObject,
+};

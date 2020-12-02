@@ -28,7 +28,6 @@ class Executions extends Component {
     classes: PropTypes.shape({
       container: PropTypes.string.isRequired,
       pythonLogo: PropTypes.string.isRequired,
-      button: PropTypes.string.isRequired,
     }).isRequired,
   };
 
