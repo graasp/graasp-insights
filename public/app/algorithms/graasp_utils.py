@@ -34,6 +34,6 @@ def parse_arguments(additional_arguments=[]):
 
     for arg in additional_arguments:
         if 'name' in arg and 'type' in arg:
-            parser.add_argument(f'--{arg["name"]}', type=arg["type"])
+            parser.add_argument('--%s' % arg["name"], type=arg["type"])
 
     return parser.parse_args()

@@ -51,7 +51,7 @@ const SelectParameters = (props) => {
           />
         );
       }
-      case PARAMETER_TYPES.NUMBER_INPUT: {
+      case PARAMETER_TYPES.FLOAT_INPUT: {
         return (
           <TextField
             value={value}

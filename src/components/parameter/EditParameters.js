@@ -9,15 +9,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { Alert } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
-import {
-  DEFAULT_PARAMETER_NAME,
-  PARAMETER_TYPES_DEFAULT,
-} from '../../config/constants';
+import { PARAMETER_TYPES_DEFAULT } from '../../config/constants';
 import { PARAMETER_TYPES } from '../../shared/constants';
-import { isParameterValid } from '../../utils/parameter';
+import {
+  isParameterValid,
+  isParameterNameValid,
+  areParametersNamesUnique,
+} from '../../utils/parameter';
 import FieldSelectorButton from './FieldSelectorButton';
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +55,7 @@ const EditParameters = (props) => {
 
   const addParam = () => {
     const newParam = {
-      name: DEFAULT_PARAMETER_NAME,
+      name: '',
       type: PARAMETER_TYPES.INTEGER_INPUT,
       value: PARAMETER_TYPES_DEFAULT[PARAMETER_TYPES.INTEGER_INPUT],
     };
@@ -104,7 +106,7 @@ const EditParameters = (props) => {
           />
         );
       }
-      case PARAMETER_TYPES.NUMBER_INPUT: {
+      case PARAMETER_TYPES.FLOAT_INPUT: {
         return (
           <TextField
             value={value}
@@ -131,9 +133,18 @@ const EditParameters = (props) => {
   return (
     <div id={id} className={className}>
       <Typography variant="h6">{t('Parameters')}</Typography>
+      {(parameters.some(({ name }) => name.length === 0) && (
+        <Alert severity="error">{t("Parameter names can't be empty")}</Alert>
+      )) ||
+        (!areParametersNamesUnique(parameters) && (
+          <Alert severity="error">
+            {t("Parameters can't have the same name")}
+          </Alert>
+        ))}
       <div className={classes.parametersContent}>
         {parameters?.map((param, paramIdx) => {
           const { name, type } = param;
+          const invalidName = name.length > 0 && !isParameterNameValid(param);
           return (
             // eslint-disable-next-line react/no-array-index-key
             <Grid container spacing={1} key={paramIdx}>
@@ -142,6 +153,13 @@ const EditParameters = (props) => {
                   label={t('Name')}
                   value={name}
                   onChange={(event) => updateName(event.target.value, paramIdx)}
+                  error={invalidName}
+                  helperText={
+                    invalidName &&
+                    t(
+                      "Parameter name can only contain letters, digits and '_' and can't start with a digit",
+                    )
+                  }
                 />
               </Grid>
               <Grid item xs={3}>
@@ -156,8 +174,8 @@ const EditParameters = (props) => {
                     <MenuItem value={PARAMETER_TYPES.INTEGER_INPUT}>
                       {t(PARAMETER_TYPES.INTEGER_INPUT)}
                     </MenuItem>
-                    <MenuItem value={PARAMETER_TYPES.NUMBER_INPUT}>
-                      {t(PARAMETER_TYPES.NUMBER_INPUT)}
+                    <MenuItem value={PARAMETER_TYPES.FLOAT_INPUT}>
+                      {t(PARAMETER_TYPES.FLOAT_INPUT)}
                     </MenuItem>
                     <MenuItem value={PARAMETER_TYPES.STRING_INPUT}>
                       {t(PARAMETER_TYPES.STRING_INPUT)}

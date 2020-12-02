@@ -116,12 +116,15 @@
     "Add parameter": "Add parameter",
     "Type": "Type",
     "Integer": "Integer",
-    "Number": "Number",
+    "Float": "Float",
     "String": "String",
     "Field Selector": "Field Selector",
     "Default value": "Default value",
     "Unselect all": "Unselect all",
     "Please provide an integer": "Please provide an integer",
-    "Please provide a number": "Please provide a number"
+    "Please provide a number": "Please provide a number",
+    "Parameter names can't be empty": "Parameter names can't be empty",
+    "Parameters can't have the same name": "Parameters can't have the same name",
+    "Parameter name can only contain letters, digits and '_' and can't start with a digit": "Parameter name can only contain letters, digits and '_' and can't start with a digit"
   }
 }

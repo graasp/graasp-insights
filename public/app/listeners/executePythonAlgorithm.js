@@ -13,7 +13,7 @@ const executePythonAlgorithm = (
     parameters
       ?.map(({ name, type, value }) => {
         switch (type) {
-          case PARAMETER_TYPES.NUMBER_INPUT:
+          case PARAMETER_TYPES.FLOAT_INPUT:
           case PARAMETER_TYPES.INTEGER_INPUT:
             return [`--${name}`, Number(value)];
           case PARAMETER_TYPES.STRING_INPUT:

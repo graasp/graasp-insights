@@ -20,7 +20,7 @@ const AUTHORS = {
 
 const PARAMETER_TYPES = {
   FIELD_SELECTOR: 'Field Selector',
-  NUMBER_INPUT: 'Number',
+  FLOAT_INPUT: 'Float',
   INTEGER_INPUT: 'Integer',
   STRING_INPUT: 'String',
 };

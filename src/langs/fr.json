@@ -115,12 +115,15 @@
     "Add parameter": "Ajouter un paramètre",
     "Type": "Type",
     "Integer": "Nombre entier",
-    "Number": "Nombre réel",
+    "Float": "Nombre réel",
     "String": "Chaîne de charactères",
     "Field Selector": "Sélecteur de champs",
     "Default value": "Valeur par défaut",
     "Unselect all": "Tout déselectionner",
     "Please provide an integer": "Veuillez entrer un nombre entier",
-    "Please provide a number": "Veuillez entrer un nombre réel"
+    "Please provide a number": "Veuillez entrer un nombre réel",
+    "Parameter names can't be empty": "Le nom des paramètres ne peut pas être vide",
+    "Parameters can't have the same name": "Les paramètres ne peuvent pas avoir le même nom",
+    "Parameter name can only contain letters, digits and '_' and can't start with a digit": "Le nom d'un paramètre ne peut contenir que des lettres, chiffres et '_' et ne peut pas commencer par un chiffre"
   }
 }
