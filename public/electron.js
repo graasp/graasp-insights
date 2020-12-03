@@ -4,6 +4,7 @@ const {
   shell,
   ipcMain,
   Menu,
+  dialog,
   // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
 const path = require('path');
@@ -97,6 +98,30 @@ const {
 Object.keys(env).forEach((key) => {
   process.env[key] = env[key];
 });
+
+// mock of electron dialog for tests
+if (process.env.NODE_ENV === 'test') {
+  if (process.env.SHOW_MESSAGE_DIALOG_RESPONSE) {
+    const response = JSON.parse(process.env.SHOW_MESSAGE_DIALOG_RESPONSE);
+    dialog.showMessageBox = () => {
+      return Promise.resolve({ response });
+    };
+  }
+  if (process.env.SHOW_SAVE_DIALOG_RESPONSE) {
+    dialog.showSaveDialog = () => {
+      return Promise.resolve({
+        filePath: process.env.SHOW_SAVE_DIALOG_RESPONSE,
+      });
+    };
+  }
+  if (process.env.SHOW_OPEN_DIALOG_RESPONSE) {
+    dialog.showOpenDialog = () => {
+      return Promise.resolve({
+        filePaths: process.env.SHOW_OPEN_DIALOG_RESPONSE,
+      });
+    };
+  }
+}
 
 let mainWindow;
 

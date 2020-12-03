@@ -68,9 +68,9 @@ export const deleteResult = ({ id, name }) => (dispatch) => {
             DELETE_RESULT_CHANNEL,
             async (event, response) => {
               dispatch(response);
+              dispatch(flagDeletingResult(false));
             },
           );
-          dispatch(flagDeletingResult(false));
         }
       },
     );

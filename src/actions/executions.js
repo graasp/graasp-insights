@@ -7,6 +7,7 @@ import {
   DELETE_EXECUTION_CHANNEL,
   STOP_EXECUTION_CHANNEL,
   buildExecuteAlgorithmChannel,
+  SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_EXECUTING_ALGORITHM,
@@ -94,16 +95,27 @@ export const createExecution = ({
   }
 };
 
-export const deleteExecution = ({ id }) => (dispatch) => {
+export const deleteExecution = ({ id, name }) => (dispatch) => {
   const flagDeletingExecution = createFlag(FLAG_DELETING_EXECUTION);
   try {
-    dispatch(flagDeletingExecution(true));
+    window.ipcRenderer.send(SHOW_CONFIRM_DELETE_PROMPT_CHANNEL, { name });
+    window.ipcRenderer.once(
+      SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+      (e, shouldDelete) => {
+        if (shouldDelete) {
+          dispatch(flagDeletingExecution(true));
 
-    window.ipcRenderer.send(DELETE_EXECUTION_CHANNEL, { id });
-    window.ipcRenderer.once(DELETE_EXECUTION_CHANNEL, async (e, payload) => {
-      dispatch(payload);
-      return dispatch(flagDeletingExecution(false));
-    });
+          window.ipcRenderer.send(DELETE_EXECUTION_CHANNEL, { id });
+          window.ipcRenderer.once(
+            DELETE_EXECUTION_CHANNEL,
+            async (event, payload) => {
+              dispatch(payload);
+              dispatch(flagDeletingExecution(false));
+            },
+          );
+        }
+      },
+    );
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_EXECUTION_MESSAGE);
     dispatch(flagDeletingExecution(false));

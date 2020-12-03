@@ -101,8 +101,8 @@ class ExecutionTable extends Component {
   }
 
   handleDelete = (execution) => {
-    const { dispatchDeleteExecution } = this.props;
-    dispatchDeleteExecution({ id: execution.id });
+    const { dispatchDeleteExecution, t } = this.props;
+    dispatchDeleteExecution({ id: execution.id, name: t('this execution') });
   };
 
   handleCancel = (execution) => {

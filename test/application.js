@@ -17,7 +17,6 @@ export const getVarFolder = () => {
   return path.join(__dirname, 'tmp', time);
 };
 
-// eslint-disable-next-line no-unused-vars
 const setUpDatabase = async (database = {}, varFolderPath) => {
   const tmpDatabasePath = varFolderPath || getVarFolder();
   const varFolder = path.join(tmpDatabasePath, 'var');
@@ -25,46 +24,64 @@ const setUpDatabase = async (database = {}, varFolderPath) => {
   fse.ensureDirSync(`${varFolder}/algorithms`);
 
   if (Object.keys(database).length !== 0) {
-    const { datasets = [], algorithms = [] } = database;
-    // eslint-disable-next-line no-restricted-syntax
+    const {
+      datasets: originalDatasets,
+      algorithms: originalAlgorithms,
+    } = database;
+    const datasets = JSON.parse(JSON.stringify(originalDatasets || []));
     for (const dataset of datasets) {
-      try {
-        const dest = `${varFolder}/datasets/${dataset.id}.json`;
-        fse.copyFileSync(dataset.filepath, dest);
-        dataset.filepath = dest;
-      } catch (e) {
-        // deleting the file after the copy throws error?
-        const isDeleteFileAfterCopy =
-          e?.syscall === 'copyfile' && e?.errno === -2;
-        if (!isDeleteFileAfterCopy) {
-          throw e;
-        }
-      }
+      const dest = `${varFolder}/datasets/${dataset.id}.json`;
+      fse.copyFileSync(dataset.filepath, dest);
+      dataset.filepath = dest;
     }
-    // eslint-disable-next-line no-restricted-syntax
+    const algorithms = JSON.parse(JSON.stringify(originalAlgorithms || []));
     for (const algorithm of algorithms) {
-      try {
-        const dest = `${varFolder}/algorithms/${algorithm.id}.py`;
-        fse.copyFileSync(algorithm.filepath, dest);
-        algorithm.filepath = dest;
-        algorithm.filename = algorithm.id;
-      } catch (e) {
-        // deleting the file after the copy throws error?
-        const isDeleteFileAfterCopy =
-          e.syscall === 'copyfile' && e.errno === -2;
-        if (!isDeleteFileAfterCopy) {
-          throw e;
-        }
-      }
+      const dest = `${varFolder}/algorithms/${algorithm.id}.py`;
+      fse.copyFileSync(algorithm.filepath, dest);
+      algorithm.filepath = dest;
+      algorithm.filename = algorithm.id;
     }
-    fse.writeFileSync(`${varFolder}/db.json`, JSON.stringify(database));
+
+    const newDatabase = {
+      datasets,
+      algorithms,
+    };
+
+    fse.writeFileSync(`${varFolder}/db.json`, JSON.stringify(newDatabase));
   }
 
   return tmpDatabasePath;
 };
 
-const createApplication = async ({ database, varFolder } = {}) => {
+const createApplication = async ({
+  database,
+  responses = {
+    showMessageDialogResponse: undefined,
+    showSaveDialogResponse: undefined,
+    showOpenDialogResponse: undefined,
+    showTours: 0,
+  },
+  varFolder,
+} = {}) => {
+  const {
+    showMessageDialogResponse,
+    showSaveDialogResponse,
+    showOpenDialogResponse,
+  } = responses;
+
   const env = { NODE_ENV: 'test', ELECTRON_IS_DEV: 0 };
+
+  if (showMessageDialogResponse !== undefined) {
+    env.SHOW_MESSAGE_DIALOG_RESPONSE = showMessageDialogResponse;
+  }
+
+  if (showSaveDialogResponse !== undefined) {
+    env.SHOW_SAVE_DIALOG_RESPONSE = showSaveDialogResponse;
+  }
+
+  if (showOpenDialogResponse !== undefined) {
+    env.SHOW_OPEN_DIALOG_RESPONSE = showOpenDialogResponse;
+  }
 
   // set up database
   const tmpDatabasePath = await setUpDatabase(database, varFolder);
