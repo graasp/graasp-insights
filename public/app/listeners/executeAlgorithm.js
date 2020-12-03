@@ -45,7 +45,12 @@ const createNewResultDataset = ({
 
 const executeAlgorithm = (mainWindow, db) => (
   event,
-  { sourceId, algorithmId, id: executionId, name },
+  {
+    id: executionId,
+    source: { id: sourceId },
+    algorithm: { id: algorithmId },
+    result: { name },
+  },
 ) => {
   const channel = buildExecuteAlgorithmChannel(executionId);
   try {
@@ -88,7 +93,10 @@ const executeAlgorithm = (mainWindow, db) => (
 
       db.get(EXECUTIONS_COLLECTION)
         .find({ id: executionId })
-        .assign({ resultId: newResult.id, status: EXECUTION_STATUSES.SUCCESS })
+        .assign({
+          status: EXECUTION_STATUSES.SUCCESS,
+          result: { id: newResult.id },
+        })
         .unset('pid')
         .write();
 

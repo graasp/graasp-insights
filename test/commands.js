@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import {
+  ALGORITHMS_MENU_ITEM_ID,
+  DATASETS_MENU_ITEM_ID,
   EXECUTIONS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
@@ -14,6 +16,14 @@ export const setUpClientCommands = ({ client }) => {
     await openDrawer(client);
     const menuItem = await client.$(`#${menuItemId}`);
     await menuItem.click();
+  });
+
+  client.addCommand('goToDatasets', async () => {
+    await client.goTo(DATASETS_MENU_ITEM_ID);
+  });
+
+  client.addCommand('goToAlgorithms', async () => {
+    await client.goTo(ALGORITHMS_MENU_ITEM_ID);
   });
 
   client.addCommand('goToExecutions', async () => {

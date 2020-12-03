@@ -30,11 +30,13 @@ const createExecution = (mainWindow, db) => async (
     // add execution
     const execution = {
       id: ObjectId().str,
-      algorithmId,
-      sourceId,
+      algorithm: { id: algorithmId },
+      source: { id: sourceId },
       executedAt: Date.now(),
       status: EXECUTION_STATUSES.PENDING,
-      name: userProvidedFilename || `${datasetName}_${algorithmName}`,
+      result: {
+        name: userProvidedFilename || `${datasetName}_${algorithmName}`,
+      },
     };
     db.get(EXECUTIONS_COLLECTION).push(execution).write();
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {

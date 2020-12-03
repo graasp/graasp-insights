@@ -54,3 +54,5 @@ export const buildExecutionRowAlgorithmButtonId = (id) =>
   `executionRowAlgorithmButton-${id}`;
 export const EDIT_ALGORITHM_MAIN_ID = 'editAlgorithmMain';
 export const DATASET_SCREEN_MAIN_ID = 'datasetScreenMain';
+export const EXECUTION_TABLE_ROW_BUTTON_CLASS = 'executionTableRowButton';
+export const EXECUTION_FORM_NAME_INPUT_ID = 'executionFormNameInput';

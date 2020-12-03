@@ -13,6 +13,7 @@ import ErrorIcon from '@material-ui/icons/Clear';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import clsx from 'clsx';
 import Table from '../common/Table';
 import {
   getDatasets,
@@ -39,6 +40,7 @@ import {
   EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
+  EXECUTION_TABLE_ROW_BUTTON_CLASS,
 } from '../../config/selectors';
 import { EXECUTION_STATUSES } from '../../shared/constants';
 
@@ -196,60 +198,86 @@ class ExecutionTable extends Component {
       const {
         id,
         executedAt,
-        algorithmId,
-        sourceId,
-        resultId,
+        algorithm: { id: algorithmId, name: algorithmName },
+        source: { id: sourceId, name: sourceName },
+        result: { id: resultId, name: resultName },
         status,
       } = execution;
 
       const executedAtString = executedAt
         ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
-      const sourceName = [...datasets, ...results].find(
-        ({ id: thisSourceId }) => thisSourceId === sourceId,
-      )?.name;
-      const resultName = results.find(
-        ({ id: thisResultId }) => thisResultId === resultId,
-      )?.name;
 
-      const sourceNameButton = sourceName ? (
+      const sName =
+        sourceName ||
+        [...datasets, ...results].find(
+          ({ id: thisSourceId }) => thisSourceId === sourceId,
+        )?.name ||
+        t('Unknown');
+
+      const sourceProps = sourceId
+        ? {
+            id: buildExecutionRowSourceButtonId(sourceId),
+            onClick: () => this.handleSourceView(sourceId),
+          }
+        : {
+            disabled: true,
+          };
+      const sourceNameButton = (
         <Button
-          className={classes.link}
-          id={buildExecutionRowSourceButtonId(sourceId)}
-          onClick={() => this.handleSourceView(sourceId)}
+          className={clsx(classes.link, EXECUTION_TABLE_ROW_BUTTON_CLASS)}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...sourceProps}
         >
-          {sourceName}
+          {sName}
         </Button>
-      ) : (
-        t('Unknown')
       );
 
-      const algorithmName =
+      const aName =
+        algorithmName ||
         algorithms.find(
           ({ id: thisAlgorithmId }) => thisAlgorithmId === algorithmId,
-        )?.name || t('Unknown');
+        )?.name ||
+        t('Unknown');
 
-      const algorithmButton = sourceName ? (
+      const algorithmProps = algorithmId
+        ? {
+            id: buildExecutionRowAlgorithmButtonId(algorithmId),
+            onClick: () => this.handleAlgorithmView(algorithmId),
+          }
+        : {
+            disabled: true,
+          };
+      const algorithmButton = (
         <Button
-          className={classes.link}
-          onClick={() => this.handleAlgorithmView(algorithmId)}
-          id={buildExecutionRowAlgorithmButtonId(algorithmId)}
+          className={clsx(classes.link, EXECUTION_TABLE_ROW_BUTTON_CLASS)}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...algorithmProps}
         >
-          {algorithmName}
+          {aName}
         </Button>
-      ) : (
-        t('Unknown')
       );
 
-      const resultButton = resultName ? (
+      const rName =
+        resultName ||
+        results.find(({ id: thisResultId }) => thisResultId === resultId)
+          ?.name ||
+        t('Unknown');
+      const resultProps = resultId
+        ? {
+            onClick: () => this.handleResultView(resultId),
+          }
+        : {
+            disabled: true,
+          };
+      const resultButton = (
         <Button
-          className={classes.link}
-          onClick={() => this.handleResultView(resultId)}
+          className={clsx(classes.link, EXECUTION_TABLE_ROW_BUTTON_CLASS)}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...resultProps}
         >
-          {resultName}
+          {rName}
         </Button>
-      ) : (
-        t('Unknown')
       );
 
       let statusIcon = null;

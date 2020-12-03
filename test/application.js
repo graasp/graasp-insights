@@ -28,16 +28,34 @@ const setUpDatabase = async (database = {}, varFolderPath) => {
     const { datasets = [], algorithms = [] } = database;
     // eslint-disable-next-line no-restricted-syntax
     for (const dataset of datasets) {
-      const dest = `${varFolder}/datasets/${dataset.id}.json`;
-      fse.copyFileSync(dataset.filepath, dest);
-      dataset.filepath = dest;
+      try {
+        const dest = `${varFolder}/datasets/${dataset.id}.json`;
+        fse.copyFileSync(dataset.filepath, dest);
+        dataset.filepath = dest;
+      } catch (e) {
+        // deleting the file after the copy throws error?
+        const isDeleteFileAfterCopy =
+          e?.syscall === 'copyfile' && e?.errno === -2;
+        if (!isDeleteFileAfterCopy) {
+          throw e;
+        }
+      }
     }
     // eslint-disable-next-line no-restricted-syntax
     for (const algorithm of algorithms) {
-      const dest = `${varFolder}/algorithms/${algorithm.id}.py`;
-      fse.copyFileSync(algorithm.filepath, dest);
-      algorithm.filepath = dest;
-      algorithm.filename = algorithm.id;
+      try {
+        const dest = `${varFolder}/algorithms/${algorithm.id}.py`;
+        fse.copyFileSync(algorithm.filepath, dest);
+        algorithm.filepath = dest;
+        algorithm.filename = algorithm.id;
+      } catch (e) {
+        // deleting the file after the copy throws error?
+        const isDeleteFileAfterCopy =
+          e.syscall === 'copyfile' && e.errno === -2;
+        if (!isDeleteFileAfterCopy) {
+          throw e;
+        }
+      }
     }
     fse.writeFileSync(`${varFolder}/db.json`, JSON.stringify(database));
   }

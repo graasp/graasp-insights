@@ -33,6 +33,7 @@ import {
   EXECUTIONS_ALGORITHMS_SELECT_ID,
   EXECUTIONS_DATASETS_SELECT_ID,
   EXECUTIONS_EXECUTE_BUTTON_ID,
+  EXECUTION_FORM_NAME_INPUT_ID,
 } from '../../config/selectors';
 
 const styles = (theme) => ({
@@ -294,6 +295,7 @@ class AddExecutionForm extends Component {
             label={t('Save As...')}
             variant="outlined"
             value={userProvidedFilename}
+            id={EXECUTION_FORM_NAME_INPUT_ID}
           />
         </FormControl>
 

@@ -112,21 +112,13 @@ const viewDataset = async (client, dataset) => {
   ).to.equal(userCount);
 };
 
-const deleteDataset = async (client, { name }) => {
+// eslint-disable-next-line import/prefer-default-export
+export const deleteDataset = async (client, { name }) => {
   const deleteButton = await client.$(
     `.${buildDatasetsListDeleteButtonClass(name)}`,
   );
   await deleteButton.click();
   // todo: validate confirm prompt
-
-  await client.expectElementToNotExist(
-    `#${DATASETS_MAIN_ID}`,
-    buildDatasetsListNameClass(name),
-  );
-  await client.expectElementToNotExist(
-    `#${DATASETS_MAIN_ID}`,
-    buildDatasetsListDescriptionClass(name),
-  );
 };
 
 describe('Datasets Scenarios', function () {
@@ -187,6 +179,16 @@ describe('Datasets Scenarios', function () {
       const backButton = await client.$(`#${DATASET_BACK_BUTTON_ID}`);
       await backButton.click();
       await deleteDataset(client, dataset);
+      await client.pause(1000);
+
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListNameClass(dataset.name),
+      );
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListDescriptionClass(dataset.name),
+      );
     }),
   );
 });

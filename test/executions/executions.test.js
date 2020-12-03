@@ -27,6 +27,8 @@ import {
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_MAIN_ID,
   EXECUTIONS_TABLE_ID,
+  EXECUTION_FORM_NAME_INPUT_ID,
+  EXECUTION_TABLE_ROW_BUTTON_CLASS,
   RESULTS_MAIN_ID,
 } from '../../src/config/selectors';
 import {
@@ -36,8 +38,9 @@ import {
   EXECUTION_SLOW,
 } from '../fixtures/executions/executions';
 import { EXECUTION_STATUSES } from '../../src/shared/constants';
+import { deleteDataset } from '../dataset.test';
 
-const createExecution = async (client, { dataset, algorithm }) => {
+const createExecution = async (client, { dataset, algorithm, name }) => {
   const datasetSelect = await client.$(`#${EXECUTIONS_DATASETS_SELECT_ID}`);
   await datasetSelect.click();
   await (
@@ -49,7 +52,9 @@ const createExecution = async (client, { dataset, algorithm }) => {
     await client.$(`#${buildExecutionAlgorithmOptionId(algorithm.id)}`)
   ).click();
 
-  // todo: as save
+  await (await client.$(`#${EXECUTION_FORM_NAME_INPUT_ID}`)).addValue(name);
+
+  await client.pause(1000);
 
   await (await client.$(`#${EXECUTIONS_EXECUTE_BUTTON_ID}`)).click();
 };
@@ -298,7 +303,9 @@ describe('Executions Scenarios', function () {
               algorithm: { id: fastAlgoId, name: fastAlgoName },
             } = EXECUTION_FAST;
 
-            await createExecution(client, EXECUTION_FAST);
+            const resultName = 'resultName';
+
+            await createExecution(client, EXECUTION_FAST, resultName);
             await createExecution(client, EXECUTION_FAST_ERROR);
 
             // check algo is displayed
@@ -321,6 +328,64 @@ describe('Executions Scenarios', function () {
             expect(
               await (await client.$(`#${EDIT_ALGORITHM_MAIN_ID}`)).getHTML(),
             ).to.contain(fastAlgoName);
+
+            // buttons are not available if resources are deleted
+
+            // enable when results tests are written
+            // delete result
+            // await client.goToResults();
+            // await deleteResult(client, { name: resultName });
+            // await client.goToExecutions();
+            // let disabledDatasetButtons = await client.$$(
+            //   `.${EXECUTION_TABLE_ROW_BUTTON_CLASS}`,
+            // );
+
+            // let testedElements = 0;
+            // for (const button of disabledDatasetButtons) {
+            //   const text = await button.getText();
+            //   if (text === resultName) {
+            //     testedElements += 1;
+            //     expect(await button.getAttribute('disabled')).to.equal('true');
+            //   }
+            // }
+            // expect(testedElements > 0).to.be.true;
+
+            // todo: enable when algorithm test are written
+            // delete algorithm
+            // await client.goToA();
+            // await deleteAlgorithm(client, { name: fastAlgoName });
+            // await client.goToExecutions();
+            //  disabledDatasetButtons = await client.$$(
+            //   `.${EXECUTION_TABLE_ROW_BUTTON_CLASS}`,
+            // );
+
+            //  testedElements = 0;
+            // for (const button of disabledDatasetButtons) {
+            //   const text = await button.getText();
+            //   if (text === fastAlgoName) {
+            //     testedElements += 1;
+            //     expect(await button.getAttribute('disabled')).to.equal('true');
+            //   }
+            // }
+            // expect(testedElements > 0).to.be.true;
+
+            // delete dataset
+            await client.goToDatasets();
+            await deleteDataset(client, { name: fastDatasetName });
+            await client.goToExecutions();
+            const disabledDatasetButtons = await client.$$(
+              `.${EXECUTION_TABLE_ROW_BUTTON_CLASS}`,
+            );
+
+            let testedElements = 0;
+            for (const button of disabledDatasetButtons) {
+              const text = await button.getText();
+              if (text === fastDatasetName) {
+                testedElements += 1;
+                expect(await button.getAttribute('disabled')).to.equal('true');
+              }
+            }
+            expect(testedElements > 0).to.be.true;
           }),
         );
 
@@ -430,7 +495,7 @@ describe('Executions Scenarios', function () {
         );
       });
       describe('Two applications', () => {
-        it.only(
+        it(
           'Quitting application stops all running executions',
           mochaAsync(async () => {
             const varFolder = getVarFolder();

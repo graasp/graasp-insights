@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { DELETE_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { ALGORITHMS_COLLECTION } = require('../db');
+const { ALGORITHMS_COLLECTION, EXECUTIONS_COLLECTION } = require('../db');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   DELETE_ALGORITHM_ERROR,
@@ -13,6 +13,15 @@ const deleteAlgorithm = (mainWindow, db) => async (event, { id }) => {
     // get algorithm from local db
     const algorithm = db.get(ALGORITHMS_COLLECTION).find({ id }).value();
     const { filepath, name } = algorithm;
+
+    // update related executions
+    db.get(EXECUTIONS_COLLECTION)
+      .filter(({ algorithm: { id: algorithmId } }) => algorithmId === id)
+      .each((exec) => {
+        // eslint-disable-next-line no-param-reassign
+        exec.algorithm = { name };
+      })
+      .write();
 
     // remove metadata entry
     db.get(ALGORITHMS_COLLECTION).remove({ id }).write();
