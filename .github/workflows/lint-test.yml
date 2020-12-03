@@ -1,0 +1,25 @@
+name: lint and test
+
+on:
+  # trigger workflow on pull requests and merges (merging = pushing on master)
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: yarn && yarn setup
+      - name: lint
+        run: yarn lint && yarn prettier:check
+      - name: test
+        run: yarn ci
