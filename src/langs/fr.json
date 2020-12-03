@@ -93,6 +93,17 @@
     "Edit utils": "Modifier le fichier utils/utilitaire",
     "This file cannot be modified. Use the user file to write your own functions.": "Ce fichier ne peut pas être modifié. Utilisez le fichier utilisateur pour écrire vos propres fonctions.",
     "User": "Utilisateur",
-    "You can use the 'utils' file to write functions you want to use across your custom algorithms": "Vous pouvez utiliser le fichier 'utils' pour écrire des fonctions que vous voulez utiliser à travers vos algorithmes personnalisés"
+    "You can use the 'utils' file to write functions you want to use across your custom algorithms": "Vous pouvez utiliser le fichier 'utils' pour écrire des fonctions que vous voulez utiliser à travers vos algorithmes personnalisés",
+    "From Algorithm": "De l'Algorithme",
+    "An error occurred during execution": "Une erreur est survenue durant l'exécution",
+    "Execution successful": "Exécution réussie",
+    "Execution running...": "Exécution en cours...",
+    "Remove execution": "Effacer l'exécution",
+    "Status": "Statut",
+    "Executed": "Exécuté",
+    "Result": "Résultat",
+    "Visualizations": "Visualisations",
+    "Cancel execution": "Annuler l'exécution",
+    "Success": "Succès"
   }
 }

@@ -17,8 +17,8 @@ import Loader from '../common/Loader';
 import {
   getDatasets,
   getAlgorithms,
-  executeAlgorithm,
   getResults,
+  createExecution,
 } from '../../actions';
 import {
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
@@ -26,8 +26,21 @@ import {
 } from '../../shared/messages';
 import { SCHEMA_TYPES } from '../../shared/constants';
 import SchemaTag from '../common/SchemaTag';
+import {
+  buildExecutionAlgorithmOptionId,
+  buildExecutionDatasetOptionId,
+  EXECUTIONS_ALERT_NO_DATASET_ID,
+  EXECUTIONS_ALGORITHMS_SELECT_ID,
+  EXECUTIONS_DATASETS_SELECT_ID,
+  EXECUTIONS_EXECUTE_BUTTON_ID,
+  EXECUTION_FORM_NAME_INPUT_ID,
+} from '../../config/selectors';
 
 const styles = (theme) => ({
+  wrapper: {
+    width: '50%',
+    margin: theme.spacing(2, 'auto', 0),
+  },
   formControl: {
     margin: theme.spacing(1),
     width: '100%',
@@ -59,9 +72,10 @@ class AddExecutionForm extends Component {
     t: PropTypes.func.isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
     dispatchGetAlgorithms: PropTypes.func.isRequired,
-    dispatchExecuteAlgorithm: PropTypes.func.isRequired,
+    dispatchCreateExecution: PropTypes.func.isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
     classes: PropTypes.shape({
+      wrapper: PropTypes.string.isRequired,
       formControl: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       buttonContainer: PropTypes.string.isRequired,
@@ -99,7 +113,7 @@ class AddExecutionForm extends Component {
     dispatchGetResults();
   }
 
-  handleDatasetSelectOnChange = (e) => {
+  handleSourceSelectOnChange = (e) => {
     this.setState({ sourceId: e.target.value });
   };
 
@@ -112,17 +126,14 @@ class AddExecutionForm extends Component {
   };
 
   executeAlgorithm = () => {
-    const { dispatchExecuteAlgorithm, algorithms } = this.props;
+    const { dispatchCreateExecution } = this.props;
     const { sourceId, algorithmId, userProvidedFilename } = this.state;
-    const { language } = algorithms.find(({ id }) => id === algorithmId);
-    if (language) {
-      dispatchExecuteAlgorithm({
-        sourceId,
-        algorithmId,
-        language,
-        userProvidedFilename,
-      });
-    }
+    dispatchCreateExecution({
+      sourceId,
+      algorithmId,
+      userProvidedFilename,
+    });
+    this.setState({ userProvidedFilename: '' });
   };
 
   renderDatasetsAndResultsSelect = () => {
@@ -132,7 +143,12 @@ class AddExecutionForm extends Component {
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
       .map(({ id, name, schemaType }) => (
-        <MenuItem value={id} key={id} className={classes.menuItem}>
+        <MenuItem
+          value={id}
+          key={id}
+          className={classes.menuItem}
+          id={buildExecutionDatasetOptionId(id)}
+        >
           {name}
           {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
             <SchemaTag schemaType={schemaType} className={classes.schemaTag} />
@@ -143,7 +159,12 @@ class AddExecutionForm extends Component {
     const resultMenuItems = results
       .sortBy(({ name }) => name)
       .map(({ id, name }) => (
-        <MenuItem value={id} key={id} className={classes.menuItem}>
+        <MenuItem
+          value={id}
+          key={id}
+          className={classes.menuItem}
+          id={buildExecutionDatasetOptionId(id)}
+        >
           {name}
         </MenuItem>
       ));
@@ -156,8 +177,9 @@ class AddExecutionForm extends Component {
         <Select
           labelId="dataset-select"
           value={sourceId}
-          onChange={this.handleDatasetSelectOnChange}
+          onChange={this.handleSourceSelectOnChange}
           label={label}
+          id={EXECUTIONS_DATASETS_SELECT_ID}
         >
           {!datasetMenuItems.isEmpty() && (
             <ListSubheader>{t('Datasets')}</ListSubheader>
@@ -178,6 +200,7 @@ class AddExecutionForm extends Component {
     const button = (
       <div className={classes.buttonWrapper}>
         <Button
+          id={EXECUTIONS_EXECUTE_BUTTON_ID}
           variant="contained"
           color="primary"
           onClick={this.executeAlgorithm}
@@ -223,7 +246,11 @@ class AddExecutionForm extends Component {
 
     if (datasets.isEmpty() && results.isEmpty()) {
       return (
-        <Alert severity="info" className={classes.infoAlert}>
+        <Alert
+          severity="info"
+          className={classes.infoAlert}
+          id={EXECUTIONS_ALERT_NO_DATASET_ID}
+        >
           {t('Load a dataset first')}
         </Alert>
       );
@@ -240,7 +267,7 @@ class AddExecutionForm extends Component {
     const algorithmLabel = `${t('Algorithm')} ${t('(Required)')}`;
 
     return (
-      <>
+      <div className={classes.wrapper}>
         {this.renderDatasetsAndResultsSelect()}
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel>{algorithmLabel}</InputLabel>
@@ -249,9 +276,14 @@ class AddExecutionForm extends Component {
             value={algorithmId}
             onChange={this.handleAlgorithmSelectOnChange}
             label={algorithmLabel}
+            id={EXECUTIONS_ALGORITHMS_SELECT_ID}
           >
             {algorithms.map(({ id, name }) => (
-              <MenuItem value={id} key={id}>
+              <MenuItem
+                value={id}
+                key={id}
+                id={buildExecutionAlgorithmOptionId(id)}
+              >
                 {name}
               </MenuItem>
             ))}
@@ -263,11 +295,12 @@ class AddExecutionForm extends Component {
             label={t('Save As...')}
             variant="outlined"
             value={userProvidedFilename}
+            id={EXECUTION_FORM_NAME_INPUT_ID}
           />
         </FormControl>
 
         {this.renderExecuteButton()}
-      </>
+      </div>
     );
   }
 }
@@ -287,7 +320,7 @@ const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
 const mapDispatchToProps = {
   dispatchGetDatasets: getDatasets,
   dispatchGetAlgorithms: getAlgorithms,
-  dispatchExecuteAlgorithm: executeAlgorithm,
+  dispatchCreateExecution: createExecution,
   dispatchGetResults: getResults,
 };
 

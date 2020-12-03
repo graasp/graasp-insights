@@ -23,10 +23,8 @@ export const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
 };
 
-export const AUTHOR_GRAASP = 'Graasp';
-export const AUTHOR_USER = 'User';
-
 export const DEFAULT_NUMBER_FORMAT = 'en';
+
 export const FILE_FILTERS = {
   PYTHON: { name: 'Python', extensions: ['py', 'pyx'] },
   JSON: { name: 'JSON', extensions: ['json'] },
@@ -117,3 +115,5 @@ export const UTILS_FILES = {
   GRAASP: 'graasp',
   USER: 'user',
 };
+
+export const CIRCLE_PROGRESS_SIZE = 26;

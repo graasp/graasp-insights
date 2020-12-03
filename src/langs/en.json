@@ -94,6 +94,17 @@
     "Edit utils": "Edit utils",
     "This file cannot be modified. Use the user file to write your own functions.": "This file cannot be modified. Use the user file to write your own functions.",
     "User": "User",
-    "You can use the 'utils' file to write functions you want to use across your custom algorithms": "You can use the 'utils' file to write functions you want to use across your custom algorithms"
+    "You can use the 'utils' file to write functions you want to use across your custom algorithms": "You can use the 'utils' file to write functions you want to use across your custom algorithms",
+    "From Algorithm": "From Algorithm",
+    "An error occurred during execution": "An error occurred during execution",
+    "Execution successful": "Execution successful",
+    "Execution running...": "Execution running...",
+    "Remove execution": "Remove execution",
+    "Status": "Status",
+    "Executed": "Executed",
+    "Result": "Result",
+    "Visualizations": "Visualizations",
+    "Cancel execution": "Cancel execution",
+    "Success": "Success"
   }
 }

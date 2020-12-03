@@ -4,13 +4,11 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const low = require('lowdb');
 const fs = require('fs');
-const ObjectId = require('bson-objectid');
 const FileSync = require('lowdb/adapters/FileSync');
 const logger = require('./logger');
 const {
   DATABASE_PATH,
   DATASETS_FOLDER,
-  RESULTS_FOLDER,
   ALGORITHMS_FOLDER,
   VAR_FOLDER,
   GRAASP_ALGORITHMS,
@@ -21,8 +19,8 @@ const {
 } = require('./config/config');
 
 const DATASETS_COLLECTION = 'datasets';
-const RESULTS_COLLECTION = 'results';
 const ALGORITHMS_COLLECTION = 'algorithms';
+const EXECUTIONS_COLLECTION = 'executions';
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -51,16 +49,11 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     mkdirp(DATASETS_FOLDER);
   }
 
-  // create the results folder if it doesn't already exist
-  if (!fs.existsSync(RESULTS_FOLDER)) {
-    mkdirp(RESULTS_FOLDER);
-  }
-
   // set some defaults (required if json file is empty)
   db.defaults({
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
-    [RESULTS_COLLECTION]: [],
+    [EXECUTIONS_COLLECTION]: [],
   }).write();
   return db;
 };
@@ -109,9 +102,8 @@ const ensureAlgorithmsExist = async (
 
         // check if algo entry is in metadata db
         if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-          const id = ObjectId().str;
           db.get(ALGORITHMS_COLLECTION)
-            .push({ ...algo, id })
+            .push({ ...algo })
             .write();
         }
       }
@@ -123,8 +115,8 @@ const ensureAlgorithmsExist = async (
 
 module.exports = {
   DATASETS_COLLECTION,
-  RESULTS_COLLECTION,
   ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,

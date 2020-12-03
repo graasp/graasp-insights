@@ -1,4 +1,8 @@
 const { loadDataset } = require('./loadDataset');
+const {
+  cancelExecutionObject,
+  executeAlgorithm,
+} = require('./executeAlgorithm');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const getDataset = require('./getDataset');
 const getDatasets = require('./getDatasets');
@@ -24,11 +28,19 @@ const addAlgorithm = require('./addAlgorithm');
 const browseFile = require('./browseFile');
 const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
+const getExecutions = require('./getExecutions');
+const deleteExecution = require('./deleteExecution');
+const createExecution = require('./createExecution');
+const {
+  cancelExecution,
+  cancelAllRunningExecutions,
+} = require('./cancelExecution');
 
 module.exports = {
   getDataset,
   getDatasets,
   deleteDataset,
+  executeAlgorithm,
   executePythonAlgorithm,
   loadDataset,
   setDatabase,
@@ -52,4 +64,10 @@ module.exports = {
   browseFile,
   getUtils,
   saveUtils,
+  getExecutions,
+  deleteExecution,
+  createExecution,
+  cancelExecutionObject,
+  cancelAllRunningExecutions,
+  cancelExecution,
 };

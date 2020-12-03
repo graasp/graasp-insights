@@ -55,5 +55,11 @@
       "propTypes": "static public field"
     }],
     "react/state-in-constructor": ["error", "never"]
-  }
+  },
+  "overrides": [{
+    "files": ["test/**/*.js"],
+    "rules": {
+      "no-unused-expressions":"off"
+    }
+  }]
 }

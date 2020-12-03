@@ -20,6 +20,7 @@ const {
 const isMac = require('./app/utils/isMac');
 const {
   LOAD_DATASET_CHANNEL,
+  EXECUTE_ALGORITHM_CHANNEL,
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
   GET_DATABASE_CHANNEL,
@@ -35,7 +36,6 @@ const {
   GET_ALGORITHM_CHANNEL,
   DELETE_ALGORITHM_CHANNEL,
   EXPORT_DATASET_CHANNEL,
-  EXECUTE_PYTHON_ALGORITHM_CHANNEL,
   CHECK_PYTHON_INSTALLATION_CHANNEL,
   SHOW_SAVE_AS_PROMPT_CHANNEL,
   EXPORT_RESULT_CHANNEL,
@@ -45,11 +45,15 @@ const {
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
   SET_DATASET_FILE_CHANNEL,
+  GET_EXECUTIONS_CHANNEL,
+  CREATE_EXECUTION_CHANNEL,
+  DELETE_EXECUTION_CHANNEL,
+  STOP_EXECUTION_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
   loadDataset,
-  executePythonAlgorithm,
+  executeAlgorithm,
   getDataset,
   getDatasets,
   setDatabase,
@@ -74,6 +78,11 @@ const {
   browseFile,
   getUtils,
   saveUtils,
+  createExecution,
+  deleteExecution,
+  getExecutions,
+  cancelAllRunningExecutions,
+  cancelExecution,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -323,10 +332,15 @@ app.on('ready', async () => {
   // called when deleting a dataset
   ipcMain.on(EXPORT_RESULT_CHANNEL, exportResult(mainWindow, db));
 
-  ipcMain.on(
-    EXECUTE_PYTHON_ALGORITHM_CHANNEL,
-    executePythonAlgorithm(mainWindow, db),
-  );
+  ipcMain.on(EXECUTE_ALGORITHM_CHANNEL, executeAlgorithm(mainWindow, db));
+
+  ipcMain.on(CREATE_EXECUTION_CHANNEL, createExecution(mainWindow, db));
+
+  ipcMain.on(GET_EXECUTIONS_CHANNEL, getExecutions(mainWindow, db));
+
+  ipcMain.on(DELETE_EXECUTION_CHANNEL, deleteExecution(mainWindow, db));
+
+  ipcMain.on(STOP_EXECUTION_CHANNEL, cancelExecution(mainWindow, db));
 
   // called when getting the database
   ipcMain.on(GET_DATABASE_CHANNEL, getDatabase(mainWindow, db));
@@ -367,6 +381,12 @@ app.on('ready', async () => {
 
   // called when saving utils
   ipcMain.on(SAVE_UTILS_CHANNEL, saveUtils(mainWindow));
+
+  app.on('window-all-closed', async () => {
+    // kill all running executions
+    await cancelAllRunningExecutions(db);
+    app.quit();
+  });
 });
 
 app.on('activate', () => {

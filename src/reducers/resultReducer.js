@@ -7,9 +7,9 @@ import {
   GET_RESULTS_SUCCESS,
   FLAG_EXPORTING_RESULT,
   FLAG_DELETING_RESULT,
-  EXECUTE_PYTHON_ALGORITHM_SUCCESS,
   CLEAR_RESULT_SUCCESS,
   FLAG_CLEARING_RESULT,
+  EXECUTE_ALGORITHM_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -32,10 +32,13 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['current', 'content'], Map(payload));
     case GET_RESULTS_SUCCESS:
       return state.setIn(['results'], List(payload));
-    case EXECUTE_PYTHON_ALGORITHM_SUCCESS:
-      return state.update('results', (results) => results.push(payload));
     case CLEAR_RESULT_SUCCESS:
       return state.setIn(['current', 'content'], Map());
+    case EXECUTE_ALGORITHM_SUCCESS:
+      // add result to list when execution is successful
+      return state.updateIn(['results'], (results) =>
+        results.push(payload.result),
+      );
     default:
       return state;
   }

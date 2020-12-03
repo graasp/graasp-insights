@@ -12,7 +12,7 @@ import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
-
+import { AUTHOR_GRAASP, AUTHOR_USER } from '../../shared/constants';
 import Editor from '../common/Editor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
@@ -22,12 +22,9 @@ import {
   saveAlgorithm,
   clearAlgorithm,
 } from '../../actions';
-import {
-  AUTHOR_GRAASP,
-  AUTHOR_USER,
-  EDITOR_PROGRAMMING_LANGUAGES,
-} from '../../config/constants';
+import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
 import BackButton from '../common/BackButton';
+import { EDIT_ALGORITHM_MAIN_ID } from '../../config/selectors';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -161,7 +158,7 @@ class EditAlgorithm extends Component {
     const author = algorithm.get('author');
 
     return (
-      <Main>
+      <Main id={EDIT_ALGORITHM_MAIN_ID}>
         <Container>
           <h1>{t('Edit Algorithm')}</h1>
           {author === AUTHOR_GRAASP && (

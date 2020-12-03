@@ -2,7 +2,11 @@
 const { app } = require('electron');
 const path = require('path');
 const isWindows = require('../utils/isWindows');
-const { ALGORITHM_TYPES } = require('../../shared/constants');
+const {
+  ALGORITHM_TYPES,
+  AUTHOR_USER,
+  AUTHOR_GRAASP,
+} = require('../../shared/constants');
 
 // resolve path for windows '\'
 const escapeEscapeCharacter = (str) => {
@@ -15,7 +19,6 @@ const VAR_FOLDER = `${escapeEscapeCharacter(app.getPath('userData'))}/var`;
 const DATABASE_PATH = `${VAR_FOLDER}/db.json`;
 const ICON_PATH = 'app/assets/icon.png';
 const DATASETS_FOLDER = `${VAR_FOLDER}/datasets`;
-const RESULTS_FOLDER = `${VAR_FOLDER}/results`;
 const ALGORITHMS_FOLDER = `${VAR_FOLDER}/algorithms`;
 const SAMPLE_DATASET_FILEPATH = path.resolve(
   `${DATASETS_FOLDER}/sampleDataset.json`,
@@ -24,8 +27,6 @@ const ALGORITHMS_FOLDER_NAME = 'algorithms';
 const PRODUCT_NAME = 'Graasp Insights';
 const TMP_FOLDER = 'tmp';
 const DEFAULT_LANG = 'en';
-const AUTHOR_GRAASP = 'Graasp';
-const AUTHOR_USER = 'User';
 
 const PROGRAMMING_LANGUAGES = {
   PYTHON: 'Python',
@@ -33,6 +34,7 @@ const PROGRAMMING_LANGUAGES = {
 
 const GRAASP_ALGORITHMS = [
   {
+    id: 'hash-users',
     name: 'Hash users',
     description:
       "Hash the userId field from the 'actions' and 'appInstanceResources'",
@@ -43,6 +45,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'sanitize-users',
     name: 'Sanitize users',
     description:
       'Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID',
@@ -53,6 +56,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'suppress-geolocation',
     name: 'Suppress geolocation',
     description: "Suppress the 'geolocation' field from the 'actions'",
     filename: 'suppress_geolocation.py',
@@ -62,6 +66,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'suppress-data',
     name: 'Suppress data',
     description: "Suppress the 'data' field from the 'actions'",
     filename: 'suppress_data.py',
@@ -71,6 +76,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'suppress-users',
     name: 'Suppress users',
     description: "Suppress the 'users' field from a dataset",
     filename: 'suppress_users.py',
@@ -80,6 +86,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'suppress-app-instances-settings',
     name: 'Suppress appInstances settings',
     description: "Suppress the 'settings' field from the 'appInstances'",
     filename: 'suppress_appInstances_settings.py',
@@ -89,6 +96,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'suppress-app-instances-resources-data',
     name: 'Suppress appInstancesResources data',
     description: "Suppress the 'data' field from the 'appInstanceResource'",
     filename: 'suppress_appInstanceResources_data.py',
@@ -101,6 +109,7 @@ const GRAASP_ALGORITHMS = [
     type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
+    id: 'two-anonymize-geolocation',
     name: '2-Anonymize geolocation',
     description: `Ensure that for every combination of 'country', 'region', and 'city', there are at least two users containing that combination.
       The corresponding fields are suppressed (from 'city' to 'country') when necessary`,
@@ -113,6 +122,7 @@ const GRAASP_ALGORITHMS = [
 ];
 
 const GRAASP_UTILS = {
+  id: 'graasp-utils',
   filename: 'graasp_utils.py',
   filepath: path.join(ALGORITHMS_FOLDER, 'graasp_utils.py'),
   language: PROGRAMMING_LANGUAGES.PYTHON,
@@ -120,6 +130,7 @@ const GRAASP_UTILS = {
 };
 
 const USER_UTILS = {
+  id: 'users-utils',
   filename: 'utils.py',
   filepath: path.join(ALGORITHMS_FOLDER, 'utils.py'),
   language: PROGRAMMING_LANGUAGES.PYTHON,
@@ -140,7 +151,6 @@ module.exports = {
   ICON_PATH,
   PRODUCT_NAME,
   DATASETS_FOLDER,
-  RESULTS_FOLDER,
   ALGORITHMS_FOLDER,
   GRAASP_ALGORITHMS,
   ALGORITHMS_FOLDER_NAME,

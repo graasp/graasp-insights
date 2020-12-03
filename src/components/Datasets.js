@@ -32,6 +32,8 @@ import {
   buildDatasetsListNameClass,
   buildDatasetsListDescriptionClass,
   buildDatasetsListDeleteButtonClass,
+  DATASET_TABLE_ID,
+  DATASETS_MAIN_ID,
 } from '../config/selectors';
 import { SCHEMA_TYPES } from '../shared/constants';
 import SchemaTag from './common/SchemaTag';
@@ -122,7 +124,7 @@ class Datasets extends Component {
 
     if (!datasets.size) {
       return (
-        <Main>
+        <Main id={DATASETS_MAIN_ID}>
           <Alert
             id={DATASETS_EMPTY_ALERT_ID}
             severity="info"
@@ -273,10 +275,10 @@ class Datasets extends Component {
     });
 
     return (
-      <Main>
+      <Main id={DATASETS_MAIN_ID}>
         <Container className={classes.content}>
           <h1>{t('Datasets')}</h1>
-          <Table rows={rows} columns={columns} />
+          <Table id={DATASET_TABLE_ID} rows={rows} columns={columns} />
           <LoadDatasetButton />
         </Container>
       </Main>

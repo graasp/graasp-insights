@@ -32,7 +32,6 @@ import DatasetScreen from './components/dataset/DatasetScreen';
 import SettingsModal from './components/SettingsModal';
 import { getLanguage, checkPythonInstallation } from './actions';
 import Results from './components/Results';
-import ResultScreen from './components/result/ResultScreen';
 import Executions from './components/Executions';
 import Visualizations from './components/Visualizations';
 
@@ -95,7 +94,7 @@ export class App extends Component {
               <Route exact path={DATASETS_PATH} component={Datasets} />
               <Route exact path={ALGORITHMS_PATH} component={Algorithms} />
               <Route exact path={RESULTS_PATH} component={Results} />
-              <Route exact path={RESULT_PATH} component={ResultScreen} />
+              <Route exact path={RESULT_PATH} component={DatasetScreen} />
               <Route exact path={HOME_PATH} component={Datasets} />
               <Route exact path={SETTINGS_PATH} component={SettingsModal} />
               <Route exact path={EXECUTIONS_PATH} component={Executions} />

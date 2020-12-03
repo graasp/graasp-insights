@@ -62,10 +62,12 @@ class Main extends Component {
     }).isRequired,
     children: PropTypes.node.isRequired,
     fullScreen: PropTypes.bool,
+    id: PropTypes.string,
   };
 
   static defaultProps = {
     fullScreen: false,
+    id: '',
   };
 
   handleDrawerOpen = () => {
@@ -77,11 +79,11 @@ class Main extends Component {
   };
 
   render() {
-    const { classes, children, fullScreen } = this.props;
+    const { classes, children, fullScreen, id } = this.props;
     const { open } = this.state;
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} id={id}>
         <CssBaseline />
         <Header isSidebarOpen={open} handleDrawerOpen={this.handleDrawerOpen} />
 

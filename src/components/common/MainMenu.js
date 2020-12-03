@@ -27,6 +27,7 @@ import {
   QUIT_MENU_ITEM_ID,
   EXECUTIONS_MENU_ITEM_ID,
   VISUALIZATIONS_MENU_ITEM_ID,
+  RESULTS_MENU_ITEM_ID,
 } from '../../config/selectors';
 
 export class MainMenu extends Component {
@@ -156,6 +157,7 @@ export class MainMenu extends Component {
           selected={path === RESULTS_PATH}
           onClick={() => this.handleClick(RESULTS_PATH)}
           button
+          id={RESULTS_MENU_ITEM_ID}
         >
           <ListItemIcon>
             <AssessmentIcon />
