@@ -221,7 +221,7 @@ const middleware = () => (next) => (action) => {
       message = SUCCESS_LOADING_DATASET_MESSAGE;
       break;
     case (type.match(new RegExp(`${EXECUTE_ALGORITHM_SUCCESS}`)) || {}).input:
-      message = buildExecutingAlgorithmSuccessMessage(payload.execution.name);
+      message = buildExecutingAlgorithmSuccessMessage();
 
       // allow to display duplicate message for executions
       options.preventDuplicates = false;
