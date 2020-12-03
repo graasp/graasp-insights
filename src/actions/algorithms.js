@@ -8,6 +8,7 @@ import {
   ADD_ALGORITHM_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
+  SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_ALGORITHMS,
@@ -48,18 +49,25 @@ export const getAlgorithms = () => (dispatch) => {
   }
 };
 
-export const deleteAlgorithm = ({ id }) => (dispatch) => {
+export const deleteAlgorithm = ({ id, name }) => (dispatch) => {
   const flagDeletingAlgorithm = createFlag(FLAG_DELETING_ALGORITHM);
   try {
-    dispatch(flagDeletingAlgorithm(true));
-
-    window.ipcRenderer.send(DELETE_ALGORITHM_CHANNEL, { id });
+    window.ipcRenderer.send(SHOW_CONFIRM_DELETE_PROMPT_CHANNEL, { name });
     window.ipcRenderer.once(
-      DELETE_ALGORITHM_CHANNEL,
-      async (event, response) => {
-        dispatch(response);
+      SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+      (e, shouldDelete) => {
+        if (shouldDelete) {
+          dispatch(flagDeletingAlgorithm(true));
+          window.ipcRenderer.send(DELETE_ALGORITHM_CHANNEL, { id });
+          window.ipcRenderer.once(
+            DELETE_ALGORITHM_CHANNEL,
+            async (event, response) => {
+              dispatch(response);
+              getAlgorithms()(dispatch);
+            },
+          );
+        }
         dispatch(flagDeletingAlgorithm(false));
-        return getAlgorithms()(dispatch);
       },
     );
   } catch (err) {

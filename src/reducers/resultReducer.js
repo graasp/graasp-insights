@@ -10,6 +10,7 @@ import {
   CLEAR_RESULT_SUCCESS,
   FLAG_CLEARING_RESULT,
   EXECUTE_ALGORITHM_SUCCESS,
+  DELETE_RESULT_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -38,6 +39,10 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       // add result to list when execution is successful
       return state.updateIn(['results'], (results) =>
         results.push(payload.result),
+      );
+    case DELETE_RESULT_SUCCESS:
+      return state.updateIn(['results'], (results) =>
+        results.filter((result) => result.id !== payload),
       );
     default:
       return state;

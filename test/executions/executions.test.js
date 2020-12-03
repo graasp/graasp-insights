@@ -1,6 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable func-names */
 import { expect } from 'chai';
 import { mochaAsync } from '../utils';
 import {
@@ -66,7 +63,7 @@ const checkExecutionRowLayout = async (
   const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
   const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
 
-  const executionName = name || `${dataset.name}_${algorithm.name}`;
+  const resultName = name || `${dataset.name}_${algorithm.name}`;
 
   const sourceName = await tr.$(
     `#${buildExecutionRowSourceButtonId(dataset.id)}`,
@@ -79,19 +76,20 @@ const checkExecutionRowLayout = async (
   expect(await algoName.getText()).to.contain(algorithm.name);
 
   if (status === EXECUTION_STATUSES.SUCCESS) {
-    expect(await tr.getHTML()).to.contain(executionName);
+    expect(await tr.getHTML()).to.contain(resultName);
   }
 
   await client.expectElementToExist(`.${status}`);
 };
 
 const checkExecutionTableLayout = async (client, executions) => {
-  for (const [idx, execution] of executions.entries()) {
-    await checkExecutionRowLayout(client, {
+  const promises = executions.map((execution, idx) =>
+    checkExecutionRowLayout(client, {
       ...execution,
       rowIdx: idx,
-    });
-  }
+    }),
+  );
+  await Promise.all(promises);
 };
 
 const checkResultRowLayout = async (
@@ -288,6 +286,7 @@ describe('Executions Scenarios', function () {
                   EXECUTION_FAST_ERROR.algorithm,
                 ],
               },
+              responses: { showMessageDialogResponse: 1 },
             });
             await app.client.goToExecutions();
           }),

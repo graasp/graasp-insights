@@ -22,7 +22,6 @@
     "Use Sample Database": "Utiliser une Base de Données Exemple",
     "Language": "Langue",
     "KB": "Ko",
-    "Quick actions": "Actions rapides",
     "Run Algorithm": "Exécuter l'algorithme",
     "View dataset": "Voir le dataset",
     "Edit dataset": "Modifier le dataset",
@@ -104,6 +103,7 @@
     "Result": "Résultat",
     "Visualizations": "Visualisations",
     "Cancel execution": "Annuler l'exécution",
-    "Success": "Succès"
+    "Success": "Succès",
+    "You cannot delete algorithms from Graasp": "Les algorithmes de Graasp ne peuvent pas être supprimés"
   }
 }

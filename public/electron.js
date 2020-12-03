@@ -4,6 +4,7 @@ const {
   shell,
   ipcMain,
   Menu,
+  dialog,
   // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron');
 const path = require('path');
@@ -49,6 +50,7 @@ const {
   CREATE_EXECUTION_CHANNEL,
   DELETE_EXECUTION_CHANNEL,
   STOP_EXECUTION_CHANNEL,
+  SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -83,6 +85,7 @@ const {
   getExecutions,
   cancelAllRunningExecutions,
   cancelExecution,
+  showConfirmDeletePrompt,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -95,6 +98,30 @@ const {
 Object.keys(env).forEach((key) => {
   process.env[key] = env[key];
 });
+
+// mock of electron dialog for tests
+if (process.env.NODE_ENV === 'test') {
+  if (process.env.SHOW_MESSAGE_DIALOG_RESPONSE) {
+    const response = JSON.parse(process.env.SHOW_MESSAGE_DIALOG_RESPONSE);
+    dialog.showMessageBox = () => {
+      return Promise.resolve({ response });
+    };
+  }
+  if (process.env.SHOW_SAVE_DIALOG_RESPONSE) {
+    dialog.showSaveDialog = () => {
+      return Promise.resolve({
+        filePath: process.env.SHOW_SAVE_DIALOG_RESPONSE,
+      });
+    };
+  }
+  if (process.env.SHOW_OPEN_DIALOG_RESPONSE) {
+    dialog.showOpenDialog = () => {
+      return Promise.resolve({
+        filePaths: process.env.SHOW_OPEN_DIALOG_RESPONSE,
+      });
+    };
+  }
+}
 
 let mainWindow;
 
@@ -303,6 +330,11 @@ app.on('ready', async () => {
   generateMenu();
 
   ipcMain.on(SHOW_SAVE_AS_PROMPT_CHANNEL, showSaveAsPrompt(mainWindow));
+
+  ipcMain.on(
+    SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+    showConfirmDeletePrompt(mainWindow),
+  );
 
   // called when getting datasets
   ipcMain.on(GET_DATASETS_CHANNEL, getDatasets(mainWindow, db));

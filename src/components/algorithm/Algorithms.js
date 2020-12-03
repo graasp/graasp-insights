@@ -23,6 +23,7 @@ import {
   ADD_ALGORITHM_PATH,
   EDIT_UTILS_PATH,
 } from '../../config/paths';
+import { AUTHOR_GRAASP } from '../../shared/constants';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -82,9 +83,9 @@ class Algorithms extends Component {
     push(ADD_ALGORITHM_PATH);
   };
 
-  handleDelete(id) {
+  handleDelete({ id, name }) {
     const { dispatchDeleteAlgorithm } = this.props;
-    dispatchDeleteAlgorithm({ id });
+    dispatchDeleteAlgorithm({ id, name });
   }
 
   handleEdit(id) {
@@ -159,7 +160,7 @@ class Algorithms extends Component {
         alignField: 'left',
       },
       {
-        columnName: t('Quick actions'),
+        columnName: t('Quick Actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',
@@ -168,6 +169,32 @@ class Algorithms extends Component {
 
     const rows = algorithms.map((algorithm) => {
       const { id, name, description, author, language } = algorithm;
+      const isByGraasp = author === AUTHOR_GRAASP;
+      const quickActions = [
+        <Tooltip title={t('Edit Algorithm')} key="edit">
+          <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>,
+        <Tooltip
+          title={
+            isByGraasp
+              ? t('You cannot delete algorithms from Graasp')
+              : t('Delete algorithm')
+          }
+          key="delete"
+        >
+          <span>
+            <IconButton
+              aria-label="delete"
+              onClick={() => this.handleDelete({ id, name })}
+              disabled={isByGraasp}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </span>
+        </Tooltip>,
+      ];
       return {
         key: id,
         name,
@@ -185,21 +212,7 @@ class Algorithms extends Component {
         ],
         author,
         language,
-        quickActions: [
-          <Tooltip title={t('Edit Algorithm')} key="edit">
-            <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Delete algorithm')} key="delete">
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete(id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>,
-        ],
+        quickActions,
       };
     });
 

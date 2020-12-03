@@ -86,9 +86,9 @@ class Results extends Component {
     // TODO: implement edit functionality
   };
 
-  handleDelete = (result) => {
+  handleDelete = ({ id, name }) => {
     const { dispatchDeleteResult } = this.props;
-    dispatchDeleteResult({ id: result.id });
+    dispatchDeleteResult({ id, name });
   };
 
   render() {
@@ -149,7 +149,7 @@ class Results extends Component {
         alignField: 'right',
       },
       {
-        columnName: t('Quick actions'),
+        columnName: t('Quick Actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',

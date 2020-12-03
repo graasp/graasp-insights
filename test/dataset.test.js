@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable func-names */
 import { expect } from 'chai';
 import { mochaAsync } from './utils';
 import { createApplication, closeApplication } from './application';
@@ -118,7 +116,6 @@ export const deleteDataset = async (client, { name }) => {
     `.${buildDatasetsListDeleteButtonClass(name)}`,
   );
   await deleteButton.click();
-  // todo: validate confirm prompt
 };
 
 describe('Datasets Scenarios', function () {
@@ -127,7 +124,9 @@ describe('Datasets Scenarios', function () {
 
   beforeEach(
     mochaAsync(async () => {
-      app = await createApplication();
+      app = await createApplication({
+        responses: { showMessageDialogResponse: 1 },
+      });
     }),
   );
 
