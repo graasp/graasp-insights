@@ -23,7 +23,7 @@ import {
   ADD_ALGORITHM_PATH,
   EDIT_UTILS_PATH,
 } from '../../config/paths';
-import { AUTHOR_USER } from '../../shared/constants';
+import { AUTHOR_GRAASP } from '../../shared/constants';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -169,25 +169,32 @@ class Algorithms extends Component {
 
     const rows = algorithms.map((algorithm) => {
       const { id, name, description, author, language } = algorithm;
+      const isByGraasp = author === AUTHOR_GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
           <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
             <EditIcon />
           </IconButton>
         </Tooltip>,
-      ];
-      if (author === AUTHOR_USER) {
-        quickActions.push(
-          <Tooltip title={t('Delete algorithm')} key="delete">
+        <Tooltip
+          title={
+            isByGraasp
+              ? t('You cannot delete algorithms from Graasp')
+              : t('Delete algorithm')
+          }
+          key="delete"
+        >
+          <span>
             <IconButton
               aria-label="delete"
               onClick={() => this.handleDelete({ id, name })}
+              disabled={isByGraasp}
             >
               <DeleteIcon />
             </IconButton>
-          </Tooltip>,
-        );
-      }
+          </span>
+        </Tooltip>,
+      ];
       return {
         key: id,
         name,

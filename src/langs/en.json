@@ -104,6 +104,7 @@
     "Result": "Result",
     "Visualizations": "Visualizations",
     "Cancel execution": "Cancel execution",
-    "Success": "Success"
+    "Success": "Success",
+    "You cannot delete algorithms from Graasp": "You cannot delete algorithms from Graasp"
   }
 }

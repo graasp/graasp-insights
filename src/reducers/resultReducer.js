@@ -42,7 +42,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       );
     case DELETE_RESULT_SUCCESS:
       return state.updateIn(['results'], (results) =>
-        results.filter((r) => r.id !== payload),
+        results.filter((result) => result.id !== payload),
       );
     default:
       return state;
