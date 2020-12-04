@@ -25,8 +25,17 @@ import {
   EDITOR_PROGRAMMING_LANGUAGES,
   ADD_OPTIONS,
 } from '../../config/constants';
-import { AUTHOR_USER } from '../../shared/constants';
 import BackButton from '../common/BackButton';
+import {
+  ADD_ALGORITHM_NAME_ID,
+  ADD_ALGORITHM_DESCRIPTION_ID,
+  ADD_ALGORITHM_FILE_LOCATION_ID,
+  ADD_ALGORITHM_SAVE_BUTTON_ID,
+  ADD_ALGORITHM_BACK_BUTTON_ID,
+  ADD_ALGORITHM_FROM_FILE_OPTION_ID,
+  ADD_ALGORITHM_FROM_EDITOR_OPTION_ID,
+} from '../../config/selectors';
+import { AUTHORS } from '../../shared/constants';
 
 const styles = (theme) => ({
   saveButton: {
@@ -96,7 +105,7 @@ class AddAlgorithm extends Component {
       history: { goBack },
     } = this.props;
     const { name, description, fileLocation, code, option } = this.state;
-    const author = AUTHOR_USER;
+    const author = AUTHORS.USER;
     const payload =
       option === ADD_OPTIONS.FILE
         ? { name, description, author, fileLocation }
@@ -134,11 +143,13 @@ class AddAlgorithm extends Component {
                     value={ADD_OPTIONS.FILE}
                     control={<Radio color="primary" />}
                     label={t('Load algorithm from a file')}
+                    id={ADD_ALGORITHM_FROM_FILE_OPTION_ID}
                   />
                   <FormControlLabel
                     value={ADD_OPTIONS.EDITOR}
                     control={<Radio color="primary" />}
                     label={t('Write algorithm')}
+                    id={ADD_ALGORITHM_FROM_EDITOR_OPTION_ID}
                   />
                 </RadioGroup>
               </FormControl>
@@ -153,6 +164,7 @@ class AddAlgorithm extends Component {
                       helperText={t('(Required)')}
                       required
                       fullWidth
+                      id={ADD_ALGORITHM_FILE_LOCATION_ID}
                     />
                   </Grid>
                   <Grid item xs={1}>
@@ -180,6 +192,7 @@ class AddAlgorithm extends Component {
                 helperText={t('(Required)')}
                 required
                 fullWidth
+                id={ADD_ALGORITHM_NAME_ID}
               />
               <TextField
                 margin="dense"
@@ -190,6 +203,7 @@ class AddAlgorithm extends Component {
                 rowsMax={4}
                 helperText={t('(Optional)')}
                 fullWidth
+                id={ADD_ALGORITHM_DESCRIPTION_ID}
               />
             </Grid>
           </Grid>
@@ -200,12 +214,16 @@ class AddAlgorithm extends Component {
               startIcon={<SaveIcon />}
               onClick={this.handleSave}
               disabled={!name || (option === ADD_OPTIONS.FILE && !fileLocation)}
+              id={ADD_ALGORITHM_SAVE_BUTTON_ID}
             >
               {t('Save')}
             </Button>
           </div>
         </Container>
-        <BackButton className={classes.backButton} />
+        <BackButton
+          className={classes.backButton}
+          id={ADD_ALGORITHM_BACK_BUTTON_ID}
+        />
       </Main>
     );
   }

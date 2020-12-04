@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import clsx from 'clsx';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -23,7 +24,18 @@ import {
   ADD_ALGORITHM_PATH,
   EDIT_UTILS_PATH,
 } from '../../config/paths';
-import { AUTHOR_GRAASP } from '../../shared/constants';
+import { AUTHORS } from '../../shared/constants';
+import {
+  ALGORITHM_TABLE_ID,
+  buildAlgorithmRowClass,
+  ALGORITHM_NAME_CLASS,
+  ALGORITHM_DESCRIPTION_CLASS,
+  ALGORITHM_AUTHOR_CLASS,
+  ALGORITHM_LANGUAGE_CLASS,
+  ALGORITHM_DELETE_BUTTON_CLASS,
+  ALGORITHM_ADD_BUTTON_ID,
+  ALGORITHM_EDIT_BUTTON_CLASS,
+} from '../../config/selectors';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -109,6 +121,7 @@ class Algorithms extends Component {
         variant="contained"
         className={classes.addButton}
         onClick={this.handleAdd}
+        id={ALGORITHM_ADD_BUTTON_ID}
       >
         <AddIcon />
       </IconButton>
@@ -169,10 +182,14 @@ class Algorithms extends Component {
 
     const rows = algorithms.map((algorithm) => {
       const { id, name, description, author, language } = algorithm;
-      const isByGraasp = author === AUTHOR_GRAASP;
+      const isByGraasp = author === AUTHORS.GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
-          <IconButton aria-label="edit" onClick={() => this.handleEdit(id)}>
+          <IconButton
+            aria-label="edit"
+            onClick={() => this.handleEdit(id)}
+            className={ALGORITHM_EDIT_BUTTON_CLASS}
+          >
             <EditIcon />
           </IconButton>
         </Tooltip>,
@@ -189,6 +206,7 @@ class Algorithms extends Component {
               aria-label="delete"
               onClick={() => this.handleDelete({ id, name })}
               disabled={isByGraasp}
+              className={ALGORITHM_DELETE_BUTTON_CLASS}
             >
               <DeleteIcon />
             </IconButton>
@@ -197,21 +215,32 @@ class Algorithms extends Component {
       ];
       return {
         key: id,
+        className: buildAlgorithmRowClass(name),
         name,
         algorithm: [
-          <Typography variant="subtitle1" key="name">
+          <Typography
+            variant="subtitle1"
+            key="name"
+            className={ALGORITHM_NAME_CLASS}
+          >
             {name}
           </Typography>,
           <Typography
             variant="caption"
             key="description"
-            className={classes.description}
+            className={clsx(classes.description, ALGORITHM_DESCRIPTION_CLASS)}
           >
             {description}
           </Typography>,
         ],
-        author,
-        language,
+        author: (
+          <Typography className={ALGORITHM_AUTHOR_CLASS}>{author}</Typography>
+        ),
+        language: (
+          <Typography className={ALGORITHM_LANGUAGE_CLASS}>
+            {language}
+          </Typography>
+        ),
         quickActions,
       };
     });
@@ -234,7 +263,7 @@ class Algorithms extends Component {
             </Button>
           </Tooltip>
           <h1>{t('Algorithms')}</h1>
-          <Table columns={columns} rows={rows} />
+          <Table columns={columns} rows={rows} id={ALGORITHM_TABLE_ID} />
         </Container>
         {this.renderAddButon()}
       </Main>

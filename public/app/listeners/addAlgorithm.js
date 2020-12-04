@@ -10,7 +10,7 @@ const {
   ADD_ALGORITHM_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
-const { PROGRAMMING_LANGUAGES } = require('../config/config');
+const { PROGRAMMING_LANGUAGES } = require('../../shared/constants');
 
 const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
   try {

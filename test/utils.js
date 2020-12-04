@@ -18,3 +18,15 @@ export const openDrawer = async (client) => {
   }
   await client.pause(OPEN_DRAWER_PAUSE);
 };
+
+export const clearInput = async (elem) => {
+  const value = await elem.getValue();
+  const backSpaces = new Array(value.length).fill('Backspace');
+  await elem.setValue(backSpaces);
+};
+
+export const menuGoTo = async (client, selector) => {
+  await openDrawer(client);
+  const el = await client.$(selector);
+  await el.click();
+};

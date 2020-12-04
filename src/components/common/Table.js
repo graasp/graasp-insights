@@ -67,9 +67,9 @@ const Table = (props) => {
       </TableHead>
       <TableBody>
         {sortedRows.map((row) => {
-          const { key } = row;
+          const { key, className } = row;
           return (
-            <TableRow key={key}>
+            <TableRow key={key} className={className}>
               {columns.map(({ field, alignField }) => {
                 return (
                   <TableCell align={alignField} key={field}>

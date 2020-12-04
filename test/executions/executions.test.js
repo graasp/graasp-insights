@@ -36,6 +36,7 @@ import {
 } from '../fixtures/executions/executions';
 import { EXECUTION_STATUSES } from '../../src/shared/constants';
 import { deleteDataset } from '../dataset.test';
+import { clickAlgoDeleteButton } from '../algorithms/utils';
 
 const createExecution = async (client, { dataset, algorithm, name }) => {
   const datasetSelect = await client.$(`#${EXECUTIONS_DATASETS_SELECT_ID}`);
@@ -351,32 +352,32 @@ describe('Executions Scenarios', function () {
 
             // todo: enable when algorithm test are written
             // delete algorithm
-            // await client.goToA();
-            // await deleteAlgorithm(client, { name: fastAlgoName });
-            // await client.goToExecutions();
-            //  disabledDatasetButtons = await client.$$(
-            //   `.${EXECUTION_TABLE_ROW_BUTTON_CLASS}`,
-            // );
+            await client.goToAlgorithms();
+            await clickAlgoDeleteButton(client, { name: fastAlgoName });
+            await client.goToExecutions();
+            let disabledDatasetButtons = await client.$$(
+              `.${EXECUTION_TABLE_ROW_BUTTON_CLASS}`,
+            );
 
-            //  testedElements = 0;
-            // for (const button of disabledDatasetButtons) {
-            //   const text = await button.getText();
-            //   if (text === fastAlgoName) {
-            //     testedElements += 1;
-            //     expect(await button.getAttribute('disabled')).to.equal('true');
-            //   }
-            // }
-            // expect(testedElements > 0).to.be.true;
+            let testedElements = 0;
+            for (const button of disabledDatasetButtons) {
+              const text = await button.getText();
+              if (text === fastAlgoName) {
+                testedElements += 1;
+                expect(await button.getAttribute('disabled')).to.equal('true');
+              }
+            }
+            expect(testedElements > 0).to.be.true;
 
             // delete dataset
             await client.goToDatasets();
             await deleteDataset(client, { name: fastDatasetName });
             await client.goToExecutions();
-            const disabledDatasetButtons = await client.$$(
+            disabledDatasetButtons = await client.$$(
               `.${EXECUTION_TABLE_ROW_BUTTON_CLASS}`,
             );
 
-            let testedElements = 0;
+            testedElements = 0;
             for (const button of disabledDatasetButtons) {
               const text = await button.getText();
               if (text === fastDatasetName) {
