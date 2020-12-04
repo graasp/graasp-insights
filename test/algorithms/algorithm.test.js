@@ -21,7 +21,6 @@ import {
   clickEditAlgoSaveButton,
   editAlgorithm,
   getNumberOfAlgorithms,
-  menuGoToAlgorithms,
 } from './utils';
 
 describe('Algorithms Scenarios', function () {
@@ -35,8 +34,7 @@ describe('Algorithms Scenarios', function () {
         responses: { showMessageDialogResponse: 1 },
       });
       const { client } = app;
-      client.setTimeout({ implicit: 0 });
-      await menuGoToAlgorithms(client);
+      await client.goToAlgorithms();
     }),
   );
 
@@ -61,12 +59,12 @@ describe('Algorithms Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      const nAlgosPrior = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       await clickAlgoDeleteButton(client, PREEXISTING_USER_ALGORITHM);
 
-      const nAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfter - nAlgosPrior).to.be.equal(-1);
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.be.equal(-1);
     }),
   );
 
@@ -75,7 +73,7 @@ describe('Algorithms Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      const nAlgosStart = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
       await clickAddButton(client);
@@ -83,8 +81,8 @@ describe('Algorithms Scenarios', function () {
       await clickAddAlgoSaveButton(client);
       await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
 
-      const nAlgosAfterAdd = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfterAdd - nAlgosStart).to.be.equal(1);
+      const nbAlgosAfterAdd = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfterAdd - nbAlgosPrev).to.be.equal(1);
 
       // replace algorithm
       await clickAlgoEditButton(client, SIMPLE_ALGORITHM);
@@ -93,14 +91,14 @@ describe('Algorithms Scenarios', function () {
       await clickEditAlgoBackButton(client);
       await checkAlgorithmRowLayout(client, REPLACEMENT_ALGORITHM);
 
-      const nAlgosAfterEdit = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfterEdit - nAlgosAfterAdd).to.be.equal(0);
+      const nbAlgosAfterEdit = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfterEdit - nbAlgosAfterAdd).to.be.equal(0);
 
       // delete algorithm
       await clickAlgoDeleteButton(client, REPLACEMENT_ALGORITHM);
 
-      const nAlgosAfterDelete = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfterDelete - nAlgosAfterEdit).to.be.equal(-1);
+      const nbAlgosAfterDelete = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfterDelete - nbAlgosAfterEdit).to.be.equal(-1);
     }),
   );
 });

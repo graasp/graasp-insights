@@ -4,6 +4,7 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const low = require('lowdb');
 const fs = require('fs');
+const fse = require('fs-extra');
 const FileSync = require('lowdb/adapters/FileSync');
 const logger = require('./logger');
 const {
@@ -45,9 +46,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   const db = low(adapter);
 
   // create the datasets folder if it doesn't already exist
-  if (!fs.existsSync(DATASETS_FOLDER)) {
-    mkdirp(DATASETS_FOLDER);
-  }
+  fse.ensureDirSync(DATASETS_FOLDER);
 
   // set some defaults (required if json file is empty)
   db.defaults({
@@ -61,9 +60,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
 const ensureAlgorithmsExist = async (db) => {
   try {
     // create the algorithms folder if it doesn't already exist
-    if (!fs.existsSync(ALGORITHMS_FOLDER)) {
-      await mkdirp(ALGORITHMS_FOLDER);
-    }
+    fse.ensureDirSync(ALGORITHMS_FOLDER);
 
     // compare version with last app's start
     const lastVersion = db.get('version').value();

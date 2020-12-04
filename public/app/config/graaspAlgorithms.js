@@ -1,4 +1,5 @@
 const { PROGRAMMING_LANGUAGES, AUTHORS } = require('../../shared/constants');
+const { ALGORITHM_TYPES } = require('../../shared/constants');
 
 const GRAASP_ALGORITHMS = [
   {
@@ -9,6 +10,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'hash_users.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'sanitize-users',
@@ -18,6 +20,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'sanitize_users.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'suppress-geolocation',
@@ -26,6 +29,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'suppress_geolocation.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'suppress-data',
@@ -34,6 +38,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'suppress_data.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'suppress-users',
@@ -42,6 +47,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'suppress_users.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'suppress-app-instances-settings',
@@ -50,6 +56,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'suppress_appInstances_settings.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'suppress-app-instances-resources-data',
@@ -58,6 +65,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'suppress_appInstanceResources_data.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
   {
     id: 'two-anonymize-geolocation',
@@ -67,6 +75,7 @@ const GRAASP_ALGORITHMS = [
     filename: 'two_anonymize_geolocations.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
 ];
 

@@ -19,7 +19,6 @@ import {
   clickEditAlgoSaveButton,
   editAlgorithm,
   getNumberOfAlgorithms,
-  menuGoToAlgorithms,
 } from './utils';
 
 describe('Edit Algorithm Scenarios', function () {
@@ -32,8 +31,7 @@ describe('Edit Algorithm Scenarios', function () {
         database: { algorithms: [PREEXISTING_USER_ALGORITHM] },
       });
       const { client } = app;
-      client.setTimeout({ implicit: 0 });
-      await menuGoToAlgorithms(client);
+      await client.goToAlgorithms();
     }),
   );
 
@@ -64,14 +62,14 @@ describe('Edit Algorithm Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      const nAlgosPrior = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       await clickAlgoEditButton(client, GRAASP_ALGORITHMS[0]);
       await editAlgorithm(client, REPLACEMENT_ALGORITHM);
       await clickEditAlgoSaveButton(client);
 
-      const nAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfter - nAlgosPrior).to.equal(1);
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
 
       await checkAlgorithmRowLayout(client, REPLACEMENT_ALGORITHM);
       await checkAlgorithmRowLayout(client, GRAASP_ALGORITHMS[0]);

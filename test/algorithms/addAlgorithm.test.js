@@ -15,7 +15,6 @@ import {
   clickAddAlgoSaveButton,
   clickAddButton,
   getNumberOfAlgorithms,
-  menuGoToAlgorithms,
 } from './utils';
 
 describe('Add Algorithm Scenarios', function () {
@@ -26,8 +25,7 @@ describe('Add Algorithm Scenarios', function () {
     mochaAsync(async () => {
       app = await createApplication();
       const { client } = app;
-      client.setTimeout({ implicit: 0 });
-      await menuGoToAlgorithms(client);
+      await client.goToAlgorithms();
     }),
   );
 
@@ -39,15 +37,15 @@ describe('Add Algorithm Scenarios', function () {
     'Using an incorrect algorithm file location leads to error',
     mochaAsync(async () => {
       const { client } = app;
-      const nAlgosPrior = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
       await clickAddButton(client);
       await addAlgorithmFromFileLocation(client, MISSING_FILE_ALGORITHM);
       await clickAddAlgoSaveButton(client);
 
-      const nAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfter - nAlgosPrior).to.equal(0);
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(0);
     }),
   );
 
@@ -56,15 +54,15 @@ describe('Add Algorithm Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      const nAlgosPrior = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
       await clickAddButton(client);
       await addAlgorithmFromFileLocation(client, SIMPLE_ALGORITHM);
       await clickAddAlgoSaveButton(client);
 
-      const nAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfter - nAlgosPrior).to.equal(1);
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
 
       await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
     }),
@@ -75,15 +73,15 @@ describe('Add Algorithm Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      const nAlgosPrior = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
       await clickAddButton(client);
       await addAlgorithmFromEditor(client, SIMPLE_ALGORITHM);
       await clickAddAlgoSaveButton(client);
 
-      const nAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfter - nAlgosPrior).to.equal(1);
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
 
       await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
     }),
@@ -94,15 +92,15 @@ describe('Add Algorithm Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      const nAlgosPrior = await getNumberOfAlgorithms(client);
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
       await clickAddButton(client);
       await addAlgorithmFromFileLocation(client, SIMPLE_ALGORITHM);
       await clickAddAlgoBackButton(client);
 
-      const nAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nAlgosAfter - nAlgosPrior).to.equal(0);
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(0);
     }),
   );
 });
