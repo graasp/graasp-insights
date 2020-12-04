@@ -21,3 +21,12 @@ export const REPLACEMENT_ALGORITHM = {
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
 };
+
+export const PREEXISTING_USER_ALGORITHM = {
+  id: 'pre-existing-algorithm',
+  name: 'Pre-existing user algorithm',
+  description: 'some description',
+  author: AUTHORS.USER,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  filepath: path.join(__dirname, './sample_algorithm.py'),
+};

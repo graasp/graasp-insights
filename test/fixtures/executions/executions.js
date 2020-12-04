@@ -1,9 +1,6 @@
 import path from 'path';
 import { DATASET_TYPES, SCHEMA_TYPES } from '../../../public/shared/constants';
-import {
-  AUTHORS,
-  PROGRAMMING_LANGUAGES,
-} from '../../../src/shared/constants';
+import { AUTHORS, PROGRAMMING_LANGUAGES } from '../../../src/shared/constants';
 
 export const EXECUTION_FAST = {
   dataset: {

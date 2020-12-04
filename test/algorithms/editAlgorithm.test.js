@@ -1,18 +1,19 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
 import GRAASP_ALGORITHMS from '../../public/app/config/graaspAlgorithms';
+import {
+  ALGORITHM_TABLE_ID,
+  buildAlgorithmRowClass,
+} from '../../src/config/selectors';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
+  PREEXISTING_USER_ALGORITHM,
   REPLACEMENT_ALGORITHM,
-  SIMPLE_ALGORITHM,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
-  addAlgorithmFromFileLocation,
   checkAlgorithmRowLayout,
-  clickAddAlgoSaveButton,
-  clickAddButton,
   clickAlgoEditButton,
   clickEditAlgoBackButton,
   clickEditAlgoSaveButton,
@@ -27,7 +28,9 @@ describe('Edit Algorithm Scenarios', function () {
 
   beforeEach(
     mochaAsync(async () => {
-      app = await createApplication();
+      app = await createApplication({
+        database: { algorithms: [PREEXISTING_USER_ALGORITHM] },
+      });
       const { client } = app;
       client.setTimeout({ implicit: 0 });
       await menuGoToAlgorithms(client);
@@ -37,6 +40,24 @@ describe('Edit Algorithm Scenarios', function () {
   afterEach(() => {
     return closeApplication(app);
   });
+
+  it(
+    'Correclty edits an algorithm',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      await clickAlgoEditButton(client, PREEXISTING_USER_ALGORITHM);
+      await editAlgorithm(client, REPLACEMENT_ALGORITHM);
+      await clickEditAlgoSaveButton(client);
+      await clickEditAlgoBackButton(client);
+
+      await checkAlgorithmRowLayout(client, REPLACEMENT_ALGORITHM);
+      client.expectElementToNotExist(
+        `#${ALGORITHM_TABLE_ID}`,
+        `.${buildAlgorithmRowClass(PREEXISTING_USER_ALGORITHM.name)}`,
+      );
+    }),
+  );
 
   it(
     'Editing a graasp algorithm creates a copy',
@@ -62,17 +83,11 @@ describe('Edit Algorithm Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      // add algo
-      await clickAddButton(client);
-      await addAlgorithmFromFileLocation(client, SIMPLE_ALGORITHM);
-      await clickAddAlgoSaveButton(client);
-      await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
-
-      await clickAlgoEditButton(client, GRAASP_ALGORITHMS[0]);
+      await clickAlgoEditButton(client, PREEXISTING_USER_ALGORITHM);
       await editAlgorithm(client, REPLACEMENT_ALGORITHM);
       await clickEditAlgoBackButton(client);
 
-      await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
+      await checkAlgorithmRowLayout(client, PREEXISTING_USER_ALGORITHM);
     }),
   );
 });

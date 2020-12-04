@@ -40,7 +40,8 @@ export const clickAlgoDeleteButton = async (client, { name }) => {
   );
   await deleteButton.click();
   await client.expectElementToNotExist(
-    `#${ALGORITHM_TABLE_ID} .${buildAlgorithmRowClass(name)}`,
+    `#${ALGORITHM_TABLE_ID}`,
+    `.${buildAlgorithmRowClass(name)}`,
   );
 };
 

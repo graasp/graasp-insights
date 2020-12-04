@@ -7,6 +7,7 @@ import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   REPLACEMENT_ALGORITHM,
   SIMPLE_ALGORITHM,
+  PREEXISTING_USER_ALGORITHM,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
@@ -29,7 +30,10 @@ describe('Algorithms Scenarios', function () {
 
   beforeEach(
     mochaAsync(async () => {
-      app = await createApplication();
+      app = await createApplication({
+        database: { algorithms: [PREEXISTING_USER_ALGORITHM] },
+        responses: { showMessageDialogResponse: 1 },
+      });
       const { client } = app;
       client.setTimeout({ implicit: 0 });
       await menuGoToAlgorithms(client);
@@ -57,13 +61,9 @@ describe('Algorithms Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      await clickAddButton(client);
-      await addAlgorithmFromFileLocation(client, SIMPLE_ALGORITHM);
-      await clickAddAlgoSaveButton(client);
-
       const nAlgosPrior = await getNumberOfAlgorithms(client);
 
-      await clickAlgoDeleteButton(client, SIMPLE_ALGORITHM);
+      await clickAlgoDeleteButton(client, PREEXISTING_USER_ALGORITHM);
 
       const nAlgosAfter = await getNumberOfAlgorithms(client);
       expect(nAlgosAfter - nAlgosPrior).to.be.equal(-1);
