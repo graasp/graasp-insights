@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import path from 'path';
 import { mochaAsync } from './utils';
 import { createApplication, closeApplication } from './application';
 import { DEFAULT_GLOBAL_TIMEOUT } from './constants';
@@ -32,6 +33,8 @@ import {
 import { ADD_DATASET_PAUSE } from './time';
 
 const fillAddDatasetForm = async (client, { name, description, filepath }) => {
+  const basename = path.basename(filepath);
+
   const addButton = await client.$(`#${LOAD_DATASET_BUTTON_ID}`);
   await addButton.click();
 
@@ -41,6 +44,10 @@ const fillAddDatasetForm = async (client, { name, description, filepath }) => {
 
   // fill in form
   await filepathEl.addValue(filepath);
+
+  // check placeholder
+  expect(await nameEl.getAttribute('placeholder')).to.contain(basename);
+
   await nameEl.addValue(name);
   await descriptionEl.addValue(description);
 };
