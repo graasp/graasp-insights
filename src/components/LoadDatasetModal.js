@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import path from 'path';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
@@ -55,15 +54,11 @@ class LoadDatasetModal extends Component {
     dispatchAddDataset: PropTypes.func.isRequired,
   };
 
-  buildDefaultDatasetName = (newFileLocation) => {
-    return path.basename(newFileLocation);
-  };
-
   handleLocationInput = (event) => {
     const fileLocation = event.target.value;
     this.setState({
       fileLocation,
-      defaultDatasetName: this.buildDefaultDatasetName(fileLocation),
+      defaultDatasetName: this.getNameFromLocation(fileLocation),
     });
   };
 
@@ -81,7 +76,7 @@ class LoadDatasetModal extends Component {
     if (filePath) {
       this.setState({
         fileLocation: filePath,
-        defaultDatasetName: this.buildDefaultDatasetName(filePath),
+        defaultDatasetName: this.getNameFromLocation(filePath),
       });
     }
   };

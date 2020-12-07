@@ -1,3 +1,5 @@
+import path from 'path';
+
 // takes fileSize in KBs with 3 decimals places, and formats them
 // eslint-disable-next-line import/prefer-default-export
 export const formatFileSize = (sizeInKb) => {
@@ -11,4 +13,10 @@ export const formatFileSize = (sizeInKb) => {
   }
   // if size >= 999.5, display size in MBs to 2dps, e.g. 12521.482 --> 12.52MB'
   return `${(Math.round(sizeInKb) / 1000).toFixed(2)}MB`;
+};
+
+export const getNameFromLocation = (fileLocation) => {
+  return path
+    .basename(fileLocation)
+    .slice(0, -path.extname(fileLocation).length);
 };

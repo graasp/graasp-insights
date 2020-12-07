@@ -89,14 +89,6 @@ class Datasets extends Component {
     push(buildDatasetPath(id));
   };
 
-  handlePublish = () => {
-    // TODO: implement publish functionality
-  };
-
-  handleEdit = () => {
-    // TODO: implement edit functionality
-  };
-
   handleDelete = ({ id, name }) => {
     const { dispatchDeleteDataset } = this.props;
     dispatchDeleteDataset({ id, name });
