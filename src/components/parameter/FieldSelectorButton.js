@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CodeIcon from '@material-ui/icons/Code';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
 import FieldSelectorModal from './FieldSelectorModal';
 
 const FieldSelectorButton = (props) => {
@@ -17,7 +17,7 @@ const FieldSelectorButton = (props) => {
   };
 
   return (
-    <div style={{ display: 'inline-block' }} id={id} className={className}>
+    <div id={id} className={className}>
       <Button
         color="primary"
         variant="contained"

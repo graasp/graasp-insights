@@ -42,7 +42,7 @@
     "Delete algorithm": "Delete algorithm",
     "Dataset": "Dataset",
     "Algorithm": "Algorithm",
-    "Load a dataset first!": "Load a dataset first!",
+    "Load a dataset first": "Load a dataset first",
     "No algorithms are available": "No algorithms are available",
     "Execute": "Execute",
     "Executions": "Executions",
@@ -125,6 +125,10 @@
     "Please provide a number": "Please provide a number",
     "Parameter names can't be empty": "Parameter names can't be empty",
     "Parameters can't have the same name": "Parameters can't have the same name",
-    "Parameter name can only contain letters, digits and '_' and can't start with a digit": "Parameter name can only contain letters, digits and '_' and can't start with a digit"
+    "Parameter name can only contain letters, digits and '_' and can't start with a digit": "Parameter name can only contain letters, digits and '_' and can't start with a digit",
+    "Schema": "Schema",
+    "Remove parameter": "Remove parameter",
+    "Edit parameters": "Edit parameters",
+    "Algorithm parameters": "Algorithm parameters"
   }
 }

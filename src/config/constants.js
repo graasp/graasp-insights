@@ -1,6 +1,5 @@
 import { PARAMETER_TYPES, SCHEMA_TYPES } from '../shared/constants';
 import defaultFieldSelectorParameters from '../shared/defaultFieldSelectorParameters';
-import theme from '../theme';
 
 export const DATASETS_COLLECTION = 'datasets';
 
@@ -96,7 +95,7 @@ export const SCHEMA_LABELS = {
 
 export const SCHEMA_COLORS = {
   [SCHEMA_TYPES.GRAASP]: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: '#5050d2',
     color: 'white',
   },
 };

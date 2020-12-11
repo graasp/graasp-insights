@@ -51,6 +51,7 @@ const executeAlgorithm = (mainWindow, db) => (
     algorithm: { id: algorithmId },
     result: { name },
     parameters,
+    schemaType,
   },
 ) => {
   const channel = buildExecuteAlgorithmChannel(executionId);
@@ -166,7 +167,7 @@ const executeAlgorithm = (mainWindow, db) => (
     switch (language) {
       case PROGRAMMING_LANGUAGES.PYTHON:
         return executePythonAlgorithm(
-          { algorithmFilepath, filepath, tmpPath, parameters },
+          { algorithmFilepath, filepath, tmpPath, parameters, schemaType },
           { onRun, onStop, onSuccess, onError, clean },
         );
 

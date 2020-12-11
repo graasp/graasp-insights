@@ -41,6 +41,7 @@ const getFileSizeLimit = require('./getFileSizeLimit');
 const getSettings = require('./getSettings');
 const showConfirmOpenDatasetPrompt = require('./showConfirmOpenDatasetPrompt');
 const openPathInExplorer = require('./openPathInExplorer');
+const getSchemas = require('./getSchemas');
 
 module.exports = {
   getDataset,
@@ -82,4 +83,5 @@ module.exports = {
   getSettings,
   showConfirmOpenDatasetPrompt,
   openPathInExplorer,
+  getSchemas,
 };

@@ -1,0 +1,333 @@
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { Alert } from '@material-ui/lab';
+import { List } from 'immutable';
+import PropTypes from 'prop-types';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { PARAMETER_TYPES_DEFAULT, SCHEMA_LABELS } from '../../config/constants';
+import { PARAMETER_TYPES, SCHEMA_TYPES } from '../../shared/constants';
+import { generateFieldSelector } from '../../shared/utils';
+import {
+  areParametersNamesUnique,
+  isParameterNameValid,
+  isParameterValid,
+} from '../../utils/parameter';
+import FieldSelector from './FieldSelector';
+
+const useStyles = makeStyles((theme) => ({
+  parametersContent: {
+    padding: theme.spacing(1),
+  },
+  addParameterButton: {
+    marginTop: theme.spacing(1),
+  },
+  fieldSelectorMargin: {
+    margin: theme.spacing(1),
+  },
+  alertError: {
+    marginBottom: theme.spacing(1),
+  },
+}));
+
+const EditParametersForm = (props) => {
+  const { t, parameters, onChange, id, className, schemas } = props;
+  const classes = useStyles();
+  const [schemaType, setSchemaType] = useState(SCHEMA_TYPES.GRAASP);
+
+  const updateParam = (updatedParam, paramIdx) => {
+    // replace the param at the right index with the updated one
+    const updatedParameters = parameters.slice();
+    updatedParameters.splice(paramIdx, 1, updatedParam);
+
+    onChange(updatedParameters);
+  };
+
+  const deleteParam = (paramIdx) => {
+    const updatedParameters = parameters.slice();
+    updatedParameters.splice(paramIdx, 1);
+
+    onChange(updatedParameters);
+  };
+
+  const addParam = () => {
+    const newParam = {
+      name: '',
+      type: PARAMETER_TYPES.INTEGER_INPUT,
+      value: PARAMETER_TYPES_DEFAULT[PARAMETER_TYPES.INTEGER_INPUT],
+    };
+
+    onChange([...parameters, newParam]);
+  };
+
+  const updateDescription = (description, paramIdx) => {
+    updateParam({ ...parameters[paramIdx], description }, paramIdx);
+  };
+
+  const updateName = (name, paramIdx) => {
+    updateParam({ ...parameters[paramIdx], name }, paramIdx);
+  };
+
+  const updateType = (type, paramIdx) => {
+    updateParam(
+      {
+        ...parameters[paramIdx],
+        type,
+        value: PARAMETER_TYPES_DEFAULT[type],
+      },
+      paramIdx,
+    );
+  };
+
+  const updateValue = (value, paramIdx) => {
+    updateParam({ ...parameters[paramIdx], value }, paramIdx);
+  };
+
+  const renderParam = (param, paramIdx) => {
+    const { type: paramType, value } = param;
+    const invalid = !isParameterValid(param);
+    switch (paramType) {
+      case PARAMETER_TYPES.STRING_INPUT: {
+        return (
+          <TextField
+            label={t('Default value')}
+            size="small"
+            fullWidth
+            value={value}
+            onChange={(event) => updateValue(event.target.value, paramIdx)}
+          />
+        );
+      }
+      case PARAMETER_TYPES.INTEGER_INPUT: {
+        return (
+          <TextField
+            label={t('Default value')}
+            size="small"
+            fullWidth
+            value={value}
+            onChange={(event) => updateValue(event.target.value, paramIdx)}
+            error={invalid}
+            helperText={invalid && t('Please provide an integer')}
+          />
+        );
+      }
+      case PARAMETER_TYPES.FLOAT_INPUT: {
+        return (
+          <TextField
+            label={t('Default value')}
+            size="small"
+            fullWidth
+            value={value}
+            onChange={(event) => updateValue(event.target.value, paramIdx)}
+            error={invalid}
+            helperText={invalid && t('Please provide a number')}
+          />
+        );
+      }
+      case PARAMETER_TYPES.FIELD_SELECTOR: {
+        let fieldSelection;
+        if (schemaType in value) {
+          fieldSelection = value[schemaType];
+        } else {
+          const { schema } = schemas.find(({ type }) => type === schemaType);
+          fieldSelection = generateFieldSelector(schema);
+        }
+
+        return (
+          <FieldSelector
+            schema={fieldSelection}
+            onChange={(newValue) => {
+              updateValue({ ...value, [schemaType]: newValue }, paramIdx);
+            }}
+          />
+        );
+      }
+      default:
+        return null;
+    }
+  };
+
+  const hasFieldSelector = parameters.some(
+    ({ type }) => type === PARAMETER_TYPES.FIELD_SELECTOR,
+  );
+
+  return (
+    <div id={id} className={className}>
+      <Typography variant="h6">{t('Parameters')}</Typography>
+      <Grid container direction="column" spacing={1}>
+        {hasFieldSelector && (
+          <Grid item>
+            <FormControl>
+              <InputLabel>{t('Schema')}</InputLabel>
+              <Select
+                value={schemaType}
+                onChange={(event) => {
+                  setSchemaType(event.target.value);
+                }}
+              >
+                {schemas.map(({ type }) => (
+                  <MenuItem value={type} key={type}>
+                    {SCHEMA_LABELS[type]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+        {parameters?.map((param, paramIdx) => {
+          const { name, type, description } = param;
+          const invalidName = name.length > 0 && !isParameterNameValid(param);
+          return (
+            // eslint-disable-next-line react/no-array-index-key
+            <Grid item key={paramIdx}>
+              <Paper className={classes.parametersContent}>
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <TextField
+                      label={t('Name')}
+                      fullWidth
+                      value={name}
+                      onChange={(event) => {
+                        updateName(event.target.value, paramIdx);
+                      }}
+                      error={invalidName}
+                      helperText={
+                        invalidName &&
+                        t(
+                          "Parameter name can only contain letters, digits and '_' and can't start with a digit",
+                        )
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <FormControl fullWidth>
+                      <InputLabel>{t('Type')}</InputLabel>
+                      <Select
+                        value={type}
+                        onChange={(event) => {
+                          updateType(event.target.value, paramIdx);
+                        }}
+                      >
+                        {Object.values(PARAMETER_TYPES).map(
+                          (paramType, idx) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <MenuItem value={paramType} key={idx}>
+                              {t(paramType)}
+                            </MenuItem>
+                          ),
+                        )}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Tooltip title={t('Remove parameter')}>
+                      <IconButton
+                        size="small"
+                        onClick={() => deleteParam(paramIdx)}
+                      >
+                        <RemoveCircleOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid
+                    item
+                    xs={type === PARAMETER_TYPES.FIELD_SELECTOR ? 12 : 8}
+                  >
+                    <TextField
+                      label={t('Description')}
+                      value={description}
+                      fullWidth
+                      size="small"
+                      multiline
+                      rowsMax={4}
+                      onChange={(event) => {
+                        updateDescription(event.target.value, paramIdx);
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={type === PARAMETER_TYPES.FIELD_SELECTOR ? 12 : 4}
+                  >
+                    {renderParam(param, paramIdx)}
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          );
+        })}
+        {(parameters.some(({ name }) => name.length === 0) && (
+          <Grid item>
+            <Alert severity="error">
+              {t("Parameter names can't be empty")}
+            </Alert>
+          </Grid>
+        )) ||
+          (!areParametersNamesUnique(parameters) && (
+            <Grid item>
+              <Alert severity="error">
+                {t("Parameters can't have the same name")}
+              </Alert>
+            </Grid>
+          ))}
+        <Grid item>
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            onClick={() => {
+              addParam();
+            }}
+          >
+            {t('Add parameter')}
+          </Button>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+EditParametersForm.propTypes = {
+  t: PropTypes.func.isRequired,
+  parameters: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      // eslint-disable-next-line react/forbid-prop-types
+      value: PropTypes.any.isRequired,
+      description: PropTypes.string,
+    }),
+  ).isRequired,
+  onChange: PropTypes.func,
+  id: PropTypes.string,
+  className: PropTypes.string,
+  schemas: PropTypes.instanceOf(List).isRequired,
+};
+
+EditParametersForm.defaultProps = {
+  onChange: () => {},
+  id: undefined,
+  className: undefined,
+};
+
+const mapStateToProps = ({ schema }) => ({
+  schemas: schema.getIn(['schemas']),
+});
+
+const ConnectedComponent = connect(mapStateToProps)(EditParametersForm);
+
+export default withTranslation()(ConnectedComponent);

@@ -42,7 +42,7 @@
     "Delete algorithm": "Supprimer l'algorithme",
     "Dataset": "Dataset",
     "Algorithm": "Algorithme",
-    "Load a dataset first!": "Veuillez importer un dataset!",
+    "Load a dataset first": "Veuillez importer un dataset",
     "No algorithms are available": "Aucun algorithme n'est disponible",
     "Execute": "Exécuter",
     "Executions": "Exécutions",
@@ -124,6 +124,10 @@
     "Please provide a number": "Veuillez entrer un nombre réel",
     "Parameter names can't be empty": "Le nom des paramètres ne peut pas être vide",
     "Parameters can't have the same name": "Les paramètres ne peuvent pas avoir le même nom",
-    "Parameter name can only contain letters, digits and '_' and can't start with a digit": "Le nom d'un paramètre ne peut contenir que des lettres, chiffres et '_' et ne peut pas commencer par un chiffre"
+    "Parameter name can only contain letters, digits and '_' and can't start with a digit": "Le nom d'un paramètre ne peut contenir que des lettres, chiffres et '_' et ne peut pas commencer par un chiffre",
+    "Schema": "Schéma",
+    "Remove parameter": "Supprimer le paramètre",
+    "Edit parameters": "Modifier les paramètres",
+    "Algorithm parameters": "Paramètres de l'algorithme"
   }
 }

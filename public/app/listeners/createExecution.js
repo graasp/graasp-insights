@@ -15,7 +15,7 @@ const logger = require('../logger');
 
 const createExecution = (mainWindow, db) => async (
   event,
-  { algorithmId, sourceId, userProvidedFilename, parameters },
+  { algorithmId, sourceId, userProvidedFilename, parameters, schemaType },
 ) => {
   try {
     const { name: datasetName } = db
@@ -38,6 +38,7 @@ const createExecution = (mainWindow, db) => async (
         name: userProvidedFilename || `${datasetName}_${algorithmName}`,
       },
       parameters,
+      schemaType,
     };
     db.get(EXECUTIONS_COLLECTION).push(execution).write();
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {

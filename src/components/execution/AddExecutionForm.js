@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -10,7 +11,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Alert from '@material-ui/lab/Alert';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import {
@@ -36,7 +36,7 @@ import {
 import { areParametersValid } from '../../utils/parameter';
 import Loader from '../common/Loader';
 import SchemaTag from '../common/SchemaTag';
-import SelectParameters from '../parameter/SelectParameters';
+import SetParametersFormButton from '../parameter/SetParametersFormButton';
 
 const styles = (theme) => ({
   wrapper: {
@@ -103,6 +103,7 @@ class AddExecutionForm extends Component {
     algorithmId: '',
     userProvidedFilename: '',
     parameters: [],
+    schemaType: SCHEMA_TYPES.GRAASP,
   };
 
   componentDidMount() {
@@ -117,7 +118,13 @@ class AddExecutionForm extends Component {
   }
 
   handleSourceSelectOnChange = (e) => {
-    this.setState({ sourceId: e.target.value });
+    const { datasets } = this.props;
+    const sourceId = e.target.value;
+    const schemaType = datasets.find(({ id }) => id === sourceId)?.schema;
+    this.setState({ sourceId });
+    if (schemaType && schemaType !== SCHEMA_TYPES.NONE) {
+      this.setState({ schemaType });
+    }
   };
 
   handleAlgorithmSelectOnChange = (e) => {
@@ -125,7 +132,8 @@ class AddExecutionForm extends Component {
     const algorithmId = e.target.value;
     this.setState({
       algorithmId,
-      parameters: algorithms.find(({ id }) => id === algorithmId)?.parameters,
+      parameters:
+        algorithms.find(({ id }) => id === algorithmId)?.parameters || [],
     });
   };
 
@@ -140,12 +148,14 @@ class AddExecutionForm extends Component {
       algorithmId,
       userProvidedFilename,
       parameters,
+      schemaType,
     } = this.state;
     dispatchCreateExecution({
       sourceId,
       algorithmId,
       userProvidedFilename,
       parameters,
+      schemaType,
     });
     this.setState({ userProvidedFilename: '' });
   };
@@ -156,7 +166,7 @@ class AddExecutionForm extends Component {
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name, schemaType }) => (
+      .map(({ id, name, schemaType: datasetSchemaType }) => (
         <MenuItem
           value={id}
           key={id}
@@ -164,8 +174,11 @@ class AddExecutionForm extends Component {
           id={buildExecutionDatasetOptionId(id)}
         >
           {name}
-          {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
-            <SchemaTag schemaType={schemaType} className={classes.schemaTag} />
+          {datasetSchemaType && datasetSchemaType !== SCHEMA_TYPES.NONE && (
+            <SchemaTag
+              schemaType={datasetSchemaType}
+              className={classes.schemaTag}
+            />
           )}
         </MenuItem>
       ));
@@ -248,13 +261,23 @@ class AddExecutionForm extends Component {
     return <div className={classes.buttonContainer}>{button}</div>;
   };
 
-  handleParametersOnChange = (newParams) => {
-    this.setState({ parameters: newParams });
+  handleParametersOnChange = ({ parameters, schemaType }) => {
+    if (parameters) {
+      this.setState({ parameters });
+    }
+    if (schemaType) {
+      this.setState({ schemaType });
+    }
   };
 
   render() {
     const { algorithms, datasets, classes, t, isLoading, results } = this.props;
-    const { algorithmId, userProvidedFilename, parameters } = this.state;
+    const {
+      algorithmId,
+      userProvidedFilename,
+      parameters,
+      schemaType,
+    } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -314,10 +337,11 @@ class AddExecutionForm extends Component {
             id={EXECUTION_FORM_NAME_INPUT_ID}
           />
         </FormControl>
-        {parameters && parameters.length > 0 && (
-          <SelectParameters
+        {parameters.length > 0 && (
+          <SetParametersFormButton
             parameters={parameters}
             onChange={this.handleParametersOnChange}
+            schemaType={schemaType}
           />
         )}
         {this.renderExecuteButton()}

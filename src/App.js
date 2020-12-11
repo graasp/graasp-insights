@@ -30,7 +30,7 @@ import AddAlgorithm from './components/algorithm/AddAlgorithm';
 import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
 import Settings from './components/Settings';
-import { getSettings, checkPythonInstallation } from './actions';
+import { getSettings, checkPythonInstallation, getSchemas } from './actions';
 import Results from './components/Results';
 import Executions from './components/Executions';
 import Visualizations from './components/Visualizations';
@@ -41,6 +41,7 @@ export class App extends Component {
   static propTypes = {
     dispatchGetSettings: PropTypes.func.isRequired,
     dispatchCheckPythonInstallation: PropTypes.func.isRequired,
+    dispatchGetSchemas: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     i18n: PropTypes.shape({
       changeLanguage: PropTypes.func.isRequired,
@@ -49,16 +50,20 @@ export class App extends Component {
 
   constructor(props) {
     super(props);
-    const { dispatchGetSettings } = this.props;
+    const {
+      dispatchGetSettings,
+      dispatchCheckPythonInstallation,
+      dispatchGetSchemas,
+    } = this.props;
 
     dispatchGetSettings();
+    dispatchCheckPythonInstallation();
+    dispatchGetSchemas();
   }
 
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
-    const { dispatchCheckPythonInstallation } = this.props;
-    dispatchCheckPythonInstallation();
   }
 
   componentDidUpdate({ lang: prevLang }) {
@@ -125,6 +130,7 @@ const mapStateToProps = ({ settings }) => ({
 const mapDispatchToProps = {
   dispatchGetSettings: getSettings,
   dispatchCheckPythonInstallation: checkPythonInstallation,
+  dispatchGetSchemas: getSchemas,
 };
 
 const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);

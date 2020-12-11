@@ -19,12 +19,14 @@ const {
   VAR_FOLDER,
 } = require('./config/paths');
 const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
-const { AUTHORS } = require('../shared/constants');
+const { AUTHORS, SCHEMA_TYPES } = require('../shared/constants');
+const GRRAASP_SCHEMA = require('./schema/graasp');
 
 const DATASETS_COLLECTION = 'datasets';
 const ALGORITHMS_COLLECTION = 'algorithms';
 const EXECUTIONS_COLLECTION = 'executions';
 const SETTINGS_COLLECTION = 'settings';
+const SCHEMAS_COLLECTION = 'schemas';
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -57,6 +59,9 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [ALGORITHMS_COLLECTION]: [],
     [EXECUTIONS_COLLECTION]: [],
     [SETTINGS_COLLECTION]: [],
+    [SCHEMAS_COLLECTION]: [
+      { type: SCHEMA_TYPES.GRAASP, schema: GRRAASP_SCHEMA },
+    ],
   }).write();
   return db;
 };
@@ -116,6 +121,7 @@ module.exports = {
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
   SETTINGS_COLLECTION,
+  SCHEMAS_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,

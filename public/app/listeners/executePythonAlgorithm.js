@@ -3,7 +3,7 @@ const { PARAMETER_TYPES } = require('../../shared/constants');
 const logger = require('../logger');
 
 const executePythonAlgorithm = (
-  { algorithmFilepath, filepath, tmpPath, parameters },
+  { algorithmFilepath, filepath, tmpPath, parameters, schemaType },
   { onRun, onStop, onSuccess, onError, clean },
 ) => {
   let errorLog = '';
@@ -18,8 +18,10 @@ const executePythonAlgorithm = (
             return [`--${name}`, Number(value)];
           case PARAMETER_TYPES.STRING_INPUT:
             return [`--${name}`, value];
-          case PARAMETER_TYPES.FIELD_SELECTOR:
-            return [`--${name}`, `${JSON.stringify(value)}`];
+          case PARAMETER_TYPES.FIELD_SELECTOR: {
+            const fieldSelection = schemaType in value ? value[schemaType] : {};
+            return [`--${name}`, `${JSON.stringify(fieldSelection)}`];
+          }
           default:
             return [];
         }

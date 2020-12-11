@@ -1,3 +1,4 @@
+import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,7 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { anySelected } from '../../utils/parameter';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,18 +27,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FieldSelector = ({ schema: { children }, onChange }) => {
+const FieldSelector = ({ schema: { properties }, onChange }) => {
   return (
     <Paper elevation={2}>
-      {Object.entries(children).map(([name, properties]) => (
+      {Object.entries(properties).map(([key, field]) => (
         <FieldSelectorTree
-          key={name}
-          name={name}
-          properties={properties}
-          onChange={(updatedProperty) => {
+          key={key}
+          name={key}
+          field={field}
+          onChange={(updatedField) => {
             onChange({
-              ...properties,
-              children: { ...children, [name]: updatedProperty },
+              properties: { ...properties, [key]: updatedField },
             });
           }}
         />
@@ -49,7 +48,7 @@ const FieldSelector = ({ schema: { children }, onChange }) => {
 
 FieldSelector.propTypes = {
   schema: PropTypes.shape({
-    children: PropTypes.shape({}).isRequired,
+    properties: PropTypes.shape({}).isRequired,
   }).isRequired,
   onChange: PropTypes.func,
 };
@@ -58,26 +57,25 @@ FieldSelector.defaultProps = {
   onChange: () => {},
 };
 
-const FieldSelectorTree = ({
-  name,
-  properties: { selected, expanded, children },
-  onChange,
-}) => {
+const FieldSelectorTree = ({ name, field, onChange }) => {
+  const { type, selected, expanded } = field;
+  const properties =
+    type === 'object' ? field.properties : field?.items?.properties;
   const classes = useStyles();
 
   const handleCheckboxOnChange = (event) => {
     // change selected field and notify parent
     const { checked } = event.target;
-    onChange({ selected: checked, expanded, children });
+    onChange({ ...field, selected: checked });
   };
 
   const toggleExpanded = () => {
     // toggle expand field and notify parent
-    onChange({ selected, expanded: !expanded, children });
+    onChange({ ...field, expanded: !expanded });
   };
 
   // show expand button only if it has children
-  const expandVisibility = children ? 'visible' : 'hidden';
+  const expandVisibility = properties ? 'visible' : 'hidden';
 
   return (
     <div>
@@ -86,7 +84,7 @@ const FieldSelectorTree = ({
         aria-label="expand"
         onClick={toggleExpanded}
         className={classes.expandButton}
-        disabled={!children}
+        disabled={!properties}
       >
         {expanded ? (
           <ArrowDropUpIcon visibility={expandVisibility} />
@@ -103,26 +101,38 @@ const FieldSelectorTree = ({
             onChange={handleCheckboxOnChange}
             color="primary"
             className={classes.checkbox}
-            indeterminate={!selected && anySelected({ children })}
+            indeterminate={
+              !selected &&
+              properties &&
+              anySelected({ type: 'object', properties })
+            }
           />
         }
         label={name}
       />
       {/* recursively render children */}
-      {children && expanded && (
+      {properties && expanded && (
         <div className={classes.shifted}>
-          {Object.entries(children).map(([childName, childProperties]) => {
+          {Object.entries(properties).map(([key, childField]) => {
             return (
               <FieldSelectorTree
-                key={childName}
-                name={childName}
-                properties={{ ...childProperties }}
-                onChange={(updatedProperty) => {
-                  onChange({
-                    selected,
-                    expanded,
-                    children: { ...children, [childName]: updatedProperty },
-                  });
+                key={key}
+                name={key}
+                field={childField}
+                onChange={(updatedField) => {
+                  // eslint-disable-next-line no-unused-expressions
+                  type === 'object'
+                    ? onChange({
+                        ...field,
+                        properties: { ...properties, [key]: updatedField },
+                      })
+                    : onChange({
+                        ...field,
+                        items: {
+                          ...field.items,
+                          properties: { ...properties, [key]: updatedField },
+                        },
+                      });
                 }}
               />
             );
@@ -135,10 +145,15 @@ const FieldSelectorTree = ({
 
 FieldSelectorTree.propTypes = {
   name: PropTypes.string.isRequired,
-  properties: PropTypes.shape({
+  field: PropTypes.shape({
+    type: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     selected: PropTypes.bool.isRequired,
     expanded: PropTypes.bool,
-    children: PropTypes.shape({}),
+    properties: PropTypes.shape({}),
+    items: PropTypes.oneOfType([
+      PropTypes.shape({ properties: PropTypes.shape({}) }),
+      PropTypes.array,
+    ]),
   }).isRequired,
   onChange: PropTypes.func,
 };

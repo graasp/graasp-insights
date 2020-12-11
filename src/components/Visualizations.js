@@ -45,7 +45,7 @@ const Visualizations = () => {
     return (
       <Main>
         <Alert severity="info" className={classes.infoAlert}>
-          {t('Load a dataset first!')}
+          {t('Load a dataset first')}
         </Alert>
       </Main>
     );

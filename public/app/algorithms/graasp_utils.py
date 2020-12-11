@@ -37,3 +37,43 @@ def parse_arguments(additional_arguments=[]):
             parser.add_argument('--%s' % arg["name"], type=arg["type"])
 
     return parser.parse_args()
+
+
+def iterate_and_apply(dataset, field_selection, func):
+    properties = field_selection.get('properties', {})
+    for name, value in properties.items():
+        if name in dataset:
+            selected = value.get('selected', False)
+            if selected:
+                dataset[name] = func(dataset[name])
+            elif value.get('type', '') == 'object':
+                iterate_and_apply(dataset[name], value, func)
+            elif value.get('type', '') == 'array' and isinstance(dataset[name], list):
+                items = value.get('items', {})
+                if isinstance(items, list):
+                    for item, fl in zip(dataset[name], items):
+                        iterate_and_apply(item, fl, func)
+
+                elif isinstance(items, dict):
+                    for item in dataset[name]:
+                        iterate_and_apply(item, items, func)
+
+
+def iterate_and_suppress(dataset, field_selection):
+    properties = field_selection.get('properties', {})
+    for name, value in properties.items():
+        if name in dataset:
+            selected = value.get('selected', False)
+            if selected:
+                del dataset[name]
+            elif value.get('type', '') == 'object':
+                iterate_and_suppress(dataset[name], value)
+            elif value.get('type', '') == 'array' and isinstance(dataset[name], list):
+                items = value.get('items', {})
+                if isinstance(items, list):
+                    for item, fl in zip(dataset[name], items):
+                        iterate_and_suppress(item, fl)
+
+                elif isinstance(items, dict):
+                    for item in dataset[name]:
+                        iterate_and_suppress(item, items)

@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
@@ -9,16 +10,11 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { addAlgorithm } from '../../actions';
-import {
-  ADD_OPTIONS,
-  EDITOR_PROGRAMMING_LANGUAGES,
-  FILE_FILTERS,
-} from '../../config/constants';
+import { ADD_OPTIONS, FILE_FILTERS } from '../../config/constants';
 import {
   ADD_ALGORITHM_BACK_BUTTON_ID,
   ADD_ALGORITHM_DESCRIPTION_ID,
@@ -29,17 +25,17 @@ import {
   ADD_ALGORITHM_SAVE_BUTTON_ID,
 } from '../../config/selectors';
 import { AUTHORS } from '../../shared/constants';
-import { areParametersValid, setParametersInCode } from '../../utils/parameter';
+import { areParametersValid } from '../../utils/parameter';
 import BackButton from '../common/BackButton';
 import BrowseFileButton from '../common/BrowseFileButton';
-import Editor from '../common/Editor';
+import PythonEditor from '../common/editor/PythonEditor';
 import Main from '../common/Main';
-import EditParameters from '../parameter/EditParameters';
+import EditParametersForm from '../parameter/EditParametersForm';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
 
 const styles = (theme) => ({
   saveButton: {
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2, 0),
     textAlign: 'center',
   },
   backButton: {
@@ -56,7 +52,6 @@ class AddAlgorithm extends Component {
     fileLocation: '',
     code: PYTHON_TEMPLATE_CODE,
     option: ADD_OPTIONS.FILE,
-    programmingLanguage: EDITOR_PROGRAMMING_LANGUAGES.PYTHON,
     parameters: [],
   };
 
@@ -101,8 +96,7 @@ class AddAlgorithm extends Component {
   };
 
   handleParamsOnChange = (parameters) => {
-    const { code } = this.state;
-    this.setState({ parameters, code: setParametersInCode(code, parameters) });
+    this.setState({ parameters });
   };
 
   handleSave = () => {
@@ -129,15 +123,6 @@ class AddAlgorithm extends Component {
     dispatchAddAlgorithm({ payload, onSuccess });
   };
 
-  isValid = () => {
-    const { name, option, fileLocation, parameters } = this.state;
-    return (
-      name &&
-      (option !== ADD_OPTIONS.FILE || fileLocation) &&
-      areParametersValid(parameters)
-    );
-  };
-
   render() {
     const { t, classes } = this.props;
     const {
@@ -146,9 +131,13 @@ class AddAlgorithm extends Component {
       option,
       fileLocation,
       code,
-      programmingLanguage,
       parameters,
     } = this.state;
+
+    const isValid =
+      name &&
+      (option !== ADD_OPTIONS.FILE || fileLocation) &&
+      areParametersValid(parameters);
 
     return (
       <Main>
@@ -198,11 +187,11 @@ class AddAlgorithm extends Component {
                   </Grid>
                 </Grid>
               ) : (
-                <Editor
-                  programmingLanguage={programmingLanguage}
+                <PythonEditor
+                  parameters={parameters}
                   code={code}
                   onCodeChange={this.handleCodeOnChange}
-                  onSave={() => this.isValid() && this.handleSave()}
+                  onSave={() => isValid && this.handleSave()}
                 />
               )}
             </Grid>
@@ -228,7 +217,7 @@ class AddAlgorithm extends Component {
                 fullWidth
                 id={ADD_ALGORITHM_DESCRIPTION_ID}
               />
-              <EditParameters
+              <EditParametersForm
                 parameters={parameters}
                 onChange={this.handleParamsOnChange}
               />
@@ -241,7 +230,7 @@ class AddAlgorithm extends Component {
               startIcon={<SaveIcon />}
               onClick={this.handleSave}
               id={ADD_ALGORITHM_SAVE_BUTTON_ID}
-              disabled={!this.isValid()}
+              disabled={!isValid}
             >
               {t('Save')}
             </Button>
