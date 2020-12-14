@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import ReactJson from 'react-json-view';
 import { withTranslation } from 'react-i18next';
 import Loader from './Loader';
-import { MAX_FILE_SIZE } from '../../config/constants';
 import { setDatasetFile } from '../../actions';
 
 class JSONFileEditor extends Component {
   static propTypes = {
     content: PropTypes.string,
-    size: PropTypes.number,
     t: PropTypes.func.isRequired,
     collapsed: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
     dispatchSetDatasetFile: PropTypes.func.isRequired,
@@ -21,7 +18,6 @@ class JSONFileEditor extends Component {
 
   static defaultProps = {
     content: null,
-    size: 0,
     collapsed: true,
     id: null,
     editEnabled: false,
@@ -32,15 +28,15 @@ class JSONFileEditor extends Component {
   };
 
   async componentDidMount() {
-    const { content, size } = this.props;
-    if (size < MAX_FILE_SIZE && content) {
+    const { content } = this.props;
+    if (content) {
       this.loadFile();
     }
   }
 
   async componentDidUpdate({ content: prevContent }) {
-    const { content, size } = this.props;
-    if (size < MAX_FILE_SIZE && content !== prevContent) {
+    const { content } = this.props;
+    if (content !== prevContent) {
       this.loadFile();
     }
   }
@@ -59,14 +55,8 @@ class JSONFileEditor extends Component {
   };
 
   render() {
-    const { content, size, t, collapsed, editEnabled } = this.props;
+    const { content, collapsed, editEnabled } = this.props;
     const { json } = this.state;
-
-    if (size > MAX_FILE_SIZE) {
-      return (
-        <Typography>{t('This file is too big to be displayed.')}</Typography>
-      );
-    }
 
     if (!content || !json) {
       return <Loader />;

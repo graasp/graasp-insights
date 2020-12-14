@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import Alert from '@material-ui/lab/Alert';
@@ -18,7 +17,7 @@ import Loader from './common/Loader';
 import LoadDatasetButton from './LoadDatasetButton';
 import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
-import { buildDatasetPath, LOAD_DATASET_PATH } from '../config/paths';
+import { LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../utils/formatting';
 import ExportButton from './common/ExportButton';
@@ -26,7 +25,6 @@ import { FLAG_EXPORTING_DATASET } from '../shared/types';
 import { EXPORT_DATASET_CHANNEL } from '../shared/channels';
 import {
   DATASETS_EMPTY_ALERT_ID,
-  buildDatasetsListViewButtonClass,
   buildDatasetsListNameClass,
   buildDatasetsListDescriptionClass,
   buildDatasetsListDeleteButtonClass,
@@ -35,6 +33,7 @@ import {
 } from '../config/selectors';
 import { SCHEMA_TYPES } from '../shared/constants';
 import SchemaTag from './common/SchemaTag';
+import ViewDatasetButton from './dataset/ViewDatasetButton';
 
 const styles = (theme) => ({
   addButton: {
@@ -81,13 +80,6 @@ class Datasets extends Component {
     const { dispatchGetDatasets } = this.props;
     dispatchGetDatasets();
   }
-
-  handleView = ({ id }) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildDatasetPath(id));
-  };
 
   handleDelete = ({ id, name }) => {
     const { dispatchDeleteDataset } = this.props;
@@ -216,15 +208,7 @@ class Datasets extends Component {
         createdAt: createdAtString,
         lastModified: lastModifiedString,
         quickActions: [
-          <Tooltip title={t('View dataset')} key="view">
-            <IconButton
-              className={buildDatasetsListViewButtonClass(name)}
-              aria-label="view"
-              onClick={() => this.handleView(dataset)}
-            >
-              <CodeIcon />
-            </IconButton>
-          </Tooltip>,
+          <ViewDatasetButton key="view" dataset={dataset} />,
           <ExportButton
             key="export"
             id={id}

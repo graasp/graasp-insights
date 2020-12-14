@@ -15,8 +15,6 @@ export const ORDER_BY = {
   DESC: 'desc',
 };
 
-export const MAX_FILE_SIZE = 1500;
-
 export const DEFAULT_LOCALE_DATE = 'en-US';
 
 export const DEFAULT_NUMBER_FORMAT = 'en';
@@ -113,3 +111,6 @@ export const UTILS_FILES = {
 };
 
 export const CIRCLE_PROGRESS_SIZE = 26;
+
+export const FILE_SIZE_LIMIT_OPTIONS = [500, 1000, 2500, 5000, 10000];
+export const DEFAULT_FILE_SIZE_LIMIT = FILE_SIZE_LIMIT_OPTIONS[1];

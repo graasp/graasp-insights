@@ -11,16 +11,28 @@ import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-
+import { formatFileSize } from '../utils/formatting';
 import { langs } from '../config/i18n';
-import { getLanguage, setLanguage } from '../actions';
+import {
+  getLanguage,
+  setFileSizeLimit,
+  setLanguage,
+  getFileSizeLimit,
+} from '../actions';
+import {
+  DEFAULT_FILE_SIZE_LIMIT,
+  FILE_SIZE_LIMIT_OPTIONS,
+} from '../config/constants';
 
 const styles = (theme) => ({
   formControl: {
     width: theme.spacing(25),
+    margin: theme.spacing(1, 0),
   },
   content: {
     padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
   },
 });
 
@@ -33,14 +45,23 @@ const SettingsModal = (props) => {
     classes,
     open,
     handleClose,
+    dispatchSetFileSizeLimit,
+    fileSizeLimit,
+    dispatchGetFileSizeLimit,
   } = props;
   dispatchGetLanguage();
+  dispatchGetFileSizeLimit();
 
   const handleChangeLanguage = async (event) => {
     const { value: newLang } = event.target;
     const { i18n } = props;
     await i18n.changeLanguage(newLang);
     dispatchSetLanguage({ lang: newLang });
+  };
+
+  const handleChangeFileSizeLimit = (event) => {
+    const { value: newLimit } = event.target;
+    dispatchSetFileSizeLimit(newLimit);
   };
 
   const renderLanguageSelect = () => {
@@ -67,11 +88,46 @@ const SettingsModal = (props) => {
     );
   };
 
+  const renderFileSizeLimit = () => {
+    let optionIdx = FILE_SIZE_LIMIT_OPTIONS.indexOf(fileSizeLimit);
+    if (optionIdx < 0) {
+      // select closest option given set file size limit
+      optionIdx = FILE_SIZE_LIMIT_OPTIONS.reduce((prev, curr) => {
+        return Math.abs(curr - fileSizeLimit) < Math.abs(prev - fileSizeLimit)
+          ? curr
+          : prev;
+      });
+    }
+
+    return (
+      <FormControl className={classes.formControl}>
+        <InputLabel shrink htmlFor="fileSizeLimitId">
+          {t('File Size Limit')}
+        </InputLabel>
+        <Select
+          value={FILE_SIZE_LIMIT_OPTIONS[optionIdx]}
+          onChange={handleChangeFileSizeLimit}
+          inputProps={{
+            name: 'fileSizeLimit',
+            id: 'fileSizeLimitId',
+          }}
+        >
+          {FILE_SIZE_LIMIT_OPTIONS.map((size) => (
+            <MenuItem key={`limit-${size}`} value={size}>
+              {formatFileSize(size)}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    );
+  };
+
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{t('Settings')}</DialogTitle>
       <Container className={classes.content}>
         {renderLanguageSelect()}
+        {renderFileSizeLimit()}
       </Container>
     </Dialog>
   );
@@ -81,6 +137,9 @@ SettingsModal.propTypes = {
   lang: PropTypes.string.isRequired,
   dispatchGetLanguage: PropTypes.func.isRequired,
   dispatchSetLanguage: PropTypes.func.isRequired,
+  dispatchGetFileSizeLimit: PropTypes.func.isRequired,
+  dispatchSetFileSizeLimit: PropTypes.func.isRequired,
+  fileSizeLimit: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     formControl: PropTypes.string.isRequired,
@@ -95,11 +154,14 @@ SettingsModal.propTypes = {
 
 const mapStateToProps = ({ settings }) => ({
   lang: settings.get('lang'),
+  fileSizeLimit: settings.get('fileSizeLimit', DEFAULT_FILE_SIZE_LIMIT),
 });
 
 const mapDispatchToProps = {
   dispatchGetLanguage: getLanguage,
   dispatchSetLanguage: setLanguage,
+  dispatchSetFileSizeLimit: setFileSizeLimit,
+  dispatchGetFileSizeLimit: getFileSizeLimit,
 };
 
 const ConnectedComponent = connect(

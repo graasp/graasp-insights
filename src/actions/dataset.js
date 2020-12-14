@@ -7,6 +7,7 @@ import {
   LOAD_DATASET_CHANNEL,
   SET_DATASET_FILE_CHANNEL,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+  SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_DATASET,
@@ -25,7 +26,9 @@ import {
   ERROR_LOADING_DATASET_MESSAGE,
   ERROR_SETTING_DATASET_MESSAGE,
   ERROR_CLEARING_DATASET_MESSAGE,
+  ERROR_OPENING_DATASET_MESSAGE,
 } from '../shared/messages';
+import { DEFAULT_FILE_SIZE_LIMIT } from '../config/constants';
 
 export const getDatasets = () => (dispatch) => {
   const flagGettingDatasets = createFlag(FLAG_GETTING_DATASETS);
@@ -138,5 +141,33 @@ export const clearDataset = () => (dispatch) => {
     // eslint-disable-next-line no-console
     console.error(ERROR_CLEARING_DATASET_MESSAGE);
     dispatch(flagClearingDataset(false));
+  }
+};
+
+export const openDataset = ({ dataset, onConfirm }) => (dispatch, getState) => {
+  try {
+    const fileSizeLimit = getState().settings.get(
+      'fileSizeLimit',
+      DEFAULT_FILE_SIZE_LIMIT,
+    );
+
+    // automatically open if dataset is smaller than limit
+    if (dataset.size < fileSizeLimit) {
+      return onConfirm();
+    }
+
+    // ask for confirmation for bigger datasets
+    window.ipcRenderer.send(SHOW_CONFIRM_OPEN_DATASET_CHANNEL, dataset);
+    return window.ipcRenderer.once(
+      SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
+      async (event, response) => {
+        if (response) {
+          onConfirm();
+        }
+      },
+    );
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    return console.error(ERROR_OPENING_DATASET_MESSAGE);
   }
 };

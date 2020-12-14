@@ -38,4 +38,8 @@ module.exports = {
   STOP_EXECUTION_CHANNEL: 'execution:stop',
   EXECUTE_ALGORITHM_CHANNEL,
   buildExecuteAlgorithmChannel,
+  SET_FILE_SIZE_LIMIT_CHANNEL: 'settings:file-size-limit:set',
+  GET_FILE_SIZE_LIMIT_CHANNEL: 'settings:file-size-limit:get',
+  SHOW_CONFIRM_OPEN_DATASET_CHANNEL: 'prompt:open:dataset:confirm',
+  GET_SETTINGS_CHANNEL: 'settings:get',
 };
