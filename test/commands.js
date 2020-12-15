@@ -6,6 +6,7 @@ import {
   EXECUTIONS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
+  SETTINGS_MENU_ITEM_ID,
 } from '../src/config/selectors';
 import { openDrawer } from './utils';
 
@@ -38,12 +39,16 @@ export const setUpClientCommands = ({ client }) => {
     await client.goTo(QUIT_MENU_ITEM_ID);
   });
 
+  client.addCommand('goToSettings', async () => {
+    await client.goTo(SETTINGS_MENU_ITEM_ID);
+  });
+
   client.addCommand('expectElementToExist', async (elementSelector) => {
     const el = await client.$(elementSelector);
     const found = await el.isExisting();
     if (!found) {
       /* eslint-disable-next-line no-console */
-      console.log(`${elementSelector} is not found`);
+      console.debug(`${elementSelector} is not found`);
     }
     expect(found).to.be.true;
   });
