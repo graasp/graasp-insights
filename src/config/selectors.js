@@ -1,5 +1,6 @@
 const parseName = (name) => name.split(' ').join('');
 
+export const SETTINGS_MENU_ITEM_ID = 'settingsMenuItem';
 export const ALGORITHMS_MENU_ITEM_ID = 'algorithmsMenuItem';
 export const DATASETS_MENU_ITEM_ID = 'datasetsMenuItem';
 export const RESULTS_MENU_ITEM_ID = 'resultsMenuItem';
@@ -78,3 +79,7 @@ export const EDIT_ALGORITHM_NAME_ID = 'editAlgorithmName';
 export const EDIT_ALGORITHM_DESCRIPTION_ID = 'editAlgorithmDescription';
 export const EDIT_ALGORITHM_SAVE_BUTTON_ID = 'editAlgorithmSaveButton';
 export const EDIT_ALGORITHM_BACK_BUTTON_ID = 'editAlgorithmBackButton';
+export const SETTINGS_BUTTON_ID = 'settingsButton';
+export const SETTINGS_FILE_SIZE_LIMIT_SELECT_ID = 'settingsFileSizeLimitSelect';
+export const SETTINGS_LANG_SELECT = 'settingsLangSelect';
+export const SETTINGS_MAIN_ID = 'settingsMain';

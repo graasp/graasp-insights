@@ -50,6 +50,7 @@ const styles = (theme) => ({
     margin: theme.spacing(2),
   },
   content: {
+    padding: theme.spacing(2),
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
@@ -233,7 +234,7 @@ class Datasets extends Component {
     return (
       <Main id={DATASETS_MAIN_ID}>
         <Container className={classes.content}>
-          <h1>{t('Datasets')}</h1>
+          <Typography variant="h4">{t('Datasets')}</Typography>
           <Table id={DATASET_TABLE_ID} rows={rows} columns={columns} />
           <LoadDatasetButton />
         </Container>
