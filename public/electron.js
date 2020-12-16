@@ -11,13 +11,8 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
 const logger = require('./app/logger');
-const {
-  ICON_PATH,
-  PRODUCT_NAME,
-  DATABASE_PATH,
-  ALGORITHMS_FOLDER,
-  escapeEscapeCharacter,
-} = require('./app/config/config');
+const { ICON_PATH, PRODUCT_NAME } = require('./app/config/config');
+const { DATABASE_PATH, ALGORITHMS_FOLDER } = require('./app/config/paths');
 const isMac = require('./app/utils/isMac');
 const {
   LOAD_DATASET_CHANNEL,
@@ -215,7 +210,7 @@ const standardFileSubmenu = [
       const year = new Date().getFullYear();
       openAboutWindow({
         // asset for icon is in the public/assets folder
-        base_path: escapeEscapeCharacter(app.getAppPath()),
+        base_path: path.resolve(app.getAppPath()),
         icon_path: path.join(__dirname, ICON_PATH),
         copyright: `Copyright © ${year} EPFL\nCopyright © ${year} Graasp Association`,
         product_name: PRODUCT_NAME,

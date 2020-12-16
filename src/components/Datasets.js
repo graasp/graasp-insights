@@ -54,6 +54,10 @@ const styles = (theme) => ({
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
+  folderString: {
+    display: 'inline',
+    margin: theme.spacing(0, 1),
+  },
 });
 
 class Datasets extends Component {
@@ -67,14 +71,17 @@ class Datasets extends Component {
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
+      folderString: PropTypes.string,
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
     isLoading: PropTypes.bool.isRequired,
+    folder: PropTypes.string,
   };
 
   static defaultProps = {
     datasets: List(),
+    folder: null,
   };
 
   componentDidMount() {
@@ -95,7 +102,7 @@ class Datasets extends Component {
   };
 
   render() {
-    const { classes, t, datasets, isLoading } = this.props;
+    const { classes, t, datasets, isLoading, folder } = this.props;
 
     if (isLoading) {
       return (
@@ -238,6 +245,12 @@ class Datasets extends Component {
     return (
       <Main id={DATASETS_MAIN_ID}>
         <Container className={classes.content}>
+          {folder && (
+            <Alert severity="info" className={classes.infoAlert}>
+              {t('Datasets are saved in your computer at')}
+              <pre className={classes.folderString}>{folder}</pre>
+            </Alert>
+          )}
           <Typography variant="h4">{t('Datasets')}</Typography>
           <Table id={DATASET_TABLE_ID} rows={rows} columns={columns} />
           <LoadDatasetButton />
@@ -250,6 +263,7 @@ class Datasets extends Component {
 const mapStateToProps = ({ dataset }) => ({
   datasets: dataset.getIn(['datasets']),
   isLoading: dataset.getIn(['activity']).size > 0,
+  folder: dataset.getIn(['folder']),
 });
 
 const mapDispatchToProps = {

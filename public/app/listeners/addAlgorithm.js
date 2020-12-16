@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const ObjectId = require('bson-objectid');
 const logger = require('../logger');
-const { ALGORITHMS_FOLDER } = require('../config/config');
+const { ALGORITHMS_FOLDER } = require('../config/paths');
 const { ALGORITHMS_COLLECTION } = require('../db');
 const { ADD_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const {

@@ -40,6 +40,10 @@ const styles = (theme) => ({
   infoAlert: {
     margin: theme.spacing(2),
   },
+  folderString: {
+    display: 'inline',
+    margin: theme.spacing(0, 1),
+  },
 });
 
 class Results extends Component {
@@ -53,16 +57,19 @@ class Results extends Component {
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      folderString: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
     algorithms: PropTypes.instanceOf(List),
     activity: PropTypes.bool.isRequired,
+    folder: PropTypes.string,
   };
 
   static defaultProps = {
     results: List(),
     algorithms: List(),
+    folder: null,
   };
 
   componentDidMount() {
@@ -92,7 +99,7 @@ class Results extends Component {
   };
 
   render() {
-    const { activity, classes, t, results, algorithms } = this.props;
+    const { activity, classes, t, results, algorithms, folder } = this.props;
 
     if (activity || !results) {
       return (
@@ -240,6 +247,12 @@ class Results extends Component {
     return (
       <Main id={RESULTS_MAIN_ID}>
         <Container>
+          {folder && (
+            <Alert severity="info" className={classes.infoAlert}>
+              {t('Results are saved in your computer at')}
+              <pre className={classes.folderString}>{folder}</pre>
+            </Alert>
+          )}
           <h1>{t('Results')}</h1>
           <Table columns={columns} rows={rows} />
         </Container>
@@ -252,6 +265,7 @@ const mapStateToProps = ({ result, algorithms }) => ({
   results: result.getIn(['results']),
   algorithms: algorithms.getIn(['algorithms']),
   activity: Boolean(result.get('activity').size),
+  folder: result.getIn(['folder']),
 });
 
 const mapDispatchToProps = {

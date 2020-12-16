@@ -3,7 +3,7 @@ const {
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
 } = require('../db');
-const { SAMPLE_DATASET_FILEPATH } = require('../config/config');
+const { SAMPLE_DATASET_FILEPATH } = require('../config/paths');
 const { SCHEMA_TYPES, DATASET_TYPES } = require('../../shared/constants');
 
 module.exports = {

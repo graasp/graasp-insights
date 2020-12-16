@@ -8,14 +8,16 @@ const fse = require('fs-extra');
 const FileSync = require('lowdb/adapters/FileSync');
 const logger = require('./logger');
 const {
-  DATABASE_PATH,
-  DATASETS_FOLDER,
-  ALGORITHMS_FOLDER,
-  VAR_FOLDER,
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
 } = require('./config/config');
+const {
+  DATABASE_PATH,
+  DATASETS_FOLDER,
+  ALGORITHMS_FOLDER,
+  VAR_FOLDER,
+} = require('./config/paths');
 const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
 const { AUTHORS } = require('../shared/constants');
 
