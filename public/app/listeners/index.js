@@ -40,6 +40,7 @@ const setFileSizeLimit = require('./setFileSizeLimit');
 const getFileSizeLimit = require('./getFileSizeLimit');
 const getSettings = require('./getSettings');
 const showConfirmOpenDatasetPrompt = require('./showConfirmOpenDatasetPrompt');
+const openPathInExplorer = require('./openPathInExplorer');
 
 module.exports = {
   getDataset,
@@ -80,4 +81,5 @@ module.exports = {
   getFileSizeLimit,
   getSettings,
   showConfirmOpenDatasetPrompt,
+  openPathInExplorer,
 };

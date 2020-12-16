@@ -25,6 +25,7 @@ import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
 import { FLAG_EXPORTING_RESULT } from '../shared/types';
 import { RESULTS_MAIN_ID } from '../config/selectors';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
+import LocationPathAlert from './common/LocationPathAlert';
 
 const styles = (theme) => ({
   addButton: {
@@ -40,10 +41,6 @@ const styles = (theme) => ({
   infoAlert: {
     margin: theme.spacing(2),
   },
-  folderString: {
-    display: 'inline',
-    margin: theme.spacing(0, 1),
-  },
 });
 
 class Results extends Component {
@@ -57,7 +54,6 @@ class Results extends Component {
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
-      folderString: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
@@ -248,10 +244,10 @@ class Results extends Component {
       <Main id={RESULTS_MAIN_ID}>
         <Container>
           {folder && (
-            <Alert severity="info" className={classes.infoAlert}>
-              {t('Results are saved in your computer at')}
-              <pre className={classes.folderString}>{folder}</pre>
-            </Alert>
+            <LocationPathAlert
+              text={t('Results are saved in your computer at')}
+              path={folder}
+            />
           )}
           <h1>{t('Results')}</h1>
           <Table columns={columns} rows={rows} />

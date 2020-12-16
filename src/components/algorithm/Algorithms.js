@@ -36,7 +36,7 @@ import {
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
 } from '../../config/selectors';
-import { DRAWER_HEADER_HEIGHT } from '../../config/constants';
+import LocationPathAlert from '../common/LocationPathAlert';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -63,13 +63,6 @@ const styles = (theme) => ({
   },
   utilsButton: {
     float: 'right',
-    position: 'absolute',
-    right: theme.spacing(2),
-    top: DRAWER_HEADER_HEIGHT + theme.spacing(3),
-  },
-  folderString: {
-    display: 'inline',
-    margin: theme.spacing(0, 1),
   },
 });
 
@@ -86,7 +79,6 @@ class Algorithms extends Component {
       addButton: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
       utilsButton: PropTypes.string.isRequired,
-      folderString: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -263,6 +255,12 @@ class Algorithms extends Component {
     return (
       <Main>
         <Container className={classes.content}>
+          {folder && (
+            <LocationPathAlert
+              text={t('Algorithms are saved in your computer at')}
+              path={folder}
+            />
+          )}
           <Tooltip
             title={t(
               "You can use the 'utils' file to write functions you want to use across your custom algorithms",
@@ -277,12 +275,6 @@ class Algorithms extends Component {
               {t('Edit utils')}
             </Button>
           </Tooltip>
-          {folder && (
-            <Alert severity="info" className={classes.infoAlert}>
-              {t('Algorithms are saved in your computer at')}
-              <pre className={classes.folderString}>{folder}</pre>
-            </Alert>
-          )}
           <Typography variant="h4">{t('Algorithms')}</Typography>
           <Table columns={columns} rows={rows} id={ALGORITHM_TABLE_ID} />
         </Container>

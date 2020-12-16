@@ -53,7 +53,9 @@ const changeFileSizeLimit = async (client, value) => {
   const input = await client.$(`#${SETTINGS_FILE_SIZE_LIMIT_SELECT_ID} input`);
   const size = await input.getAttribute('value');
   if (size !== value) {
-    await (await client.$(`#${SETTINGS_FILE_SIZE_LIMIT_SELECT_ID}`)).click();
+    await (
+      await client.$(`#${SETTINGS_FILE_SIZE_LIMIT_SELECT_ID} .MuiSelect-root`)
+    ).click();
     await (await client.$(`[data-value='${value}']`)).click();
   }
 };

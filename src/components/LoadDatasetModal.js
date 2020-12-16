@@ -176,6 +176,7 @@ class LoadDatasetModal extends Component {
             rows={4}
             rowsMax={4}
             helperText={t('(Optional)')}
+            onChange={this.handleDescriptionInput}
             fullWidth
           />
         </DialogContent>

@@ -33,7 +33,7 @@ import {
 import { ADD_DATASET_PAUSE } from './time';
 
 const fillAddDatasetForm = async (client, { name, description, filepath }) => {
-  const basename = path.basename(filepath);
+  const basename = path.basename(filepath, '.json');
 
   const addButton = await client.$(`#${LOAD_DATASET_BUTTON_ID}`);
   await addButton.click();
@@ -44,7 +44,7 @@ const fillAddDatasetForm = async (client, { name, description, filepath }) => {
 
   // fill in form
   await filepathEl.addValue(filepath);
-
+  await client.pause(2000);
   // check placeholder
   expect(await nameEl.getAttribute('placeholder')).to.contain(basename);
 

@@ -34,6 +34,7 @@ import {
 import { SCHEMA_TYPES } from '../shared/constants';
 import SchemaTag from './common/SchemaTag';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
+import LocationPathAlert from './common/LocationPathAlert';
 
 const styles = (theme) => ({
   addButton: {
@@ -53,10 +54,6 @@ const styles = (theme) => ({
     padding: theme.spacing(2),
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
-  },
-  folderString: {
-    display: 'inline',
-    margin: theme.spacing(0, 1),
   },
 });
 
@@ -246,10 +243,10 @@ class Datasets extends Component {
       <Main id={DATASETS_MAIN_ID}>
         <Container className={classes.content}>
           {folder && (
-            <Alert severity="info" className={classes.infoAlert}>
-              {t('Datasets are saved in your computer at')}
-              <pre className={classes.folderString}>{folder}</pre>
-            </Alert>
+            <LocationPathAlert
+              text={t('Datasets are saved in your computer at')}
+              path={folder}
+            />
           )}
           <Typography variant="h4">{t('Datasets')}</Typography>
           <Table id={DATASET_TABLE_ID} rows={rows} columns={columns} />
