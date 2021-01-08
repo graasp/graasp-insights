@@ -1,8 +1,10 @@
 export default `from graasp_utils import load_dataset, save_dataset, parse_arguments
 
 def main():
-    # prepares the parameters for the algorithm (dataset_path and output_path come
-    # by default). You can then use them with args.parameter_name
+    # Prepares the parameters for the algorithm (dataset_path and output_path
+    # come by default). You can then use them with args.parameter_name.
+    # Avoid editing the parameters here, use the dedicated utility instead and
+    # the code will change accordingly.
     args = parse_arguments()
 
     # load the json dataset, available as a python dictionary

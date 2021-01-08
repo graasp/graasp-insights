@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SaveIcon from '@material-ui/icons/Save';
 import { makeStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,11 +17,15 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { SCHEMA_LABELS } from '../../config/constants';
 import { PARAMETER_TYPES } from '../../shared/constants';
 import { generateFieldSelector } from '../../shared/utils';
 import { isParameterValid } from '../../utils/parameter';
 import FieldSelector from './FieldSelector';
+import {
+  SET_PARAMETERS_SAVE_BUTTON_ID,
+  SET_PARAMETERS_BACK_BUTTON_ID,
+  buildParameterValueInputId,
+} from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -29,14 +36,22 @@ const useStyles = makeStyles((theme) => ({
 const SetParametersFormModal = (props) => {
   const {
     t,
-    parameters,
-    onChange,
+    parameters: parametersSource,
+    parametersOnChange,
+    schemaOnChange,
     open,
     handleClose,
     schemas,
-    schemaType,
+    schemaId: schemaIdSource,
   } = props;
   const classes = useStyles();
+
+  const [parameters, setParameters] = useState(parametersSource);
+  const [schemaId, setSchemaId] = useState(schemaIdSource);
+
+  useEffect(() => {
+    setParameters(parametersSource);
+  }, [parametersSource]);
 
   const updateParam = (newValue, paramIdx) => {
     const updatedParam = { ...parameters[paramIdx], value: newValue };
@@ -45,11 +60,11 @@ const SetParametersFormModal = (props) => {
     const updatedParameters = parameters.slice();
     updatedParameters.splice(paramIdx, 1, updatedParam);
 
-    onChange({ parameters: updatedParameters });
+    setParameters(updatedParameters);
   };
 
   const renderParam = (param, paramIdx) => {
-    const { type: paramType, value } = param;
+    const { name, type: paramType, value } = param;
     const invalid = !isParameterValid(param);
     switch (paramType) {
       case PARAMETER_TYPES.STRING_INPUT: {
@@ -60,6 +75,7 @@ const SetParametersFormModal = (props) => {
             value={value}
             onChange={(event) => updateParam(event.target.value, paramIdx)}
             fullWidth
+            id={buildParameterValueInputId(name)}
           />
         );
       }
@@ -73,6 +89,7 @@ const SetParametersFormModal = (props) => {
             error={invalid}
             helperText={invalid && t('Please provide an integer')}
             fullWidth
+            id={buildParameterValueInputId(name)}
           />
         );
       }
@@ -86,15 +103,16 @@ const SetParametersFormModal = (props) => {
             error={invalid}
             helperText={invalid && t('Please provide a number')}
             fullWidth
+            id={buildParameterValueInputId(name)}
           />
         );
       }
       case PARAMETER_TYPES.FIELD_SELECTOR: {
         let fieldSelection;
-        if (schemaType in value) {
-          fieldSelection = value[schemaType];
+        if (schemaId in value) {
+          fieldSelection = value[schemaId];
         } else {
-          const schema = schemas.find(({ type }) => type === schemaType);
+          const schema = schemas.find(({ id }) => id === schemaId)?.schema;
           fieldSelection = generateFieldSelector(schema);
         }
 
@@ -102,7 +120,7 @@ const SetParametersFormModal = (props) => {
           <FieldSelector
             schema={fieldSelection}
             onChange={(newValue) => {
-              updateParam({ ...value, [schemaType]: newValue }, paramIdx);
+              updateParam({ ...value, [schemaId]: newValue }, paramIdx);
             }}
           />
         );
@@ -126,14 +144,14 @@ const SetParametersFormModal = (props) => {
               <FormControl>
                 <InputLabel>{t('Schema')}</InputLabel>
                 <Select
-                  value={schemaType}
+                  value={schemaId}
                   onChange={(event) => {
-                    onChange({ schema: event.target.value });
+                    setSchemaId(event.target.value);
                   }}
                 >
-                  {schemas.map(({ type }) => (
-                    <MenuItem value={type} key={type}>
-                      {SCHEMA_LABELS[type]}
+                  {schemas.map(({ id, label }) => (
+                    <MenuItem value={id} key={id}>
+                      {label}
                     </MenuItem>
                   ))}
                 </Select>
@@ -151,6 +169,38 @@ const SetParametersFormModal = (props) => {
               </Grid>
             );
           })}
+          <Grid item container justify="space-between">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+                onClick={() => {
+                  parametersOnChange(parameters);
+                  schemaOnChange(schemaId);
+                  handleClose();
+                }}
+                id={SET_PARAMETERS_SAVE_BUTTON_ID}
+              >
+                {t('Save')}
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => {
+                  setParameters(parametersSource);
+                  setSchemaId(schemaIdSource);
+                  handleClose();
+                }}
+                id={SET_PARAMETERS_BACK_BUTTON_ID}
+              >
+                {t('Back')}
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Container>
     </Dialog>
@@ -167,15 +217,17 @@ SetParametersFormModal.propTypes = {
     }),
   ).isRequired,
   t: PropTypes.func.isRequired,
-  onChange: PropTypes.func,
+  parametersOnChange: PropTypes.func,
+  schemaOnChange: PropTypes.func,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   schemas: PropTypes.instanceOf(List).isRequired,
-  schemaType: PropTypes.string.isRequired,
+  schemaId: PropTypes.string.isRequired,
 };
 
 SetParametersFormModal.defaultProps = {
-  onChange: () => {},
+  parametersOnChange: () => {},
+  schemaOnChange: () => {},
 };
 
 const mapStateToProps = ({ schema }) => ({

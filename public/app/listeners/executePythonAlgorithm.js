@@ -3,7 +3,7 @@ const { PARAMETER_TYPES } = require('../../shared/constants');
 const logger = require('../logger');
 
 const executePythonAlgorithm = (
-  { algorithmFilepath, filepath, tmpPath, parameters, schemaType },
+  { algorithmFilepath, filepath, tmpPath, parameters, schemaId },
   { onRun, onStop, onSuccess, onError, clean },
 ) => {
   let errorLog = '';
@@ -19,7 +19,7 @@ const executePythonAlgorithm = (
           case PARAMETER_TYPES.STRING_INPUT:
             return [`--${name}`, value];
           case PARAMETER_TYPES.FIELD_SELECTOR: {
-            const fieldSelection = schemaType in value ? value[schemaType] : {};
+            const fieldSelection = schemaId in value ? value[schemaId] : {};
             return [`--${name}`, `${JSON.stringify(fieldSelection)}`];
           }
           default:
@@ -28,13 +28,12 @@ const executePythonAlgorithm = (
       })
       .flat() || [];
 
-  const process = spawn(
-    'python',
-    [algorithmFilepath, filepath, tmpPath, ...preparedParameters],
-    {
-      maxBuffer: 10486750,
-    },
-  );
+  const process = spawn('python', [
+    algorithmFilepath,
+    filepath,
+    tmpPath,
+    ...preparedParameters,
+  ]);
 
   onRun({ pid: process.pid });
 

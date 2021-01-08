@@ -11,15 +11,6 @@ import Banner from '../common/Banner';
 export class DeveloperScreen extends Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
-    theme: PropTypes.shape({
-      direction: PropTypes.string.isRequired,
-    }).isRequired,
-    history: PropTypes.shape({
-      replace: PropTypes.func.isRequired,
-    }).isRequired,
-    i18n: PropTypes.shape({
-      changeLanguage: PropTypes.func.isRequired,
-    }).isRequired,
   };
 
   render() {

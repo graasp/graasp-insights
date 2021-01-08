@@ -83,3 +83,16 @@ export const SETTINGS_BUTTON_ID = 'settingsButton';
 export const SETTINGS_FILE_SIZE_LIMIT_SELECT_ID = 'settingsFileSizeLimitSelect';
 export const SETTINGS_LANG_SELECT = 'settingsLangSelect';
 export const SETTINGS_MAIN_ID = 'settingsMain';
+export const PARAMETER_CLASS = 'parameter';
+export const PARAMETER_NAME_CLASS = 'parameterName';
+export const PARAMETER_TYPE_CLASS = 'parameterType';
+export const PARAMETER_DESCRIPTION_CLASS = 'parameterDescription';
+export const PARAMETER_VALUE_CLASS = 'parameterValue';
+export const ADD_PARAMETER_BUTTON_ID = 'addParameter';
+export const buildParameterTypeOptionClass = (type) =>
+  `parameterTypeOption-${parseName(type)}`;
+export const SET_PARAMETERS_BUTTON_ID = 'setParametersButton';
+export const SET_PARAMETERS_SAVE_BUTTON_ID = 'setParametersSaveButton';
+export const SET_PARAMETERS_BACK_BUTTON_ID = 'setParametersBackButton';
+export const buildParameterValueInputId = (name) =>
+  `parameterValueInput-${name}`;

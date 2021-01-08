@@ -128,6 +128,7 @@
     "Schema": "Schéma",
     "Remove parameter": "Supprimer le paramètre",
     "Edit parameters": "Modifier les paramètres",
-    "Algorithm parameters": "Paramètres de l'algorithme"
+    "Algorithm parameters": "Paramètres de l'algorithme",
+    "Detected schema": "Schéma détecté"
   }
 }

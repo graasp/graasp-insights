@@ -28,7 +28,7 @@ import {
   EXECUTIONS_EXECUTE_BUTTON_ID,
   EXECUTION_FORM_NAME_INPUT_ID,
 } from '../../config/selectors';
-import { SCHEMA_TYPES } from '../../shared/constants';
+import { GRAASP_SCHEMA_ID } from '../../shared/constants';
 import {
   buildPythonWrongVersionMessage,
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
@@ -90,6 +90,7 @@ class AddExecutionForm extends Component {
       valid: PropTypes.bool,
       version: PropTypes.string,
     }).isRequired,
+    schemas: PropTypes.instanceOf(List).isRequired,
   };
 
   static defaultProps = {
@@ -103,7 +104,7 @@ class AddExecutionForm extends Component {
     algorithmId: '',
     userProvidedFilename: '',
     parameters: [],
-    schemaType: SCHEMA_TYPES.GRAASP,
+    schemaId: GRAASP_SCHEMA_ID,
   };
 
   componentDidMount() {
@@ -120,10 +121,10 @@ class AddExecutionForm extends Component {
   handleSourceSelectOnChange = (e) => {
     const { datasets } = this.props;
     const sourceId = e.target.value;
-    const schemaType = datasets.find(({ id }) => id === sourceId)?.schema;
     this.setState({ sourceId });
-    if (schemaType && schemaType !== SCHEMA_TYPES.NONE) {
-      this.setState({ schemaType });
+    const schemaId = datasets.find(({ id }) => id === sourceId)?.schemaId;
+    if (schemaId) {
+      this.setState({ schemaId });
     }
   };
 
@@ -148,25 +149,25 @@ class AddExecutionForm extends Component {
       algorithmId,
       userProvidedFilename,
       parameters,
-      schemaType,
+      schemaId,
     } = this.state;
     dispatchCreateExecution({
       sourceId,
       algorithmId,
       userProvidedFilename,
       parameters,
-      schemaType,
+      schemaId,
     });
     this.setState({ userProvidedFilename: '' });
   };
 
   renderDatasetsAndResultsSelect = () => {
     const { sourceId } = this.state;
-    const { classes, t, datasets, results } = this.props;
+    const { classes, t, datasets, results, schemas } = this.props;
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name, schemaType: datasetSchemaType }) => (
+      .map(({ id, name, schemaId: datasetSchemaId }) => (
         <MenuItem
           value={id}
           key={id}
@@ -174,9 +175,9 @@ class AddExecutionForm extends Component {
           id={buildExecutionDatasetOptionId(id)}
         >
           {name}
-          {datasetSchemaType && datasetSchemaType !== SCHEMA_TYPES.NONE && (
+          {datasetSchemaId && (
             <SchemaTag
-              schemaType={datasetSchemaType}
+              schema={schemas.find(({ id: sid }) => sid === datasetSchemaId)}
               className={classes.schemaTag}
             />
           )}
@@ -261,13 +262,12 @@ class AddExecutionForm extends Component {
     return <div className={classes.buttonContainer}>{button}</div>;
   };
 
-  handleParametersOnChange = ({ parameters, schemaType }) => {
-    if (parameters) {
-      this.setState({ parameters });
-    }
-    if (schemaType) {
-      this.setState({ schemaType });
-    }
+  handleParametersOnChange = (parameters) => {
+    this.setState({ parameters });
+  };
+
+  handleSchemaOnChange = (schemaId) => {
+    this.setState({ schemaId });
   };
 
   render() {
@@ -276,7 +276,7 @@ class AddExecutionForm extends Component {
       algorithmId,
       userProvidedFilename,
       parameters,
-      schemaType,
+      schemaId,
     } = this.state;
 
     if (isLoading) {
@@ -340,8 +340,9 @@ class AddExecutionForm extends Component {
         {parameters.length > 0 && (
           <SetParametersFormButton
             parameters={parameters}
-            onChange={this.handleParametersOnChange}
-            schemaType={schemaType}
+            schemaId={schemaId}
+            parametersOnChange={this.handleParametersOnChange}
+            schemaOnChange={this.handleSchemaOnChange}
           />
         )}
         {this.renderExecuteButton()}
@@ -350,7 +351,13 @@ class AddExecutionForm extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
+const mapStateToProps = ({
+  dataset,
+  algorithms,
+  settings,
+  result,
+  schema,
+}) => ({
   datasets: dataset.get('datasets'),
   results: result.get('results'),
   algorithms: algorithms.get('algorithms'),
@@ -360,6 +367,7 @@ const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
       algorithms.getIn(['activity']).size &&
       result.getIn(['activity']).size,
   ),
+  schemas: schema.getIn(['schemas']),
 });
 
 const mapDispatchToProps = {

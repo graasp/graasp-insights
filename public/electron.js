@@ -99,6 +99,7 @@ const {
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
+  addDefaultSchemas,
 } = require('./app/db');
 
 // add keys to process
@@ -328,6 +329,7 @@ app.on('ready', async () => {
   await ensureDatabaseExists(DATABASE_PATH);
   const db = bootstrapDatabase(DATABASE_PATH);
   await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
+  await addDefaultSchemas(db);
 
   // set version file in var folder
   // used to detect first install

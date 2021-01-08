@@ -11,6 +11,7 @@ const {
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
+  DEFAULT_SCHEMAS,
 } = require('./config/config');
 const {
   DATABASE_PATH,
@@ -19,8 +20,7 @@ const {
   VAR_FOLDER,
 } = require('./config/paths');
 const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
-const { AUTHORS, SCHEMA_TYPES } = require('../shared/constants');
-const GRRAASP_SCHEMA = require('./schema/graasp');
+const { AUTHORS } = require('../shared/constants');
 
 const DATASETS_COLLECTION = 'datasets';
 const ALGORITHMS_COLLECTION = 'algorithms';
@@ -58,10 +58,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
     [EXECUTIONS_COLLECTION]: [],
-    [SETTINGS_COLLECTION]: [],
-    [SCHEMAS_COLLECTION]: [
-      { type: SCHEMA_TYPES.GRAASP, schema: GRRAASP_SCHEMA },
-    ],
+    [SCHEMAS_COLLECTION]: [],
   }).write();
   return db;
 };
@@ -116,6 +113,15 @@ const ensureAlgorithmsExist = async (db) => {
   }
 };
 
+const addDefaultSchemas = async (db) => {
+  DEFAULT_SCHEMAS.forEach((schema) => {
+    const { id } = schema;
+    if (!db.get(SCHEMAS_COLLECTION).find({ id }).value()) {
+      db.get(SCHEMAS_COLLECTION).push(schema).write();
+    }
+  });
+};
+
 module.exports = {
   DATASETS_COLLECTION,
   ALGORITHMS_COLLECTION,
@@ -125,4 +131,5 @@ module.exports = {
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
+  addDefaultSchemas,
 };

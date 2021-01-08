@@ -23,12 +23,12 @@ const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
     fs.writeFileSync(filepath, contentAsString);
 
     // check schema
-    const schemaType = detectSchema(content);
-    db.get(DATASETS_COLLECTION).find({ id }).assign({ schemaType }).write();
+    const schemaId = detectSchema(content);
+    db.get(DATASETS_COLLECTION).find({ id }).assign({ schemaId }).write();
 
     return mainWindow.webContents.send(SET_DATASET_FILE_CHANNEL, {
       type: SET_DATASET_FILE_SUCCESS,
-      payload: { content: contentAsString, schemaType },
+      payload: { content: contentAsString, schemaId },
     });
   } catch (err) {
     logger.error(err);

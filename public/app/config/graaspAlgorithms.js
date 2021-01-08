@@ -3,29 +3,22 @@ const {
   PROGRAMMING_LANGUAGES,
   AUTHORS,
   PARAMETER_TYPES,
-  SCHEMA_TYPES,
 } = require('../../shared/constants');
-const { ALGORITHM_TYPES } = require('../../shared/constants');
+const { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } = require('../../shared/constants');
 const { generateFieldSelector } = require('../../shared/utils');
 const GRAASP_SCHEMA = require('../schema/graasp');
 
-const updateObjectValues = (schema, newValues) => {
-  if (_.isObject(schema) && _.isObject(newValues)) {
-    return {
-      ...schema,
-      ...Object.fromEntries(
-        Object.entries(newValues).map(([key, value]) =>
-          key in schema
-            ? [key, updateObjectValues(schema[key], value)]
-            : [key, value],
-        ),
-      ),
-    };
-  }
-  return newValues;
-};
-
 const GRAASP_ALGORITHMS = [
+  {
+    id: 'hash-users',
+    name: 'Hash users',
+    description:
+      "Hash the userId field from the 'actions', 'appInstanceResources' and 'users'. Additionally remove every other field from the 'users'",
+    filename: 'hash_users.py',
+    author: AUTHORS.GRAASP,
+    language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
+  },
   {
     id: 'hash-fields',
     name: 'Hash fields',
@@ -40,31 +33,28 @@ const GRAASP_ALGORITHMS = [
         type: PARAMETER_TYPES.FIELD_SELECTOR,
         description: 'Select fields to hash',
         value: {
-          [SCHEMA_TYPES.GRAASP]: updateObjectValues(
-            generateFieldSelector(GRAASP_SCHEMA),
-            {
-              properties: {
-                data: {
-                  properties: {
-                    actions: {
-                      items: {
-                        properties: {
-                          user: { selected: true },
-                        },
+          [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
+            properties: {
+              data: {
+                properties: {
+                  actions: {
+                    items: {
+                      properties: {
+                        user: { selected: true },
                       },
                     },
-                    appInstanceResources: {
-                      items: {
-                        properties: {
-                          user: { selected: true },
-                        },
+                  },
+                  appInstanceResources: {
+                    items: {
+                      properties: {
+                        user: { selected: true },
                       },
                     },
                   },
                 },
               },
             },
-          ),
+          }),
         },
       },
     ],
@@ -112,39 +102,36 @@ const GRAASP_ALGORITHMS = [
         type: PARAMETER_TYPES.FIELD_SELECTOR,
         description: 'Select fields to suppress',
         value: {
-          [SCHEMA_TYPES.GRAASP]: updateObjectValues(
-            generateFieldSelector(GRAASP_SCHEMA),
-            {
-              properties: {
-                data: {
-                  properties: {
-                    actions: {
-                      items: {
-                        properties: {
-                          data: { selected: true },
-                          geolocation: { selected: true },
-                        },
+          [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
+            properties: {
+              data: {
+                properties: {
+                  actions: {
+                    items: {
+                      properties: {
+                        data: { selected: true },
+                        geolocation: { selected: true },
                       },
                     },
-                    appInstances: {
-                      items: {
-                        properties: {
-                          settings: { selected: true },
-                        },
+                  },
+                  appInstances: {
+                    items: {
+                      properties: {
+                        settings: { selected: true },
                       },
                     },
-                    appInstanceResources: {
-                      items: {
-                        properties: {
-                          data: { selected: true },
-                        },
+                  },
+                  appInstanceResources: {
+                    items: {
+                      properties: {
+                        data: { selected: true },
                       },
                     },
                   },
                 },
               },
             },
-          ),
+          }),
         },
       },
     ],

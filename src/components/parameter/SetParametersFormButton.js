@@ -3,10 +3,18 @@ import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import SetParametersFormModal from './SetParametersFormModal';
+import { SET_PARAMETERS_BUTTON_ID } from '../../config/selectors';
 
 const SetParametersFormButton = (props) => {
   const [open, setOpen] = useState(false);
-  const { parameters, onChange, id, className, schemaType } = props;
+  const {
+    parameters,
+    parametersOnChange,
+    schemaOnChange,
+    id,
+    className,
+    schemaId,
+  } = props;
   const { t } = useTranslation();
 
   const handleClickOpen = () => {
@@ -24,6 +32,7 @@ const SetParametersFormButton = (props) => {
         variant="contained"
         size="small"
         onClick={handleClickOpen}
+        id={SET_PARAMETERS_BUTTON_ID}
       >
         {t('Edit parameters')}
       </Button>
@@ -31,8 +40,9 @@ const SetParametersFormButton = (props) => {
         open={open}
         handleClose={handleClose}
         parameters={parameters}
-        onChange={onChange}
-        schemaType={schemaType}
+        parametersOnChange={parametersOnChange}
+        schemaOnChange={schemaOnChange}
+        schemaId={schemaId}
       />
     </div>
   );
@@ -47,14 +57,16 @@ SetParametersFormButton.propTypes = {
       value: PropTypes.any.isRequired,
     }),
   ).isRequired,
-  onChange: PropTypes.func,
+  parametersOnChange: PropTypes.func,
+  schemaOnChange: PropTypes.func,
   className: PropTypes.string,
   id: PropTypes.string,
-  schemaType: PropTypes.string.isRequired,
+  schemaId: PropTypes.string.isRequired,
 };
 
 SetParametersFormButton.defaultProps = {
-  onChange: () => {},
+  parametersOnChange: () => {},
+  schemaOnChange: () => {},
   className: undefined,
   id: undefined,
 };

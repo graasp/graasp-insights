@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { mochaAsync } from '../utils';
+import { mochaAsync, clearInput } from '../utils';
 import {
   createApplication,
   closeApplication,
@@ -27,18 +27,30 @@ import {
   EXECUTION_FORM_NAME_INPUT_ID,
   EXECUTION_TABLE_ROW_BUTTON_CLASS,
   RESULTS_MAIN_ID,
+  SET_PARAMETERS_BUTTON_ID,
+  SET_PARAMETERS_SAVE_BUTTON_ID,
+  buildParameterValueInputId,
 } from '../../src/config/selectors';
 import {
   EXECUTION_FAST,
   EXECUTION_FAST_ERROR,
   EXECUTION_SLOW_ERROR,
   EXECUTION_SLOW,
+  EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER,
+  EXECUTION_WITH_FAILING_INTEGER_PARAMETER,
+  EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER,
+  EXECUTION_WITH_FAILING_FLOAT_PARAMETER,
+  EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER,
+  EXECUTION_WITH_FAILING_STRING_PARAMETER,
 } from '../fixtures/executions/executions';
 import { EXECUTION_STATUSES } from '../../src/shared/constants';
 import { deleteDataset } from '../dataset.test';
 import { clickAlgoDeleteButton } from '../algorithms/utils';
 
-const createExecution = async (client, { dataset, algorithm, name }) => {
+const createExecution = async (
+  client,
+  { dataset, algorithm, name, parameters },
+) => {
   const datasetSelect = await client.$(`#${EXECUTIONS_DATASETS_SELECT_ID}`);
   await datasetSelect.click();
   await (
@@ -51,6 +63,20 @@ const createExecution = async (client, { dataset, algorithm, name }) => {
   ).click();
 
   await (await client.$(`#${EXECUTION_FORM_NAME_INPUT_ID}`)).addValue(name);
+
+  if (parameters) {
+    const setParametersButton = await client.$(`#${SET_PARAMETERS_BUTTON_ID}`);
+    await setParametersButton.click();
+    for (const { name: parameterName, value } of parameters) {
+      const parameterTextField = await client.$(
+        `#${buildParameterValueInputId(parameterName)}`,
+      );
+      await clearInput(parameterTextField);
+      parameterTextField.addValue(value);
+    }
+
+    await (await client.$(`#${SET_PARAMETERS_SAVE_BUTTON_ID}`)).click();
+  }
 
   await client.pause(1000);
 
@@ -160,8 +186,20 @@ describe('Executions Scenarios', function () {
         mochaAsync(async () => {
           app = await createApplication({
             database: {
-              datasets: [EXECUTION_FAST.dataset, EXECUTION_SLOW.dataset],
-              algorithms: [EXECUTION_FAST.algorithm, EXECUTION_SLOW.algorithm],
+              datasets: [
+                EXECUTION_FAST.dataset,
+                EXECUTION_SLOW.dataset,
+                EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER.dataset,
+                EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER.dataset,
+                EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER.dataset,
+              ],
+              algorithms: [
+                EXECUTION_FAST.algorithm,
+                EXECUTION_SLOW.algorithm,
+                EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER.algorithm,
+                EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER.algorithm,
+                EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER.algorithm,
+              ],
             },
           });
           await app.client.goToExecutions();
@@ -213,7 +251,65 @@ describe('Executions Scenarios', function () {
           });
         }),
       );
+
+      it(
+        'Execute with successful parameter',
+        mochaAsync(async () => {
+          const { client } = app;
+
+          await createExecution(
+            client,
+            EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER,
+          );
+          await client.pause(1000);
+          await checkExecutionRowLayout(client, {
+            ...EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER,
+            status: EXECUTION_STATUSES.SUCCESS,
+
+            rowIdx: 0,
+          });
+
+          await createExecution(
+            client,
+            EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER,
+          );
+          await client.pause(1000);
+          await checkExecutionRowLayout(client, {
+            ...EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER,
+            status: EXECUTION_STATUSES.SUCCESS,
+
+            rowIdx: 1,
+          });
+
+          await createExecution(
+            client,
+            EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER,
+          );
+          await client.pause(1000);
+          await checkExecutionRowLayout(client, {
+            ...EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER,
+            status: EXECUTION_STATUSES.SUCCESS,
+
+            rowIdx: 2,
+          });
+
+          await client.goToResults();
+          await checkResultRowLayout(client, {
+            ...EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER,
+            rowIdx: 0,
+          });
+          await checkResultRowLayout(client, {
+            ...EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER,
+            rowIdx: 1,
+          });
+          await checkResultRowLayout(client, {
+            ...EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER,
+            rowIdx: 2,
+          });
+        }),
+      );
     });
+
     describe('Failing executions', () => {
       beforeEach(
         mochaAsync(async () => {
@@ -222,10 +318,16 @@ describe('Executions Scenarios', function () {
               datasets: [
                 EXECUTION_FAST_ERROR.dataset,
                 EXECUTION_SLOW_ERROR.dataset,
+                EXECUTION_WITH_FAILING_INTEGER_PARAMETER.dataset,
+                EXECUTION_WITH_FAILING_FLOAT_PARAMETER.dataset,
+                EXECUTION_WITH_FAILING_STRING_PARAMETER.dataset,
               ],
               algorithms: [
                 EXECUTION_FAST_ERROR.algorithm,
                 EXECUTION_SLOW_ERROR.algorithm,
+                EXECUTION_WITH_FAILING_INTEGER_PARAMETER.algorithm,
+                EXECUTION_WITH_FAILING_FLOAT_PARAMETER.algorithm,
+                EXECUTION_WITH_FAILING_STRING_PARAMETER.algorithm,
               ],
             },
           });
@@ -263,6 +365,43 @@ describe('Executions Scenarios', function () {
             ...EXECUTION_SLOW_ERROR,
             status: EXECUTION_STATUSES.ERROR,
             rowIdx: 1,
+          });
+        }),
+      );
+
+      it(
+        'Execute with failing parameter',
+        mochaAsync(async () => {
+          const { client } = app;
+
+          await createExecution(
+            client,
+            EXECUTION_WITH_FAILING_INTEGER_PARAMETER,
+          );
+          await client.pause(1000);
+          await checkExecutionRowLayout(client, {
+            ...EXECUTION_WITH_FAILING_INTEGER_PARAMETER,
+            status: EXECUTION_STATUSES.ERROR,
+            rowIdx: 0,
+          });
+
+          await createExecution(client, EXECUTION_WITH_FAILING_FLOAT_PARAMETER);
+          await client.pause(1000);
+          await checkExecutionRowLayout(client, {
+            ...EXECUTION_WITH_FAILING_FLOAT_PARAMETER,
+            status: EXECUTION_STATUSES.ERROR,
+            rowIdx: 1,
+          });
+
+          await createExecution(
+            client,
+            EXECUTION_WITH_FAILING_STRING_PARAMETER,
+          );
+          await client.pause(1000);
+          await checkExecutionRowLayout(client, {
+            ...EXECUTION_WITH_FAILING_STRING_PARAMETER,
+            status: EXECUTION_STATUSES.ERROR,
+            rowIdx: 2,
           });
         }),
       );

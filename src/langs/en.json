@@ -129,6 +129,7 @@
     "Schema": "Schema",
     "Remove parameter": "Remove parameter",
     "Edit parameters": "Edit parameters",
-    "Algorithm parameters": "Algorithm parameters"
+    "Algorithm parameters": "Algorithm parameters",
+    "Detected schema": "Detected schema"
   }
 }

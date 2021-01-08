@@ -4,7 +4,9 @@ const {
   ALGORITHM_TYPES,
   PROGRAMMING_LANGUAGES,
   AUTHORS,
+  GRAASP_SCHEMA_ID,
 } = require('../../shared/constants');
+const GRAASP_SCHEMA = require('../schema/graasp');
 
 const DEFAULT_LOGGING_LEVEL = 'info';
 const DEFAULT_PROTOCOL = 'https';
@@ -33,6 +35,18 @@ const USER_UTILS = {
 
 const ACCEPTED_PYTHON_VERSIONS = ['2.7', '3'];
 
+const DEFAULT_SCHEMAS = [
+  {
+    id: GRAASP_SCHEMA_ID,
+    label: 'Graasp',
+    schema: GRAASP_SCHEMA,
+    tagStyle: {
+      backgroundColor: '#5050d2',
+      color: 'white',
+    },
+  },
+];
+
 module.exports = {
   DEFAULT_LOGGING_LEVEL,
   DEFAULT_PROTOCOL,
@@ -44,4 +58,5 @@ module.exports = {
   ACCEPTED_PYTHON_VERSIONS,
   GRAASP_UTILS,
   USER_UTILS,
+  DEFAULT_SCHEMAS,
 };

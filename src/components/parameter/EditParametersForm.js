@@ -17,8 +17,17 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { PARAMETER_TYPES_DEFAULT, SCHEMA_LABELS } from '../../config/constants';
-import { PARAMETER_TYPES, SCHEMA_TYPES } from '../../shared/constants';
+import { PARAMETER_TYPES_DEFAULT } from '../../config/constants';
+import {
+  PARAMETER_CLASS,
+  PARAMETER_NAME_CLASS,
+  PARAMETER_TYPE_CLASS,
+  PARAMETER_DESCRIPTION_CLASS,
+  PARAMETER_VALUE_CLASS,
+  ADD_PARAMETER_BUTTON_ID,
+  buildParameterTypeOptionClass,
+} from '../../config/selectors';
+import { PARAMETER_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import { generateFieldSelector } from '../../shared/utils';
 import {
   areParametersNamesUnique,
@@ -45,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const EditParametersForm = (props) => {
   const { t, parameters, onChange, id, className, schemas } = props;
   const classes = useStyles();
-  const [schemaType, setSchemaType] = useState(SCHEMA_TYPES.GRAASP);
+  const [schemaId, setSchemaId] = useState(GRAASP_SCHEMA_ID);
 
   const updateParam = (updatedParam, paramIdx) => {
     // replace the param at the right index with the updated one
@@ -107,6 +116,7 @@ const EditParametersForm = (props) => {
             fullWidth
             value={value}
             onChange={(event) => updateValue(event.target.value, paramIdx)}
+            inputProps={{ className: PARAMETER_VALUE_CLASS }}
           />
         );
       }
@@ -120,6 +130,7 @@ const EditParametersForm = (props) => {
             onChange={(event) => updateValue(event.target.value, paramIdx)}
             error={invalid}
             helperText={invalid && t('Please provide an integer')}
+            inputProps={{ className: PARAMETER_VALUE_CLASS }}
           />
         );
       }
@@ -133,15 +144,17 @@ const EditParametersForm = (props) => {
             onChange={(event) => updateValue(event.target.value, paramIdx)}
             error={invalid}
             helperText={invalid && t('Please provide a number')}
+            inputProps={{ className: PARAMETER_VALUE_CLASS }}
           />
         );
       }
       case PARAMETER_TYPES.FIELD_SELECTOR: {
         let fieldSelection;
-        if (schemaType in value) {
-          fieldSelection = value[schemaType];
+        if (schemaId in value) {
+          fieldSelection = value[schemaId];
         } else {
-          const { schema } = schemas.find(({ type }) => type === schemaType);
+          const schema = schemas.find(({ id: sid }) => sid === schemaId)
+            ?.schema;
           fieldSelection = generateFieldSelector(schema);
         }
 
@@ -149,7 +162,7 @@ const EditParametersForm = (props) => {
           <FieldSelector
             schema={fieldSelection}
             onChange={(newValue) => {
-              updateValue({ ...value, [schemaType]: newValue }, paramIdx);
+              updateValue({ ...value, [schemaId]: newValue }, paramIdx);
             }}
           />
         );
@@ -172,14 +185,14 @@ const EditParametersForm = (props) => {
             <FormControl>
               <InputLabel>{t('Schema')}</InputLabel>
               <Select
-                value={schemaType}
+                value={schemaId}
                 onChange={(event) => {
-                  setSchemaType(event.target.value);
+                  setSchemaId(event.target.value);
                 }}
               >
-                {schemas.map(({ type }) => (
-                  <MenuItem value={type} key={type}>
-                    {SCHEMA_LABELS[type]}
+                {schemas.map(({ id: sid, label }) => (
+                  <MenuItem value={sid} key={sid}>
+                    {label}
                   </MenuItem>
                 ))}
               </Select>
@@ -191,7 +204,7 @@ const EditParametersForm = (props) => {
           const invalidName = name.length > 0 && !isParameterNameValid(param);
           return (
             // eslint-disable-next-line react/no-array-index-key
-            <Grid item key={paramIdx}>
+            <Grid item key={paramIdx} className={PARAMETER_CLASS}>
               <Paper className={classes.parametersContent}>
                 <Grid container spacing={1}>
                   <Grid item xs={6}>
@@ -209,6 +222,7 @@ const EditParametersForm = (props) => {
                           "Parameter name can only contain letters, digits and '_' and can't start with a digit",
                         )
                       }
+                      inputProps={{ className: PARAMETER_NAME_CLASS }}
                     />
                   </Grid>
                   <Grid item xs={5}>
@@ -219,11 +233,18 @@ const EditParametersForm = (props) => {
                         onChange={(event) => {
                           updateType(event.target.value, paramIdx);
                         }}
+                        className={PARAMETER_TYPE_CLASS}
                       >
                         {Object.values(PARAMETER_TYPES).map(
                           (paramType, idx) => (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <MenuItem value={paramType} key={idx}>
+                            <MenuItem
+                              value={paramType}
+                              // eslint-disable-next-line react/no-array-index-key
+                              key={idx}
+                              className={buildParameterTypeOptionClass(
+                                paramType,
+                              )}
+                            >
                               {t(paramType)}
                             </MenuItem>
                           ),
@@ -257,6 +278,7 @@ const EditParametersForm = (props) => {
                       onChange={(event) => {
                         updateDescription(event.target.value, paramIdx);
                       }}
+                      inputProps={{ className: PARAMETER_DESCRIPTION_CLASS }}
                     />
                   </Grid>
                   <Grid
@@ -292,6 +314,7 @@ const EditParametersForm = (props) => {
             onClick={() => {
               addParam();
             }}
+            id={ADD_PARAMETER_BUTTON_ID}
           >
             {t('Add parameter')}
           </Button>

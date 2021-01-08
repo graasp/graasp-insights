@@ -1,4 +1,4 @@
-''' Hash the userId field from the 'actions' and 'appInstanceResources' '''
+''' Hash the specified fields '''
 
 import json
 

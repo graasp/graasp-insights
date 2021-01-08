@@ -1,3 +1,11 @@
+/**
+ * Add selected and expanded values to each property of a schema.
+ * Selected (boolean) indicates if the property is selected.
+ * Expanded (boolean) indicates if the property is expanded.
+ * @param {object} schema - the schema
+ * @param {boolean} expandUntilDepth - depth until which the property is expanded by default
+ * @return {object} - schema with selected and expanded values for each property
+ */
 const generateFieldSelector = (schema, expandUntilDepth = 1) => {
   const generate = (field, depth) => {
     const { type, properties, items } = field;

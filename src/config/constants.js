@@ -1,5 +1,4 @@
-import { PARAMETER_TYPES, SCHEMA_TYPES } from '../shared/constants';
-import defaultFieldSelectorParameters from '../shared/defaultFieldSelectorParameters';
+import { PARAMETER_TYPES } from '../shared/constants';
 
 export const DATASETS_COLLECTION = 'datasets';
 
@@ -89,21 +88,6 @@ export const COLORS = [
 // used to define yaxis and xaxis tick sizes in ActionsByDayChart and ActionsByTimeOfDayChart
 export const TICK_FONT_SIZE = 14;
 
-export const SCHEMA_LABELS = {
-  [SCHEMA_TYPES.GRAASP]: 'Graasp',
-};
-
-export const SCHEMA_COLORS = {
-  [SCHEMA_TYPES.GRAASP]: {
-    backgroundColor: '#5050d2',
-    color: 'white',
-  },
-};
-
-export const SCHEMA_TOOLTIPS = {
-  [SCHEMA_TYPES.GRAASP]: 'Graasp dataset detected',
-};
-
 export const UTILS_FILES = {
   GRAASP: 'graasp',
   USER: 'user',
@@ -122,7 +106,8 @@ export const PARAMETER_TYPES_PYTHON = {
 };
 
 export const PARAMETER_TYPES_DEFAULT = {
-  [PARAMETER_TYPES.FIELD_SELECTOR]: defaultFieldSelectorParameters,
+  // the field selector is consituted of key value pairs { schemaId, fieldSelection }
+  [PARAMETER_TYPES.FIELD_SELECTOR]: {},
   [PARAMETER_TYPES.FLOAT_INPUT]: 0.0,
   [PARAMETER_TYPES.INTEGER_INPUT]: 0,
   [PARAMETER_TYPES.STRING_INPUT]: '',

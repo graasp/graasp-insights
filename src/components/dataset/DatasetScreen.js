@@ -19,8 +19,8 @@ import {
   DATASET_SCREEN_MAIN_ID,
 } from '../../config/selectors';
 import BackButton from '../common/BackButton';
-import { SCHEMA_TYPES } from '../../shared/constants';
 import SchemaTag from '../common/SchemaTag';
+import { GRAASP_SCHEMA_ID } from '../../shared/constants';
 
 const styles = (theme) => ({
   wrapper: {
@@ -61,7 +61,9 @@ class DatasetScreen extends Component {
     datasetId: PropTypes.string,
     datasetContent: PropTypes.string,
     datasetSize: PropTypes.number,
-    datasetSchemaType: PropTypes.string,
+    datasetSchema: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
     activity: PropTypes.bool.isRequired,
   };
 
@@ -70,7 +72,7 @@ class DatasetScreen extends Component {
     datasetId: null,
     datasetContent: null,
     datasetSize: null,
-    datasetSchemaType: SCHEMA_TYPES.NONE,
+    datasetSchema: null,
   };
 
   componentDidMount() {
@@ -97,7 +99,7 @@ class DatasetScreen extends Component {
       datasetSize,
       datasetId,
       datasetContent,
-      datasetSchemaType,
+      datasetSchema,
       activity,
     } = this.props;
 
@@ -145,9 +147,9 @@ class DatasetScreen extends Component {
                 <Grid item>
                   <Typography variant="h5">{t('Content')}</Typography>
                 </Grid>
-                {datasetSchemaType && datasetSchemaType !== SCHEMA_TYPES.NONE && (
+                {datasetSchema && (
                   <Grid item>
-                    <SchemaTag schemaType={datasetSchemaType} />
+                    <SchemaTag schema={datasetSchema} />
                   </Grid>
                 )}
               </Grid>
@@ -161,7 +163,7 @@ class DatasetScreen extends Component {
                 />
               </Paper>
             </Grid>
-            {datasetSchemaType === SCHEMA_TYPES.GRAASP && (
+            {datasetSchema?.id === GRAASP_SCHEMA_ID && (
               <Grid item>
                 <Typography variant="h5">{t('Information')}</Typography>
                 <DatasetInformationTable
@@ -177,12 +179,14 @@ class DatasetScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
+const mapStateToProps = ({ dataset, schema }) => ({
   datasetName: dataset.getIn(['current', 'content', 'name']),
   datasetId: dataset.getIn(['current', 'content', 'id']),
   datasetContent: dataset.getIn(['current', 'content', 'content']),
   datasetSize: dataset.getIn(['current', 'content', 'size']),
-  datasetSchemaType: dataset.getIn(['current', 'content', 'schemaType']),
+  datasetSchema: schema
+    .getIn(['schemas'])
+    .find(({ id }) => id === dataset.getIn(['current', 'content', 'schemaId'])),
   activity: Boolean(dataset.getIn(['activity']).size),
 });
 
