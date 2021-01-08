@@ -19,6 +19,7 @@ import {
 } from '../config/selectors';
 import BrowseFileButton from './common/BrowseFileButton';
 import { FILE_FILTERS } from '../config/constants';
+import { getNameFromLocation } from '../utils/formatting';
 
 const styles = () => ({
   dialogContent: {
@@ -58,7 +59,7 @@ class LoadDatasetModal extends Component {
     const fileLocation = event.target.value;
     this.setState({
       fileLocation,
-      defaultDatasetName: this.getNameFromLocation(fileLocation),
+      defaultDatasetName: getNameFromLocation(fileLocation),
     });
   };
 
@@ -76,7 +77,7 @@ class LoadDatasetModal extends Component {
     if (filePath) {
       this.setState({
         fileLocation: filePath,
-        defaultDatasetName: this.getNameFromLocation(filePath),
+        defaultDatasetName: getNameFromLocation(filePath),
       });
     }
   };
