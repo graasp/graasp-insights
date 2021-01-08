@@ -5,11 +5,11 @@ const {
   SET_FILE_SIZE_LIMIT_SUCCESS,
   SET_FILE_SIZE_LIMIT_ERROR,
 } = require('../../shared/types');
+const { SETTINGS_COLLECTION } = require('../db');
 
 const setFileSizeLimit = (mainWindow, db) => async (event, size) => {
   try {
-    logger.debug('rjkdfgnv');
-    db.set('settings.fileSizeLimit', size).write();
+    db.get(SETTINGS_COLLECTION).set('fileSizeLimit', size).write();
     mainWindow.webContents.send(SET_FILE_SIZE_LIMIT_CHANNEL, {
       type: SET_FILE_SIZE_LIMIT_SUCCESS,
       payload: size,

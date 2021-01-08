@@ -5,10 +5,11 @@ const {
   SET_LANGUAGE_SUCCESS,
   SET_LANGUAGE_ERROR,
 } = require('../../shared/types');
+const { SETTINGS_COLLECTION } = require('../db');
 
 const setLanguage = (mainWindow, db) => async (event, lang) => {
   try {
-    db.set('settings.lang', lang).write();
+    db.get(SETTINGS_COLLECTION).set('lang', lang).write();
     mainWindow.webContents.send(SET_LANGUAGE_CHANNEL, {
       type: SET_LANGUAGE_SUCCESS,
       payload: lang,

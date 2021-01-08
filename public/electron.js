@@ -93,6 +93,7 @@ const {
   setFileSizeLimit,
   getSettings,
   showConfirmOpenDatasetPrompt,
+  getFileSizeLimit,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -100,7 +101,6 @@ const {
   bootstrapDatabase,
   ensureAlgorithmsExist,
 } = require('./app/db');
-const getFileSizeLimit = require('./app/listeners/getFileSizeLimit');
 
 // add keys to process
 Object.keys(env).forEach((key) => {

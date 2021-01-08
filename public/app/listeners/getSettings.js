@@ -5,10 +5,11 @@ const {
   GET_SETTINGS_SUCCESS,
   GET_SETTINGS_ERROR,
 } = require('../../shared/types');
+const { SETTINGS_COLLECTION } = require('../db');
 
 const getSettings = (mainWindow, db) => async () => {
   try {
-    const settings = db.get('settings').value();
+    const settings = db.get(SETTINGS_COLLECTION).value();
     mainWindow.webContents.send(GET_SETTINGS_CHANNEL, {
       type: GET_SETTINGS_SUCCESS,
       payload: settings,

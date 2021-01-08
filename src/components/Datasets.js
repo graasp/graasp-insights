@@ -19,7 +19,7 @@ import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
 import { LOAD_DATASET_PATH } from '../config/paths';
 import Table from './common/Table';
-import { formatFileSize } from '../utils/formatting';
+import { formatFileSize } from '../shared/formatting';
 import ExportButton from './common/ExportButton';
 import { FLAG_EXPORTING_DATASET } from '../shared/types';
 import { EXPORT_DATASET_CHANNEL } from '../shared/channels';

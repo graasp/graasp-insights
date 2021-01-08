@@ -5,10 +5,11 @@ const {
   GET_FILE_SIZE_LIMIT_SUCCESS,
   GET_FILE_SIZE_LIMIT_ERROR,
 } = require('../../shared/types');
+const { SETTINGS_COLLECTION } = require('../db');
 
 const getFileSizeLimit = (mainWindow, db) => async () => {
   try {
-    const size = db.get('settings.fileSizeLimit').value();
+    const size = db.get(SETTINGS_COLLECTION).get('fileSizeLimit').value();
     mainWindow.webContents.send(GET_FILE_SIZE_LIMIT_CHANNEL, {
       type: GET_FILE_SIZE_LIMIT_SUCCESS,
       payload: size,

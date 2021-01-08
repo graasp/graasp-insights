@@ -20,7 +20,7 @@ import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getResults, deleteResult, getAlgorithms } from '../actions';
 import { buildResultPath } from '../config/paths';
 import Table from './common/Table';
-import { formatFileSize } from '../utils/formatting';
+import { formatFileSize } from '../shared/formatting';
 import ExportButton from './common/ExportButton';
 import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
 import { FLAG_EXPORTING_RESULT } from '../shared/types';

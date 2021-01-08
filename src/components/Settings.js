@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
 import Main from './common/Main';
-import { formatFileSize } from '../utils/formatting';
+import { formatFileSize } from '../shared/formatting';
 import { langs } from '../config/i18n';
 import {
   getLanguage,
@@ -48,7 +48,7 @@ const Settings = (props) => {
     t,
     classes,
     dispatchSetFileSizeLimit,
-    fileSizeLimit,
+    fileSizeLimit = DEFAULT_FILE_SIZE_LIMIT,
     dispatchGetFileSizeLimit,
   } = props;
   dispatchGetLanguage();
@@ -157,7 +157,7 @@ Settings.propTypes = {
 
 const mapStateToProps = ({ settings }) => ({
   lang: settings.get('lang'),
-  fileSizeLimit: settings.get('fileSizeLimit') || DEFAULT_FILE_SIZE_LIMIT,
+  fileSizeLimit: settings.get('fileSizeLimit'),
 });
 
 const mapDispatchToProps = {
