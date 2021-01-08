@@ -19,6 +19,7 @@ import {
 } from '../config/selectors';
 import BrowseFileButton from './common/BrowseFileButton';
 import { FILE_FILTERS } from '../config/constants';
+import { getNameFromLocation } from '../utils/formatting';
 
 const styles = () => ({
   dialogContent: {
@@ -39,6 +40,7 @@ class LoadDatasetModal extends Component {
     fileLocation: '',
     fileCustomName: '',
     fileDescription: '',
+    defaultDatasetName: '',
   };
 
   static propTypes = {
@@ -54,7 +56,11 @@ class LoadDatasetModal extends Component {
   };
 
   handleLocationInput = (event) => {
-    this.setState({ fileLocation: event.target.value });
+    const fileLocation = event.target.value;
+    this.setState({
+      fileLocation,
+      defaultDatasetName: getNameFromLocation(fileLocation),
+    });
   };
 
   handleCustomNameInput = (event) => {
@@ -69,29 +75,51 @@ class LoadDatasetModal extends Component {
     // currently we select only one file
     const filePath = filePaths[0];
     if (filePath) {
-      this.setState({ fileLocation: filePath });
+      this.setState({
+        fileLocation: filePath,
+        defaultDatasetName: getNameFromLocation(filePath),
+      });
     }
   };
 
   handleFileSubmit = () => {
-    const { fileCustomName, fileLocation, fileDescription } = this.state;
+    const {
+      fileCustomName,
+      fileLocation,
+      fileDescription,
+      defaultDatasetName,
+    } = this.state;
     const { dispatchAddDataset } = this.props;
-    dispatchAddDataset({ fileCustomName, fileLocation, fileDescription });
+    dispatchAddDataset({
+      fileCustomName: fileCustomName || defaultDatasetName,
+      fileLocation,
+      fileDescription,
+    });
+  };
+
+  resetForm = () => {
+    this.setState({
+      fileLocation: '',
+      fileCustomName: '',
+      fileDescription: '',
+      defaultDatasetName: '',
+    });
   };
 
   render() {
     const { classes, t, open, handleClose } = this.props;
-    const { fileLocation, fileCustomName, fileDescription } = this.state;
+    const {
+      fileLocation,
+      fileCustomName,
+      fileDescription,
+      defaultDatasetName,
+    } = this.state;
 
     return (
       <Dialog
         open={open}
         onClose={() => {
-          this.setState({
-            fileLocation: '',
-            fileCustomName: '',
-            fileDescription: '',
-          });
+          this.resetForm();
           handleClose();
         }}
         maxWidth="sm"
@@ -123,10 +151,14 @@ class LoadDatasetModal extends Component {
             margin="dense"
             id={LOAD_DATASET_NAME_ID}
             label={t('Dataset name')}
+            placeholder={defaultDatasetName}
             value={fileCustomName}
             onChange={this.handleCustomNameInput}
             fullWidth
             helperText={t('(Optional)')}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
 
           <TextField
@@ -134,7 +166,6 @@ class LoadDatasetModal extends Component {
             id={LOAD_DATASET_DESCRIPTION_ID}
             label={t('Description')}
             value={fileDescription}
-            onChange={this.handleDescriptionInput}
             multiline
             rows={4}
             rowsMax={4}
@@ -146,11 +177,7 @@ class LoadDatasetModal extends Component {
           <Button
             id={LOAD_DATASET_CANCEL_BUTTON_ID}
             onClick={() => {
-              this.setState({
-                fileLocation: '',
-                fileCustomName: '',
-                fileDescription: '',
-              });
+              this.resetForm();
               handleClose();
             }}
             color="primary"
@@ -161,11 +188,7 @@ class LoadDatasetModal extends Component {
             id={LOAD_DATASET_ACCEPT_ID}
             onClick={() => {
               this.handleFileSubmit();
-              this.setState({
-                fileLocation: '',
-                fileCustomName: '',
-                fileDescription: '',
-              });
+              this.resetForm();
               handleClose();
             }}
             color="primary"

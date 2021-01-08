@@ -52,15 +52,11 @@ const createNewDataset = ({ name, filepath, description, type }) => {
 
 const loadDataset = (mainWindow, db) => async (event, args) => {
   const { fileLocation, fileCustomName, fileDescription } = args;
-  const defaultFileName = path
-    .basename(fileLocation)
-    .slice(0, -path.extname(fileLocation).length);
-  const fileName = fileCustomName || defaultFileName;
 
   if (fs.existsSync(fileLocation)) {
     try {
       const newDataset = createNewDataset({
-        name: fileName,
+        name: fileCustomName,
         filepath: fileLocation,
         description: fileDescription,
         folderPath: DATASETS_FOLDER,

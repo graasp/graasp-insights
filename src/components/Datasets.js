@@ -9,8 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import PublishIcon from '@material-ui/icons/Publish';
-import EditIcon from '@material-ui/icons/Edit';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -89,14 +87,6 @@ class Datasets extends Component {
       history: { push },
     } = this.props;
     push(buildDatasetPath(id));
-  };
-
-  handlePublish = () => {
-    // TODO: implement publish functionality
-  };
-
-  handleEdit = () => {
-    // TODO: implement edit functionality
   };
 
   handleDelete = ({ id, name }) => {
@@ -250,24 +240,6 @@ class Datasets extends Component {
               onClick={() => this.handleDelete(dataset)}
             >
               <DeleteIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Edit dataset')} key="edit">
-            <IconButton
-              disabled
-              aria-label="edit"
-              onClick={() => this.handleEdit(dataset)}
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>,
-          <Tooltip title={t('Publish dataset')} key="publish">
-            <IconButton
-              disabled
-              aria-label="publish"
-              onClick={() => this.handlePublish(dataset)}
-            >
-              <PublishIcon />
             </IconButton>
           </Tooltip>,
         ],
