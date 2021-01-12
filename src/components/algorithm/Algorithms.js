@@ -56,6 +56,7 @@ const styles = (theme) => ({
     },
   },
   content: {
+    padding: theme.spacing(2),
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
@@ -262,7 +263,7 @@ class Algorithms extends Component {
               {t('Edit utils')}
             </Button>
           </Tooltip>
-          <h1>{t('Algorithms')}</h1>
+          <Typography variant="h4">{t('Algorithms')}</Typography>
           <Table columns={columns} rows={rows} id={ALGORITHM_TABLE_ID} />
         </Container>
         {this.renderAddButon()}

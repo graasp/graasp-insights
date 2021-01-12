@@ -36,6 +36,10 @@ const {
   cancelAllRunningExecutions,
 } = require('./cancelExecution');
 const showConfirmDeletePrompt = require('./showConfirmDeletePrompt');
+const setFileSizeLimit = require('./setFileSizeLimit');
+const getFileSizeLimit = require('./getFileSizeLimit');
+const getSettings = require('./getSettings');
+const showConfirmOpenDatasetPrompt = require('./showConfirmOpenDatasetPrompt');
 
 module.exports = {
   getDataset,
@@ -72,4 +76,8 @@ module.exports = {
   cancelAllRunningExecutions,
   cancelExecution,
   showConfirmDeletePrompt,
+  setFileSizeLimit,
+  getFileSizeLimit,
+  getSettings,
+  showConfirmOpenDatasetPrompt,
 };

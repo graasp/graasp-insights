@@ -41,6 +41,9 @@ import {
   CREATE_EXECUTION_ERROR,
   DELETE_EXECUTION_ERROR,
   DELETE_EXECUTION_SUCCESS,
+  SET_FILE_SIZE_LIMIT_ERROR,
+  GET_FILE_SIZE_LIMIT_ERROR,
+  GET_SETTINGS_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -84,6 +87,9 @@ import {
   ERROR_DELETING_EXECUTION_MESSAGE,
   SUCCESS_DELETING_EXECUTION_MESSAGE,
   buildExecutingAlgorithmSuccessMessage,
+  ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE,
+  ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE,
+  ERROR_GETTING_SETTINGS_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -214,6 +220,15 @@ const middleware = () => (next) => (action) => {
       break;
     case SAVE_UTILS_ERROR:
       message = ERROR_SAVING_UTILS_MESSAGE;
+      break;
+    case SET_FILE_SIZE_LIMIT_ERROR:
+      message = ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE;
+      break;
+    case GET_FILE_SIZE_LIMIT_ERROR:
+      message = ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE;
+      break;
+    case GET_SETTINGS_ERROR:
+      message = ERROR_GETTING_SETTINGS_MESSAGE;
       break;
 
     // success messages

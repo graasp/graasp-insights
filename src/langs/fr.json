@@ -104,6 +104,8 @@
     "Visualizations": "Visualisations",
     "Cancel execution": "Annuler l'exécution",
     "Success": "Succès",
-    "You cannot delete algorithms from Graasp": "Les algorithmes de Graasp ne peuvent pas être supprimés"
+    "You cannot delete algorithms from Graasp": "Les algorithmes de Graasp ne peuvent pas être supprimés",
+    "File Size Limit": "Limite de taille de fichier",
+    "A warning will appear when opening datasets bigger than this limit.": "Un avertissement apparaîtra à l'ouverture d'un dataset plus grand que cette limite."
   }
 }

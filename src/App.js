@@ -29,8 +29,8 @@ import EditUtils from './components/algorithm/EditUtils';
 import AddAlgorithm from './components/algorithm/AddAlgorithm';
 import Datasets from './components/Datasets';
 import DatasetScreen from './components/dataset/DatasetScreen';
-import SettingsModal from './components/SettingsModal';
-import { getLanguage, checkPythonInstallation } from './actions';
+import Settings from './components/Settings';
+import { getSettings, checkPythonInstallation } from './actions';
 import Results from './components/Results';
 import Executions from './components/Executions';
 import Visualizations from './components/Visualizations';
@@ -39,7 +39,7 @@ export class App extends Component {
   state = { height: 0 };
 
   static propTypes = {
-    dispatchGetLanguage: PropTypes.func.isRequired,
+    dispatchGetSettings: PropTypes.func.isRequired,
     dispatchCheckPythonInstallation: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     i18n: PropTypes.shape({
@@ -49,9 +49,9 @@ export class App extends Component {
 
   constructor(props) {
     super(props);
-    const { dispatchGetLanguage } = this.props;
+    const { dispatchGetSettings } = this.props;
 
-    dispatchGetLanguage();
+    dispatchGetSettings();
   }
 
   componentDidMount() {
@@ -96,8 +96,8 @@ export class App extends Component {
               <Route exact path={RESULTS_PATH} component={Results} />
               <Route exact path={RESULT_PATH} component={DatasetScreen} />
               <Route exact path={HOME_PATH} component={Datasets} />
-              <Route exact path={SETTINGS_PATH} component={SettingsModal} />
               <Route exact path={EXECUTIONS_PATH} component={Executions} />
+              <Route exact path={SETTINGS_PATH} component={Settings} />
               <Route
                 exact
                 path={EDIT_ALGORITHM_PATH}
@@ -123,7 +123,7 @@ const mapStateToProps = ({ settings }) => ({
 });
 
 const mapDispatchToProps = {
-  dispatchGetLanguage: getLanguage,
+  dispatchGetSettings: getSettings,
   dispatchCheckPythonInstallation: checkPythonInstallation,
 };
 

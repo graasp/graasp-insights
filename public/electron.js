@@ -51,6 +51,10 @@ const {
   DELETE_EXECUTION_CHANNEL,
   STOP_EXECUTION_CHANNEL,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+  SET_FILE_SIZE_LIMIT_CHANNEL,
+  GET_FILE_SIZE_LIMIT_CHANNEL,
+  GET_SETTINGS_CHANNEL,
+  SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -86,6 +90,10 @@ const {
   cancelAllRunningExecutions,
   cancelExecution,
   showConfirmDeletePrompt,
+  setFileSizeLimit,
+  getSettings,
+  showConfirmOpenDatasetPrompt,
+  getFileSizeLimit,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -336,6 +344,11 @@ app.on('ready', async () => {
     showConfirmDeletePrompt(mainWindow),
   );
 
+  ipcMain.on(
+    SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
+    showConfirmOpenDatasetPrompt(mainWindow),
+  );
+
   // called when getting datasets
   ipcMain.on(GET_DATASETS_CHANNEL, getDatasets(mainWindow, db));
 
@@ -413,6 +426,15 @@ app.on('ready', async () => {
 
   // called when saving utils
   ipcMain.on(SAVE_UTILS_CHANNEL, saveUtils(mainWindow));
+
+  // called when setting file size limit
+  ipcMain.on(SET_FILE_SIZE_LIMIT_CHANNEL, setFileSizeLimit(mainWindow, db));
+
+  // called when getting file size limit
+  ipcMain.on(GET_FILE_SIZE_LIMIT_CHANNEL, getFileSizeLimit(mainWindow, db));
+
+  // called when getting settings
+  ipcMain.on(GET_SETTINGS_CHANNEL, getSettings(mainWindow, db));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

@@ -94,6 +94,13 @@ const buildExecutingAlgorithmSuccessMessage = (name) => {
 };
 const ERROR_CANCELING_EXECUTION_MESSAGE =
   'There was an error canceling the execution';
+const ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE =
+  'There was an error setting the file size limit';
+const ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE =
+  'There was an error retrieving the file size limit';
+const ERROR_OPENING_DATASET_MESSAGE = 'There was an error opening the dataset';
+const ERROR_GETTING_SETTINGS_MESSAGE =
+  'There was an error retrieving the settings';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -145,4 +152,8 @@ module.exports = {
   SUCCESS_DELETING_EXECUTION_MESSAGE,
   buildExecutingAlgorithmSuccessMessage,
   ERROR_CANCELING_EXECUTION_MESSAGE,
+  ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE,
+  ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE,
+  ERROR_OPENING_DATASET_MESSAGE,
+  ERROR_GETTING_SETTINGS_MESSAGE,
 };

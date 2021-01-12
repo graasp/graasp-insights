@@ -6,10 +6,12 @@ const {
   GET_LANGUAGE_SUCCESS,
   GET_LANGUAGE_ERROR,
 } = require('../../shared/types');
+const { SETTINGS_COLLECTION } = require('../db');
 
 const getLanguage = (mainWindow, db) => async () => {
   try {
-    const lang = db.get('settings.lang').value() || DEFAULT_LANG;
+    const lang =
+      db.get(SETTINGS_COLLECTION).get('lang').value() || DEFAULT_LANG;
 
     mainWindow.webContents.send(GET_LANGUAGE_CHANNEL, {
       type: GET_LANGUAGE_SUCCESS,

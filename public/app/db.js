@@ -22,6 +22,7 @@ const { AUTHORS } = require('../shared/constants');
 const DATASETS_COLLECTION = 'datasets';
 const ALGORITHMS_COLLECTION = 'algorithms';
 const EXECUTIONS_COLLECTION = 'executions';
+const SETTINGS_COLLECTION = 'settings';
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -53,6 +54,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
     [EXECUTIONS_COLLECTION]: [],
+    [SETTINGS_COLLECTION]: [],
   }).write();
   return db;
 };
@@ -111,6 +113,7 @@ module.exports = {
   DATASETS_COLLECTION,
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
+  SETTINGS_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,

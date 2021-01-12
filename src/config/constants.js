@@ -2,7 +2,6 @@ import { SCHEMA_TYPES } from '../shared/constants';
 import theme from '../theme';
 
 export const DATASETS_COLLECTION = 'datasets';
-export const SETTINGS_COLLECTION = 'settings';
 
 export const DEFAULT_LANGUAGE = 'en';
 export const DEFAULT_PROTOCOL = 'https';
@@ -14,8 +13,6 @@ export const ORDER_BY = {
   ASC: 'asc',
   DESC: 'desc',
 };
-
-export const MAX_FILE_SIZE = 1500;
 
 export const DEFAULT_LOCALE_DATE = 'en-US';
 
@@ -113,3 +110,6 @@ export const UTILS_FILES = {
 };
 
 export const CIRCLE_PROGRESS_SIZE = 26;
+
+export const FILE_SIZE_LIMIT_OPTIONS = [0, 500, 1000, 2500, 5000, 10000];
+export const DEFAULT_FILE_SIZE_LIMIT = FILE_SIZE_LIMIT_OPTIONS[2];
