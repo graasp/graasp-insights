@@ -209,7 +209,11 @@ class Datasets extends Component {
         createdAt: createdAtString,
         lastModified: lastModifiedString,
         quickActions: [
-          <ViewDatasetButton key="view" dataset={dataset} />,
+          <ViewDatasetButton
+            tooltip={t('View dataset')}
+            key="view"
+            dataset={dataset}
+          />,
           <ExportButton
             key="export"
             id={id}

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
@@ -69,9 +70,8 @@ const Settings = (props) => {
   const renderLanguageSelect = () => {
     return (
       <FormControl className={classes.formControl} id={SETTINGS_LANG_SELECT}>
-        <InputLabel shrink htmlFor="languageId">
-          {t('Language')}
-        </InputLabel>
+        <FormLabel>{t('Language')}</FormLabel>
+        <FormHelperText />
         <Select
           value={lang}
           onChange={handleChangeLanguage}
@@ -101,28 +101,35 @@ const Settings = (props) => {
       }, 0);
     }
 
+    const control = (
+      <Select
+        value={FILE_SIZE_LIMIT_OPTIONS[optionIdx]}
+        onChange={handleChangeFileSizeLimit}
+        inputProps={{
+          name: 'fileSizeLimit',
+          id: 'fileSizeLimitId',
+        }}
+      >
+        {FILE_SIZE_LIMIT_OPTIONS.map((size) => (
+          <MenuItem key={`limit-${size}`} value={size}>
+            {formatFileSize(size)}
+          </MenuItem>
+        ))}
+      </Select>
+    );
+
     return (
       <FormControl
         className={classes.formControl}
         id={SETTINGS_FILE_SIZE_LIMIT_SELECT_ID}
       >
-        <InputLabel shrink htmlFor="fileSizeLimitId">
-          {t('File Size Limit')}
-        </InputLabel>
-        <Select
-          value={FILE_SIZE_LIMIT_OPTIONS[optionIdx]}
-          onChange={handleChangeFileSizeLimit}
-          inputProps={{
-            name: 'fileSizeLimit',
-            id: 'fileSizeLimitId',
-          }}
-        >
-          {FILE_SIZE_LIMIT_OPTIONS.map((size) => (
-            <MenuItem key={`limit-${size}`} value={size}>
-              {formatFileSize(size)}
-            </MenuItem>
-          ))}
-        </Select>
+        <FormLabel>{t('File Size Limit')}</FormLabel>
+        <FormHelperText>
+          {t(
+            'A warning will appear when opening datasets bigger than this limit.',
+          )}
+        </FormHelperText>
+        {control}
       </FormControl>
     );
   };

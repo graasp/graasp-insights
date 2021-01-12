@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,7 +19,11 @@ class ViewDatasetButton extends Component {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
-    t: PropTypes.func.isRequired,
+    tooltip: PropTypes.string,
+  };
+
+  static defaultProps = {
+    tooltip: '',
   };
 
   handleView = () => {
@@ -37,10 +40,10 @@ class ViewDatasetButton extends Component {
   };
 
   render() {
-    const { t, dataset } = this.props;
+    const { dataset, tooltip } = this.props;
     const { name } = dataset;
     return (
-      <Tooltip title={t('View dataset')}>
+      <Tooltip title={tooltip}>
         <IconButton
           className={buildDatasetsListViewButtonClass(name)}
           aria-label="view"
@@ -58,6 +61,5 @@ const mapDispatchToProps = {
 };
 
 const ConnectedComponent = connect(null, mapDispatchToProps)(ViewDatasetButton);
-const TranslatedComponent = withTranslation()(ConnectedComponent);
 
-export default withRouter(TranslatedComponent);
+export default withRouter(ConnectedComponent);

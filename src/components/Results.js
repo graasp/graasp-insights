@@ -12,7 +12,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import PublishIcon from '@material-ui/icons/Publish';
 import EditIcon from '@material-ui/icons/Edit';
-import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Main from './common/Main';
 import Loader from './common/Loader';
@@ -25,6 +24,7 @@ import ExportButton from './common/ExportButton';
 import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
 import { FLAG_EXPORTING_RESULT } from '../shared/types';
 import { RESULTS_MAIN_ID } from '../config/selectors';
+import ViewDatasetButton from './dataset/ViewDatasetButton';
 
 const styles = (theme) => ({
   addButton: {
@@ -195,14 +195,11 @@ class Results extends Component {
         createdAt: createdAtString,
         lastModified: lastModifiedString,
         quickActions: [
-          <Tooltip title={t('View result')} key="view">
-            <IconButton
-              aria-label="view"
-              onClick={() => this.handleView(result)}
-            >
-              <CodeIcon />
-            </IconButton>
-          </Tooltip>,
+          <ViewDatasetButton
+            tooltip={t('View result')}
+            key="view"
+            dataset={result}
+          />,
           <ExportButton
             id={id}
             name={`${name}.json`}

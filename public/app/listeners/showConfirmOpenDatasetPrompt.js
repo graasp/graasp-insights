@@ -12,9 +12,11 @@ const showConfirmOpenDatasetPrompt = (mainWindow) => (event, { size }) => {
     buttons: ['Cancel', 'Continue'],
     defaultId: 1,
     cancelId: 0,
-    message: `This dataset's size is ${formatFileSize(
+    message: `This dataset is ${formatFileSize(
       size,
-    )} and opening it might take time. Do you want to proceed?`,
+    )} in size, and opening it might take time or slow down your device. Do you want to proceed?`,
+    detail:
+      'Tip: You can adjust the default maximum size for viewing datasets in your Settings tab.',
   };
 
   dialog.showMessageBox(mainWindow, options).then(({ response }) => {

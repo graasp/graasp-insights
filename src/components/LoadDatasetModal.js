@@ -19,7 +19,7 @@ import {
 } from '../config/selectors';
 import BrowseFileButton from './common/BrowseFileButton';
 import { FILE_FILTERS } from '../config/constants';
-import { getNameFromLocation } from '../utils/formatting';
+import { getNameFromLocation } from '../shared/formatting';
 
 const styles = () => ({
   dialogContent: {
