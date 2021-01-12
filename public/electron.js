@@ -430,10 +430,10 @@ app.on('ready', async () => {
   // called when setting file size limit
   ipcMain.on(SET_FILE_SIZE_LIMIT_CHANNEL, setFileSizeLimit(mainWindow, db));
 
-  // called when gettings file size limit
+  // called when getting file size limit
   ipcMain.on(GET_FILE_SIZE_LIMIT_CHANNEL, getFileSizeLimit(mainWindow, db));
 
-  // called when gettings settings
+  // called when getting settings
   ipcMain.on(GET_SETTINGS_CHANNEL, getSettings(mainWindow, db));
 
   app.on('window-all-closed', async () => {

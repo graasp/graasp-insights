@@ -106,6 +106,7 @@
     "Cancel execution": "Cancel execution",
     "Success": "Success",
     "You cannot delete algorithms from Graasp": "You cannot delete algorithms from Graasp",
-    "File Size Limit": "File Size Limit"
+    "File Size Limit": "File Size Limit",
+    "A warning will appear when opening datasets bigger than this limit.": "A warning will appear when opening datasets bigger than this limit."
   }
 }
