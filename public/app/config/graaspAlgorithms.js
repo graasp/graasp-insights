@@ -31,7 +31,7 @@ const GRAASP_ALGORITHMS = [
       {
         name: 'hashed_fields',
         type: PARAMETER_TYPES.FIELD_SELECTOR,
-        description: 'Select fields to hash:',
+        helperText: 'Select fields to hash:',
         value: {
           [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
             properties: {
@@ -83,7 +83,7 @@ const GRAASP_ALGORITHMS = [
       {
         name: 'k',
         type: PARAMETER_TYPES.INTEGER_INPUT,
-        description: 'Select parameter k for k-anonymization:',
+        helperText: 'Select parameter k for k-anonymization:',
         value: 2,
       },
     ],
@@ -100,7 +100,7 @@ const GRAASP_ALGORITHMS = [
       {
         name: 'suppressed_fields',
         type: PARAMETER_TYPES.FIELD_SELECTOR,
-        description: 'Select fields to suppress:',
+        helperText: 'Select fields to suppress:',
         value: {
           [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
             properties: {

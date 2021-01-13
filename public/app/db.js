@@ -58,6 +58,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
     [EXECUTIONS_COLLECTION]: [],
+    [SETTINGS_COLLECTION]: {},
     [SCHEMAS_COLLECTION]: {},
   }).write();
   return db;

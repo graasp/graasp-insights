@@ -43,7 +43,7 @@ PythonEditor.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      value: PropTypes.oneOf([
+      value: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
         PropTypes.shape({}),

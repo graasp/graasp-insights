@@ -85,8 +85,8 @@ const EditParametersForm = (props) => {
     onChange([...parameters, newParam]);
   };
 
-  const updateDescription = (description, paramIdx) => {
-    updateParam({ ...parameters[paramIdx], description }, paramIdx);
+  const updateHelperText = (helperText, paramIdx) => {
+    updateParam({ ...parameters[paramIdx], helperText }, paramIdx);
   };
 
   const updateName = (name, paramIdx) => {
@@ -183,7 +183,7 @@ const EditParametersForm = (props) => {
     <div id={id} className={className}>
       <Typography variant="h6">{t('Parameters')}</Typography>
       <Grid container direction="column" spacing={1}>
-        {hasFieldSelector && (
+        {hasFieldSelector && schemas.size > 1 && (
           <Grid item>
             <FormControl>
               <InputLabel>{t('Schema')}</InputLabel>
@@ -193,7 +193,7 @@ const EditParametersForm = (props) => {
                   setSchemaId(event.target.value);
                 }}
               >
-                {schemas.map(({ label }, sid) => (
+                {schemas.entrySeq().map(([sid, { label }]) => (
                   <MenuItem value={sid} key={label}>
                     {label}
                   </MenuItem>
@@ -203,7 +203,7 @@ const EditParametersForm = (props) => {
           </Grid>
         )}
         {parameters?.map((param, paramIdx) => {
-          const { name, type, description } = param;
+          const { name, type, helperText } = param;
           const invalidName = name.length > 0 && !isParameterNameValid(param);
           return (
             // eslint-disable-next-line react/no-array-index-key
@@ -272,14 +272,14 @@ const EditParametersForm = (props) => {
                     xs={type === PARAMETER_TYPES.FIELD_SELECTOR ? 12 : 8}
                   >
                     <TextField
-                      label={t('Description')}
-                      value={description}
+                      label={t('Helper text')}
+                      value={helperText}
                       fullWidth
                       size="small"
                       multiline
                       rowsMax={4}
                       onChange={(event) => {
-                        updateDescription(event.target.value, paramIdx);
+                        updateHelperText(event.target.value, paramIdx);
                       }}
                       inputProps={{ className: PARAMETER_DESCRIPTION_CLASS }}
                     />
@@ -333,12 +333,12 @@ EditParametersForm.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      value: PropTypes.oneOf([
+      value: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
         PropTypes.shape({}),
       ]).isRequired,
-      description: PropTypes.string,
+      helperText: PropTypes.string,
     }),
   ).isRequired,
   onChange: PropTypes.func,

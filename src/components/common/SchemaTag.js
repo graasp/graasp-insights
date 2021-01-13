@@ -33,7 +33,6 @@ const SchemaTag = ({ schema, className, t, classes }) => {
 
 SchemaTag.propTypes = {
   schema: PropTypes.shape({
-    schemaId: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     tagStyle: PropTypes.shape({}).isRequired,
   }),

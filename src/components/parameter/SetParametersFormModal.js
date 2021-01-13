@@ -142,7 +142,7 @@ const SetParametersFormModal = (props) => {
       <DialogTitle>{t('Algorithm parameters')}</DialogTitle>
       <Container className={classes.content}>
         <Grid container direction="column" spacing={2}>
-          {hasFieldSelector && (
+          {hasFieldSelector && schemas.size > 1 && (
             <Grid item>
               <FormControl>
                 <InputLabel>{t('Schema')}</InputLabel>
@@ -152,7 +152,7 @@ const SetParametersFormModal = (props) => {
                     setSchemaId(event.target.value);
                   }}
                 >
-                  {schemas.map(({ label }, id) => (
+                  {schemas.entrySeq().map(([id, { label }]) => (
                     <MenuItem value={id} key={label}>
                       {label}
                     </MenuItem>
@@ -162,12 +162,11 @@ const SetParametersFormModal = (props) => {
             </Grid>
           )}
           {parameters.map((param, paramIdx) => {
-            const { name, description } = param;
+            const { name, helperText } = param;
             return (
               // eslint-disable-next-line react/no-array-index-key
               <Grid item key={name}>
-                <Typography variant="subtitle1">{name}</Typography>
-                <Typography variant="caption">{description}</Typography>
+                <Typography>{helperText || name}</Typography>
                 {renderParam(param, paramIdx)}
               </Grid>
             );
@@ -215,7 +214,7 @@ SetParametersFormModal.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      value: PropTypes.oneOf([
+      value: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
         PropTypes.shape({}),
