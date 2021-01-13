@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import SetParametersFormModal from './SetParametersFormModal';
+import { useTranslation } from 'react-i18next';
 import { SET_PARAMETERS_BUTTON_ID } from '../../config/selectors';
+import SetParametersFormModal from './SetParametersFormModal';
+
+const useStyles = makeStyles(() => ({
+  button: {
+    backgroundColor: 'forestgreen',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: 'forestgreen',
+    },
+  },
+}));
 
 const SetParametersFormButton = (props) => {
   const [open, setOpen] = useState(false);
@@ -16,6 +27,7 @@ const SetParametersFormButton = (props) => {
     schemaId,
   } = props;
   const { t } = useTranslation();
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -28,7 +40,7 @@ const SetParametersFormButton = (props) => {
   return (
     <div id={id} className={className}>
       <Button
-        color="primary"
+        className={classes.button}
         variant="contained"
         size="small"
         onClick={handleClickOpen}
@@ -53,8 +65,11 @@ SetParametersFormButton.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      // eslint-disable-next-line react/forbid-prop-types
-      value: PropTypes.any.isRequired,
+      value: PropTypes.oneOf([
+        PropTypes.number,
+        PropTypes.string,
+        PropTypes.shape({}),
+      ]).isRequired,
     }),
   ).isRequired,
   parametersOnChange: PropTypes.func,

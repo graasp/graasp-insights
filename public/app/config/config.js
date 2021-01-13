@@ -35,8 +35,8 @@ const USER_UTILS = {
 
 const ACCEPTED_PYTHON_VERSIONS = ['2.7', '3'];
 
-const DEFAULT_SCHEMAS = [
-  {
+const DEFAULT_SCHEMAS = {
+  [GRAASP_SCHEMA_ID]: {
     id: GRAASP_SCHEMA_ID,
     label: 'Graasp',
     schema: GRAASP_SCHEMA,
@@ -45,7 +45,7 @@ const DEFAULT_SCHEMAS = [
       color: 'white',
     },
   },
-];
+};
 
 module.exports = {
   DEFAULT_LOGGING_LEVEL,

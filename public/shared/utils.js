@@ -70,6 +70,63 @@ const generateFieldSelector = (schema, expandUntilDepth = 1) => {
   };
 };
 
+/**
+ * Recursively unselect every field from a schema.
+ * @param {object} schema - the schema
+ * @return {object} - schema with all fields unselected
+ */
+const fieldSelectorUnselectAll = (schema) => {
+  const unselectField = (field) => {
+    const { type, properties, items } = field;
+    if (type === 'object') {
+      return {
+        ...field,
+        selected: false,
+        properties: Object.fromEntries(
+          Object.entries(properties).map(([key, value]) => [
+            key,
+            unselectField(value),
+          ]),
+        ),
+      };
+    }
+
+    if (type === 'array') {
+      if (Array.isArray(items)) {
+        return { ...field, selected: false, items: items.map(unselectField) };
+      }
+
+      if (items?.type === 'object') {
+        return {
+          ...field,
+          selected: false,
+          items: {
+            ...items,
+            properties: Object.fromEntries(
+              Object.entries(items.properties).map(([key, value]) => [
+                key,
+                unselectField(value),
+              ]),
+            ),
+          },
+        };
+      }
+    }
+    return { ...field, selected: false };
+  };
+
+  return {
+    ...schema,
+    properties: Object.fromEntries(
+      Object.entries(schema.properties).map(([key, value]) => [
+        key,
+        unselectField(value),
+      ]),
+    ),
+  };
+};
+
 module.exports = {
   generateFieldSelector,
+  fieldSelectorUnselectAll,
 };

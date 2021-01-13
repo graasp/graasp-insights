@@ -43,8 +43,11 @@ PythonEditor.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      // eslint-disable-next-line react/forbid-prop-types
-      value: PropTypes.any.isRequired,
+      value: PropTypes.oneOf([
+        PropTypes.number,
+        PropTypes.string,
+        PropTypes.shape({}),
+      ]).isRequired,
     }),
   ),
   onCodeChange: PropTypes.func,

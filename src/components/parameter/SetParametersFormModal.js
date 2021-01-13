@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { List } from 'immutable';
+import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -30,6 +30,9 @@ import {
 const useStyles = makeStyles((theme) => ({
   content: {
     paddingBottom: theme.spacing(2),
+  },
+  paramTextField: {
+    display: 'block',
   },
 }));
 
@@ -74,7 +77,7 @@ const SetParametersFormModal = (props) => {
             size="small"
             value={value}
             onChange={(event) => updateParam(event.target.value, paramIdx)}
-            fullWidth
+            className={classes.paramTextField}
             id={buildParameterValueInputId(name)}
           />
         );
@@ -88,7 +91,7 @@ const SetParametersFormModal = (props) => {
             onChange={(event) => updateParam(event.target.value, paramIdx)}
             error={invalid}
             helperText={invalid && t('Please provide an integer')}
-            fullWidth
+            className={classes.paramTextField}
             id={buildParameterValueInputId(name)}
           />
         );
@@ -102,7 +105,7 @@ const SetParametersFormModal = (props) => {
             onChange={(event) => updateParam(event.target.value, paramIdx)}
             error={invalid}
             helperText={invalid && t('Please provide a number')}
-            fullWidth
+            className={classes.paramTextField}
             id={buildParameterValueInputId(name)}
           />
         );
@@ -112,7 +115,7 @@ const SetParametersFormModal = (props) => {
         if (schemaId in value) {
           fieldSelection = value[schemaId];
         } else {
-          const schema = schemas.find(({ id }) => id === schemaId)?.schema;
+          const schema = schemas.get(schemaId)?.schema;
           fieldSelection = generateFieldSelector(schema);
         }
 
@@ -149,8 +152,8 @@ const SetParametersFormModal = (props) => {
                     setSchemaId(event.target.value);
                   }}
                 >
-                  {schemas.map(({ id, label }) => (
-                    <MenuItem value={id} key={id}>
+                  {schemas.map(({ label }, id) => (
+                    <MenuItem value={id} key={label}>
                       {label}
                     </MenuItem>
                   ))}
@@ -212,8 +215,11 @@ SetParametersFormModal.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      // eslint-disable-next-line react/forbid-prop-types
-      value: PropTypes.any.isRequired,
+      value: PropTypes.oneOf([
+        PropTypes.number,
+        PropTypes.string,
+        PropTypes.shape({}),
+      ]).isRequired,
     }),
   ).isRequired,
   t: PropTypes.func.isRequired,
@@ -221,7 +227,7 @@ SetParametersFormModal.propTypes = {
   schemaOnChange: PropTypes.func,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  schemas: PropTypes.instanceOf(List).isRequired,
+  schemas: PropTypes.instanceOf(Map).isRequired,
   schemaId: PropTypes.string.isRequired,
 };
 

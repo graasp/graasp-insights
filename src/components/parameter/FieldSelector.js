@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,7 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { anySelected } from '../../utils/parameter';
+import { fieldSelectorUnselectAll } from '../../shared/utils';
 
 const useStyles = makeStyles((theme) => ({
   shifted: {
@@ -25,9 +28,20 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
     marginRight: theme.spacing(1),
   },
+  unselectButton: {
+    padding: theme.spacing(0, 1),
+    color: 'forestgreen',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }));
 
-const FieldSelector = ({ schema: { properties }, onChange }) => {
+const FieldSelector = ({ schema, onChange }) => {
+  const { properties } = schema;
+  const { t } = useTranslation();
+  const classes = useStyles();
+
   return (
     <Paper elevation={2}>
       {Object.entries(properties).map(([key, field]) => (
@@ -37,11 +51,20 @@ const FieldSelector = ({ schema: { properties }, onChange }) => {
           field={field}
           onChange={(updatedField) => {
             onChange({
+              ...schema,
               properties: { ...properties, [key]: updatedField },
             });
           }}
         />
       ))}
+      <Button
+        className={classes.unselectButton}
+        size="small"
+        onClick={() => onChange(fieldSelectorUnselectAll(schema))}
+        disableRipple
+      >
+        {t('Unselect all')}
+      </Button>
     </Paper>
   );
 };

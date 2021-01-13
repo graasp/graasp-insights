@@ -77,14 +77,12 @@ const AddVisualizationForm = ({
             label={t('Dataset')}
             className={classes.select}
           >
-            {datasets.map(({ id, name, schemaId: datasetSchemaId }) => (
+            {datasets.map(({ id, name, schemaId }) => (
               <MenuItem value={id} key={id}>
                 {name}
-                {datasetSchemaId && (
+                {schemaId && (
                   <SchemaTag
-                    schema={schemas.find(
-                      ({ id: schemaId }) => schemaId === datasetSchemaId,
-                    )}
+                    schema={schemas.get(schemaId)}
                     className={classes.schemaTag}
                   />
                 )}

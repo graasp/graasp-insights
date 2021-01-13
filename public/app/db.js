@@ -58,7 +58,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
     [EXECUTIONS_COLLECTION]: [],
-    [SCHEMAS_COLLECTION]: [],
+    [SCHEMAS_COLLECTION]: {},
   }).write();
   return db;
 };
@@ -114,10 +114,9 @@ const ensureAlgorithmsExist = async (db) => {
 };
 
 const addDefaultSchemas = async (db) => {
-  DEFAULT_SCHEMAS.forEach((schema) => {
-    const { id } = schema;
-    if (!db.get(SCHEMAS_COLLECTION).find({ id }).value()) {
-      db.get(SCHEMAS_COLLECTION).push(schema).write();
+  Object.entries(DEFAULT_SCHEMAS).forEach(([id, schemaInfo]) => {
+    if (!db.get(SCHEMAS_COLLECTION).has(id).value()) {
+      db.get(SCHEMAS_COLLECTION).set(id, schemaInfo).write();
     }
   });
 };

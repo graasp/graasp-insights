@@ -13,7 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import { Alert } from '@material-ui/lab';
-import { List } from 'immutable';
+import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -41,7 +41,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
   addParameterButton: {
-    marginTop: theme.spacing(1),
+    color: 'white',
+    backgroundColor: 'forestgreen',
+    '&:hover': {
+      backgroundColor: 'forestgreen',
+    },
   },
   fieldSelectorMargin: {
     margin: theme.spacing(1),
@@ -153,8 +157,7 @@ const EditParametersForm = (props) => {
         if (schemaId in value) {
           fieldSelection = value[schemaId];
         } else {
-          const schema = schemas.find(({ id: sid }) => sid === schemaId)
-            ?.schema;
+          const schema = schemas.get(schemaId)?.schema;
           fieldSelection = generateFieldSelector(schema);
         }
 
@@ -190,8 +193,8 @@ const EditParametersForm = (props) => {
                   setSchemaId(event.target.value);
                 }}
               >
-                {schemas.map(({ id: sid, label }) => (
-                  <MenuItem value={sid} key={sid}>
+                {schemas.map(({ label }, sid) => (
+                  <MenuItem value={sid} key={label}>
                     {label}
                   </MenuItem>
                 ))}
@@ -308,7 +311,7 @@ const EditParametersForm = (props) => {
           ))}
         <Grid item>
           <Button
-            color="primary"
+            className={classes.addParameterButton}
             variant="contained"
             size="small"
             onClick={() => {
@@ -330,15 +333,18 @@ EditParametersForm.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
-      // eslint-disable-next-line react/forbid-prop-types
-      value: PropTypes.any.isRequired,
+      value: PropTypes.oneOf([
+        PropTypes.number,
+        PropTypes.string,
+        PropTypes.shape({}),
+      ]).isRequired,
       description: PropTypes.string,
     }),
   ).isRequired,
   onChange: PropTypes.func,
   id: PropTypes.string,
   className: PropTypes.string,
-  schemas: PropTypes.instanceOf(List).isRequired,
+  schemas: PropTypes.instanceOf(Map).isRequired,
 };
 
 EditParametersForm.defaultProps = {

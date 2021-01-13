@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Alert from '@material-ui/lab/Alert';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -64,6 +64,9 @@ const styles = (theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
   },
+  parametersButton: {
+    margin: theme.spacing(1),
+  },
 });
 
 class AddExecutionForm extends Component {
@@ -84,13 +87,14 @@ class AddExecutionForm extends Component {
       buttonWrapper: PropTypes.string.isRequired,
       menuItem: PropTypes.string.isRequired,
       schemaTag: PropTypes.string.isRequired,
+      parametersButton: PropTypes.string.isRequired,
     }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     pythonVersion: PropTypes.shape({
       valid: PropTypes.bool,
       version: PropTypes.string,
     }).isRequired,
-    schemas: PropTypes.instanceOf(List).isRequired,
+    schemas: PropTypes.instanceOf(Map).isRequired,
   };
 
   static defaultProps = {
@@ -167,7 +171,7 @@ class AddExecutionForm extends Component {
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name, schemaId: datasetSchemaId }) => (
+      .map(({ id, name, schemaId }) => (
         <MenuItem
           value={id}
           key={id}
@@ -175,9 +179,9 @@ class AddExecutionForm extends Component {
           id={buildExecutionDatasetOptionId(id)}
         >
           {name}
-          {datasetSchemaId && (
+          {schemaId && (
             <SchemaTag
-              schema={schemas.find(({ id: sid }) => sid === datasetSchemaId)}
+              schema={schemas.get(schemaId)}
               className={classes.schemaTag}
             />
           )}
@@ -339,6 +343,7 @@ class AddExecutionForm extends Component {
         </FormControl>
         {parameters.length > 0 && (
           <SetParametersFormButton
+            className={classes.parametersButton}
             parameters={parameters}
             schemaId={schemaId}
             parametersOnChange={this.handleParametersOnChange}

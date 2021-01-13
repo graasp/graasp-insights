@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -73,7 +73,7 @@ class Datasets extends Component {
     datasets: PropTypes.instanceOf(List),
     isLoading: PropTypes.bool.isRequired,
     folder: PropTypes.string,
-    schemas: PropTypes.instanceOf(List).isRequired,
+    schemas: PropTypes.instanceOf(Map).isRequired,
   };
 
   static defaultProps = {
@@ -195,9 +195,7 @@ class Datasets extends Component {
               </Grid>
               {schemaId && (
                 <Grid item>
-                  <SchemaTag
-                    schema={schemas.find(({ id: sid }) => sid === schemaId)}
-                  />
+                  <SchemaTag schema={schemas.get(schemaId)} />
                 </Grid>
               )}
             </Grid>

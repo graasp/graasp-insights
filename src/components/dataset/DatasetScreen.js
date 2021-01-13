@@ -184,9 +184,10 @@ const mapStateToProps = ({ dataset, schema }) => ({
   datasetId: dataset.getIn(['current', 'content', 'id']),
   datasetContent: dataset.getIn(['current', 'content', 'content']),
   datasetSize: dataset.getIn(['current', 'content', 'size']),
-  datasetSchema: schema
-    .getIn(['schemas'])
-    .find(({ id }) => id === dataset.getIn(['current', 'content', 'schemaId'])),
+  datasetSchema: schema.getIn([
+    'schemas',
+    dataset.getIn(['current', 'content', 'schemaId']),
+  ]),
   activity: Boolean(dataset.getIn(['activity']).size),
 });
 
