@@ -7,6 +7,7 @@ const {
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const { DATASET_TYPES } = require('../../shared/constants');
+const { DATASETS_FOLDER } = require('../config/paths');
 
 const getResults = (mainWindow, db) => async () => {
   try {
@@ -16,7 +17,7 @@ const getResults = (mainWindow, db) => async () => {
       .value();
     mainWindow.webContents.send(GET_RESULTS_CHANNEL, {
       type: GET_RESULTS_SUCCESS,
-      payload: results,
+      payload: { results, folder: DATASETS_FOLDER },
     });
   } catch (err) {
     logger.error(err);

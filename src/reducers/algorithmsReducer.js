@@ -25,6 +25,7 @@ const INITIAL_STATE = Map({
     graasp: '',
     activity: List(),
   }),
+  folder: null,
 });
 
 export default (state = INITIAL_STATE, { type, payload }) => {
@@ -41,7 +42,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case FLAG_GETTING_UTILS:
       return state.updateIn(['utils', 'activity'], updateActivityList(payload));
     case GET_ALGORITHMS_SUCCESS:
-      return state.setIn(['algorithms'], List(payload));
+      return state
+        .setIn(['algorithms'], List(payload.algorithms))
+        .setIn(['folder'], payload.folder);
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case CLEAR_ALGORITHM_SUCCESS:

@@ -19,6 +19,7 @@ const INITIAL_STATE = Map({
     content: Map(),
   }),
   datasets: List(),
+  folder: null,
 });
 
 export default (state = INITIAL_STATE, { type, payload }) => {
@@ -32,7 +33,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case GET_DATASET_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case GET_DATASETS_SUCCESS:
-      return state.setIn(['datasets'], List(payload));
+      return state
+        .setIn(['datasets'], List(payload.datasets))
+        .setIn(['folder'], payload.folder);
     case LOAD_DATASET_SUCCESS:
       return state.updateIn(['datasets'], pushDatasetToList(payload));
     case SET_DATASET_FILE_SUCCESS: {

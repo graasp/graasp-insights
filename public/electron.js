@@ -11,13 +11,8 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
 const logger = require('./app/logger');
-const {
-  ICON_PATH,
-  PRODUCT_NAME,
-  DATABASE_PATH,
-  ALGORITHMS_FOLDER,
-  escapeEscapeCharacter,
-} = require('./app/config/config');
+const { ICON_PATH, PRODUCT_NAME } = require('./app/config/config');
+const { DATABASE_PATH, ALGORITHMS_FOLDER } = require('./app/config/paths');
 const isMac = require('./app/utils/isMac');
 const {
   LOAD_DATASET_CHANNEL,
@@ -55,6 +50,7 @@ const {
   GET_FILE_SIZE_LIMIT_CHANNEL,
   GET_SETTINGS_CHANNEL,
   SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
+  OPEN_PATH_IN_EXPLORER_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -94,6 +90,7 @@ const {
   getSettings,
   showConfirmOpenDatasetPrompt,
   getFileSizeLimit,
+  openPathInExplorer,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -215,7 +212,7 @@ const standardFileSubmenu = [
       const year = new Date().getFullYear();
       openAboutWindow({
         // asset for icon is in the public/assets folder
-        base_path: escapeEscapeCharacter(app.getAppPath()),
+        base_path: path.resolve(app.getAppPath()),
         icon_path: path.join(__dirname, ICON_PATH),
         copyright: `Copyright © ${year} EPFL\nCopyright © ${year} Graasp Association`,
         product_name: PRODUCT_NAME,
@@ -435,6 +432,9 @@ app.on('ready', async () => {
 
   // called when getting settings
   ipcMain.on(GET_SETTINGS_CHANNEL, getSettings(mainWindow, db));
+
+  // called when opening a path in the explorer
+  ipcMain.on(OPEN_PATH_IN_EXPLORER_CHANNEL, openPathInExplorer(mainWindow));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

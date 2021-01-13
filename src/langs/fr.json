@@ -28,7 +28,7 @@
     "Visualize dataset": "Visualiser le dataset",
     "Publish dataset": "Publier le dataset",
     "Remove dataset": "Enlever le dataset",
-    "Add new dataset": "Ajouter un nouveau dataset",
+    "Import new dataset": "Importer un nouveau dataset",
     "Select dataset": "Sélectionner un dataset",
     "Add a dataset by clicking on the icon below.": "Ajoutez un dataset en cliquant sur l'icone en bas.",
     "(Required)": "(Obligatoire)",
@@ -106,6 +106,10 @@
     "Success": "Succès",
     "You cannot delete algorithms from Graasp": "Les algorithmes de Graasp ne peuvent pas être supprimés",
     "File Size Limit": "Limite de taille de fichier",
-    "A warning will appear when opening datasets bigger than this limit.": "Un avertissement apparaîtra à l'ouverture d'un dataset plus grand que cette limite."
+    "A warning will appear when opening datasets bigger than this limit.": "Un avertissement apparaîtra à l'ouverture d'un dataset plus grand que cette limite.",
+    "Algorithms are saved in your computer at": "Les algorithms sont sauvegardés sur votre ordinateur dans",
+    "Results are saved in your computer at": "Les résultats sont sauvegardés sur votre ordinateur dans",
+    "Datasets are saved in your computer at": "Les datasets sont sauvegardés sur votre ordinateur dans",
+    "The submitted dataset will be copied in a dedicated folder for the application.": "Le dataset choisi sera copié dans un dossier dédié pour l'application."
   }
 }

@@ -34,6 +34,7 @@ import {
 import { SCHEMA_TYPES } from '../shared/constants';
 import SchemaTag from './common/SchemaTag';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
+import LocationPathAlert from './common/LocationPathAlert';
 
 const styles = (theme) => ({
   addButton: {
@@ -67,14 +68,17 @@ class Datasets extends Component {
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
+      folderString: PropTypes.string,
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
     isLoading: PropTypes.bool.isRequired,
+    folder: PropTypes.string,
   };
 
   static defaultProps = {
     datasets: List(),
+    folder: null,
   };
 
   componentDidMount() {
@@ -95,7 +99,7 @@ class Datasets extends Component {
   };
 
   render() {
-    const { classes, t, datasets, isLoading } = this.props;
+    const { classes, t, datasets, isLoading, folder } = this.props;
 
     if (isLoading) {
       return (
@@ -238,6 +242,12 @@ class Datasets extends Component {
     return (
       <Main id={DATASETS_MAIN_ID}>
         <Container className={classes.content}>
+          {folder && (
+            <LocationPathAlert
+              text={t('Datasets are saved in your computer at')}
+              path={folder}
+            />
+          )}
           <Typography variant="h4">{t('Datasets')}</Typography>
           <Table id={DATASET_TABLE_ID} rows={rows} columns={columns} />
           <LoadDatasetButton />
@@ -250,6 +260,7 @@ class Datasets extends Component {
 const mapStateToProps = ({ dataset }) => ({
   datasets: dataset.getIn(['datasets']),
   isLoading: dataset.getIn(['activity']).size > 0,
+  folder: dataset.getIn(['folder']),
 });
 
 const mapDispatchToProps = {

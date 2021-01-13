@@ -7,16 +7,17 @@ const {
   GET_ALGORITHMS_SUCCESS,
 } = require('../../shared/types');
 const { ALGORITHM_TYPES } = require('../../shared/constants');
+const { ALGORITHMS_FOLDER } = require('../config/paths');
 
 const getAlgorithms = (mainWindow, db) => async () => {
   try {
-    const payload = db
+    const algorithms = db
       .get(ALGORITHMS_COLLECTION)
       .value()
       .filter(({ type }) => type !== ALGORITHM_TYPES.UTILS);
     mainWindow.webContents.send(GET_ALGORITHMS_CHANNEL, {
       type: GET_ALGORITHMS_SUCCESS,
-      payload,
+      payload: { algorithms, folder: ALGORITHMS_FOLDER },
     });
   } catch (err) {
     logger.error(err);

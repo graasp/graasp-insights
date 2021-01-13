@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -126,9 +127,14 @@ class LoadDatasetModal extends Component {
         fullWidth
       >
         <DialogTitle id="create-new-item-form">
-          {t('Add new dataset')}
+          {t('Import new dataset')}
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
+          <DialogContentText>
+            {t(
+              'The submitted dataset will be copied in a dedicated folder for the application.',
+            )}
+          </DialogContentText>
           <div className={classes.loadDataset}>
             <TextField
               autoFocus
@@ -170,6 +176,7 @@ class LoadDatasetModal extends Component {
             rows={4}
             rowsMax={4}
             helperText={t('(Optional)')}
+            onChange={this.handleDescriptionInput}
             fullWidth
           />
         </DialogContent>
@@ -202,7 +209,9 @@ class LoadDatasetModal extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ dataset }) => ({
+  folder: dataset.getIn(['folder']),
+});
 
 const mapDispatchToProps = {
   dispatchAddDataset: loadDataset,

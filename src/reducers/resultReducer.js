@@ -19,6 +19,7 @@ const INITIAL_STATE = Map({
     content: Map(),
   }),
   results: List(),
+  folder: null,
 });
 
 export default (state = INITIAL_STATE, { type, payload }) => {
@@ -32,7 +33,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case GET_RESULT_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
     case GET_RESULTS_SUCCESS:
-      return state.setIn(['results'], List(payload));
+      return state
+        .setIn(['results'], List(payload.results))
+        .setIn(['folder'], payload.folder);
     case CLEAR_RESULT_SUCCESS:
       return state.setIn(['current', 'content'], Map());
     case EXECUTE_ALGORITHM_SUCCESS:

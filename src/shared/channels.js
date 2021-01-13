@@ -36,6 +36,7 @@ module.exports = {
   CREATE_EXECUTION_CHANNEL: 'execution:create',
   DELETE_EXECUTION_CHANNEL: 'execution:delete',
   STOP_EXECUTION_CHANNEL: 'execution:stop',
+  OPEN_PATH_IN_EXPLORER_CHANNEL: 'open:explorer',
   EXECUTE_ALGORITHM_CHANNEL,
   buildExecuteAlgorithmChannel,
   SET_FILE_SIZE_LIMIT_CHANNEL: 'settings:file-size-limit:set',

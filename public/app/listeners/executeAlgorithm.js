@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../logger');
-const { DATASETS_FOLDER } = require('../config/config');
+const { DATASETS_FOLDER } = require('../config/paths');
 const { createNewDataset } = require('./loadDataset');
 const {
   DATASETS_COLLECTION,

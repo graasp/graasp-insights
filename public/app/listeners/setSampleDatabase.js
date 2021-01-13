@@ -6,7 +6,7 @@ const {
   ALGORITHMS_FOLDER,
   DATASETS_FOLDER,
   SAMPLE_DATASET_FILEPATH,
-} = require('../config/config');
+} = require('../config/paths');
 const { SET_SAMPLE_DATABASE_CHANNEL } = require('../../shared/channels');
 const sampleDatabase = require('../data/sample');
 const {

@@ -25,6 +25,7 @@ import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
 import { FLAG_EXPORTING_RESULT } from '../shared/types';
 import { RESULTS_MAIN_ID } from '../config/selectors';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
+import LocationPathAlert from './common/LocationPathAlert';
 
 const styles = (theme) => ({
   addButton: {
@@ -58,11 +59,13 @@ class Results extends Component {
     results: PropTypes.instanceOf(List),
     algorithms: PropTypes.instanceOf(List),
     activity: PropTypes.bool.isRequired,
+    folder: PropTypes.string,
   };
 
   static defaultProps = {
     results: List(),
     algorithms: List(),
+    folder: null,
   };
 
   componentDidMount() {
@@ -92,7 +95,7 @@ class Results extends Component {
   };
 
   render() {
-    const { activity, classes, t, results, algorithms } = this.props;
+    const { activity, classes, t, results, algorithms, folder } = this.props;
 
     if (activity || !results) {
       return (
@@ -240,6 +243,12 @@ class Results extends Component {
     return (
       <Main id={RESULTS_MAIN_ID}>
         <Container>
+          {folder && (
+            <LocationPathAlert
+              text={t('Results are saved in your computer at')}
+              path={folder}
+            />
+          )}
           <h1>{t('Results')}</h1>
           <Table columns={columns} rows={rows} />
         </Container>
@@ -252,6 +261,7 @@ const mapStateToProps = ({ result, algorithms }) => ({
   results: result.getIn(['results']),
   algorithms: algorithms.getIn(['algorithms']),
   activity: Boolean(result.get('activity').size),
+  folder: result.getIn(['folder']),
 });
 
 const mapDispatchToProps = {

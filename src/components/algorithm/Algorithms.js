@@ -36,6 +36,7 @@ import {
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
 } from '../../config/selectors';
+import LocationPathAlert from '../common/LocationPathAlert';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -82,6 +83,11 @@ class Algorithms extends Component {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }).isRequired,
+    folder: PropTypes.string,
+  };
+
+  static defaultProps = {
+    folder: null,
   };
 
   componentDidMount() {
@@ -130,7 +136,7 @@ class Algorithms extends Component {
   }
 
   render() {
-    const { algorithms, t, isLoading, classes } = this.props;
+    const { algorithms, t, isLoading, classes, folder } = this.props;
 
     if (isLoading) {
       return (
@@ -249,6 +255,12 @@ class Algorithms extends Component {
     return (
       <Main>
         <Container className={classes.content}>
+          {folder && (
+            <LocationPathAlert
+              text={t('Algorithms are saved in your computer at')}
+              path={folder}
+            />
+          )}
           <Tooltip
             title={t(
               "You can use the 'utils' file to write functions you want to use across your custom algorithms",
@@ -275,6 +287,7 @@ class Algorithms extends Component {
 const mapStateToProps = ({ algorithms }) => ({
   algorithms: algorithms.get('algorithms'),
   isLoading: algorithms.getIn(['activity']).size > 0,
+  folder: algorithms.getIn(['folder'], null),
 });
 
 const mapDispatchToProps = {

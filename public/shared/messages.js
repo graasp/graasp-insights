@@ -101,6 +101,8 @@ const ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE =
 const ERROR_OPENING_DATASET_MESSAGE = 'There was an error opening the dataset';
 const ERROR_GETTING_SETTINGS_MESSAGE =
   'There was an error retrieving the settings';
+const ERROR_OPENING_PATH_IN_EXPLORER_MESSAGE =
+  'There was an error opening the path in the explorer';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -156,4 +158,5 @@ module.exports = {
   ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_OPENING_DATASET_MESSAGE,
   ERROR_GETTING_SETTINGS_MESSAGE,
+  ERROR_OPENING_PATH_IN_EXPLORER_MESSAGE,
 };
