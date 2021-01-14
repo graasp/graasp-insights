@@ -70,8 +70,12 @@ exports[`<App /> renders correctly 1`] = `
           "light": "#e57373",
           "main": "#f44336",
         },
-        "forestgreen": "forestgreen",
         "getContrastText": [Function],
+        "green": Object {
+          "dark": "forestgreen",
+          "light": "forestgreen",
+          "main": "forestgreen",
+        },
         "grey": Object {
           "100": "#f5f5f5",
           "200": "#eeeeee",

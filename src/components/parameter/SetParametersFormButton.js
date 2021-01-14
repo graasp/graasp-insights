@@ -8,10 +8,10 @@ import SetParametersFormModal from './SetParametersFormModal';
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    backgroundColor: theme.palette.forestgreen,
+    backgroundColor: theme.palette.green.main,
     color: 'white',
     '&:hover': {
-      backgroundColor: theme.palette.forestgreen,
+      backgroundColor: theme.palette.green.main,
     },
   },
 }));
