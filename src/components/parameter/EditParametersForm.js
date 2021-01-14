@@ -42,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
   },
   addParameterButton: {
     color: 'white',
-    backgroundColor: 'forestgreen',
+    backgroundColor: theme.palette.forestgreen,
     '&:hover': {
-      backgroundColor: 'forestgreen',
+      backgroundColor: theme.palette.forestgreen,
     },
   },
   fieldSelectorMargin: {
@@ -85,8 +85,8 @@ const EditParametersForm = (props) => {
     onChange([...parameters, newParam]);
   };
 
-  const updateHelperText = (helperText, paramIdx) => {
-    updateParam({ ...parameters[paramIdx], helperText }, paramIdx);
+  const updateDescription = (description, paramIdx) => {
+    updateParam({ ...parameters[paramIdx], description }, paramIdx);
   };
 
   const updateName = (name, paramIdx) => {
@@ -203,7 +203,7 @@ const EditParametersForm = (props) => {
           </Grid>
         )}
         {parameters?.map((param, paramIdx) => {
-          const { name, type, helperText } = param;
+          const { name, type, description } = param;
           const invalidName = name.length > 0 && !isParameterNameValid(param);
           return (
             // eslint-disable-next-line react/no-array-index-key
@@ -272,14 +272,14 @@ const EditParametersForm = (props) => {
                     xs={type === PARAMETER_TYPES.FIELD_SELECTOR ? 12 : 8}
                   >
                     <TextField
-                      label={t('Helper text')}
-                      value={helperText}
+                      label={t('Description')}
+                      value={description}
                       fullWidth
                       size="small"
                       multiline
                       rowsMax={4}
                       onChange={(event) => {
-                        updateHelperText(event.target.value, paramIdx);
+                        updateDescription(event.target.value, paramIdx);
                       }}
                       inputProps={{ className: PARAMETER_DESCRIPTION_CLASS }}
                     />
@@ -338,7 +338,7 @@ EditParametersForm.propTypes = {
         PropTypes.string,
         PropTypes.shape({}),
       ]).isRequired,
-      helperText: PropTypes.string,
+      description: PropTypes.string.isRequired,
     }),
   ).isRequired,
   onChange: PropTypes.func,
@@ -349,8 +349,8 @@ EditParametersForm.propTypes = {
 
 EditParametersForm.defaultProps = {
   onChange: () => {},
-  id: undefined,
-  className: undefined,
+  id: null,
+  className: null,
 };
 
 const mapStateToProps = ({ schema }) => ({

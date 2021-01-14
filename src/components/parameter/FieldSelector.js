@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   unselectButton: {
     padding: theme.spacing(0, 1),
-    color: 'forestgreen',
+    color: theme.palette.forestgreen,
     '&:hover': {
       backgroundColor: 'transparent',
     },

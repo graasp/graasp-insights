@@ -162,11 +162,12 @@ const SetParametersFormModal = (props) => {
             </Grid>
           )}
           {parameters.map((param, paramIdx) => {
-            const { name, helperText } = param;
+            const { name, description } = param;
             return (
               // eslint-disable-next-line react/no-array-index-key
               <Grid item key={name}>
-                <Typography>{helperText || name}</Typography>
+                <Typography variant="subtitle1">{name}</Typography>
+                <Typography variant="caption">{description}</Typography>
                 {renderParam(param, paramIdx)}
               </Grid>
             );
@@ -219,6 +220,7 @@ SetParametersFormModal.propTypes = {
         PropTypes.string,
         PropTypes.shape({}),
       ]).isRequired,
+      description: PropTypes.string.isRequired,
     }),
   ).isRequired,
   t: PropTypes.func.isRequired,

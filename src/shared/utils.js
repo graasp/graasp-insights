@@ -12,7 +12,7 @@ const generateFieldSelector = (schema, expandUntilDepth = 1) => {
     const expanded = depth <= expandUntilDepth;
     switch (type) {
       case 'object':
-        // if we have an object, properties contains the information for each key
+        // if we have an object, the 'properties' field contains the information for each key
         return {
           ...field,
           selected: false,

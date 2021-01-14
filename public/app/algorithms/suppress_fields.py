@@ -7,13 +7,13 @@ from graasp_utils import load_dataset, parse_arguments, save_dataset, iterate_an
 
 def main():
     args = parse_arguments([
-        {'name': 'suppressed_fields', 'type': str}
+        {'name': 'fields', 'type': str}
     ])
 
     dataset = load_dataset(args.dataset_path)
-    suppressed_fields = json.loads(args.suppressed_fields)
+    fields = json.loads(args.fields)
 
-    iterate_and_suppress(dataset, suppressed_fields)
+    iterate_and_suppress(dataset, fields)
 
     save_dataset(dataset, args.output_path)
 

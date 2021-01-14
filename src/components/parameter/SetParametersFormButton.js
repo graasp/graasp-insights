@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { SET_PARAMETERS_BUTTON_ID } from '../../config/selectors';
 import SetParametersFormModal from './SetParametersFormModal';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   button: {
-    backgroundColor: 'forestgreen',
+    backgroundColor: theme.palette.forestgreen,
     color: 'white',
     '&:hover': {
-      backgroundColor: 'forestgreen',
+      backgroundColor: theme.palette.forestgreen,
     },
   },
 }));
@@ -82,8 +82,8 @@ SetParametersFormButton.propTypes = {
 SetParametersFormButton.defaultProps = {
   parametersOnChange: () => {},
   schemaOnChange: () => {},
-  className: undefined,
-  id: undefined,
+  className: null,
+  id: null,
 };
 
 export default SetParametersFormButton;
