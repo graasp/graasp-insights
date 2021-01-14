@@ -11,6 +11,7 @@ const {
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
+  DEFAULT_SCHEMAS,
 } = require('./config/config');
 const {
   DATABASE_PATH,
@@ -25,6 +26,7 @@ const DATASETS_COLLECTION = 'datasets';
 const ALGORITHMS_COLLECTION = 'algorithms';
 const EXECUTIONS_COLLECTION = 'executions';
 const SETTINGS_COLLECTION = 'settings';
+const SCHEMAS_COLLECTION = 'schemas';
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -56,7 +58,8 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
     [DATASETS_COLLECTION]: [],
     [ALGORITHMS_COLLECTION]: [],
     [EXECUTIONS_COLLECTION]: [],
-    [SETTINGS_COLLECTION]: [],
+    [SETTINGS_COLLECTION]: {},
+    [SCHEMAS_COLLECTION]: {},
   }).write();
   return db;
 };
@@ -111,12 +114,22 @@ const ensureAlgorithmsExist = async (db) => {
   }
 };
 
+const addDefaultSchemas = async (db) => {
+  Object.entries(DEFAULT_SCHEMAS).forEach(([id, schemaInfo]) => {
+    if (!db.get(SCHEMAS_COLLECTION).has(id).value()) {
+      db.get(SCHEMAS_COLLECTION).set(id, schemaInfo).write();
+    }
+  });
+};
+
 module.exports = {
   DATASETS_COLLECTION,
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
   SETTINGS_COLLECTION,
+  SCHEMAS_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
+  addDefaultSchemas,
 };

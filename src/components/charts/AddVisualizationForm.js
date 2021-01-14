@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import FormControl from '@material-ui/core/FormControl';
@@ -10,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import { List } from 'immutable';
 import SchemaTag from '../common/SchemaTag';
-import { SCHEMA_TYPES } from '../../shared/constants';
+import { GRAASP_SCHEMA_ID } from '../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -44,10 +45,11 @@ const AddVisualizationForm = ({
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
+  const schemas = useSelector((state) => state.schema.getIn(['schemas']));
 
-  const selectedSchemaType = datasets.find(({ id }) => id === selectedDatasetId)
-    ?.schemaType;
-  const isGraasp = selectedSchemaType === SCHEMA_TYPES.GRAASP;
+  const selectedSchemaId = datasets.find(({ id }) => id === selectedDatasetId)
+    ?.schemaId;
+  const isGraasp = selectedSchemaId === GRAASP_SCHEMA_ID;
   const button = (
     <Button
       variant="contained"
@@ -75,12 +77,12 @@ const AddVisualizationForm = ({
             label={t('Dataset')}
             className={classes.select}
           >
-            {datasets.map(({ id, name, schemaType }) => (
+            {datasets.map(({ id, name, schemaId }) => (
               <MenuItem value={id} key={id}>
                 {name}
-                {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
+                {schemaId && (
                   <SchemaTag
-                    schemaType={schemaType}
+                    schema={schemas.get(schemaId)}
                     className={classes.schemaTag}
                   />
                 )}

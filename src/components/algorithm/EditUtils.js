@@ -12,14 +12,11 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import SaveIcon from '@material-ui/icons/Save';
 
-import Editor from '../common/Editor';
+import PythonEditor from '../common/editor/PythonEditor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
 import { getUtils, saveUtils } from '../../actions';
-import {
-  EDITOR_PROGRAMMING_LANGUAGES,
-  UTILS_FILES,
-} from '../../config/constants';
+import { UTILS_FILES } from '../../config/constants';
 import BackButton from '../common/BackButton';
 
 const styles = (theme) => ({
@@ -136,8 +133,7 @@ class EditAlgorithm extends Component {
             </Grid>
             {displayedUtils === UTILS_FILES.USER ? (
               <Grid item>
-                <Editor
-                  programmingLanguage={EDITOR_PROGRAMMING_LANGUAGES.PYTHON}
+                <PythonEditor
                   code={userUtils}
                   onCodeChange={this.handleUserCodeOnChange}
                   onSave={this.handleSave}
@@ -153,11 +149,7 @@ class EditAlgorithm extends Component {
                   </Alert>
                 </Grid>,
                 <Grid item key="editor">
-                  <Editor
-                    programmingLanguage={EDITOR_PROGRAMMING_LANGUAGES.PYTHON}
-                    code={graaspUtils}
-                    readOnly
-                  />
+                  <PythonEditor code={graaspUtils} readOnly />
                 </Grid>,
               ]
             )}

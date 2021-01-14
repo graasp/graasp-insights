@@ -6,6 +6,7 @@ import developer from './developerReducer';
 import settings from './settingsReducer';
 import algorithms from './algorithmsReducer';
 import executions from './executionsReducer';
+import schema from './schemaReducer';
 
 export default combineReducers({
   toastr,
@@ -15,4 +16,5 @@ export default combineReducers({
   settings,
   algorithms,
   executions,
+  schema,
 });

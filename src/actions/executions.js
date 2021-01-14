@@ -66,6 +66,8 @@ export const createExecution = ({
   sourceId,
   autoStart = true,
   userProvidedFilename,
+  parameters,
+  schemaId,
 }) => (dispatch) => {
   const flagCreatingExecution = createFlag(FLAG_CREATING_EXECUTION);
   try {
@@ -75,6 +77,8 @@ export const createExecution = ({
       algorithmId,
       sourceId,
       userProvidedFilename,
+      parameters,
+      schemaId,
     });
     window.ipcRenderer.once(
       CREATE_EXECUTION_CHANNEL,

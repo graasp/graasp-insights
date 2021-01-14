@@ -89,7 +89,7 @@
             "properties": {
               "_id": { "type": "string" },
               "user": { "type": "string" },
-              "sessionId": { "type": "string" },
+              "sessionId": { "type": ["string", "null"] },
               "data": {},
               "ownership": { "type": "string" },
               "visibility": { "type": "string" },

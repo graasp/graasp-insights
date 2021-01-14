@@ -43,4 +43,5 @@ module.exports = {
   GET_FILE_SIZE_LIMIT_CHANNEL: 'settings:file-size-limit:get',
   SHOW_CONFIRM_OPEN_DATASET_CHANNEL: 'prompt:open:dataset:confirm',
   GET_SETTINGS_CHANNEL: 'settings:get',
+  GET_SCHEMAS_CHANNEL: 'schemas:get',
 };

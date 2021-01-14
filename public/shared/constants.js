@@ -18,10 +18,14 @@ const AUTHORS = {
   USER: 'User',
 };
 
-const SCHEMA_TYPES = {
-  GRAASP: 'GRAASP',
-  NONE: 'NONE',
+const PARAMETER_TYPES = {
+  FIELD_SELECTOR: 'Field Selector',
+  FLOAT_INPUT: 'Float',
+  INTEGER_INPUT: 'Integer',
+  STRING_INPUT: 'String',
 };
+
+const GRAASP_SCHEMA_ID = 'schema-graasp';
 
 const EXECUTION_STATUSES = {
   PENDING: 'pending',
@@ -41,7 +45,8 @@ module.exports = {
   ALGORITHM_TYPES,
   APP_BACKGROUND_COLOR,
   AUTHORS,
-  SCHEMA_TYPES,
+  PARAMETER_TYPES,
+  GRAASP_SCHEMA_ID,
   PROGRAMMING_LANGUAGES,
   EXECUTION_STATUSES,
   DATASET_TYPES,

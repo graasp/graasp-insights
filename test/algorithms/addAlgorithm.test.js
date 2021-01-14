@@ -5,6 +5,7 @@ import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   MISSING_FILE_ALGORITHM,
   SIMPLE_ALGORITHM,
+  ALGORITHM_WITH_PARAMETERS,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
@@ -15,6 +16,7 @@ import {
   clickAddAlgoSaveButton,
   clickAddButton,
   getNumberOfAlgorithms,
+  addParameters,
 } from './utils';
 
 describe('Add Algorithm Scenarios', function () {
@@ -101,6 +103,26 @@ describe('Add Algorithm Scenarios', function () {
 
       const nbAlgosAfter = await getNumberOfAlgorithms(client);
       expect(nbAlgosAfter - nbAlgosPrev).to.equal(0);
+    }),
+  );
+
+  it(
+    'Adds algorithm with parameters',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
+
+      // add algorithm
+      await clickAddButton(client);
+      await addAlgorithmFromEditor(client, ALGORITHM_WITH_PARAMETERS);
+      await addParameters(client, ALGORITHM_WITH_PARAMETERS);
+      await clickAddAlgoSaveButton(client);
+
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
+
+      await checkAlgorithmRowLayout(client, ALGORITHM_WITH_PARAMETERS);
     }),
   );
 });

@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -7,7 +8,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import Alert from '@material-ui/lab/Alert';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -17,7 +17,6 @@ import {
   getAlgorithm,
   saveAlgorithm,
 } from '../../actions';
-import { EDITOR_PROGRAMMING_LANGUAGES } from '../../config/constants';
 import {
   EDIT_ALGORITHM_BACK_BUTTON_ID,
   EDIT_ALGORITHM_DESCRIPTION_ID,
@@ -26,10 +25,12 @@ import {
   EDIT_ALGORITHM_SAVE_BUTTON_ID,
 } from '../../config/selectors';
 import { AUTHORS } from '../../shared/constants';
+import { areParametersValid } from '../../utils/parameter';
 import BackButton from '../common/BackButton';
-import Editor from '../common/Editor';
+import PythonEditor from '../common/editor/PythonEditor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
+import EditParametersForm from '../parameter/EditParametersForm';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -48,6 +49,7 @@ class EditAlgorithm extends Component {
     name: '',
     description: '',
     code: '',
+    parameters: [],
   };
 
   static propTypes = {
@@ -88,9 +90,10 @@ class EditAlgorithm extends Component {
     if (algorithm && algorithm !== prevAlgorithm) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        name: algorithm.get('name'),
-        description: algorithm.get('description'),
-        code: algorithm.get('code'),
+        name: algorithm.get('name', ''),
+        description: algorithm.get('description', ''),
+        code: algorithm.get('code', ''),
+        parameters: algorithm.get('parameters', []),
       });
     }
   }
@@ -112,6 +115,10 @@ class EditAlgorithm extends Component {
     this.setState({ code });
   };
 
+  handleParamsOnChange = (parameters) => {
+    this.setState({ parameters });
+  };
+
   handleSave = () => {
     const {
       dispatchSaveAlgorithm,
@@ -119,17 +126,32 @@ class EditAlgorithm extends Component {
       algorithm,
       history: { goBack },
     } = this.props;
-    const { name, description, code } = this.state;
+    const { name, description, code, parameters } = this.state;
+
     if (algorithm && name) {
+      const id = algorithm.get('id');
       const author = algorithm.get('author');
+      const filepath = algorithm.get('filepath');
 
       if (author === AUTHORS.GRAASP) {
         // add as a new algorithm instead
-        const payload = { name, description, author: AUTHORS.USER, code };
+        const payload = {
+          name,
+          description,
+          author: AUTHORS.USER,
+          code,
+          parameters,
+        };
         const onSuccess = goBack;
         dispatchAddAlgorithm({ payload, onSuccess });
       } else {
-        const metadata = { ...algorithm?.toObject(), name, description };
+        const metadata = {
+          id,
+          filepath,
+          name,
+          description,
+          parameters,
+        };
         dispatchSaveAlgorithm({ metadata, code });
       }
     }
@@ -137,7 +159,8 @@ class EditAlgorithm extends Component {
 
   render() {
     const { t, classes, algorithm, activity } = this.props;
-    const { name, description, code } = this.state;
+    const { name, description, code, parameters } = this.state;
+    const isValid = name && areParametersValid(parameters);
 
     if (activity) {
       return (
@@ -175,11 +198,11 @@ class EditAlgorithm extends Component {
           )}
           <Grid container spacing={2} justify="center">
             <Grid item xs={7}>
-              <Editor
-                programmingLanguage={EDITOR_PROGRAMMING_LANGUAGES.PYTHON}
+              <PythonEditor
+                parameters={parameters}
                 code={code}
                 onCodeChange={this.handleCodeOnChange}
-                onSave={this.handleSave}
+                onSave={() => isValid && this.handleSave()}
               />
             </Grid>
             <Grid item xs={5}>
@@ -204,6 +227,10 @@ class EditAlgorithm extends Component {
                 fullWidth
                 id={EDIT_ALGORITHM_DESCRIPTION_ID}
               />
+              <EditParametersForm
+                parameters={parameters}
+                onChange={this.handleParamsOnChange}
+              />
             </Grid>
             <Grid item>
               <Button
@@ -211,8 +238,8 @@ class EditAlgorithm extends Component {
                 color="primary"
                 startIcon={<SaveIcon />}
                 onClick={this.handleSave}
-                disabled={!name}
                 id={EDIT_ALGORITHM_SAVE_BUTTON_ID}
+                disabled={!isValid}
               >
                 {t('Save')}
               </Button>

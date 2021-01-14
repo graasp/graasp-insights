@@ -5,12 +5,6 @@ import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
-import { SCHEMA_TYPES } from '../../shared/constants';
-import {
-  SCHEMA_LABELS,
-  SCHEMA_COLORS,
-  SCHEMA_TOOLTIPS,
-} from '../../config/constants';
 
 const styles = () => ({
   chip: {
@@ -18,17 +12,19 @@ const styles = () => ({
   },
 });
 
-const SchemaTag = ({ schemaType, className, t, classes }) => {
-  if (schemaType === SCHEMA_TYPES.NONE) {
+const SchemaTag = ({ schema, className, t, classes }) => {
+  if (!schema) {
     return null;
   }
 
+  const { label, tagStyle } = schema;
+
   return (
-    <Tooltip title={t(SCHEMA_TOOLTIPS[schemaType])}>
+    <Tooltip title={`${t('Detected schema')}: ${label}`}>
       <Chip
         size="small"
-        label={SCHEMA_LABELS[schemaType]}
-        style={SCHEMA_COLORS[schemaType]}
+        label={label}
+        style={tagStyle}
         className={clsx(classes.chip, className)}
       />
     </Tooltip>
@@ -36,7 +32,10 @@ const SchemaTag = ({ schemaType, className, t, classes }) => {
 };
 
 SchemaTag.propTypes = {
-  schemaType: PropTypes.string,
+  schema: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    tagStyle: PropTypes.shape({}).isRequired,
+  }),
   t: PropTypes.func.isRequired,
   className: PropTypes.string,
   classes: PropTypes.shape({
@@ -45,8 +44,8 @@ SchemaTag.propTypes = {
 };
 
 SchemaTag.defaultProps = {
-  schemaType: SCHEMA_TYPES.NONE,
-  className: undefined,
+  schema: null,
+  className: null,
 };
 
 const StyledComponent = withStyles(styles)(SchemaTag);

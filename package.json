@@ -112,7 +112,7 @@
     "start:dev": "env-cmd -f ./.env.local react-scripts start",
     "premocha": "yarn prepare",
     "mocha": "concurrently \"mkdirp test/tmp\" \"env-cmd -f ./.env.test react-scripts start\" \"wait-on http://localhost:3000 && mocha --recursive --retries 3 --require @babel/register test\"",
-    "mocha:dev": "mocha --recursive --require @babel/register \"test\"",
+    "mocha:dev": "mocha --recursive --require @babel/register test",
     "prettier:check": "prettier --check {src,public,test}/**{,/**}/*.js",
     "prettier:write": "prettier --write {src,public,test}/**{,/**}/*.js",
     "hooks:uninstall": "node node_modules/husky/husky.js uninstall",

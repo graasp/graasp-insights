@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -31,7 +31,6 @@ import {
   DATASET_TABLE_ID,
   DATASETS_MAIN_ID,
 } from '../config/selectors';
-import { SCHEMA_TYPES } from '../shared/constants';
 import SchemaTag from './common/SchemaTag';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
 import LocationPathAlert from './common/LocationPathAlert';
@@ -74,6 +73,7 @@ class Datasets extends Component {
     datasets: PropTypes.instanceOf(List),
     isLoading: PropTypes.bool.isRequired,
     folder: PropTypes.string,
+    schemas: PropTypes.instanceOf(Map).isRequired,
   };
 
   static defaultProps = {
@@ -99,7 +99,7 @@ class Datasets extends Component {
   };
 
   render() {
-    const { classes, t, datasets, isLoading, folder } = this.props;
+    const { classes, t, datasets, isLoading, folder, schemas } = this.props;
 
     if (isLoading) {
       return (
@@ -169,7 +169,7 @@ class Datasets extends Component {
         lastModified,
         createdAt,
         description = '',
-        schemaType,
+        schemaId,
       } = dataset;
       const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
@@ -193,9 +193,9 @@ class Datasets extends Component {
                   {name}
                 </Typography>
               </Grid>
-              {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
+              {schemaId && (
                 <Grid item>
-                  <SchemaTag schemaType={schemaType} />
+                  <SchemaTag schema={schemas.get(schemaId)} />
                 </Grid>
               )}
             </Grid>
@@ -257,10 +257,11 @@ class Datasets extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset }) => ({
+const mapStateToProps = ({ dataset, schema }) => ({
   datasets: dataset.getIn(['datasets']),
   isLoading: dataset.getIn(['activity']).size > 0,
   folder: dataset.getIn(['folder']),
+  schemas: schema.getIn(['schemas']),
 });
 
 const mapDispatchToProps = {

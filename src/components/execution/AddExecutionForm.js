@@ -1,31 +1,24 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { List } from 'immutable';
-import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withTranslation } from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Alert from '@material-ui/lab/Alert';
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Loader from '../common/Loader';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Alert from '@material-ui/lab/Alert';
+import { List, Map } from 'immutable';
+import PropTypes from 'prop-types';
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import {
-  getDatasets,
-  getAlgorithms,
-  getResults,
   createExecution,
+  getAlgorithms,
+  getDatasets,
+  getResults,
 } from '../../actions';
-import {
-  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
-  buildPythonWrongVersionMessage,
-} from '../../shared/messages';
-import { SCHEMA_TYPES } from '../../shared/constants';
-import SchemaTag from '../common/SchemaTag';
 import {
   buildExecutionAlgorithmOptionId,
   buildExecutionDatasetOptionId,
@@ -35,6 +28,15 @@ import {
   EXECUTIONS_EXECUTE_BUTTON_ID,
   EXECUTION_FORM_NAME_INPUT_ID,
 } from '../../config/selectors';
+import { GRAASP_SCHEMA_ID } from '../../shared/constants';
+import {
+  buildPythonWrongVersionMessage,
+  ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
+} from '../../shared/messages';
+import { areParametersValid } from '../../utils/parameter';
+import Loader from '../common/Loader';
+import SchemaTag from '../common/SchemaTag';
+import SetParametersFormButton from '../parameter/SetParametersFormButton';
 
 const styles = (theme) => ({
   wrapper: {
@@ -62,6 +64,9 @@ const styles = (theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
   },
+  parametersButton: {
+    margin: theme.spacing(1),
+  },
 });
 
 class AddExecutionForm extends Component {
@@ -82,12 +87,14 @@ class AddExecutionForm extends Component {
       buttonWrapper: PropTypes.string.isRequired,
       menuItem: PropTypes.string.isRequired,
       schemaTag: PropTypes.string.isRequired,
+      parametersButton: PropTypes.string.isRequired,
     }).isRequired,
     isLoading: PropTypes.bool.isRequired,
     pythonVersion: PropTypes.shape({
       valid: PropTypes.bool,
       version: PropTypes.string,
     }).isRequired,
+    schemas: PropTypes.instanceOf(Map).isRequired,
   };
 
   static defaultProps = {
@@ -100,6 +107,8 @@ class AddExecutionForm extends Component {
     sourceId: '',
     algorithmId: '',
     userProvidedFilename: '',
+    parameters: [],
+    schemaId: GRAASP_SCHEMA_ID,
   };
 
   componentDidMount() {
@@ -114,11 +123,23 @@ class AddExecutionForm extends Component {
   }
 
   handleSourceSelectOnChange = (e) => {
-    this.setState({ sourceId: e.target.value });
+    const { datasets } = this.props;
+    const sourceId = e.target.value;
+    this.setState({ sourceId });
+    const schemaId = datasets.find(({ id }) => id === sourceId)?.schemaId;
+    if (schemaId) {
+      this.setState({ schemaId });
+    }
   };
 
   handleAlgorithmSelectOnChange = (e) => {
-    this.setState({ algorithmId: e.target.value });
+    const { algorithms } = this.props;
+    const algorithmId = e.target.value;
+    this.setState({
+      algorithmId,
+      parameters:
+        algorithms.find(({ id }) => id === algorithmId)?.parameters || [],
+    });
   };
 
   handleNameOnChange = (e) => {
@@ -127,22 +148,30 @@ class AddExecutionForm extends Component {
 
   executeAlgorithm = () => {
     const { dispatchCreateExecution } = this.props;
-    const { sourceId, algorithmId, userProvidedFilename } = this.state;
+    const {
+      sourceId,
+      algorithmId,
+      userProvidedFilename,
+      parameters,
+      schemaId,
+    } = this.state;
     dispatchCreateExecution({
       sourceId,
       algorithmId,
       userProvidedFilename,
+      parameters,
+      schemaId,
     });
     this.setState({ userProvidedFilename: '' });
   };
 
   renderDatasetsAndResultsSelect = () => {
     const { sourceId } = this.state;
-    const { classes, t, datasets, results } = this.props;
+    const { classes, t, datasets, results, schemas } = this.props;
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name, schemaType }) => (
+      .map(({ id, name, schemaId }) => (
         <MenuItem
           value={id}
           key={id}
@@ -150,8 +179,11 @@ class AddExecutionForm extends Component {
           id={buildExecutionDatasetOptionId(id)}
         >
           {name}
-          {schemaType && schemaType !== SCHEMA_TYPES.NONE && (
-            <SchemaTag schemaType={schemaType} className={classes.schemaTag} />
+          {schemaId && (
+            <SchemaTag
+              schema={schemas.get(schemaId)}
+              className={classes.schemaTag}
+            />
           )}
         </MenuItem>
       ));
@@ -195,8 +227,13 @@ class AddExecutionForm extends Component {
   };
 
   renderExecuteButton = () => {
-    const { sourceId, algorithmId } = this.state;
+    const { sourceId, algorithmId, parameters } = this.state;
     const { t, pythonVersion, classes } = this.props;
+    const valid =
+      sourceId &&
+      algorithmId &&
+      pythonVersion?.valid &&
+      (!parameters || areParametersValid(parameters));
     const button = (
       <div className={classes.buttonWrapper}>
         <Button
@@ -204,31 +241,24 @@ class AddExecutionForm extends Component {
           variant="contained"
           color="primary"
           onClick={this.executeAlgorithm}
-          disabled={!sourceId || !algorithmId || !pythonVersion?.valid}
+          disabled={!valid}
         >
           {t('Execute')}
         </Button>
       </div>
     );
 
+    let tooltip;
     if (!pythonVersion?.version) {
-      return (
-        <div className={classes.buttonContainer}>
-          <Tooltip title={t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE)}>
-            {button}
-          </Tooltip>
-        </div>
-      );
+      tooltip = t(ERROR_PYTHON_NOT_INSTALLED_MESSAGE);
+    } else if (!pythonVersion?.valid) {
+      tooltip = t(buildPythonWrongVersionMessage(pythonVersion.version));
     }
 
-    if (!pythonVersion.valid) {
+    if (tooltip) {
       return (
         <div className={classes.buttonContainer}>
-          <Tooltip
-            title={t(buildPythonWrongVersionMessage(pythonVersion.version))}
-          >
-            {button}
-          </Tooltip>
+          <Tooltip title={tooltip}>{button}</Tooltip>
         </div>
       );
     }
@@ -236,9 +266,22 @@ class AddExecutionForm extends Component {
     return <div className={classes.buttonContainer}>{button}</div>;
   };
 
+  handleParametersOnChange = (parameters) => {
+    this.setState({ parameters });
+  };
+
+  handleSchemaOnChange = (schemaId) => {
+    this.setState({ schemaId });
+  };
+
   render() {
     const { algorithms, datasets, classes, t, isLoading, results } = this.props;
-    const { algorithmId, userProvidedFilename } = this.state;
+    const {
+      algorithmId,
+      userProvidedFilename,
+      parameters,
+      schemaId,
+    } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -298,14 +341,28 @@ class AddExecutionForm extends Component {
             id={EXECUTION_FORM_NAME_INPUT_ID}
           />
         </FormControl>
-
+        {parameters.length > 0 && (
+          <SetParametersFormButton
+            className={classes.parametersButton}
+            parameters={parameters}
+            schemaId={schemaId}
+            parametersOnChange={this.handleParametersOnChange}
+            schemaOnChange={this.handleSchemaOnChange}
+          />
+        )}
         {this.renderExecuteButton()}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
+const mapStateToProps = ({
+  dataset,
+  algorithms,
+  settings,
+  result,
+  schema,
+}) => ({
   datasets: dataset.get('datasets'),
   results: result.get('results'),
   algorithms: algorithms.get('algorithms'),
@@ -315,6 +372,7 @@ const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
       algorithms.getIn(['activity']).size &&
       result.getIn(['activity']).size,
   ),
+  schemas: schema.getIn(['schemas']),
 });
 
 const mapDispatchToProps = {

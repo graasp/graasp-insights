@@ -11,6 +11,7 @@ describe('<App />', () => {
     t: jest.fn(),
     dispatchCheckPythonInstallation: jest.fn(),
     dispatchGetSettings: jest.fn(),
+    dispatchGetSchemas: jest.fn(),
     lang: 'en',
   };
 

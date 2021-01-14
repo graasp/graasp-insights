@@ -21,7 +21,15 @@ import {
   EDIT_ALGORITHM_DESCRIPTION_ID,
   EDIT_ALGORITHM_NAME_ID,
   EDIT_ALGORITHM_SAVE_BUTTON_ID,
+  PARAMETER_CLASS,
+  PARAMETER_NAME_CLASS,
+  PARAMETER_TYPE_CLASS,
+  PARAMETER_DESCRIPTION_CLASS,
+  PARAMETER_VALUE_CLASS,
+  ADD_PARAMETER_BUTTON_ID,
+  buildParameterTypeOptionClass,
 } from '../../src/config/selectors';
+import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
 
 export const menuGoToAlgorithms = (client) =>
@@ -140,4 +148,34 @@ export const editAlgorithm = async (client, { name, description }) => {
   await nameEl.setValue(name);
   await clearInput(descriptionEl);
   await descriptionEl.addValue(description);
+};
+
+export const addParameters = async (client, { parameters }) => {
+  const addParameterButton = await client.$(`#${ADD_PARAMETER_BUTTON_ID}`);
+  for (const { name, type, description, value } of parameters) {
+    await addParameterButton.click();
+    const parameterElements = await client.$$(`.${PARAMETER_CLASS}`);
+    const lastParameter = parameterElements[parameterElements.length - 1];
+
+    const nameElem = await lastParameter.$(`.${PARAMETER_NAME_CLASS}`);
+    await nameElem.setValue(name);
+
+    const typeElem = await lastParameter.$(`.${PARAMETER_TYPE_CLASS}`);
+    await typeElem.click();
+    const typeOption = await client.$(
+      `.${buildParameterTypeOptionClass(type)}`,
+    );
+    await typeOption.click();
+
+    const descriptionElem = await lastParameter.$(
+      `.${PARAMETER_DESCRIPTION_CLASS}`,
+    );
+    await descriptionElem.setValue(description);
+
+    if (type !== PARAMETER_TYPES.FIELD_SELECTOR) {
+      const valueElem = await lastParameter.$(`.${PARAMETER_VALUE_CLASS}`);
+      await clearInput(valueElem);
+      await valueElem.setValue(value);
+    }
+  }
 };

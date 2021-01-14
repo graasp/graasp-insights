@@ -51,6 +51,7 @@ const {
   GET_SETTINGS_CHANNEL,
   SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
   OPEN_PATH_IN_EXPLORER_CHANNEL,
+  GET_SCHEMAS_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -91,12 +92,14 @@ const {
   showConfirmOpenDatasetPrompt,
   getFileSizeLimit,
   openPathInExplorer,
+  getSchemas,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
+  addDefaultSchemas,
 } = require('./app/db');
 
 // add keys to process
@@ -326,6 +329,7 @@ app.on('ready', async () => {
   await ensureDatabaseExists(DATABASE_PATH);
   const db = bootstrapDatabase(DATABASE_PATH);
   await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
+  await addDefaultSchemas(db);
 
   // set version file in var folder
   // used to detect first install
@@ -435,6 +439,9 @@ app.on('ready', async () => {
 
   // called when opening a path in the explorer
   ipcMain.on(OPEN_PATH_IN_EXPLORER_CHANNEL, openPathInExplorer(mainWindow));
+
+  // called when getting schemas
+  ipcMain.on(GET_SCHEMAS_CHANNEL, getSchemas(mainWindow, db));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

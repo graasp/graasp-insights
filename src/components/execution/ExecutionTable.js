@@ -69,14 +69,7 @@ class ExecutionTable extends Component {
     dispatchCancelExecution: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     classes: PropTypes.shape({
-      container: PropTypes.string.isRequired,
-      pythonLogo: PropTypes.string.isRequired,
-      button: PropTypes.string.isRequired,
       link: PropTypes.string.isRequired,
-    }).isRequired,
-    pythonVersion: PropTypes.shape({
-      valid: PropTypes.bool,
-      version: PropTypes.string,
     }).isRequired,
   };
 
@@ -187,7 +180,7 @@ class ExecutionTable extends Component {
         alignField: 'right',
       },
       {
-        columnName: t('Quick actions'),
+        columnName: t('Quick Actions'),
         field: 'quickActions',
         alignColumn: 'right',
         alignField: 'right',
@@ -348,20 +341,13 @@ class ExecutionTable extends Component {
   }
 }
 
-const mapStateToProps = ({
-  dataset,
-  algorithms,
-  settings,
-  executions,
-  result,
-}) => ({
+const mapStateToProps = ({ dataset, algorithms, executions, result }) => ({
   datasets: dataset.get('datasets'),
   algorithms: algorithms.get('algorithms'),
   isLoading:
     Boolean(dataset.getIn(['activity']).size) &&
     Boolean(algorithms.getIn(['activity']).size) &&
     Boolean(executions.get('activity').size),
-  pythonVersion: settings.get('pythonVersion'),
   executions: executions.getIn(['executions']),
   results: result.getIn(['results']),
 });
