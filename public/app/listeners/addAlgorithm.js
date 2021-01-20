@@ -27,6 +27,21 @@ const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
     const filename = `${id}.py`;
     const filepath = path.join(ALGORITHMS_FOLDER, filename);
     const language = PROGRAMMING_LANGUAGES.PYTHON;
+
+    // copy or create file
+    if (fileLocation) {
+      fs.copyFileSync(fileLocation, filepath);
+    } else {
+      fs.writeFileSync(filepath, code);
+    }
+
+    // get file data
+    const stats = fs.statSync(filepath);
+    const { size, ctimeMs, mtimeMs } = stats;
+    const sizeInKiloBytes = size / 1000;
+    const createdAt = ctimeMs;
+    const lastModified = mtimeMs;
+
     const metadata = {
       id,
       name,
@@ -36,14 +51,10 @@ const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
       author,
       language,
       parameters,
+      createdAt,
+      lastModified,
+      size: sizeInKiloBytes,
     };
-
-    // copy or create file
-    if (fileLocation) {
-      fs.copyFileSync(fileLocation, filepath);
-    } else {
-      fs.writeFileSync(filepath, code);
-    }
 
     // add entry in lowdb
     db.get(ALGORITHMS_COLLECTION).push(metadata).write();

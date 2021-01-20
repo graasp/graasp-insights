@@ -103,8 +103,21 @@ const ensureAlgorithmsExist = async (db) => {
 
         // check if algo entry is in metadata db
         if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
+          // get file data
+          const stats = fs.statSync(destPath);
+          const { size, ctimeMs, mtimeMs } = stats;
+          const sizeInKiloBytes = size / 1000;
+          const createdAt = ctimeMs;
+          const lastModified = mtimeMs;
+
           db.get(ALGORITHMS_COLLECTION)
-            .push({ ...algo, filepath: destPath })
+            .push({
+              ...algo,
+              filepath: destPath,
+              createdAt,
+              lastModified,
+              size: sizeInKiloBytes,
+            })
             .write();
         }
       }

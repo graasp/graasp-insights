@@ -37,6 +37,8 @@ import {
   ALGORITHM_EDIT_BUTTON_CLASS,
 } from '../../config/selectors';
 import LocationPathAlert from '../common/LocationPathAlert';
+import { DEFAULT_LOCALE_DATE } from '../../config/constants';
+import { formatFileSize } from '../../shared/formatting';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -180,6 +182,27 @@ class Algorithms extends Component {
         alignField: 'left',
       },
       {
+        columnName: t('Size'),
+        sortBy: 'sizeNumeric',
+        field: 'size',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
+        columnName: t('Created'),
+        sortBy: 'createdAt',
+        field: 'createdAt',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
+        columnName: t('Last Modified'),
+        sortBy: 'lastModified',
+        field: 'lastModified',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
         columnName: t('Quick Actions'),
         field: 'quickActions',
         alignColumn: 'right',
@@ -188,7 +211,23 @@ class Algorithms extends Component {
     ];
 
     const rows = algorithms.map((algorithm) => {
-      const { id, name, description, author, language } = algorithm;
+      const {
+        id,
+        name,
+        description,
+        author,
+        language,
+        createdAt,
+        lastModified,
+        size,
+      } = algorithm;
+      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
+      const createdAtString = createdAt
+        ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
+        : t('Unknown');
+      const lastModifiedString = lastModified
+        ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
+        : t('Unknown');
       const isByGraasp = author === AUTHORS.GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
@@ -249,6 +288,10 @@ class Algorithms extends Component {
           </Typography>
         ),
         quickActions,
+        size: sizeString,
+        sizeNumeric: size,
+        createdAt: createdAtString,
+        lastModified: lastModifiedString,
       };
     });
 
@@ -276,7 +319,13 @@ class Algorithms extends Component {
             </Button>
           </Tooltip>
           <Typography variant="h4">{t('Algorithms')}</Typography>
-          <Table columns={columns} rows={rows} id={ALGORITHM_TABLE_ID} />
+          <Table
+            columns={columns}
+            rows={rows}
+            id={ALGORITHM_TABLE_ID}
+            orderBy="lastModified"
+            isAsc={false}
+          />
         </Container>
         {this.renderAddButon()}
       </Main>
