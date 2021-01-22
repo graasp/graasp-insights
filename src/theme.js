@@ -5,10 +5,13 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
   palette: {
-    primary: { light: '#5050d2', main: '#5050d2', dark: '#5050d2' },
+    primary: { light: '#09653f', main: '#09653f', dark: '#09653f' },
     secondary: { light: '#ffffff', main: '#ffffff', dark: '#ffffff' },
-    tertiary: { light: '#8884d8', main: '#8884d8', dark: '#8884d8' },
-    green: { light: 'forestgreen', main: 'forestgreen', dark: 'forestgreen' },
+    tertiary: {
+      light: 'forestgreen',
+      main: 'forestgreen',
+      dark: 'forestgreen',
+    },
   },
 });
 

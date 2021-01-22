@@ -42,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
   },
   addParameterButton: {
     color: 'white',
-    backgroundColor: theme.palette.green.main,
+    backgroundColor: theme.palette.tertiary.main,
     '&:hover': {
-      backgroundColor: theme.palette.green.main,
+      backgroundColor: theme.palette.tertiary.main,
     },
   },
   fieldSelectorMargin: {
