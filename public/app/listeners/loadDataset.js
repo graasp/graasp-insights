@@ -12,6 +12,7 @@ const {
 } = require('../../shared/types');
 const { DATASET_TYPES } = require('../../shared/constants');
 const { detectSchemas } = require('../schema/detectSchemas');
+const { getFileStats } = require('../utils/file');
 
 const createNewDataset = ({ name, filepath, description, type }, db) => {
   // create and get file data
@@ -30,12 +31,7 @@ const createNewDataset = ({ name, filepath, description, type }, db) => {
     schemaIds = [];
   }
 
-  // get file data
-  const stats = fs.statSync(destPath);
-  const { size, ctimeMs } = stats;
-  const sizeInKiloBytes = size / 1000;
-  const createdAt = ctimeMs;
-  const lastModified = createdAt;
+  const { createdAt, lastModified, sizeInKiloBytes } = getFileStats(filepath);
 
   return {
     id: fileId,

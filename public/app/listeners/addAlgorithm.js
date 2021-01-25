@@ -11,6 +11,7 @@ const {
 } = require('../../shared/types');
 const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
 const { PROGRAMMING_LANGUAGES } = require('../../shared/constants');
+const { getFileStats } = require('../utils/file');
 
 const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
   try {
@@ -35,12 +36,7 @@ const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
       fs.writeFileSync(filepath, code);
     }
 
-    // get file data
-    const stats = fs.statSync(filepath);
-    const { size, ctimeMs, mtimeMs } = stats;
-    const sizeInKiloBytes = size / 1000;
-    const createdAt = ctimeMs;
-    const lastModified = mtimeMs;
+    const { createdAt, lastModified, sizeInKiloBytes } = getFileStats(filepath);
 
     const metadata = {
       id,

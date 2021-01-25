@@ -7,6 +7,7 @@ const {
   SAVE_ALGORITHM_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
+const { getFileStats } = require('../utils/file');
 
 const saveAlgorithm = (mainWindow, db) => async (event, { metadata, code }) => {
   const { id, filepath } = metadata;
@@ -18,11 +19,7 @@ const saveAlgorithm = (mainWindow, db) => async (event, { metadata, code }) => {
       flag: 'r+',
     });
 
-    // get file data
-    const stats = fs.statSync(filepath);
-    const { size, mtimeMs } = stats;
-    const sizeInKiloBytes = size / 1000;
-    const lastModified = mtimeMs;
+    const { lastModified, sizeInKiloBytes } = getFileStats(filepath);
 
     const newMetadata = {
       ...metadata,
