@@ -13,61 +13,56 @@ const generateFieldSelector = (schema, expandUntilDepth = 1) => {
     switch (type) {
       case 'object':
         // if we have an object, the 'properties' field contains the information for each key
-        return {
-          ...field,
+        return Object.assign(field, {
           selected: false,
           expanded,
           properties: Object.fromEntries(
-            Object.entries(properties).map(([key, value]) => [
-              key,
-              generate(value, depth + 1),
+            Object.entries(properties).map((entry) => [
+              entry[0],
+              generate(entry[1], depth + 1),
             ]),
           ),
-        };
+        });
       case 'array': {
         // if we have an array, items could either be an array of subschemas or one single schema for every element
         if (Array.isArray(items)) {
-          return {
-            ...field,
+          return Object.assign(field, {
             selected: false,
             expanded,
             items: items.map((obj) => generate(obj, depth + 1)),
-          };
+          });
         }
         const { type: subType, properties: subProperties } = items;
         if (subType === 'object') {
-          return {
-            ...field,
+          return Object.assign(field, {
             selected: false,
             expanded,
-            items: {
-              ...items,
+            items: Object.assign(items, {
               properties: Object.fromEntries(
-                Object.entries(subProperties).map(([key, value]) => [
-                  key,
-                  generate(value, depth + 1),
+                Object.entries(subProperties).map((entry) => [
+                  entry[0],
+                  generate(entry[1], depth + 1),
                 ]),
               ),
-            },
-          };
+            }),
+          });
         }
-        return { ...field, selected: false, expanded };
+        return Object.assign(field, { selected: false, expanded });
       }
       default:
         // if neither object nor array, then no more nesting/children
-        return { ...field, selected: false, expanded };
+        return Object.assign(field, { selected: false, expanded });
     }
   };
 
-  return {
-    ...schema,
+  return Object.assign(schema, {
     properties: Object.fromEntries(
-      Object.entries(schema.properties).map(([key, value]) => [
-        key,
-        generate(value, 1),
+      Object.entries(schema.properties).map((entry) => [
+        entry[0],
+        generate(entry[1], 1),
       ]),
     ),
-  };
+  });
 };
 
 /**
@@ -79,51 +74,50 @@ const fieldSelectorUnselectAll = (schema) => {
   const unselectField = (field) => {
     const { type, properties, items } = field;
     if (type === 'object') {
-      return {
-        ...field,
+      return Object.assign(field, {
         selected: false,
         properties: Object.fromEntries(
-          Object.entries(properties).map(([key, value]) => [
-            key,
-            unselectField(value),
+          Object.entries(properties).map((entry) => [
+            entry[0],
+            unselectField(entry[1]),
           ]),
         ),
-      };
+      });
     }
 
     if (type === 'array') {
       if (Array.isArray(items)) {
-        return { ...field, selected: false, items: items.map(unselectField) };
+        return Object.assign(field, {
+          selected: false,
+          items: items.map(unselectField),
+        });
       }
 
       if (items?.type === 'object') {
-        return {
-          ...field,
+        return Object.assign(field, {
           selected: false,
-          items: {
-            ...items,
+          items: Object.assign(items, {
             properties: Object.fromEntries(
-              Object.entries(items.properties).map(([key, value]) => [
-                key,
-                unselectField(value),
+              Object.entries(items.properties).map((entry) => [
+                entry[0],
+                unselectField(entry[1]),
               ]),
             ),
-          },
-        };
+          }),
+        });
       }
     }
-    return { ...field, selected: false };
+    return Object.assign(field, { selected: false });
   };
 
-  return {
-    ...schema,
+  return Object.assign(schema, {
     properties: Object.fromEntries(
-      Object.entries(schema.properties).map(([key, value]) => [
-        key,
-        unselectField(value),
+      Object.entries(schema.properties).map((entry) => [
+        entry[0],
+        unselectField(entry[1]),
       ]),
     ),
-  };
+  });
 };
 
 module.exports = {
