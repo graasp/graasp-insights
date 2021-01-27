@@ -12,10 +12,7 @@ def shuffle_attribute(array, attribute):
     values = [elem.get(attribute, None) for elem in array]
     true_random.shuffle(values)
     for elem, new_value in zip(array, values):
-        if new_value is not None:
-            elem[attribute] = new_value
-        elif attribute in elem:
-            del attribute[elem]
+        elem[attribute] = new_value
 
 
 def iterate_and_shuffle(dataset, field_selection):
