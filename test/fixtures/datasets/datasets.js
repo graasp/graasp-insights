@@ -1,5 +1,5 @@
 import path from 'path';
-import { DATASET_TYPES, SCHEMA_TYPES } from '../../../src/shared/constants';
+import { DATASET_TYPES, GRAASP_SCHEMA_ID } from '../../../src/shared/constants';
 
 // eslint-disable-next-line import/prefer-default-export
 export const SIMPLE_DATASET = {
@@ -33,5 +33,5 @@ export const DATASET_1000_KB = {
   createdAt: Date.now(),
   lastModified: Date.now(),
   type: DATASET_TYPES.SOURCE,
-  schema: SCHEMA_TYPES.GRAASP,
+  schema: GRAASP_SCHEMA_ID,
 };
