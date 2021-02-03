@@ -146,7 +146,8 @@ const GRAASP_ALGORITHMS = [
   {
     id: 'shuffle-fields',
     name: 'Shuffle fields',
-    description: 'Shuffle selected array fields from a dataset',
+    description:
+      "Given an array of objects, this algorithm randomly shuffles the values in selected keys between the array's objects",
     filename: 'shuffle_fields.py',
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
