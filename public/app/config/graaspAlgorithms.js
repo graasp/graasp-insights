@@ -143,6 +143,41 @@ const GRAASP_ALGORITHMS = [
       },
     ],
   },
+  {
+    id: 'shuffle-fields',
+    name: 'Shuffle fields',
+    description:
+      "Given an array of objects, this algorithm randomly shuffles the values in selected keys between the array's objects",
+    filename: 'shuffle_fields.py',
+    author: AUTHORS.GRAASP,
+    language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
+    parameters: [
+      {
+        name: 'fields',
+        type: PARAMETER_TYPES.FIELD_SELECTOR,
+        description: 'Select fields to shuffle:',
+        value: {
+          [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
+            properties: {
+              data: {
+                properties: {
+                  actions: {
+                    items: {
+                      properties: {
+                        verb: { selected: true },
+                        geolocation: { selected: true },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }),
+        },
+      },
+    ],
+  },
 ];
 
 module.exports = GRAASP_ALGORITHMS;
