@@ -16,7 +16,7 @@
     "Kim Lan Phan Hoang",
     "Hagop Taminian"
   ],
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-only",
   "dependencies": {
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
