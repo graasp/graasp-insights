@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Select from 'react-select';
 import { makeStyles } from '@material-ui/core/styles';
 import CustomValueContainer from './custom/CustomValueContainer';
+import { formatDisplayedSelection } from '../../utils/charts';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -63,7 +64,12 @@ const UsersSelect = ({ allUsersConsolidated, setUsersToFilter }) => {
         closeMenuOnSelect={false}
         hideSelectedOptions={false}
         allowSelectAll
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={
+          (option) =>
+            // if users have been hashed, no names exist - hence use userIds
+            option.name || `${formatDisplayedSelection(option._id)}`
+          // eslint-disable-next-line react/jsx-curly-newline
+        }
         placeholder={t('Filter by user...')}
         value={selectedUsers}
         onChange={(selected) => {

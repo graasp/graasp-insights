@@ -112,3 +112,7 @@ export const PARAMETER_TYPES_DEFAULT = {
   [PARAMETER_TYPES.INTEGER_INPUT]: 0,
   [PARAMETER_TYPES.STRING_INPUT]: '',
 };
+
+// used in UsersSelect dropdown, if a string is too long (which occurs when user Ids are hashed)
+export const MAX_STRING_DISPLAYED_LENGTH = 25;
+export const ABBREVIATED_STRING_LENGTH = 10;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { components } from 'react-select';
+import { formatDisplayedSelection } from '../../../utils/charts';
 
 // this component, used within the UsersSelect component, overrides react-select's default text display
 // by default, react-select will keep expanding its text display as additional options are selected
@@ -16,12 +17,14 @@ const CustomValueContainer = ({ children, ...props }) => {
     const { length } = values;
     const alsoSelectedCount = length - 2;
     if (length === 1) {
-      values = `${values[0].key}`;
+      values = `${formatDisplayedSelection(values[0].key)}`;
     } else if (length === 2) {
-      values = `${values[0].key}, ${values[1].key}`;
+      values = `${formatDisplayedSelection(
+        values[0].key,
+      )}, ${formatDisplayedSelection(values[1].key)}`;
     } else {
-      const firstSelection = values[0].key;
-      const secondSelection = values[1].key;
+      const firstSelection = formatDisplayedSelection(values[0].key);
+      const secondSelection = formatDisplayedSelection(values[1].key);
       values = t('Many users selected...', {
         firstSelection,
         secondSelection,
