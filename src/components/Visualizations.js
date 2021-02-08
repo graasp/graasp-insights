@@ -6,7 +6,7 @@ import Alert from '@material-ui/lab/Alert';
 import Main from './common/Main';
 import AddVisualizationForm from './charts/AddVisualizationForm';
 import ChartsLayout from './charts/ChartsLayout';
-import { getDatasets, getDataset } from '../actions';
+import { getDatasets, getDataset, clearDataset } from '../actions';
 
 const useStyles = makeStyles((theme) => ({
   infoAlert: {
@@ -26,6 +26,10 @@ const Visualizations = () => {
   // on component load, dispatch getDatasets action
   useEffect(() => {
     dispatch(getDatasets());
+    // in react hooks, the return statement acts as a clean-up function simmilar to componentWillUnmount
+    return () => {
+      dispatch(clearDataset());
+    };
   }, [dispatch]);
 
   // retrieve datasets from redux store
