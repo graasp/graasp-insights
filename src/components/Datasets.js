@@ -11,13 +11,14 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import LoadDatasetButton from './LoadDatasetButton';
 import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
-import { LOAD_DATASET_PATH } from '../config/paths';
+import { SCHEMAS_PATH } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../shared/formatting';
 import ExportButton from './common/ExportButton';
@@ -54,6 +55,9 @@ const styles = (theme) => ({
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
+  schemasButton: {
+    float: 'right',
+  },
 });
 
 class Datasets extends Component {
@@ -67,7 +71,7 @@ class Datasets extends Component {
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
-      folderString: PropTypes.string,
+      schemasButton: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List),
@@ -91,11 +95,11 @@ class Datasets extends Component {
     dispatchDeleteDataset({ id, name });
   };
 
-  handleAdd = () => {
+  handleSchemasButton = () => {
     const {
       history: { push },
     } = this.props;
-    push(LOAD_DATASET_PATH);
+    push(SCHEMAS_PATH);
   };
 
   render() {
@@ -169,7 +173,7 @@ class Datasets extends Component {
         lastModified,
         createdAt,
         description = '',
-        schemaId,
+        schemaIds,
       } = dataset;
       const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
@@ -183,7 +187,7 @@ class Datasets extends Component {
         name,
         dataset: (
           <>
-            <Grid container alignItems="center" spacing={2}>
+            <Grid container alignItems="center" spacing={1}>
               <Grid item>
                 <Typography
                   className={buildDatasetsListNameClass(name)}
@@ -193,11 +197,16 @@ class Datasets extends Component {
                   {name}
                 </Typography>
               </Grid>
-              {schemaId && (
-                <Grid item>
-                  <SchemaTag schema={schemas.get(schemaId)} />
+              {schemaIds?.map((schemaId) => (
+                <Grid item key={schemaId}>
+                  <SchemaTag
+                    schema={schemas.get(schemaId)}
+                    tooltip={`${t('Detected schema')}: ${
+                      schemas.get(schemaId)?.label
+                    }`}
+                  />
                 </Grid>
-              )}
+              ))}
             </Grid>
             <Typography
               className={buildDatasetsListDescriptionClass(name)}
@@ -248,6 +257,14 @@ class Datasets extends Component {
               path={folder}
             />
           )}
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.schemasButton}
+            onClick={() => this.handleSchemasButton()}
+          >
+            {t('Schemas')}
+          </Button>
           <Typography variant="h4">{t('Datasets')}</Typography>
           <Table id={DATASET_TABLE_ID} rows={rows} columns={columns} />
           <LoadDatasetButton />

@@ -40,14 +40,6 @@ class EditAlgorithm extends Component {
   })();
 
   static propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        id: PropTypes.string,
-      }).isRequired,
-    }).isRequired,
-    history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
-    }).isRequired,
     dispatchGetUtils: PropTypes.func.isRequired,
     dispatchSaveUtils: PropTypes.func.isRequired,
     classes: PropTypes.shape({

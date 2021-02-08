@@ -27,18 +27,19 @@ const {
 } = require('../../shared/types');
 const { cancelExecutionObject } = require('./cancelExecution');
 
-const createNewResultDataset = ({
-  name,
-  filepath,
-  algorithmId,
-  description,
-}) => {
-  const result = createNewDataset({
-    name,
-    filepath,
-    description,
-    type: DATASET_TYPES.RESULT,
-  });
+const createNewResultDataset = (
+  { name, filepath, algorithmId, description },
+  db,
+) => {
+  const result = createNewDataset(
+    {
+      name,
+      filepath,
+      description,
+      type: DATASET_TYPES.RESULT,
+    },
+    db,
+  );
   result.algorithmId = algorithmId;
   return result;
 };
@@ -85,12 +86,15 @@ const executeAlgorithm = (mainWindow, db) => (
     // update execution and return it
     const onSuccess = () => {
       // save result in db
-      const newResult = createNewResultDataset({
-        name: name?.length ? name : `${datasetName}_${algorithmName}`,
-        filepath: tmpPath,
-        algorithmId,
-        description,
-      });
+      const newResult = createNewResultDataset(
+        {
+          name: name?.length ? name : `${datasetName}_${algorithmName}`,
+          filepath: tmpPath,
+          algorithmId,
+          description,
+        },
+        db,
+      );
       db.get(DATASETS_COLLECTION).push(newResult).write();
 
       db.get(EXECUTIONS_COLLECTION)

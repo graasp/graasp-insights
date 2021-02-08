@@ -10,10 +10,10 @@ const {
   LOAD_DATASET_SUCCESS,
   LOAD_DATASET_ERROR,
 } = require('../../shared/types');
-const { detectSchema } = require('../schema');
 const { DATASET_TYPES } = require('../../shared/constants');
+const { detectSchemas } = require('../schema/detectSchemas');
 
-const createNewDataset = ({ name, filepath, description, type }) => {
+const createNewDataset = ({ name, filepath, description, type }, db) => {
   // create and get file data
   const fileId = ObjectId().str;
   const destPath = path.join(DATASETS_FOLDER, `${fileId}.json`);
@@ -21,13 +21,13 @@ const createNewDataset = ({ name, filepath, description, type }) => {
   // copy file
   fs.copyFileSync(filepath, destPath);
 
-  let schemaId;
+  let schemaIds;
   try {
     const content = fs.readFileSync(destPath, 'utf8');
     const jsonContent = JSON.parse(content);
-    schemaId = detectSchema(jsonContent) || null;
+    schemaIds = detectSchemas(jsonContent, db) || [];
   } catch {
-    schemaId = null;
+    schemaIds = [];
   }
 
   // get file data
@@ -45,7 +45,7 @@ const createNewDataset = ({ name, filepath, description, type }) => {
     size: sizeInKiloBytes,
     createdAt,
     lastModified,
-    schemaId,
+    schemaIds,
     type,
   };
 };
@@ -55,13 +55,16 @@ const loadDataset = (mainWindow, db) => async (event, args) => {
 
   if (fs.existsSync(fileLocation)) {
     try {
-      const newDataset = createNewDataset({
-        name: fileCustomName,
-        filepath: fileLocation,
-        description: fileDescription,
-        folderPath: DATASETS_FOLDER,
-        type: DATASET_TYPES.SOURCE,
-      });
+      const newDataset = createNewDataset(
+        {
+          name: fileCustomName,
+          filepath: fileLocation,
+          description: fileDescription,
+          folderPath: DATASETS_FOLDER,
+          type: DATASET_TYPES.SOURCE,
+        },
+        db,
+      );
       logger.debug(`load dataset at ${newDataset.filepath}`);
       // save file in lowdb
       db.get(DATASETS_COLLECTION).push(newDataset).write();

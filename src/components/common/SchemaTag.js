@@ -1,34 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { withTranslation } from 'react-i18next';
-import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
 
-const styles = () => ({
-  chip: {
-    height: '20px',
-  },
-});
-
-const SchemaTag = ({ schema, className, t, classes }) => {
+const SchemaTag = ({ schema, className, size, tooltip }) => {
   if (!schema) {
     return null;
   }
 
   const { label, tagStyle } = schema;
-
-  return (
-    <Tooltip title={`${t('Detected schema')}: ${label}`}>
-      <Chip
-        size="small"
-        label={label}
-        style={tagStyle}
-        className={clsx(classes.chip, className)}
-      />
-    </Tooltip>
+  const chip = (
+    <Chip size={size} label={label} style={tagStyle} className={className} />
   );
+
+  return tooltip ? <Tooltip title={tooltip}>{chip}</Tooltip> : chip;
 };
 
 SchemaTag.propTypes = {
@@ -36,18 +21,16 @@ SchemaTag.propTypes = {
     label: PropTypes.string.isRequired,
     tagStyle: PropTypes.shape({}).isRequired,
   }),
-  t: PropTypes.func.isRequired,
   className: PropTypes.string,
-  classes: PropTypes.shape({
-    chip: PropTypes.string.isRequired,
-  }).isRequired,
+  size: PropTypes.string,
+  tooltip: PropTypes.string,
 };
 
 SchemaTag.defaultProps = {
   schema: null,
   className: null,
+  size: 'small',
+  tooltip: null,
 };
 
-const StyledComponent = withStyles(styles)(SchemaTag);
-
-export default withTranslation()(StyledComponent);
+export default SchemaTag;

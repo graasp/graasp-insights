@@ -7,6 +7,7 @@ export const RESULTS_MENU_ITEM_ID = 'resultsMenuItem';
 export const DRAWER_BUTTON_ID = 'drawerButton';
 export const QUIT_MENU_ITEM_ID = 'quitMenuItem';
 export const EXECUTIONS_MENU_ITEM_ID = 'executionsMenuItem';
+export const SCHEMAS_MENU_ITEM_ID = 'schemasMenuItem';
 export const DATASETS_EMPTY_ALERT_ID = 'datasetsEmptyAlert';
 export const LOAD_DATASET_BUTTON_ID = 'loadDatasetButton';
 export const LOAD_DATASET_NAME_ID = 'loadDatasetName';

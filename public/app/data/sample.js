@@ -18,7 +18,7 @@ module.exports = {
       size: 45,
       createdAt: Date.now(),
       lastModified: Date.now(),
-      schemaId: GRAASP_SCHEMA_ID,
+      schemaIds: [GRAASP_SCHEMA_ID],
       type: DATASET_TYPES.SOURCE,
     },
   ],

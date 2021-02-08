@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
+import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import LoadDatasetModal from './LoadDatasetModal';
-import { LOAD_DATASET_BUTTON_ID } from '../config/selectors';
+import AddIcon from '@material-ui/icons/Add';
+import { useTranslation } from 'react-i18next';
+import AddSchemaModal from './AddSchemaModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoadDatasetButton = () => {
+const AddSchemaButton = () => {
   const [open, setOpen] = useState(false);
-  const classes = useStyles();
   const { t } = useTranslation();
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,17 +37,16 @@ const LoadDatasetButton = () => {
 
   return (
     <div className={classes.root}>
-      <Tooltip placement="left" title={t('Add a dataset')} arrow>
+      <Tooltip placement="left" title={t('Add schema')} arrow>
         <IconButton
-          id={LOAD_DATASET_BUTTON_ID}
           variant="contained"
-          className={classes.addButton}
           onClick={handleClickOpen}
+          className={classes.addButton}
         >
           <AddIcon />
         </IconButton>
       </Tooltip>
-      <LoadDatasetModal
+      <AddSchemaModal
         open={open}
         setOpen={setOpen}
         handleClickOpen={handleClickOpen}
@@ -58,4 +56,4 @@ const LoadDatasetButton = () => {
   );
 };
 
-export default LoadDatasetButton;
+export default AddSchemaButton;

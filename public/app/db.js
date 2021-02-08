@@ -117,7 +117,10 @@ const ensureAlgorithmsExist = async (db) => {
 const addDefaultSchemas = async (db) => {
   Object.entries(DEFAULT_SCHEMAS).forEach(([id, schemaInfo]) => {
     if (!db.get(SCHEMAS_COLLECTION).has(id).value()) {
-      db.get(SCHEMAS_COLLECTION).set(id, schemaInfo).write();
+      const createdAt = Date.now();
+      db.get(SCHEMAS_COLLECTION)
+        .set(id, { ...schemaInfo, createdAt })
+        .write();
     }
   });
 };

@@ -5,7 +5,7 @@ const {
   PARAMETER_TYPES,
 } = require('../../shared/constants');
 const { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } = require('../../shared/constants');
-const { generateFieldSelector } = require('../../shared/utils');
+const { setFieldSelectorAttributes } = require('../../shared/utils');
 const GRAASP_SCHEMA = require('../schema/graasp');
 
 const GRAASP_ALGORITHMS = [
@@ -33,35 +33,38 @@ const GRAASP_ALGORITHMS = [
         type: PARAMETER_TYPES.FIELD_SELECTOR,
         description: 'Select fields to hash:',
         value: {
-          [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
-            properties: {
-              data: {
-                properties: {
-                  actions: {
-                    items: {
-                      properties: {
-                        user: { selected: true },
+          [GRAASP_SCHEMA_ID]: _.merge(
+            setFieldSelectorAttributes(GRAASP_SCHEMA, false, 1),
+            {
+              properties: {
+                data: {
+                  properties: {
+                    actions: {
+                      items: {
+                        properties: {
+                          user: { selected: true },
+                        },
                       },
                     },
-                  },
-                  users: {
-                    items: {
-                      properties: {
-                        _id: { selected: true },
+                    users: {
+                      items: {
+                        properties: {
+                          _id: { selected: true },
+                        },
                       },
                     },
-                  },
-                  appInstanceResources: {
-                    items: {
-                      properties: {
-                        user: { selected: true },
+                    appInstanceResources: {
+                      items: {
+                        properties: {
+                          user: { selected: true },
+                        },
                       },
                     },
                   },
                 },
               },
             },
-          }),
+          ),
         },
       },
     ],
@@ -109,36 +112,39 @@ const GRAASP_ALGORITHMS = [
         type: PARAMETER_TYPES.FIELD_SELECTOR,
         description: 'Select fields to suppress:',
         value: {
-          [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
-            properties: {
-              data: {
-                properties: {
-                  actions: {
-                    items: {
-                      properties: {
-                        data: { selected: true },
-                        geolocation: { selected: true },
+          [GRAASP_SCHEMA_ID]: _.merge(
+            setFieldSelectorAttributes(GRAASP_SCHEMA, false, 1),
+            {
+              properties: {
+                data: {
+                  properties: {
+                    actions: {
+                      items: {
+                        properties: {
+                          data: { selected: true },
+                          geolocation: { selected: true },
+                        },
                       },
                     },
-                  },
-                  appInstances: {
-                    items: {
-                      properties: {
-                        settings: { selected: true },
+                    appInstances: {
+                      items: {
+                        properties: {
+                          settings: { selected: true },
+                        },
                       },
                     },
-                  },
-                  appInstanceResources: {
-                    items: {
-                      properties: {
-                        data: { selected: true },
+                    appInstanceResources: {
+                      items: {
+                        properties: {
+                          data: { selected: true },
+                        },
                       },
                     },
                   },
                 },
               },
             },
-          }),
+          ),
         },
       },
     ],
@@ -158,22 +164,25 @@ const GRAASP_ALGORITHMS = [
         type: PARAMETER_TYPES.FIELD_SELECTOR,
         description: 'Select fields to shuffle:',
         value: {
-          [GRAASP_SCHEMA_ID]: _.merge(generateFieldSelector(GRAASP_SCHEMA), {
-            properties: {
-              data: {
-                properties: {
-                  actions: {
-                    items: {
-                      properties: {
-                        verb: { selected: true },
-                        geolocation: { selected: true },
+          [GRAASP_SCHEMA_ID]: _.merge(
+            setFieldSelectorAttributes(GRAASP_SCHEMA, false, 1),
+            {
+              properties: {
+                data: {
+                  properties: {
+                    actions: {
+                      items: {
+                        properties: {
+                          verb: { selected: true },
+                          geolocation: { selected: true },
+                        },
                       },
                     },
                   },
                 },
               },
             },
-          }),
+          ),
         },
       },
     ],

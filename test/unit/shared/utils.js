@@ -1,29 +1,39 @@
 import { expect } from 'chai';
+import { setFieldSelectorAttributesData } from '../../fixtures/unit/shared/utils';
 import {
-  generateFieldSelectorData,
-  fieldSelectorUnselectAllData,
-} from '../../fixtures/unit/shared/utils';
-import {
-  generateFieldSelector,
+  setFieldSelectorAttributes,
   fieldSelectorUnselectAll,
 } from '../../../src/shared/utils';
 
 describe('Field selector helpers', () => {
-  it(`generateFieldSelector correctly adds values for depth=1`, () => {
-    const { input, outputDepth1: expected } = generateFieldSelectorData;
-    const output = generateFieldSelector(input, 1);
+  it(`setFieldSelectorAttributes correctly adds values for depth=1`, () => {
+    const {
+      input,
+      outputAllUnselectedDepth1: expected,
+    } = setFieldSelectorAttributesData;
+    const output = setFieldSelectorAttributes(input, false, 1);
     expect(output).to.deep.equal(expected);
   });
 
-  it(`generateFieldSelector correctly adds values for depth=2`, () => {
-    const { input, outputDepth2: expected } = generateFieldSelectorData;
-    const output = generateFieldSelector(input, 2);
+  it(`setFieldSelectorAttributes correctly adds values for depth=2`, () => {
+    const {
+      input,
+      outputAllUnselectedDepth2: expected,
+    } = setFieldSelectorAttributesData;
+    const output = setFieldSelectorAttributes(input, false, 2);
     expect(output).to.deep.equal(expected);
   });
 
-  it(`fieldSelectorUnselectAll correctly unselects all`, () => {
-    const { input, output: expected } = fieldSelectorUnselectAllData;
-    const output = fieldSelectorUnselectAll(input);
-    expect(output).to.deep.equal(expected);
+  it(`Correctly select and unselect all`, () => {
+    const {
+      input,
+      outputAllSelectedDepth2: expectedAllSelected,
+      outputAllUnselectedDepth2: expectedAllUnselected,
+    } = setFieldSelectorAttributesData;
+    const outputAllSelected = setFieldSelectorAttributes(input, true, 2);
+    expect(outputAllSelected).to.deep.equal(expectedAllSelected);
+
+    const outputAllUnselected = fieldSelectorUnselectAll(outputAllSelected);
+    expect(outputAllUnselected).to.deep.equal(expectedAllUnselected);
   });
 });

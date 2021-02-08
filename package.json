@@ -40,6 +40,7 @@
     "immutable": "4.0.0-rc.12",
     "lodash": "4.17.20",
     "lowdb": "1.0.0",
+    "material-ui-color": "0.4.8",
     "mkdirp": "1.0.4",
     "mocha": "8.2.0",
     "prop-types": "15.7.2",
@@ -59,6 +60,7 @@
     "redux-devtools-extension": "2.13.8",
     "redux-promise": "0.6.0",
     "redux-thunk": "2.3.0",
+    "styled-components": "5.2.1",
     "supercluster": "7.1.0",
     "tree-kill": "1.2.2",
     "use-supercluster": "0.2.9"

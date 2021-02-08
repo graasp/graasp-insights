@@ -384,6 +384,16 @@ exports[`<App /> renders correctly 1`] = `
           exact={true}
           path="/visualizations"
         />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/schemas"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/schema/:id"
+        />
       </Switch>
     </div>
   </HashRouter>

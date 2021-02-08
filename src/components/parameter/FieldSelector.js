@@ -82,8 +82,9 @@ FieldSelector.defaultProps = {
 
 const FieldSelectorTree = ({ name, field, onChange }) => {
   const { type, selected, expanded } = field;
-  const properties =
-    type === 'object' ? field.properties : field?.items?.properties;
+  const properties = type?.includes('object')
+    ? field.properties
+    : field?.items?.properties;
   const classes = useStyles();
 
   const handleCheckboxOnChange = (event) => {
@@ -144,7 +145,7 @@ const FieldSelectorTree = ({ name, field, onChange }) => {
                 field={childField}
                 onChange={(updatedField) => {
                   // eslint-disable-next-line no-unused-expressions
-                  type === 'object'
+                  type.includes('object')
                     ? onChange({
                         ...field,
                         properties: { ...properties, [key]: updatedField },

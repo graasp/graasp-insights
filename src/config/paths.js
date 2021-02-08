@@ -12,6 +12,8 @@ export const RESULTS_PATH = '/results';
 export const RESULT_PATH = '/result/:id';
 export const EXECUTIONS_PATH = '/executions';
 export const VISUALIZATIONS_PATH = '/visualizations';
+export const SCHEMAS_PATH = '/schemas';
+export const SCHEMA_PATH = '/schema/:id';
 
 export const buildDatasetPath = (id = ':id') => {
   return `/dataset/${id}`;
@@ -24,3 +26,5 @@ export const buildResultPath = (id = ':id') => {
 export const buildEditAlgorithmPath = (id = ':id') => {
   return `/edit-algorithm/${id}`;
 };
+
+export const buildSchemaPath = (id = ':id') => `/schema/${id}`;

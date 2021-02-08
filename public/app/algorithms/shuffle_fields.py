@@ -23,11 +23,11 @@ def iterate_and_shuffle(dataset, field_selection):
         prop = dataset.get(prop_name, {})
 
         # if it is an object, iterate through its properties using recursion
-        if prop_field_sel.get('type', '') == 'object':
+        if 'object' in prop_field_sel.get('type', '') and isinstance(prop, dict):
             iterate_and_shuffle(prop, prop_field_sel)
 
         # if it is an array, "items" specifies the array's content
-        elif prop_field_sel.get('type', '') == 'array' and isinstance(prop, list):
+        elif 'array' in prop_field_sel.get('type', '') and isinstance(prop, list):
             items = prop_field_sel.get('items', {})
 
             # if "items" is a list

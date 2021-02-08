@@ -46,9 +46,9 @@ def iterate_and_apply(dataset, field_selection, func):
             selected = value.get('selected', False)
             if selected:
                 dataset[name] = func(dataset[name])
-            elif value.get('type', '') == 'object':
+            elif 'object' in value.get('type', '') and isinstance(dataset[name], dict):
                 iterate_and_apply(dataset[name], value, func)
-            elif value.get('type', '') == 'array' and isinstance(dataset[name], list):
+            elif 'array' in value.get('type', '') and isinstance(dataset[name], list):
                 items = value.get('items', {})
                 if isinstance(items, list):
                     for item, fl in zip(dataset[name], items):
@@ -66,9 +66,9 @@ def iterate_and_suppress(dataset, field_selection):
             selected = value.get('selected', False)
             if selected:
                 del dataset[name]
-            elif value.get('type', '') == 'object':
+            elif 'object' in value.get('type', '') and isinstance(dataset[name], dict):
                 iterate_and_suppress(dataset[name], value)
-            elif value.get('type', '') == 'array' and isinstance(dataset[name], list):
+            elif 'array' in value.get('type', '') and isinstance(dataset[name], list):
                 items = value.get('items', {})
                 if isinstance(items, list):
                     for item, fl in zip(dataset[name], items):

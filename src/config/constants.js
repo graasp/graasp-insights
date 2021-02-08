@@ -116,3 +116,8 @@ export const PARAMETER_TYPES_DEFAULT = {
 // used in UsersSelect dropdown, if a string is too long (which occurs when user Ids are hashed)
 export const MAX_STRING_DISPLAYED_LENGTH = 25;
 export const ABBREVIATED_STRING_LENGTH = 10;
+
+export const DEFAULT_TAG_STYLE = {
+  backgroundColor: '#555555',
+  color: 'white',
+};

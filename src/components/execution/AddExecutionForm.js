@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -123,12 +124,21 @@ class AddExecutionForm extends Component {
   }
 
   handleSourceSelectOnChange = (e) => {
-    const { datasets } = this.props;
+    const { datasets, algorithms } = this.props;
+    const { algorithmId } = this.state;
+    let { schemaId } = this.state;
     const sourceId = e.target.value;
     this.setState({ sourceId });
-    const schemaId = datasets.find(({ id }) => id === sourceId)?.schemaId;
-    if (schemaId) {
-      this.setState({ schemaId });
+
+    // if current schemaId not in newly selected dataset, then set it as the first one of the dataset
+    const schemaIds = datasets.find(({ id }) => id === sourceId)?.schemaIds;
+    if (schemaIds?.length && !schemaIds?.includes(schemaId)) {
+      [schemaId] = schemaIds;
+      this.setState({
+        schemaId,
+        parameters:
+          algorithms.find(({ id }) => id === algorithmId)?.parameters || [],
+      });
     }
   };
 
@@ -171,20 +181,21 @@ class AddExecutionForm extends Component {
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
-      .map(({ id, name, schemaId }) => (
+      .map(({ id, name, schemaIds }) => (
         <MenuItem
           value={id}
           key={id}
           className={classes.menuItem}
           id={buildExecutionDatasetOptionId(id)}
         >
-          {name}
-          {schemaId && (
-            <SchemaTag
-              schema={schemas.get(schemaId)}
-              className={classes.schemaTag}
-            />
-          )}
+          <Grid container alignItems="center" spacing={1}>
+            <Grid item>{name}</Grid>
+            {schemaIds?.map((schemaId) => (
+              <Grid item key={schemaId}>
+                <SchemaTag schema={schemas.get(schemaId)} />
+              </Grid>
+            ))}
+          </Grid>
         </MenuItem>
       ));
 
