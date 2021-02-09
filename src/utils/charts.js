@@ -184,20 +184,14 @@ export const formatActionsByVerb = (actionsByVerbObject) => {
 // therefore note: id is the id of the action, and user is the userId of the user performing the action
 export const filterActionsByUser = (actions, usersArray) => {
   // if the dataset passed into the visualizer has hashed users, then user names are no longer available
-  // instead, users key (and usersArray here) will be of the format... users: {[_id: hashedId], [_id: hashedId2], ...}
+  // instead, users key (and usersArray here) will be of the format... users: [{_id: hashedId}, {_id: hashedId2}, ...]
   // therefore slightly different filtering function
   if (usersArray.some((user) => !user.name)) {
-    return actions.filter((action) => {
-      return usersArray.some((user) => {
-        return user._id === action.user;
-      });
-    });
+    const userIdsArray = usersArray.map(({ _id }) => _id);
+    return actions.filter((action) => userIdsArray.includes(action.user));
   }
-  return actions.filter((action) => {
-    return usersArray.some((user) => {
-      return user.ids.includes(action.user);
-    });
-  });
+  const userIdsArray = usersArray.map((user) => user.ids).flat();
+  return actions.filter((action) => userIdsArray.includes(action.user));
 };
 
 // remove user 'Learning Analytics' from users list retrieved by API
@@ -210,7 +204,7 @@ export const removeLearningAnalyticsUser = (usersArray) => {
 // instead of users = [{id: 1, name: 'Augie March'}, {id: 2, name: 'augie march'}], users = [{ids: [1,2], name: 'augie march'}]
 export const consolidateUsers = (usersArray) => {
   // if the dataset passed into the visualizer has hashed users, then user names are no longer available
-  // instead, users key (and usersArray here) will be of the format... users: {[_id: hashedId], [_id: hashedId2], ...}
+  // instead, users key (and usersArray here) will be of the format... users: [{_id: hashedId}, {_id: hashedId2}, ...]
   // therefore return this array as is
   if (usersArray.some((user) => !user.name)) {
     return usersArray;
@@ -247,7 +241,7 @@ export const consolidateUsers = (usersArray) => {
 // proper names are recapitalized ('Augie March'), and only the first letter of emails is capitalized
 export const formatConsolidatedUsers = (consolidatedUsersArray) => {
   // if the dataset passed into the visualizer has hashed users, then user names are no longer available
-  // hence, consolidatedUsersArray will be of the format... consolidatedUsersArray: {[_id: hashedId], [_id: hashedId2], ...}
+  // hence, consolidatedUsersArray will be of the format... consolidatedUsersArray: [{_id: hashedId}, {_id: hashedId2}, ...]
   // return this array as is (no point capitalizing, etc.)
   if (consolidatedUsersArray.some((user) => !user.name)) {
     return consolidatedUsersArray;
