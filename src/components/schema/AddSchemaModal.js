@@ -141,7 +141,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
           color="primary"
           disabled={!label}
         >
-          {t('Add schema')}
+          {t('Add Schema')}
         </Button>
       </DialogActions>
     </Dialog>

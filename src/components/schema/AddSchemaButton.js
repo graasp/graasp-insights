@@ -37,7 +37,7 @@ const AddSchemaButton = () => {
 
   return (
     <div className={classes.root}>
-      <Tooltip placement="left" title={t('Add schema')} arrow>
+      <Tooltip placement="left" title={t('Add a Schema')} arrow>
         <IconButton
           variant="contained"
           onClick={handleClickOpen}
