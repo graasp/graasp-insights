@@ -16,9 +16,13 @@ import Alert from '@material-ui/lab/Alert';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import LoadDatasetButton from './LoadDatasetButton';
-import { DEFAULT_LOCALE_DATE } from '../config/constants';
+import {
+  DEFAULT_LOCALE_DATE,
+  DEFAULT_TAG_STYLE,
+  MAX_SHOWN_SCHEMA_TAGS,
+} from '../config/constants';
 import { getDatasets, deleteDataset } from '../actions';
-import { SCHEMAS_PATH } from '../config/paths';
+import { buildSchemaPath, SCHEMAS_PATH } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../shared/formatting';
 import ExportButton from './common/ExportButton';
@@ -95,11 +99,18 @@ class Datasets extends Component {
     dispatchDeleteDataset({ id, name });
   };
 
-  handleSchemasButton = () => {
+  handleSchemasButtonOnClick = () => {
     const {
       history: { push },
     } = this.props;
     push(SCHEMAS_PATH);
+  };
+
+  handleSchemaOnClick = (id) => {
+    const {
+      history: { push },
+    } = this.props;
+    push(buildSchemaPath(id));
   };
 
   render() {
@@ -197,16 +208,31 @@ class Datasets extends Component {
                   {name}
                 </Typography>
               </Grid>
-              {schemaIds?.map((schemaId) => (
+              {schemaIds?.slice(0, MAX_SHOWN_SCHEMA_TAGS).map((schemaId) => (
                 <Grid item key={schemaId}>
                   <SchemaTag
                     schema={schemas.get(schemaId)}
                     tooltip={`${t('Detected schema')}: ${
                       schemas.get(schemaId)?.label
                     }`}
+                    onClick={() => this.handleSchemaOnClick(schemaId)}
                   />
                 </Grid>
               ))}
+              {schemaIds?.length > MAX_SHOWN_SCHEMA_TAGS && (
+                <Grid item>
+                  <SchemaTag
+                    schema={{
+                      label: '...',
+                      tagStyle: DEFAULT_TAG_STYLE,
+                    }}
+                    tooltip={schemaIds
+                      ?.slice(MAX_SHOWN_SCHEMA_TAGS)
+                      .map((schemaId) => schemas.get(schemaId)?.label)
+                      .join(', ')}
+                  />
+                </Grid>
+              )}
             </Grid>
             <Typography
               className={buildDatasetsListDescriptionClass(name)}
@@ -261,7 +287,7 @@ class Datasets extends Component {
             variant="contained"
             color="primary"
             className={classes.schemasButton}
-            onClick={() => this.handleSchemasButton()}
+            onClick={() => this.handleSchemasButtonOnClick()}
           >
             {t('Schemas')}
           </Button>

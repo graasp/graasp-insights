@@ -10,7 +10,7 @@ const { validateSchema } = require('../schema/detectSchemas');
 
 const setSchema = (mainWindow, db) => async (event, schema) => {
   try {
-    const { label, tagStyle, fromDataset } = schema;
+    const { label, description, tagStyle, fromDataset } = schema;
     let { id, schema: schemaDef, createdAt } = schema;
 
     if (!id) {
@@ -19,6 +19,8 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
     if (!createdAt) {
       createdAt = Date.now();
     }
+
+    const lastModified = Date.now();
 
     if (fromDataset) {
       // generate schema from dataset
@@ -36,27 +38,32 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
 
     // check for all datasets if they satisfy the schema
     const datasets = db.get(DATASETS_COLLECTION).value();
-    datasets.forEach(({ id: dId, filepath, schemaIds: schemaIdsPrev }) => {
+    datasets.forEach(({ filepath, schemaIds: schemaIdsPrev }, idx) => {
       const content = fs.readFileSync(filepath, 'utf8');
       const json = JSON.parse(content);
       const satisfiesSchema = validateSchema(json, schemaDef);
+      let schemaIds = schemaIdsPrev || [];
 
       if (satisfiesSchema && !schemaIdsPrev?.includes(id)) {
         // add schema id to schemaIds
-        db.get(DATASETS_COLLECTION)
-          .find({ id: dId })
-          .assign({ schemaIds: [].concat(schemaIdsPrev, id) })
-          .write();
+        schemaIds.push(id);
+        db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
       } else if (!satisfiesSchema && schemaIdsPrev?.includes(id)) {
         // remove schema id from schemaIds
-        db.get(DATASETS_COLLECTION)
-          .find({ id: dId })
-          .assign({ schemaIds: schemaIdsPrev.filter((sId) => sId !== id) })
-          .write();
+        schemaIds = schemaIds.filter((sId) => sId !== id);
+        db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
       }
     });
 
-    const schemaToStore = { id, label, tagStyle, schema: schemaDef, createdAt };
+    const schemaToStore = {
+      id,
+      label,
+      description,
+      tagStyle,
+      schema: schemaDef,
+      createdAt,
+      lastModified,
+    };
 
     db.get(SCHEMAS_COLLECTION).set(id, schemaToStore).write();
     mainWindow.webContents.send(SET_SCHEMA_CHANNEL, {

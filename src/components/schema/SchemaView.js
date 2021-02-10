@@ -39,7 +39,7 @@ const styles = (theme) => ({
     textAlign: 'center',
   },
   tag: {
-    fontSize: '24px',
+    fontSize: 2 * theme.typography.fontSize,
   },
   saveButtonWrapper: {
     textAlign: 'center',
@@ -50,9 +50,11 @@ const styles = (theme) => ({
 class SchemaView extends Component {
   state = {
     label: '',
+    description: '',
     tagStyle: {},
     schemaDef: {},
     modified: false,
+    createdAt: Date.now(),
   };
 
   static propTypes = {
@@ -82,14 +84,27 @@ class SchemaView extends Component {
       },
     } = this.props;
 
-    const { label, tagStyle, schema: schemaDef } = schemas.get(id);
+    const {
+      label,
+      description,
+      tagStyle,
+      schema: schemaDef,
+      createdAt,
+    } = schemas.get(id);
 
-    this.setState({ label, tagStyle, schemaDef });
+    this.setState({ label, description, tagStyle, schemaDef, createdAt });
   }
 
   handleLabelOnChange = ({ target: { value: label } }) => {
     this.setState({
       label,
+      modified: true,
+    });
+  };
+
+  handleDescriptionOnChange = ({ target: { value: description } }) => {
+    this.setState({
+      description,
       modified: true,
     });
   };
@@ -111,13 +126,22 @@ class SchemaView extends Component {
         params: { id },
       },
     } = this.props;
-    const { label, tagStyle, schemaDef, modified } = this.state;
+    const {
+      label,
+      description,
+      tagStyle,
+      schemaDef,
+      modified,
+      createdAt,
+    } = this.state;
     if (modified) {
       dispatchSetSchema({
         id,
         label,
+        description,
         tagStyle,
         schema: schemaDef,
+        createdAt,
       });
     }
 
@@ -137,7 +161,7 @@ class SchemaView extends Component {
       classes,
       schemas,
     } = this.props;
-    const { label, tagStyle, schemaDef, modified } = this.state;
+    const { label, description, tagStyle, schemaDef, modified } = this.state;
 
     const schema = schemas.get(id);
     const isGraasp = id === GRAASP_SCHEMA_ID;
@@ -168,6 +192,17 @@ class SchemaView extends Component {
                   value={label}
                   fullWidth
                   disabled={isGraasp}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  onChange={this.handleDescriptionOnChange}
+                  label={t('Description')}
+                  value={description}
+                  fullWidth
+                  disabled={isGraasp}
+                  multiline
+                  rowsMax={4}
                 />
               </Grid>
               <Grid item container alignItems="center">

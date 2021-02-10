@@ -1,4 +1,7 @@
+import hexRgb from 'hex-rgb';
 import { PARAMETER_TYPES } from '../shared/constants';
+import theme from '../theme';
+import { generateTextColorFromBackground } from '../utils/color';
 
 export const DATASETS_COLLECTION = 'datasets';
 
@@ -118,6 +121,10 @@ export const MAX_STRING_DISPLAYED_LENGTH = 25;
 export const ABBREVIATED_STRING_LENGTH = 10;
 
 export const DEFAULT_TAG_STYLE = {
-  backgroundColor: '#555555',
-  color: 'white',
+  backgroundColor: theme.palette.gray.main,
+  color: generateTextColorFromBackground(
+    hexRgb(theme.palette.gray.main, { format: 'array' }),
+  ),
 };
+
+export const MAX_SHOWN_SCHEMA_TAGS = 3;

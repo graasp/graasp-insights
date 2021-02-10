@@ -15,10 +15,10 @@ const deleteSchema = (mainWindow, db) => async (event, { id }) => {
     // remove schema id from every dataset
     db.get(DATASETS_COLLECTION)
       .value()
-      .forEach(({ id: dId, schemaIds }) => {
+      .forEach(({ schemaIds }, idx) => {
         if (schemaIds?.includes(id)) {
           db.get(DATASETS_COLLECTION)
-            .find({ id: dId })
+            .nth(idx)
             .assign({
               schemaIds: schemaIds.filter((schemaId) => schemaId !== id),
             })

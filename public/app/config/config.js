@@ -35,15 +35,19 @@ const USER_UTILS = {
 
 const ACCEPTED_PYTHON_VERSIONS = ['2.7', '3'];
 
+const now = Date.now();
 const DEFAULT_SCHEMAS = {
   [GRAASP_SCHEMA_ID]: {
     id: GRAASP_SCHEMA_ID,
     label: 'Graasp',
+    description: 'Schema for datasets gathered from the Graasp écosystem',
     schema: GRAASP_SCHEMA,
     tagStyle: {
       backgroundColor: '#5050d2',
       color: 'white',
     },
+    createdAt: now,
+    lastModified: now,
   },
 };
 

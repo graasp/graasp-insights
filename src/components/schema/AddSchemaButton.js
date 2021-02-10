@@ -27,11 +27,11 @@ const AddSchemaButton = () => {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  const handleClickOpen = () => {
+  const handleButtonOnClick = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleModalOnClose = () => {
     setOpen(false);
   };
 
@@ -40,18 +40,13 @@ const AddSchemaButton = () => {
       <Tooltip placement="left" title={t('Add a Schema')} arrow>
         <IconButton
           variant="contained"
-          onClick={handleClickOpen}
+          onClick={handleButtonOnClick}
           className={classes.addButton}
         >
           <AddIcon />
         </IconButton>
       </Tooltip>
-      <AddSchemaModal
-        open={open}
-        setOpen={setOpen}
-        handleClickOpen={handleClickOpen}
-        handleClose={handleClose}
-      />
+      <AddSchemaModal open={open} onClose={handleModalOnClose} />
     </div>
   );
 };

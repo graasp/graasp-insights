@@ -37,6 +37,10 @@ const styles = (theme) => ({
   buttonGroup: {
     marginTop: theme.spacing(1),
   },
+  schemaDescription: {
+    display: 'inline-block',
+    margin: theme.spacing(1),
+  },
 });
 
 class Schemas extends Component {
@@ -54,6 +58,7 @@ class Schemas extends Component {
       content: PropTypes.string.isRequired,
       schemaContent: PropTypes.string.isRequired,
       buttonGroup: PropTypes.string.isRequired,
+      schemaDescription: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -94,7 +99,7 @@ class Schemas extends Component {
       {
         columnName: t('Schema'),
         sortBy: 'label',
-        field: 'tag',
+        field: 'schema',
         alignColumn: 'left',
         alignField: 'left',
       },
@@ -102,6 +107,13 @@ class Schemas extends Component {
         columnName: t('Created'),
         sortBy: 'createdAt',
         field: 'createdAt',
+        alignColumn: 'right',
+        alignField: 'right',
+      },
+      {
+        columnName: t('Last Modified'),
+        sortBy: 'lastModified',
+        field: 'lastModified',
         alignColumn: 'right',
         alignField: 'right',
       },
@@ -117,7 +129,7 @@ class Schemas extends Component {
       .valueSeq()
       .toList()
       .map((schema) => {
-        const { id, label, createdAt } = schema;
+        const { id, label, description, createdAt, lastModified } = schema;
 
         const isGraasp = id === GRAASP_SCHEMA_ID;
 
@@ -125,11 +137,29 @@ class Schemas extends Component {
           ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
           : t('Unknown');
 
+        const lastModifiedString = lastModified
+          ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown');
+
         return {
           key: id,
           label,
-          tag: <SchemaTag schema={schema} size="medium" />,
+          schema: (
+            <>
+              <SchemaTag schema={schema} size="medium" />
+              <>
+                <Typography
+                  variant="caption"
+                  key="description"
+                  className={classes.schemaDescription}
+                >
+                  {description}
+                </Typography>
+              </>
+            </>
+          ),
           createdAt: createdAtString,
+          lastModified: lastModifiedString,
           quickActions: [
             <Tooltip title={t('View Schema')} key="view">
               <IconButton aria-label="view" onClick={() => this.handleView(id)}>
@@ -173,7 +203,9 @@ class Schemas extends Component {
 const mapStateToProps = ({ schema }) => {
   return {
     schemas: schema.get('schemas'),
-    gettingSchemas: schema.get('activity').includes(FLAG_GETTING_SCHEMAS),
+    gettingSchemas: Boolean(
+      schema.getIn(['activity', FLAG_GETTING_SCHEMAS]).size,
+    ),
     lastSchemaIdSet: schema.get('lastSchemaIdSet'),
   };
 };

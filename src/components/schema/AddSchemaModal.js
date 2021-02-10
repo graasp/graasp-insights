@@ -24,22 +24,22 @@ const useStyles = makeStyles((theme) => ({
   content: {
     paddingBottom: theme.spacing(2),
   },
-  formControl: {
-    minWidth: 200,
-  },
 }));
 
-const AddSchemaModal = ({ open, handleClose }) => {
+const AddSchemaModal = ({ open, onClose }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const dispatch = useDispatch();
   const datasets = useSelector(({ dataset }) => dataset.get('datasets'));
 
   const [label, setLabel] = useState('');
+  const [description, setDescription] = useState('');
   const [tagStyle, setTagStyle] = useState(DEFAULT_TAG_STYLE);
   const [datasetId, setDatasetId] = useState('none');
 
   const handleLabelOnChange = ({ target: { value } }) => setLabel(value);
+  const handleDescriptionOnChange = ({ target: { value } }) =>
+    setDescription(value);
 
   const handleColorOnChange = ({ hex, rgb }) => {
     setTagStyle({
@@ -52,6 +52,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
 
   const resetForm = () => {
     setLabel('');
+    setDescription('');
     setTagStyle(DEFAULT_TAG_STYLE);
     setDatasetId('none');
   };
@@ -60,6 +61,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
     dispatch(
       setSchema({
         label,
+        description,
         tagStyle,
         fromDataset: datasetId !== 'none' ? datasetId : undefined,
       }),
@@ -67,7 +69,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
       <DialogTitle>{t('Add Schema')}</DialogTitle>
       <DialogContent className={classes.content}>
         <Grid container direction="column" spacing={0}>
@@ -80,12 +82,17 @@ const AddSchemaModal = ({ open, handleClose }) => {
             />
           </Grid>
           <Grid item>
-            <FormControl
-              className={classes.formControl}
-              variant="outlined"
-              margin="normal"
+            <TextField
+              onChange={handleDescriptionOnChange}
+              label={t('Description')}
+              value={description}
+              multiline
+              rowsMax={4}
               fullWidth
-            >
+            />
+          </Grid>
+          <Grid item>
+            <FormControl variant="outlined" margin="normal" fullWidth>
               <InputLabel id="dataset-select-label">
                 {t('Generate from dataset')}
               </InputLabel>
@@ -126,7 +133,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
         <Button
           onClick={() => {
             resetForm();
-            handleClose();
+            onClose();
           }}
           color="primary"
         >
@@ -136,7 +143,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
           onClick={() => {
             handleAddSchema();
             resetForm();
-            handleClose();
+            onClose();
           }}
           color="primary"
           disabled={!label}
@@ -150,7 +157,7 @@ const AddSchemaModal = ({ open, handleClose }) => {
 
 AddSchemaModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default AddSchemaModal;

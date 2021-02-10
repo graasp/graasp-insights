@@ -9,12 +9,11 @@ const validateSchema = (json, schema) => {
 };
 
 const detectSchemas = (json, db) => {
-  const schemas = db.get(SCHEMAS_COLLECTION).value();
-  const validSchemas = Object.values(schemas)
-    .filter(({ schema }) => {
-      return validateSchema(json, schema);
-    })
-    .map(({ id }) => id);
+  const validSchemas = db
+    .get(SCHEMAS_COLLECTION)
+    .filter(({ schema }) => validateSchema(json, schema))
+    .map('id')
+    .value();
 
   return validSchemas;
 };
