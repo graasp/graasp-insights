@@ -109,6 +109,8 @@ const SUCCESS_SETTING_SCHEMA_MESSAGE = 'The schema was saved successfully';
 const ERROR_SETTING_SCHEMA_MESSAGE = 'There was an error saving the schema';
 const SUCCESS_DELETING_SCHEMA_MESSAGE = 'The schema was deleted successfully';
 const ERROR_DELETING_SCHEMA_MESSAGE = 'There was an error deleting the schema';
+const ERROR_OPENING_URL_IN_BROWSER_MESSAGE =
+  'There was an error opening the link in the browser';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -170,4 +172,5 @@ module.exports = {
   ERROR_SETTING_SCHEMA_MESSAGE,
   SUCCESS_DELETING_SCHEMA_MESSAGE,
   ERROR_DELETING_SCHEMA_MESSAGE,
+  ERROR_OPENING_URL_IN_BROWSER_MESSAGE,
 };

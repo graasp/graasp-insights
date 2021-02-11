@@ -128,3 +128,6 @@ export const DEFAULT_TAG_STYLE = {
 };
 
 export const MAX_SHOWN_SCHEMA_TAGS = 3;
+
+export const JSON_SCHEMA_GETTING_STARTED_URL =
+  'https://json-schema.org/learn/getting-started-step-by-step.html';

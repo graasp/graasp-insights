@@ -46,4 +46,5 @@ module.exports = {
   GET_SCHEMAS_CHANNEL: 'schemas:get',
   SET_SCHEMA_CHANNEL: 'schema:set',
   DELETE_SCHEMA_CHANNEL: 'schema:delete',
+  OPEN_URL_IN_BROWSER_CHANNEL: 'open:browser',
 };

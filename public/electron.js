@@ -54,6 +54,7 @@ const {
   GET_SCHEMAS_CHANNEL,
   SET_SCHEMA_CHANNEL,
   DELETE_SCHEMA_CHANNEL,
+  OPEN_URL_IN_BROWSER_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -97,6 +98,7 @@ const {
   getSchemas,
   setSchema,
   deleteSchema,
+  openUrlInBrowser,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -443,6 +445,9 @@ app.on('ready', async () => {
 
   // called when opening a path in the explorer
   ipcMain.on(OPEN_PATH_IN_EXPLORER_CHANNEL, openPathInExplorer(mainWindow));
+
+  // called when opening a link to open it in a browser
+  ipcMain.on(OPEN_URL_IN_BROWSER_CHANNEL, openUrlInBrowser(mainWindow));
 
   // called when getting schemas
   ipcMain.on(GET_SCHEMAS_CHANNEL, getSchemas(mainWindow, db));

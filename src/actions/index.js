@@ -5,3 +5,4 @@ export * from './result';
 export * from './algorithms';
 export * from './executions';
 export * from './schema';
+export * from './browser';

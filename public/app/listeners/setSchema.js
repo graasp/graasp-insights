@@ -33,7 +33,7 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
       const json = JSON.parse(content);
       schemaDef = generateSchemaFromJSON(json);
     } else if (!schemaDef) {
-      schemaDef = { type: 'object', properties: {} };
+      schemaDef = { type: 'object', required: [], properties: {} };
     }
 
     // check for all datasets if they satisfy the schema

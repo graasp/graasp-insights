@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import SaveIcon from '@material-ui/icons/Save';
+import Alert from '@material-ui/lab/Alert';
 import { Map } from 'immutable';
 import { ColorPicker } from 'material-ui-color';
 import PropTypes from 'prop-types';
@@ -14,18 +15,19 @@ import { withTranslation } from 'react-i18next';
 import ReactJson from 'react-json-view';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { setSchema } from '../../actions';
-import { GRAASP_SCHEMA_ID } from '../../shared/constants';
-import { generateTextColorFromBackground } from '../../utils/color';
-import BackButton from '../common/BackButton';
-import Main from '../common/Main';
-import SchemaTag from '../common/SchemaTag';
+import { openUrlInBrowser, setSchema } from '../../actions';
+import { JSON_SCHEMA_GETTING_STARTED_URL } from '../../config/constants';
 import {
   SCHEMA_VIEW_BACK_BUTTON_ID,
   SCHEMA_VIEW_DESCRIPTION_ID,
   SCHEMA_VIEW_LABEL_ID,
   SCHEMA_VIEW_SAVE_BUTTON_ID,
 } from '../../config/selectors';
+import { GRAASP_SCHEMA_ID } from '../../shared/constants';
+import { generateTextColorFromBackground } from '../../utils/color';
+import BackButton from '../common/BackButton';
+import Main from '../common/Main';
+import SchemaTag from '../common/SchemaTag';
 
 const styles = (theme) => ({
   schemaContent: {
@@ -51,6 +53,17 @@ const styles = (theme) => ({
     textAlign: 'center',
     margin: theme.spacing(2),
   },
+  infoAlert: {
+    marginBottom: theme.spacing(1),
+  },
+  urlString: {
+    display: 'inline',
+    marginTop: theme.spacing(1),
+    textTransform: 'none',
+    fontFamily: 'courier new',
+    padding: theme.spacing(0),
+    userSelect: 'auto',
+  },
 });
 
 class SchemaView extends Component {
@@ -66,6 +79,7 @@ class SchemaView extends Component {
   static propTypes = {
     schemas: PropTypes.instanceOf(Map).isRequired,
     dispatchSetSchema: PropTypes.func.isRequired,
+    dispatchOpenUrlInBrowser: PropTypes.func.isRequired,
     match: PropTypes.shape({
       params: PropTypes.shape({
         id: PropTypes.string.isRequired,
@@ -79,6 +93,8 @@ class SchemaView extends Component {
       tagWrapper: PropTypes.string.isRequired,
       tag: PropTypes.string.isRequired,
       saveButtonWrapper: PropTypes.string.isRequired,
+      infoAlert: PropTypes.string.isRequired,
+      urlString: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -158,6 +174,11 @@ class SchemaView extends Component {
     this.setState({ schemaDef, modified: true });
   };
 
+  JSONSchemaLearnMoreOnClick = () => {
+    const { dispatchOpenUrlInBrowser } = this.props;
+    dispatchOpenUrlInBrowser(JSON_SCHEMA_GETTING_STARTED_URL);
+  };
+
   render() {
     const {
       match: {
@@ -180,6 +201,20 @@ class SchemaView extends Component {
           </div>
           <Grid container justify="space-evenly">
             <Grid item xs={6}>
+              {!isGraasp && (
+                <Alert severity="info" className={classes.infoAlert}>
+                  {`${t(
+                    'You can enforce the presence of fields with the "required" attribute. Learn more about JSON schemas at',
+                  )}:`}
+                  <Button
+                    onClick={this.JSONSchemaLearnMoreOnClick}
+                    className={classes.urlString}
+                    size="small"
+                  >
+                    {JSON_SCHEMA_GETTING_STARTED_URL}
+                  </Button>
+                </Alert>
+              )}
               <Paper className={classes.schemaContent}>
                 <ReactJson
                   collapsed={4}
@@ -259,6 +294,7 @@ const mapStateToProps = ({ schema }) => ({
 
 const mapDispatchToProps = {
   dispatchSetSchema: setSchema,
+  dispatchOpenUrlInBrowser: openUrlInBrowser,
 };
 
 const ConnectedComponent = connect(
