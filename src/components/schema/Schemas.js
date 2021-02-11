@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,6 +15,13 @@ import { withRouter } from 'react-router';
 import { deleteSchema, getSchemas, setSchema } from '../../actions';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import { buildSchemaPath } from '../../config/paths';
+import {
+  buildSchemaRowClass,
+  SCHEMAS_DELETE_SCHEMA_BUTTON_CLASS,
+  SCHEMAS_TABLE_ID,
+  SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS,
+  SCHEMA_DESCRIPTION_CLASS,
+} from '../../config/selectors';
 import { GRAASP_SCHEMA_ID } from '../../shared/constants';
 import { FLAG_GETTING_SCHEMAS } from '../../shared/types';
 import Loader from '../common/Loader';
@@ -143,6 +151,7 @@ class Schemas extends Component {
 
         return {
           key: id,
+          className: buildSchemaRowClass(label),
           label,
           schema: (
             <>
@@ -151,7 +160,10 @@ class Schemas extends Component {
                 <Typography
                   variant="caption"
                   key="description"
-                  className={classes.schemaDescription}
+                  className={clsx(
+                    classes.schemaDescription,
+                    SCHEMA_DESCRIPTION_CLASS,
+                  )}
                 >
                   {description}
                 </Typography>
@@ -162,7 +174,11 @@ class Schemas extends Component {
           lastModified: lastModifiedString,
           quickActions: [
             <Tooltip title={t('View Schema')} key="view">
-              <IconButton aria-label="view" onClick={() => this.handleView(id)}>
+              <IconButton
+                aria-label="view"
+                className={SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS}
+                onClick={() => this.handleView(id)}
+              >
                 <CodeIcon />
               </IconButton>
             </Tooltip>,
@@ -179,6 +195,7 @@ class Schemas extends Component {
                   aria-label="delete"
                   onClick={() => this.handleDelete(id)}
                   disabled={isGraasp}
+                  className={SCHEMAS_DELETE_SCHEMA_BUTTON_CLASS}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -192,7 +209,7 @@ class Schemas extends Component {
       <Main>
         <Container className={classes.content}>
           <Typography variant="h4">{t('Schemas')}</Typography>
-          <Table rows={rows} columns={columns} />
+          <Table rows={rows} columns={columns} id={SCHEMAS_TABLE_ID} />
           <AddSchemaButton />
         </Container>
       </Main>

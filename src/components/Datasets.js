@@ -35,6 +35,7 @@ import {
   buildDatasetsListDeleteButtonClass,
   DATASET_TABLE_ID,
   DATASETS_MAIN_ID,
+  buildDatasetRowClass,
 } from '../config/selectors';
 import SchemaTag from './common/SchemaTag';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
@@ -195,6 +196,7 @@ class Datasets extends Component {
         : t('Unknown');
       return {
         key: id,
+        className: buildDatasetRowClass(name),
         name,
         dataset: (
           <>

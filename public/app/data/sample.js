@@ -7,7 +7,7 @@ const {
 } = require('../db');
 const { SAMPLE_DATASET_FILEPATH } = require('../config/paths');
 const { GRAASP_SCHEMA_ID, DATASET_TYPES } = require('../../shared/constants');
-const { DEFAULT_SCHEMAS } = require('../config/config');
+const { DEFAULT_SCHEMAS } = require('../schema/config');
 
 module.exports = {
   [DATASETS_COLLECTION]: [

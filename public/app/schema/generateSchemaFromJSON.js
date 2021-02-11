@@ -47,6 +47,7 @@ const generateSchemaFromJSON = (value) => {
         type: 'array',
         items: {
           type: types.length > 1 ? types : types[0],
+          required: [],
           properties,
         },
       };

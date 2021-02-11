@@ -16,9 +16,17 @@ import Typography from '@material-ui/core/Typography';
 import { ColorPicker } from 'material-ui-color';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateTextColorFromBackground } from '../../utils/color';
 import { setSchema } from '../../actions';
 import { DEFAULT_TAG_STYLE } from '../../config/constants';
+import {
+  ADD_SCHEMA_CANCEL_BUTTON_ID,
+  ADD_SCHEMA_CONFIRM_BUTTON_ID,
+  ADD_SCHEMA_DESCRIPTION_ID,
+  ADD_SCHEMA_FROM_DATASET_SELECT_ID,
+  ADD_SCHEMA_LABEL_ID,
+  buildDatasetOptionClass,
+} from '../../config/selectors';
+import { generateTextColorFromBackground } from '../../utils/color';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -75,6 +83,7 @@ const AddSchemaModal = ({ open, onClose }) => {
         <Grid container direction="column" spacing={0}>
           <Grid item>
             <TextField
+              id={ADD_SCHEMA_LABEL_ID}
               onChange={handleLabelOnChange}
               label={t('Label')}
               value={label}
@@ -83,6 +92,7 @@ const AddSchemaModal = ({ open, onClose }) => {
           </Grid>
           <Grid item>
             <TextField
+              id={ADD_SCHEMA_DESCRIPTION_ID}
               onChange={handleDescriptionOnChange}
               label={t('Description')}
               value={description}
@@ -97,6 +107,7 @@ const AddSchemaModal = ({ open, onClose }) => {
                 {t('Generate from dataset')}
               </InputLabel>
               <Select
+                id={ADD_SCHEMA_FROM_DATASET_SELECT_ID}
                 labelId="dataset-select-label"
                 value={datasetId}
                 onChange={handleDatasetSelect}
@@ -104,7 +115,11 @@ const AddSchemaModal = ({ open, onClose }) => {
               >
                 <MenuItem value="none">{t('None')}</MenuItem>
                 {datasets.map(({ id, name }) => (
-                  <MenuItem value={id} key={id}>
+                  <MenuItem
+                    value={id}
+                    key={id}
+                    className={buildDatasetOptionClass(name)}
+                  >
                     {name}
                   </MenuItem>
                 ))}
@@ -131,6 +146,7 @@ const AddSchemaModal = ({ open, onClose }) => {
       </DialogContent>
       <DialogActions>
         <Button
+          id={ADD_SCHEMA_CANCEL_BUTTON_ID}
           onClick={() => {
             resetForm();
             onClose();
@@ -140,6 +156,7 @@ const AddSchemaModal = ({ open, onClose }) => {
           {t('Cancel')}
         </Button>
         <Button
+          id={ADD_SCHEMA_CONFIRM_BUTTON_ID}
           onClick={() => {
             handleAddSchema();
             resetForm();

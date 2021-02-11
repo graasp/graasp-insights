@@ -6,6 +6,7 @@ import {
   EXECUTIONS_MENU_ITEM_ID,
   QUIT_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
+  SCHEMAS_MENU_ITEM_ID,
   SETTINGS_MENU_ITEM_ID,
 } from '../src/config/selectors';
 import { openDrawer } from './utils';
@@ -41,6 +42,10 @@ export const setUpClientCommands = ({ client }) => {
 
   client.addCommand('goToSettings', async () => {
     await client.goTo(SETTINGS_MENU_ITEM_ID);
+  });
+
+  client.addCommand('goToSchemas', async () => {
+    await client.goTo(SCHEMAS_MENU_ITEM_ID);
   });
 
   client.addCommand('expectElementToExist', async (elementSelector) => {

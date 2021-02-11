@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core';
+import { buildSchemaTagClass } from '../../config/selectors';
 
 const useStyles = makeStyles(() => ({
   clickable: {
@@ -24,7 +25,11 @@ const SchemaTag = ({ schema, className, size, tooltip, onClick }) => {
       size={size}
       label={label}
       style={tagStyle}
-      className={clsx(className, onClick && classes.clickable)}
+      className={clsx(
+        buildSchemaTagClass(label),
+        className,
+        onClick && classes.clickable,
+      )}
       onClick={onClick}
     />
   );

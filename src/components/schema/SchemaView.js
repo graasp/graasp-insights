@@ -20,6 +20,12 @@ import { generateTextColorFromBackground } from '../../utils/color';
 import BackButton from '../common/BackButton';
 import Main from '../common/Main';
 import SchemaTag from '../common/SchemaTag';
+import {
+  SCHEMA_VIEW_BACK_BUTTON_ID,
+  SCHEMA_VIEW_DESCRIPTION_ID,
+  SCHEMA_VIEW_LABEL_ID,
+  SCHEMA_VIEW_SAVE_BUTTON_ID,
+} from '../../config/selectors';
 
 const styles = (theme) => ({
   schemaContent: {
@@ -187,6 +193,7 @@ class SchemaView extends Component {
             <Grid item container xs={3} spacing={3} direction="column">
               <Grid item>
                 <TextField
+                  id={SCHEMA_VIEW_LABEL_ID}
                   onChange={this.handleLabelOnChange}
                   label={t('Label')}
                   value={label}
@@ -196,6 +203,7 @@ class SchemaView extends Component {
               </Grid>
               <Grid item>
                 <TextField
+                  id={SCHEMA_VIEW_DESCRIPTION_ID}
                   onChange={this.handleDescriptionOnChange}
                   label={t('Description')}
                   value={description}
@@ -224,6 +232,7 @@ class SchemaView extends Component {
           {!isGraasp && (
             <div className={classes.saveButtonWrapper}>
               <Button
+                id={SCHEMA_VIEW_SAVE_BUTTON_ID}
                 variant="contained"
                 color="primary"
                 startIcon={<SaveIcon />}
@@ -234,7 +243,10 @@ class SchemaView extends Component {
               </Button>
             </div>
           )}
-          <BackButton className={classes.backButton} />
+          <BackButton
+            id={SCHEMA_VIEW_BACK_BUTTON_ID}
+            className={classes.backButton}
+          />
         </Container>
       </Main>
     );

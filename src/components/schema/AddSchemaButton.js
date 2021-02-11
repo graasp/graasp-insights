@@ -5,6 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import { useTranslation } from 'react-i18next';
 import AddSchemaModal from './AddSchemaModal';
+import { SCHEMAS_ADD_BUTTON_ID } from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,7 @@ const AddSchemaButton = () => {
           variant="contained"
           onClick={handleButtonOnClick}
           className={classes.addButton}
+          id={SCHEMAS_ADD_BUTTON_ID}
         >
           <AddIcon />
         </IconButton>

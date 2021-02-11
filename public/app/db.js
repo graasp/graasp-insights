@@ -11,8 +11,8 @@ const {
   ALGORITHMS_FOLDER_NAME,
   GRAASP_UTILS,
   USER_UTILS,
-  DEFAULT_SCHEMAS,
 } = require('./config/config');
+const { DEFAULT_SCHEMAS } = require('./schema/config');
 const {
   DATABASE_PATH,
   DATASETS_FOLDER,
