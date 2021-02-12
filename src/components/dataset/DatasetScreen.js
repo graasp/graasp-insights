@@ -22,6 +22,7 @@ import {
 import BackButton from '../common/BackButton';
 import SchemaTag from '../common/SchemaTag';
 import { GRAASP_SCHEMA_ID } from '../../shared/constants';
+import { buildSchemaPath } from '../../config/paths';
 
 const styles = (theme) => ({
   wrapper: {
@@ -45,6 +46,9 @@ const styles = (theme) => ({
 
 class DatasetScreen extends Component {
   static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
     match: PropTypes.shape({
       params: PropTypes.shape({ id: PropTypes.string }).isRequired,
     }).isRequired,
@@ -90,6 +94,13 @@ class DatasetScreen extends Component {
     const { dispatchClearDataset } = this.props;
     dispatchClearDataset();
   }
+
+  handleSchemaOnClick = (id) => {
+    const {
+      history: { push },
+    } = this.props;
+    push(buildSchemaPath(id));
+  };
 
   render() {
     const {
@@ -155,6 +166,7 @@ class DatasetScreen extends Component {
                       tooltip={`${t('Detected schema')}: ${
                         schemas.get(schemaId)?.label
                       }`}
+                      onClick={() => this.handleSchemaOnClick(schemaId)}
                     />
                   </Grid>
                 ))}

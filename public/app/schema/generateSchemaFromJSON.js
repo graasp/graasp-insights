@@ -16,25 +16,29 @@ const customizer = (objValue, srcValue, key) => {
   return undefined;
 };
 
-const generateSchemaFromJSON = (value) => {
+const generateSchemaFromJSON = (value, requiredDepth = 1) => {
   if (_.isNull(value)) return { type: 'null' };
   if (_.isString(value)) return { type: 'string' };
   if (_.isNumber(value)) return { type: 'number' };
   if (_.isBoolean(value)) return { type: 'bool' };
-  if (_.isPlainObject(value))
+  if (_.isPlainObject(value)) {
+    const properties = Object.fromEntries(
+      Object.entries(value).map((entry) => [
+        entry[0],
+        generateSchemaFromJSON(entry[1], requiredDepth - 1),
+      ]),
+    );
     return {
       type: 'object',
-      required: [], // nothing is required by default
-      properties: Object.fromEntries(
-        Object.entries(value).map((entry) => [
-          entry[0],
-          generateSchemaFromJSON(entry[1]),
-        ]),
-      ),
+      required: requiredDepth > 0 ? Object.keys(properties) : [],
+      properties,
     };
+  }
   if (_.isArray(value)) {
     // generate schema for each value in array
-    const arraySchemas = value.map(generateSchemaFromJSON);
+    const arraySchemas = value.map((arrayItem) =>
+      generateSchemaFromJSON(arrayItem, requiredDepth - 1),
+    );
     const types = Array.from(new Set(arraySchemas.map(({ type }) => type)));
     if (types.includes('object')) {
       // merge every generated schema into a single one
@@ -47,7 +51,7 @@ const generateSchemaFromJSON = (value) => {
         type: 'array',
         items: {
           type: types.length > 1 ? types : types[0],
-          required: [],
+          required: requiredDepth > 0 ? Object.keys(properties) : [],
           properties,
         },
       };

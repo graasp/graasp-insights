@@ -12,7 +12,7 @@ const generateSchemaFromJSONDataSimple = {
   },
   output: {
     type: 'object',
-    required: [],
+    required: ['prop1', 'prop2', 'prop3', 'prop4', 'prop5', 'prop6'],
     properties: {
       prop1: { type: 'number' },
       prop2: { type: 'string' },
@@ -65,7 +65,7 @@ const generateSchemaFromJSONDataComplex = {
   },
   output: {
     type: 'object',
-    required: [],
+    required: ['prop1', 'prop2'],
     properties: {
       prop1: {
         type: 'object',
