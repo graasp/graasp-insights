@@ -9,6 +9,8 @@ const {
   AFTERNOON,
   EVENING,
   NIGHT,
+  MAX_STRING_DISPLAYED_LENGTH,
+  ABBREVIATED_STRING_LENGTH,
 } = require('../config/constants');
 
 // Takes array of action objects and returns an object with {key: value} pairs of {date: #-of-actions}
@@ -181,11 +183,15 @@ export const formatActionsByVerb = (actionsByVerbObject) => {
 // 'actions' is an array in the format retrieved from the API: [ { id: 1, user: 2, ... }, {...} ]
 // therefore note: id is the id of the action, and user is the userId of the user performing the action
 export const filterActionsByUser = (actions, usersArray) => {
-  return actions.filter((action) => {
-    return usersArray.some((user) => {
-      return user.ids.includes(action.user);
-    });
-  });
+  // if the dataset passed into the visualizer has hashed users, then user names are no longer available
+  // instead, users key (and usersArray here) will be of the format... users: [{_id: hashedId}, {_id: hashedId2}, ...]
+  // therefore slightly different filtering function
+  if (usersArray.some((user) => !user.name)) {
+    const userIdsArray = usersArray.map(({ _id }) => _id);
+    return actions.filter((action) => userIdsArray.includes(action.user));
+  }
+  const userIdsArray = usersArray.map((user) => user.ids).flat();
+  return actions.filter((action) => userIdsArray.includes(action.user));
 };
 
 // remove user 'Learning Analytics' from users list retrieved by API
@@ -197,6 +203,13 @@ export const removeLearningAnalyticsUser = (usersArray) => {
 // consolidate users with the same name into a single entry
 // instead of users = [{id: 1, name: 'Augie March'}, {id: 2, name: 'augie march'}], users = [{ids: [1,2], name: 'augie march'}]
 export const consolidateUsers = (usersArray) => {
+  // if the dataset passed into the visualizer has hashed users, then user names are no longer available
+  // instead, users key (and usersArray here) will be of the format... users: [{_id: hashedId}, {_id: hashedId2}, ...]
+  // therefore return this array as is
+  if (usersArray.some((user) => !user.name)) {
+    return usersArray;
+  }
+
   // remove trailing spaces from user names and turn them lower case
   const usersArrayWithTrimmedNames = usersArray.map((user) => {
     return { ...user, name: user.name.trim().toLowerCase() };
@@ -227,6 +240,13 @@ export const consolidateUsers = (usersArray) => {
 // for presentation purposes, format user names, then sort them alphabetically
 // proper names are recapitalized ('Augie March'), and only the first letter of emails is capitalized
 export const formatConsolidatedUsers = (consolidatedUsersArray) => {
+  // if the dataset passed into the visualizer has hashed users, then user names are no longer available
+  // hence, consolidatedUsersArray will be of the format... consolidatedUsersArray: [{_id: hashedId}, {_id: hashedId2}, ...]
+  // return this array as is (no point capitalizing, etc.)
+  if (consolidatedUsersArray.some((user) => !user.name)) {
+    return consolidatedUsersArray;
+  }
+
   const usersArrayCapitalized = consolidatedUsersArray.map((user) => {
     // if user name includes @ symbol, only capitalize first letter
     if (user.name.indexOf('@') !== -1) {
@@ -248,6 +268,14 @@ export const formatConsolidatedUsers = (consolidatedUsersArray) => {
 // for react-select purposes, add a 'value' key to each element of the users array, holding the same value as the key 'name'
 export const addValueKeyToUsers = (consolidatedUsersArray) => {
   return consolidatedUsersArray.map((user) => {
-    return { ...user, value: user.name };
+    // if !user.name, use the user._id. this occurs in cases where users have been hashed
+    return { ...user, value: user.name || user._id };
   });
+};
+
+// used in UsersSelect dropdown: if a string is too long (which occurs when user Ids are hashed), show abbreviated version
+export const formatDisplayedSelection = (valueKey) => {
+  return valueKey.length < MAX_STRING_DISPLAYED_LENGTH
+    ? valueKey
+    : `${valueKey.slice(0, ABBREVIATED_STRING_LENGTH)}...`;
 };
