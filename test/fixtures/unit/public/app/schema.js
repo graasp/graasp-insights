@@ -16,7 +16,7 @@ const generateSchemaFromJSONDataSimple = {
     properties: {
       prop1: { type: 'number' },
       prop2: { type: 'string' },
-      prop3: { type: 'bool' },
+      prop3: { type: 'boolean' },
       prop4: { type: 'array', items: { type: 'number' } },
       prop5: {
         type: 'object',
@@ -97,12 +97,12 @@ const generateSchemaFromJSONDataComplex = {
               properties: {
                 arrsubprop1: { type: 'number' },
               },
-              items: { type: 'bool' },
+              items: { type: 'boolean' },
             },
             arrprop3: {
               type: 'array',
               items: {
-                type: ['number', 'string', 'null', 'bool'],
+                type: ['number', 'string', 'null', 'boolean'],
               },
             },
           },

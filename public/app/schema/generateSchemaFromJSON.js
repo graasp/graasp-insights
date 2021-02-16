@@ -20,7 +20,7 @@ const generateSchemaFromJSON = (value, requiredDepth = 1) => {
   if (_.isNull(value)) return { type: 'null' };
   if (_.isString(value)) return { type: 'string' };
   if (_.isNumber(value)) return { type: 'number' };
-  if (_.isBoolean(value)) return { type: 'bool' };
+  if (_.isBoolean(value)) return { type: 'boolean' };
   if (_.isPlainObject(value)) {
     const properties = Object.fromEntries(
       Object.entries(value).map((entry) => [
