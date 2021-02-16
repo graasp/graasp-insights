@@ -169,7 +169,7 @@
       ]
     },
     "nsis": {
-      "license": "license_win.txt"
+      "license": "windows_license.txt"
     },
     "linux": {
       "icon": "assets/icon.png",
