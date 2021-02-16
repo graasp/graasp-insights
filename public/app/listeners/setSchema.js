@@ -47,12 +47,11 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
       if (satisfiesSchema && !schemaIdsPrev?.includes(id)) {
         // add schema id to schemaIds
         schemaIds.push(id);
-        db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
       } else if (!satisfiesSchema && schemaIdsPrev?.includes(id)) {
         // remove schema id from schemaIds
         schemaIds = schemaIds.filter((sId) => sId !== id);
-        db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
       }
+      db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
     });
 
     const schemaToStore = {

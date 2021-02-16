@@ -156,18 +156,16 @@ class Schemas extends Component {
           schema: (
             <>
               <SchemaTag schema={schema} size="medium" />
-              <>
-                <Typography
-                  variant="caption"
-                  key="description"
-                  className={clsx(
-                    classes.schemaDescription,
-                    SCHEMA_DESCRIPTION_CLASS,
-                  )}
-                >
-                  {description}
-                </Typography>
-              </>
+              <Typography
+                variant="caption"
+                key="description"
+                className={clsx(
+                  classes.schemaDescription,
+                  SCHEMA_DESCRIPTION_CLASS,
+                )}
+              >
+                {description}
+              </Typography>
             </>
           ),
           createdAt: createdAtString,

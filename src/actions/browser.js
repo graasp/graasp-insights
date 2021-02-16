@@ -6,7 +6,7 @@ import {
 } from '../shared/messages';
 
 // eslint-disable-next-line import/prefer-default-export
-export const openUrlInBrowser = (url) => () => {
+export const openUrlInBrowser = (url) => {
   try {
     window.ipcRenderer.send(OPEN_URL_IN_BROWSER_CHANNEL, url);
   } catch (err) {

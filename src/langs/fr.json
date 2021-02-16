@@ -141,6 +141,6 @@
     "Delete Schema": "Supprimer le Schéma",
     "Add Schema": "Ajouter le Schéma",
     "Add a Schema": "Ajouter un Schéma",
-    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "Vous pouvez imposer la présence de champs avec l'attribut \"required\". Apprenez d'avantage à propos des schémas JSON sur"
+    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "Vous pouvez imposer la présence de champs avec l'attribut \"required\". Plus d'informations sur les schémas JSON sur"
   }
 }

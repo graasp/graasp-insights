@@ -47,7 +47,7 @@ const styles = (theme) => ({
     textAlign: 'center',
   },
   tag: {
-    fontSize: 2 * theme.typography.fontSize,
+    fontSize: '2em',
   },
   saveButtonWrapper: {
     textAlign: 'center',
@@ -79,7 +79,6 @@ class SchemaView extends Component {
   static propTypes = {
     schemas: PropTypes.instanceOf(Map).isRequired,
     dispatchSetSchema: PropTypes.func.isRequired,
-    dispatchOpenUrlInBrowser: PropTypes.func.isRequired,
     match: PropTypes.shape({
       params: PropTypes.shape({
         id: PropTypes.string.isRequired,
@@ -175,8 +174,7 @@ class SchemaView extends Component {
   };
 
   JSONSchemaLearnMoreOnClick = () => {
-    const { dispatchOpenUrlInBrowser } = this.props;
-    dispatchOpenUrlInBrowser(JSON_SCHEMA_GETTING_STARTED_URL);
+    openUrlInBrowser(JSON_SCHEMA_GETTING_STARTED_URL);
   };
 
   render() {
@@ -294,7 +292,6 @@ const mapStateToProps = ({ schema }) => ({
 
 const mapDispatchToProps = {
   dispatchSetSchema: setSchema,
-  dispatchOpenUrlInBrowser: openUrlInBrowser,
 };
 
 const ConnectedComponent = connect(
