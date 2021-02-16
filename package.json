@@ -168,6 +168,9 @@
         "github"
       ]
     },
+    "nsis": {
+      "license": "license_win.txt"
+    },
     "linux": {
       "icon": "assets/icon.png",
       "target": [
@@ -179,6 +182,9 @@
       "publish": [
         "github"
       ]
+    },
+    "appImage": {
+      "license": "license_en.txt"
     }
   },
   "jest": {
