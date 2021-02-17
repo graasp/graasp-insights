@@ -44,3 +44,6 @@ coverage.lcov
 
 # exclude git conflict files
 *.orig
+
+# exclude provision profiles
+/assets/*.provisionprofile
