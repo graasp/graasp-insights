@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/graasp/graasp-insights/compare/v0.1.2...v0.1.3) (2021-02-17)
+
+### Build System
+
+- give permission to decrypt secret file for release ([c8af845](https://github.com/graasp/graasp-insights/commit/c8af845419fc39eb329aa3358741c59a2f882f02))
+
 ### 0.1.2 (2021-02-17)
 
 ### Features
