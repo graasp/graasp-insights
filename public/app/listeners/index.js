@@ -42,6 +42,9 @@ const getSettings = require('./getSettings');
 const showConfirmOpenDatasetPrompt = require('./showConfirmOpenDatasetPrompt');
 const openPathInExplorer = require('./openPathInExplorer');
 const getSchemas = require('./getSchemas');
+const setSchema = require('./setSchema');
+const deleteSchema = require('./deleteSchema');
+const openUrlInBrowser = require('./openUrlInBrowser');
 
 module.exports = {
   getDataset,
@@ -84,4 +87,7 @@ module.exports = {
   showConfirmOpenDatasetPrompt,
   openPathInExplorer,
   getSchemas,
+  setSchema,
+  deleteSchema,
+  openUrlInBrowser,
 };

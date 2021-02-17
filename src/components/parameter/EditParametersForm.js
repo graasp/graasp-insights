@@ -28,7 +28,7 @@ import {
   buildParameterTypeOptionClass,
 } from '../../config/selectors';
 import { PARAMETER_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
-import { generateFieldSelector } from '../../shared/utils';
+import { setFieldSelectorAttributes } from '../../shared/utils';
 import {
   areParametersNamesUnique,
   isParameterNameValid,
@@ -158,7 +158,7 @@ const EditParametersForm = (props) => {
           fieldSelection = value[schemaId];
         } else {
           const schema = schemas.get(schemaId)?.schema;
-          fieldSelection = generateFieldSelector(schema);
+          fieldSelection = setFieldSelectorAttributes(schema, false, 1);
         }
 
         return (

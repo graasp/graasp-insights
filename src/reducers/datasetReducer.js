@@ -39,10 +39,10 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case LOAD_DATASET_SUCCESS:
       return state.updateIn(['datasets'], pushDatasetToList(payload));
     case SET_DATASET_FILE_SUCCESS: {
-      const { content, schemaId } = payload;
+      const { content, schemaIds } = payload;
       return state
         .setIn(['current', 'content', 'content'], content)
-        .setIn(['current', 'content', 'schemaId'], schemaId);
+        .setIn(['current', 'content', 'schemaIds'], schemaIds);
     }
     case CLEAR_DATASET_SUCCESS:
       return state.setIn(['current', 'content'], Map());

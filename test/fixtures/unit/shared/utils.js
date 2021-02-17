@@ -1,4 +1,4 @@
-export const generateFieldSelectorData = {
+const setFieldSelectorAttributesData = {
   input: {
     type: 'object',
     properties: {
@@ -28,7 +28,7 @@ export const generateFieldSelectorData = {
       prop6: {},
     },
   },
-  outputDepth1: {
+  outputAllUnselectedDepth1: {
     type: 'object',
     properties: {
       prop1: {
@@ -63,7 +63,7 @@ export const generateFieldSelectorData = {
       prop6: { selected: false, expanded: true },
     },
   },
-  outputDepth2: {
+  outputAllUnselectedDepth2: {
     type: 'object',
     properties: {
       prop1: {
@@ -98,19 +98,16 @@ export const generateFieldSelectorData = {
       prop6: { selected: false, expanded: true },
     },
   },
-};
-
-export const fieldSelectorUnselectAllData = {
-  input: {
+  outputAllSelectedDepth2: {
     type: 'object',
     properties: {
       prop1: {
         type: 'object',
         properties: {
           objsubprop1: { type: 'string', selected: true, expanded: true },
-          objsubprop2: { type: 'number', selected: false, expanded: false },
+          objsubprop2: { type: 'number', selected: true, expanded: true },
         },
-        selected: false,
+        selected: true,
         expanded: true,
       },
       prop2: {
@@ -118,57 +115,26 @@ export const fieldSelectorUnselectAllData = {
         items: {
           type: 'object',
           properties: {
-            arrsubprop1: { type: 'string', selected: false, expanded: false },
-            arrsubprop2: { type: 'number', selected: true, expanded: false },
+            arrsubprop1: { type: 'string', selected: true, expanded: true },
+            arrsubprop2: { type: 'number', selected: true, expanded: true },
           },
         },
         selected: true,
-        expanded: false,
+        expanded: true,
       },
       prop3: {
         type: 'array',
         items: { type: 'string' },
-        selected: false,
-        expanded: false,
+        selected: true,
+        expanded: true,
       },
       prop4: { type: 'string', selected: true, expanded: true },
-      prop5: { type: 'number', selected: false, expanded: true },
+      prop5: { type: 'number', selected: true, expanded: true },
       prop6: { selected: true, expanded: true },
     },
   },
-  output: {
-    type: 'object',
-    properties: {
-      prop1: {
-        type: 'object',
-        properties: {
-          objsubprop1: { type: 'string', selected: false, expanded: true },
-          objsubprop2: { type: 'number', selected: false, expanded: false },
-        },
-        selected: false,
-        expanded: true,
-      },
-      prop2: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            arrsubprop1: { type: 'string', selected: false, expanded: false },
-            arrsubprop2: { type: 'number', selected: false, expanded: false },
-          },
-        },
-        selected: false,
-        expanded: false,
-      },
-      prop3: {
-        type: 'array',
-        items: { type: 'string' },
-        selected: false,
-        expanded: false,
-      },
-      prop4: { type: 'string', selected: false, expanded: true },
-      prop5: { type: 'number', selected: false, expanded: true },
-      prop6: { selected: false, expanded: true },
-    },
-  },
+};
+
+module.exports = {
+  setFieldSelectorAttributesData,
 };

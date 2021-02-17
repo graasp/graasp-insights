@@ -17,6 +17,7 @@ export const SIMPLE_DATASET = {
   createdAt: Date.now(),
   lastModified: Date.now(),
   type: DATASET_TYPES.SOURCE,
+  schemaIds: [GRAASP_SCHEMA_ID],
 };
 
 export const MISSING_FILE_DATASET = {
@@ -33,5 +34,5 @@ export const DATASET_1000_KB = {
   createdAt: Date.now(),
   lastModified: Date.now(),
   type: DATASET_TYPES.SOURCE,
-  schema: GRAASP_SCHEMA_ID,
+  schemaIds: [GRAASP_SCHEMA_ID],
 };

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const LoadDatasetButton = () => {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,7 +38,7 @@ const LoadDatasetButton = () => {
 
   return (
     <div className={classes.root}>
-      <Tooltip placement="left" title="Add dataset" arrow>
+      <Tooltip placement="left" title={t('Add a dataset')} arrow>
         <IconButton
           id={LOAD_DATASET_BUTTON_ID}
           variant="contained"

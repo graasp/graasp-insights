@@ -6,7 +6,7 @@ import {
   PROGRAMMING_LANGUAGES,
   GRAASP_SCHEMA_ID,
 } from '../../../src/shared/constants';
-import { generateFieldSelector } from '../../../src/shared/utils';
+import { setFieldSelectorAttributes } from '../../../src/shared/utils';
 
 export const MISSING_FILE_ALGORITHM = {
   name: 'Algorithm name',
@@ -68,7 +68,9 @@ export const ALGORITHM_WITH_PARAMETERS = {
       name: 'param_field_selector',
       type: PARAMETER_TYPES.FIELD_SELECTOR,
       description: 'field selector parameters description',
-      value: { [GRAASP_SCHEMA_ID]: generateFieldSelector(GRAASP_SCHEMA) },
+      value: {
+        [GRAASP_SCHEMA_ID]: setFieldSelectorAttributes(GRAASP_SCHEMA, false, 2),
+      },
     },
   ],
 };

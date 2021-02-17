@@ -19,7 +19,7 @@ export const EXECUTION_FAST = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: {
     id: 'exec-fast-algo',
@@ -40,7 +40,7 @@ export const EXECUTION_SLOW = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: {
     id: 'exec-slow-algo',
@@ -61,7 +61,7 @@ export const EXECUTION_FAST_ERROR = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: {
     id: 'exec-fast-algo-error',
@@ -82,7 +82,7 @@ export const EXECUTION_SLOW_ERROR = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: {
     id: 'exec-slow-algo-error',
@@ -103,7 +103,7 @@ export const EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: ALGORITHM_WITH_INTEGER_PARAMETER,
   parameters: [
@@ -123,7 +123,7 @@ export const EXECUTION_WITH_FAILING_INTEGER_PARAMETER = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: ALGORITHM_WITH_INTEGER_PARAMETER,
   parameters: [
@@ -143,7 +143,7 @@ export const EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: ALGORITHM_WITH_FLOAT_PARAMETER,
   parameters: [
@@ -163,7 +163,7 @@ export const EXECUTION_WITH_FAILING_FLOAT_PARAMETER = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: ALGORITHM_WITH_FLOAT_PARAMETER,
   parameters: [
@@ -183,7 +183,7 @@ export const EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: ALGORITHM_WITH_STRING_PARAMETER,
   parameters: [
@@ -203,7 +203,7 @@ export const EXECUTION_WITH_FAILING_STRING_PARAMETER = {
     createdAt: Date.now(),
     lastModified: Date.now(),
     type: DATASET_TYPES.SOURCE,
-    schemaId: GRAASP_SCHEMA_ID,
+    schemaIds: [GRAASP_SCHEMA_ID],
   },
   algorithm: ALGORITHM_WITH_STRING_PARAMETER,
   parameters: [

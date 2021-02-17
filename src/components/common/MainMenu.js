@@ -12,6 +12,7 @@ import CodeIcon from '@material-ui/icons/Code';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import SettingsIcon from '@material-ui/icons/Settings';
 import TuneIcon from '@material-ui/icons/Tune';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { withTranslation } from 'react-i18next';
 import {
   HOME_PATH,
@@ -22,6 +23,7 @@ import {
   EXECUTIONS_PATH,
   VISUALIZATIONS_PATH,
   SETTINGS_PATH,
+  SCHEMAS_PATH,
 } from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
@@ -31,6 +33,7 @@ import {
   VISUALIZATIONS_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
   SETTINGS_MENU_ITEM_ID,
+  SCHEMAS_MENU_ITEM_ID,
 } from '../../config/selectors';
 
 export class MainMenu extends Component {
@@ -153,6 +156,17 @@ export class MainMenu extends Component {
             <PieChartIcon />
           </ListItemIcon>
           <ListItemText primary={t('Datasets')} />
+        </MenuItem>
+        <MenuItem
+          id={SCHEMAS_MENU_ITEM_ID}
+          onClick={() => this.handleClick(SCHEMAS_PATH)}
+          button
+          selected={path === SCHEMAS_PATH}
+        >
+          <ListItemIcon>
+            <AccountTreeIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Schemas')} />
         </MenuItem>
         <MenuItem
           id={ALGORITHMS_MENU_ITEM_ID}

@@ -19,6 +19,8 @@ import {
   EDIT_UTILS_PATH,
   ADD_ALGORITHM_PATH,
   VISUALIZATIONS_PATH,
+  SCHEMAS_PATH,
+  SCHEMA_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -34,6 +36,8 @@ import { getSettings, checkPythonInstallation, getSchemas } from './actions';
 import Results from './components/Results';
 import Executions from './components/Executions';
 import Visualizations from './components/Visualizations';
+import Schemas from './components/schema/Schemas';
+import SchemaView from './components/schema/SchemaView';
 
 export class App extends Component {
   state = { height: 0 };
@@ -115,6 +119,8 @@ export class App extends Component {
                 path={VISUALIZATIONS_PATH}
                 component={Visualizations}
               />
+              <Route exact path={SCHEMAS_PATH} component={Schemas} />
+              <Route exact path={SCHEMA_PATH} component={SchemaView} />
             </Switch>
           </div>
         </Router>

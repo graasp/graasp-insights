@@ -1,34 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { withTranslation } from 'react-i18next';
-import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles } from '@material-ui/core';
+import { buildSchemaTagClass } from '../../config/selectors';
 
-const styles = () => ({
-  chip: {
-    height: '20px',
+const useStyles = makeStyles(() => ({
+  clickable: {
+    cursor: 'pointer',
   },
-});
+}));
 
-const SchemaTag = ({ schema, className, t, classes }) => {
+const SchemaTag = ({ schema, className, size, tooltip, onClick }) => {
+  const classes = useStyles();
+
   if (!schema) {
     return null;
   }
 
   const { label, tagStyle } = schema;
-
-  return (
-    <Tooltip title={`${t('Detected schema')}: ${label}`}>
-      <Chip
-        size="small"
-        label={label}
-        style={tagStyle}
-        className={clsx(classes.chip, className)}
-      />
-    </Tooltip>
+  const chip = (
+    <Chip
+      size={size}
+      label={label}
+      style={tagStyle}
+      className={clsx(
+        buildSchemaTagClass(label),
+        className,
+        onClick && classes.clickable,
+      )}
+      onClick={onClick}
+    />
   );
+
+  return tooltip ? <Tooltip title={tooltip}>{chip}</Tooltip> : chip;
 };
 
 SchemaTag.propTypes = {
@@ -36,18 +42,18 @@ SchemaTag.propTypes = {
     label: PropTypes.string.isRequired,
     tagStyle: PropTypes.shape({}).isRequired,
   }),
-  t: PropTypes.func.isRequired,
   className: PropTypes.string,
-  classes: PropTypes.shape({
-    chip: PropTypes.string.isRequired,
-  }).isRequired,
+  size: PropTypes.string,
+  tooltip: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 SchemaTag.defaultProps = {
   schema: null,
   className: null,
+  size: 'small',
+  tooltip: null,
+  onClick: null,
 };
 
-const StyledComponent = withStyles(styles)(SchemaTag);
-
-export default withTranslation()(StyledComponent);
+export default SchemaTag;

@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { PARAMETER_TYPES } from '../../shared/constants';
-import { generateFieldSelector } from '../../shared/utils';
+import { setFieldSelectorAttributes } from '../../shared/utils';
 import { isParameterValid } from '../../utils/parameter';
 import FieldSelector from './FieldSelector';
 import {
@@ -55,6 +55,10 @@ const SetParametersFormModal = (props) => {
   useEffect(() => {
     setParameters(parametersSource);
   }, [parametersSource]);
+
+  useEffect(() => {
+    setSchemaId(schemaIdSource);
+  }, [schemaIdSource]);
 
   const updateParam = (newValue, paramIdx) => {
     const updatedParam = { ...parameters[paramIdx], value: newValue };
@@ -116,7 +120,7 @@ const SetParametersFormModal = (props) => {
           fieldSelection = value[schemaId];
         } else {
           const schema = schemas.get(schemaId)?.schema;
-          fieldSelection = generateFieldSelector(schema);
+          fieldSelection = setFieldSelectorAttributes(schema, false, 1);
         }
 
         return (

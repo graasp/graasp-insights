@@ -7,7 +7,7 @@ const {
 } = require('../../shared/types');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
 const { DATASETS_COLLECTION } = require('../db');
-const { detectSchema } = require('../schema');
+const { detectSchemas } = require('../schema/detectSchemas');
 
 const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
   try {
@@ -22,13 +22,13 @@ const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
     const contentAsString = JSON.stringify(content, null, 2);
     fs.writeFileSync(filepath, contentAsString);
 
-    // check schema
-    const schemaId = detectSchema(content);
-    db.get(DATASETS_COLLECTION).find({ id }).assign({ schemaId }).write();
+    // check schemas
+    const schemaIds = detectSchemas(content, db);
+    db.get(DATASETS_COLLECTION).find({ id }).assign({ schemaIds }).write();
 
     return mainWindow.webContents.send(SET_DATASET_FILE_CHANNEL, {
       type: SET_DATASET_FILE_SUCCESS,
-      payload: { content: contentAsString, schemaId },
+      payload: { content: contentAsString, schemaIds },
     });
   } catch (err) {
     logger.error(err);

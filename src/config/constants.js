@@ -1,4 +1,7 @@
+import hexRgb from 'hex-rgb';
 import { PARAMETER_TYPES } from '../shared/constants';
+import theme from '../theme';
+import { generateTextColorFromBackground } from '../utils/color';
 
 export const DATASETS_COLLECTION = 'datasets';
 
@@ -116,3 +119,15 @@ export const PARAMETER_TYPES_DEFAULT = {
 // used in UsersSelect dropdown, if a string is too long (which occurs when user Ids are hashed)
 export const MAX_STRING_DISPLAYED_LENGTH = 25;
 export const ABBREVIATED_STRING_LENGTH = 10;
+
+export const DEFAULT_TAG_STYLE = {
+  backgroundColor: theme.palette.gray.main,
+  color: generateTextColorFromBackground(
+    hexRgb(theme.palette.gray.main, { format: 'array' }),
+  ),
+};
+
+export const MAX_SHOWN_SCHEMA_TAGS = 3;
+
+export const JSON_SCHEMA_GETTING_STARTED_URL =
+  'https://json-schema.org/learn/getting-started-step-by-step.html';

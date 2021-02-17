@@ -45,6 +45,10 @@ import {
   GET_FILE_SIZE_LIMIT_ERROR,
   GET_SETTINGS_ERROR,
   GET_SCHEMAS_ERROR,
+  SET_SCHEMA_SUCCESS,
+  SET_SCHEMA_ERROR,
+  DELETE_SCHEMA_SUCCESS,
+  DELETE_SCHEMA_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -92,6 +96,10 @@ import {
   ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_GETTING_SETTINGS_MESSAGE,
   ERROR_GETTING_SCHEMAS_MESSAGE,
+  SUCCESS_SETTING_SCHEMA_MESSAGE,
+  ERROR_SETTING_SCHEMA_MESSAGE,
+  SUCCESS_DELETING_SCHEMA_MESSAGE,
+  ERROR_DELETING_SCHEMA_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -235,6 +243,12 @@ const middleware = () => (next) => (action) => {
     case GET_SCHEMAS_ERROR:
       message = ERROR_GETTING_SCHEMAS_MESSAGE;
       break;
+    case SET_SCHEMA_ERROR:
+      message = ERROR_SETTING_SCHEMA_MESSAGE;
+      break;
+    case DELETE_SCHEMA_ERROR:
+      message = ERROR_DELETING_SCHEMA_MESSAGE;
+      break;
 
     // success messages
     case LOAD_DATASET_SUCCESS:
@@ -272,6 +286,12 @@ const middleware = () => (next) => (action) => {
       break;
     case DELETE_EXECUTION_SUCCESS:
       message = SUCCESS_DELETING_EXECUTION_MESSAGE;
+      break;
+    case SET_SCHEMA_SUCCESS:
+      message = SUCCESS_SETTING_SCHEMA_MESSAGE;
+      break;
+    case DELETE_SCHEMA_SUCCESS:
+      message = SUCCESS_DELETING_SCHEMA_MESSAGE;
       break;
     default:
       break;

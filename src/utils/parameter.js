@@ -33,8 +33,9 @@ export const areParametersValid = (parameters) =>
 
 // check if object or if any of its descendants is 'selected'
 export const anySelected = (field) => {
-  const properties =
-    field.type === 'object' ? field.properties : field?.items?.properties;
+  const properties = field.type?.includes('object')
+    ? field.properties
+    : field?.items?.properties;
   return (
     field.selected ||
     (properties && Object.values(properties).some(anySelected))

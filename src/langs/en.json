@@ -131,6 +131,18 @@
     "Edit parameters": "Edit parameters",
     "Algorithm parameters": "Algorithm parameters",
     "Detected schema": "Detected schema",
-    "Helper text": "Helper text"
+    "Helper text": "Helper text",
+    "Schemas": "Schemas",
+    "Add a dataset": "Add a dataset",
+    "View Schema": "View Schema",
+    "Label": "Label",
+    "None": "None",
+    "Generate from dataset": "Generate from dataset",
+    "Tag color": "Tag color",
+    "You cannot delete the Graasp Schema": "You cannot delete the Graasp Schema",
+    "Delete Schema": "Delete Schema",
+    "Add Schema": "Add Schema",
+    "Add a Schema": "Add a Schema",
+    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at"
   }
 }

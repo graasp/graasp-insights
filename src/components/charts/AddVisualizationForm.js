@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import FormControl from '@material-ui/core/FormControl';
@@ -47,9 +48,9 @@ const AddVisualizationForm = ({
   const classes = useStyles();
   const schemas = useSelector((state) => state.schema.getIn(['schemas']));
 
-  const selectedSchemaId = datasets.find(({ id }) => id === selectedDatasetId)
-    ?.schemaId;
-  const isGraasp = selectedSchemaId === GRAASP_SCHEMA_ID;
+  const selectedSchemaIds = datasets.find(({ id }) => id === selectedDatasetId)
+    ?.schemaIds;
+  const isGraasp = selectedSchemaIds?.includes(GRAASP_SCHEMA_ID);
   const button = (
     <Button
       variant="contained"
@@ -77,15 +78,16 @@ const AddVisualizationForm = ({
             label={t('Dataset')}
             className={classes.select}
           >
-            {datasets.map(({ id, name, schemaId }) => (
+            {datasets.map(({ id, name, schemaIds }) => (
               <MenuItem value={id} key={id}>
-                {name}
-                {schemaId && (
-                  <SchemaTag
-                    schema={schemas.get(schemaId)}
-                    className={classes.schemaTag}
-                  />
-                )}
+                <Grid container alignItems="center" spacing={1}>
+                  <Grid item>{name}</Grid>
+                  {schemaIds?.map((schemaId) => (
+                    <Grid item key={schemaId}>
+                      <SchemaTag schema={schemas.get(schemaId)} />
+                    </Grid>
+                  ))}
+                </Grid>
               </MenuItem>
             ))}
           </Select>
