@@ -19,9 +19,16 @@ const styles = () => ({
 });
 
 const Table = (props) => {
-  const { columns, rows, classes, id } = props;
-  const [isAsc, setIsAsc] = useState(true);
-  const [orderBy, setOrderBy] = useState();
+  const {
+    columns,
+    rows,
+    classes,
+    id,
+    orderBy: initialOrderBy,
+    isAsc: initialIsAsc,
+  } = props;
+  const [orderBy, setOrderBy] = useState(initialOrderBy);
+  const [isAsc, setIsAsc] = useState(initialIsAsc);
 
   const handleSortColumn = (column) => {
     if (orderBy === column) {
@@ -92,10 +99,14 @@ Table.propTypes = {
     bold: PropTypes.string.isRequired,
   }).isRequired,
   id: PropTypes.string,
+  orderBy: PropTypes.string,
+  isAsc: PropTypes.bool,
 };
 
 Table.defaultProps = {
   id: '',
+  orderBy: null,
+  isAsc: true,
 };
 
 const StyledComponent = withStyles(styles, { withTheme: false })(Table);

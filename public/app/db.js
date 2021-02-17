@@ -21,6 +21,7 @@ const {
 } = require('./config/paths');
 const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
 const { AUTHORS } = require('../shared/constants');
+const { getFileStats } = require('./utils/file');
 
 const DATASETS_COLLECTION = 'datasets';
 const ALGORITHMS_COLLECTION = 'algorithms';
@@ -101,11 +102,26 @@ const ensureAlgorithmsExist = async (db) => {
           fs.copyFileSync(srcPath, destPath);
         }
 
-        // check if algo entry is in metadata db
-        if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-          db.get(ALGORITHMS_COLLECTION)
-            .push({ ...algo, filepath: destPath })
-            .write();
+        try {
+          // check if algo entry is in metadata db
+          if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
+            // get file data
+            const { sizeInKiloBytes, createdAt, lastModified } = getFileStats(
+              destPath,
+            );
+
+            db.get(ALGORITHMS_COLLECTION)
+              .push({
+                ...algo,
+                filepath: destPath,
+                createdAt,
+                lastModified,
+                size: sizeInKiloBytes,
+              })
+              .write();
+          }
+        } catch (e) {
+          logger.error(e);
         }
       }
     });

@@ -11,6 +11,7 @@ const {
 } = require('../../shared/types');
 const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
 const { PROGRAMMING_LANGUAGES } = require('../../shared/constants');
+const { getFileStats } = require('../utils/file');
 
 const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
   try {
@@ -27,6 +28,16 @@ const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
     const filename = `${id}.py`;
     const filepath = path.join(ALGORITHMS_FOLDER, filename);
     const language = PROGRAMMING_LANGUAGES.PYTHON;
+
+    // copy or create file
+    if (fileLocation) {
+      fs.copyFileSync(fileLocation, filepath);
+    } else {
+      fs.writeFileSync(filepath, code);
+    }
+
+    const { createdAt, lastModified, sizeInKiloBytes } = getFileStats(filepath);
+
     const metadata = {
       id,
       name,
@@ -36,14 +47,10 @@ const addAlgorithm = (mainWindow, db) => async (event, algorithm) => {
       author,
       language,
       parameters,
+      createdAt,
+      lastModified,
+      size: sizeInKiloBytes,
     };
-
-    // copy or create file
-    if (fileLocation) {
-      fs.copyFileSync(fileLocation, filepath);
-    } else {
-      fs.writeFileSync(filepath, code);
-    }
 
     // add entry in lowdb
     db.get(ALGORITHMS_COLLECTION).push(metadata).write();
