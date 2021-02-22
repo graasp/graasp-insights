@@ -111,6 +111,10 @@ const SUCCESS_DELETING_SCHEMA_MESSAGE = 'The schema was deleted successfully';
 const ERROR_DELETING_SCHEMA_MESSAGE = 'There was an error deleting the schema';
 const ERROR_OPENING_URL_IN_BROWSER_MESSAGE =
   'There was an error opening the link in the browser';
+const SUCCESS_DELETING_ALL_MESSAGE =
+  'All application data was cleared successfully.';
+const ERROR_DELETING_ALL_MESSAGE =
+  'There was an error deleting some application data. Try clearing the remaining data manually.';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -173,4 +177,6 @@ module.exports = {
   SUCCESS_DELETING_SCHEMA_MESSAGE,
   ERROR_DELETING_SCHEMA_MESSAGE,
   ERROR_OPENING_URL_IN_BROWSER_MESSAGE,
+  SUCCESS_DELETING_ALL_MESSAGE,
+  ERROR_DELETING_ALL_MESSAGE,
 };

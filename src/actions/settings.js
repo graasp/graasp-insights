@@ -6,6 +6,8 @@ import {
   GET_FILE_SIZE_LIMIT_CHANNEL,
   SET_FILE_SIZE_LIMIT_CHANNEL,
   GET_SETTINGS_CHANNEL,
+  SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
+  DELETE_ALL_CHANNEL,
 } from '../shared/channels';
 import {
   ERROR_MESSAGE_HEADER,
@@ -15,6 +17,7 @@ import {
   ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_GETTING_SETTINGS_MESSAGE,
+  ERROR_DELETING_ALL_MESSAGE,
 } from '../shared/messages';
 import {
   FLAG_GETTING_LANGUAGE,
@@ -23,6 +26,7 @@ import {
   FLAG_GETTING_FILE_SIZE_LIMIT,
   FLAG_CHECKING_PYTHON_VERSION,
   FLAG_GETTING_SETTINGS,
+  FLAG_DELETING_ALL,
 } from '../shared/types';
 import { createFlag } from './common';
 
@@ -135,6 +139,29 @@ const checkPythonInstallation = () => (dispatch) => {
   }
 };
 
+const deleteAll = () => (dispatch) => {
+  const flagDeletingAll = createFlag(FLAG_DELETING_ALL);
+  try {
+    window.ipcRenderer.send(SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL);
+    window.ipcRenderer.once(
+      SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
+      (event, shouldDelete) => {
+        if (shouldDelete) {
+          dispatch(flagDeletingAll(true));
+          window.ipcRenderer.send(DELETE_ALL_CHANNEL);
+          window.ipcRenderer.once(DELETE_ALL_CHANNEL, (e, response) =>
+            dispatch(response),
+          );
+        }
+        dispatch(flagDeletingAll(false));
+      },
+    );
+  } catch (error) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_ALL_MESSAGE);
+    dispatch(flagDeletingAll(false));
+  }
+};
+
 export {
   getSettings,
   getLanguage,
@@ -142,4 +169,5 @@ export {
   checkPythonInstallation,
   getFileSizeLimit,
   setFileSizeLimit,
+  deleteAll,
 };
