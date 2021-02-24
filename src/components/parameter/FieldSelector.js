@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FieldSelector = ({ schema, onChange }) => {
+const FieldSelector = ({ schema, onChange, disabled }) => {
   const { properties } = schema;
   const { t } = useTranslation();
   const classes = useStyles();
@@ -55,6 +55,7 @@ const FieldSelector = ({ schema, onChange }) => {
               properties: { ...properties, [key]: updatedField },
             });
           }}
+          disabled={disabled}
         />
       ))}
       <Button
@@ -62,6 +63,7 @@ const FieldSelector = ({ schema, onChange }) => {
         size="small"
         onClick={() => onChange(fieldSelectorUnselectAll(schema))}
         disableRipple
+        disabled={disabled}
       >
         {t('Unselect all')}
       </Button>
@@ -74,13 +76,15 @@ FieldSelector.propTypes = {
     properties: PropTypes.shape({}).isRequired,
   }).isRequired,
   onChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 FieldSelector.defaultProps = {
   onChange: () => {},
+  disabled: false,
 };
 
-const FieldSelectorTree = ({ name, field, onChange }) => {
+const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
   const { type, selected, expanded } = field;
   const properties = type?.includes('object')
     ? field.properties
@@ -130,6 +134,7 @@ const FieldSelectorTree = ({ name, field, onChange }) => {
               properties &&
               anySelected({ type: 'object', properties })
             }
+            disabled={disabled}
           />
         }
         label={name}
@@ -158,6 +163,7 @@ const FieldSelectorTree = ({ name, field, onChange }) => {
                         },
                       });
                 }}
+                disabled={disabled}
               />
             );
           })}
@@ -180,10 +186,12 @@ FieldSelectorTree.propTypes = {
     ]),
   }).isRequired,
   onChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 FieldSelectorTree.defaultProps = {
   onChange: () => {},
+  disabled: false,
 };
 
 export default FieldSelector;

@@ -1,5 +1,5 @@
 import path from 'path';
-import GRAASP_SCHEMA from '../../../public/app/schema/graasp.json';
+import GRAASP_SCHEMA from '../../../public/shared/graasp.json';
 import {
   AUTHORS,
   PARAMETER_TYPES,

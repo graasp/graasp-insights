@@ -24,7 +24,6 @@ import {
   EDIT_ALGORITHM_NAME_ID,
   EDIT_ALGORITHM_SAVE_BUTTON_ID,
 } from '../../config/selectors';
-import { AUTHORS } from '../../shared/constants';
 import { areParametersValid } from '../../utils/parameter';
 import BackButton from '../common/BackButton';
 import PythonEditor from '../common/editor/PythonEditor';
@@ -64,7 +63,6 @@ class EditAlgorithm extends Component {
     }).isRequired,
     dispatchGetAlgorithm: PropTypes.func.isRequired,
     dispatchSaveAlgorithm: PropTypes.func.isRequired,
-    dispatchAddAlgorithm: PropTypes.func.isRequired,
     dispatchClearAlgorithm: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       infoAlert: PropTypes.string.isRequired,
@@ -120,40 +118,21 @@ class EditAlgorithm extends Component {
   };
 
   handleSave = () => {
-    const {
-      dispatchSaveAlgorithm,
-      dispatchAddAlgorithm,
-      algorithm,
-      history: { goBack },
-    } = this.props;
+    const { dispatchSaveAlgorithm, algorithm } = this.props;
     const { name, description, code, parameters } = this.state;
 
     if (algorithm && name) {
       const id = algorithm.get('id');
-      const author = algorithm.get('author');
       const filepath = algorithm.get('filepath');
 
-      if (author === AUTHORS.GRAASP) {
-        // add as a new algorithm instead
-        const payload = {
-          name,
-          description,
-          author: AUTHORS.USER,
-          code,
-          parameters,
-        };
-        const onSuccess = goBack;
-        dispatchAddAlgorithm({ payload, onSuccess });
-      } else {
-        const metadata = {
-          id,
-          filepath,
-          name,
-          description,
-          parameters,
-        };
-        dispatchSaveAlgorithm({ metadata, code });
-      }
+      const metadata = {
+        id,
+        filepath,
+        name,
+        description,
+        parameters,
+      };
+      dispatchSaveAlgorithm({ metadata, code });
     }
   };
 
@@ -183,19 +162,10 @@ class EditAlgorithm extends Component {
       );
     }
 
-    const author = algorithm.get('author');
-
     return (
       <Main id={EDIT_ALGORITHM_MAIN_ID}>
         <Container>
           <h1>{t('Edit Algorithm')}</h1>
-          {author === AUTHORS.GRAASP && (
-            <Alert severity="info" className={classes.infoAlert}>
-              {t(
-                `You are modifying a Graasp algorithm. Saving will create a new file instead.`,
-              )}
-            </Alert>
-          )}
           <Grid container spacing={2} justify="center">
             <Grid item xs={7}>
               <PythonEditor

@@ -1,6 +1,4 @@
 /* eslint-disable func-names */
-import { expect } from 'chai';
-import GRAASP_ALGORITHMS from '../../public/app/config/graaspAlgorithms';
 import {
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -18,7 +16,6 @@ import {
   clickEditAlgoBackButton,
   clickEditAlgoSaveButton,
   editAlgorithm,
-  getNumberOfAlgorithms,
 } from './utils';
 
 describe('Edit Algorithm Scenarios', function () {
@@ -54,25 +51,6 @@ describe('Edit Algorithm Scenarios', function () {
         `#${ALGORITHM_TABLE_ID}`,
         `.${buildAlgorithmRowClass(PREEXISTING_USER_ALGORITHM.name)}`,
       );
-    }),
-  );
-
-  it(
-    'Editing a graasp algorithm creates a copy',
-    mochaAsync(async () => {
-      const { client } = app;
-
-      const nbAlgosPrev = await getNumberOfAlgorithms(client);
-
-      await clickAlgoEditButton(client, GRAASP_ALGORITHMS[0]);
-      await editAlgorithm(client, REPLACEMENT_ALGORITHM);
-      await clickEditAlgoSaveButton(client);
-
-      const nbAlgosAfter = await getNumberOfAlgorithms(client);
-      expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
-
-      await checkAlgorithmRowLayout(client, REPLACEMENT_ALGORITHM);
-      await checkAlgorithmRowLayout(client, GRAASP_ALGORITHMS[0]);
     }),
   );
 

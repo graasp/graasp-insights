@@ -31,6 +31,7 @@ module.exports = {
   GET_ALGORITHM_CHANNEL: 'algorithm:get',
   SAVE_ALGORITHM_CHANNEL: 'algorithm:save',
   ADD_ALGORITHM_CHANNEL: 'algorithm:add',
+  ADD_BUILT_IN_ALGORITHM_CHANNEL: 'algorithm:add-built-in',
   BROWSE_FILE_CHANNEL: 'file:browse',
   GET_UTILS_CHANNEL: 'utils:get',
   SAVE_UTILS_CHANNEL: 'utils:save',
@@ -49,4 +50,5 @@ module.exports = {
   SET_SCHEMA_CHANNEL: 'schema:set',
   DELETE_SCHEMA_CHANNEL: 'schema:delete',
   OPEN_URL_IN_BROWSER_CHANNEL: 'open:browser',
+  GET_ALGORITHM_CODE_CHANNEL: 'algorithm:code:get',
 };

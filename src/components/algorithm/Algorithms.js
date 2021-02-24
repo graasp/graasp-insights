@@ -24,7 +24,6 @@ import {
   ADD_ALGORITHM_PATH,
   EDIT_UTILS_PATH,
 } from '../../config/paths';
-import { AUTHORS } from '../../shared/constants';
 import {
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -228,7 +227,6 @@ class Algorithms extends Component {
       const lastModifiedString = lastModified
         ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
-      const isByGraasp = author === AUTHORS.GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
           <IconButton
@@ -239,24 +237,14 @@ class Algorithms extends Component {
             <EditIcon />
           </IconButton>
         </Tooltip>,
-        <Tooltip
-          title={
-            isByGraasp
-              ? t('You cannot delete algorithms from Graasp')
-              : t('Delete algorithm')
-          }
-          key="delete"
-        >
-          <span>
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete({ id, name })}
-              disabled={isByGraasp}
-              className={ALGORITHM_DELETE_BUTTON_CLASS}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </span>
+        <Tooltip title={t('Delete algorithm')} key="delete">
+          <IconButton
+            aria-label="delete"
+            onClick={() => this.handleDelete({ id, name })}
+            className={ALGORITHM_DELETE_BUTTON_CLASS}
+          >
+            <DeleteIcon />
+          </IconButton>
         </Tooltip>,
       ];
       return {

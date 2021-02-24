@@ -37,6 +37,7 @@ const {
   EXPORT_RESULT_CHANNEL,
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
+  ADD_BUILT_IN_ALGORITHM_CHANNEL,
   BROWSE_FILE_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
@@ -57,6 +58,7 @@ const {
   SET_SCHEMA_CHANNEL,
   DELETE_SCHEMA_CHANNEL,
   OPEN_URL_IN_BROWSER_CHANNEL,
+  GET_ALGORITHM_CODE_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -103,6 +105,8 @@ const {
   setSchema,
   deleteSchema,
   openUrlInBrowser,
+  addBuiltInAlgorithm,
+  getAlgorithmCode,
 } = require('./app/listeners');
 const env = require('./env.json');
 const {
@@ -437,6 +441,12 @@ app.on('ready', async () => {
   // called when adding an algorithm
   ipcMain.on(ADD_ALGORITHM_CHANNEL, addAlgorithm(mainWindow, db));
 
+  // called when adding a built-in algorithm
+  ipcMain.on(
+    ADD_BUILT_IN_ALGORITHM_CHANNEL,
+    addBuiltInAlgorithm(mainWindow, db),
+  );
+
   // called when browsing a file
   ipcMain.on(BROWSE_FILE_CHANNEL, browseFile(mainWindow));
 
@@ -469,6 +479,9 @@ app.on('ready', async () => {
 
   // called when deleting a schema
   ipcMain.on(DELETE_SCHEMA_CHANNEL, deleteSchema(mainWindow, db));
+
+  // called when reading the code of an algorithm
+  ipcMain.on(GET_ALGORITHM_CODE_CHANNEL, getAlgorithmCode(mainWindow));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

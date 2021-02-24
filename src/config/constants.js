@@ -33,6 +33,7 @@ export const EDITOR_PROGRAMMING_LANGUAGES = {
 export const ADD_OPTIONS = {
   FILE: 'file',
   EDITOR: 'editor',
+  BUILT_IN: 'built-in',
 };
 
 // Default latitude and longitude for centering map in ActionsMap.js. Zurich coordinates used below.

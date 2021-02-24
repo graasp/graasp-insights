@@ -51,6 +51,7 @@ import {
   DELETE_SCHEMA_ERROR,
   CLEAR_DATABASE_SUCCESS,
   CLEAR_DATABASE_ERROR,
+  GET_ALGORITHM_CODE_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -104,6 +105,7 @@ import {
   ERROR_DELETING_SCHEMA_MESSAGE,
   SUCCESS_DELETING_ALL_MESSAGE,
   ERROR_DELETING_ALL_MESSAGE,
+  ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -150,6 +152,13 @@ const middleware = () => (next) => (action) => {
         message = ERROR_MISSING_FILE_MESSAGE;
       } else {
         message = ERROR_GETTING_ALGORITHM_MESSAGE;
+      }
+      break;
+    case GET_ALGORITHM_CODE_ERROR:
+      if (error === ERROR_MISSING_FILE) {
+        message = ERROR_MISSING_FILE_MESSAGE;
+      } else {
+        message = ERROR_GETTING_ALGORITHM_CODE_MESSAGE;
       }
       break;
     case (type.match(new RegExp(`${EXECUTE_ALGORITHM_ERROR}`)) || {}).input:

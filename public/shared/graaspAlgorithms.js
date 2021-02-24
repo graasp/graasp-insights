@@ -3,10 +3,10 @@ const {
   PROGRAMMING_LANGUAGES,
   AUTHORS,
   PARAMETER_TYPES,
-} = require('../../shared/constants');
-const { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } = require('../../shared/constants');
-const { setFieldSelectorAttributes } = require('../../shared/utils');
-const GRAASP_SCHEMA = require('../schema/graasp');
+} = require('./constants');
+const { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } = require('./constants');
+const { setFieldSelectorAttributes } = require('./utils');
+const GRAASP_SCHEMA = require('./graasp');
 
 const GRAASP_ALGORITHMS = [
   {
@@ -18,6 +18,7 @@ const GRAASP_ALGORITHMS = [
     author: AUTHORS.GRAASP,
     language: PROGRAMMING_LANGUAGES.PYTHON,
     type: ALGORITHM_TYPES.ANONYMIZATION,
+    parameters: [],
   },
   {
     id: 'hash-fields',

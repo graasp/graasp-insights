@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditParametersForm = (props) => {
-  const { t, parameters, onChange, id, className, schemas } = props;
+  const { t, parameters, onChange, id, className, schemas, disabled } = props;
   const classes = useStyles();
   const [schemaId, setSchemaId] = useState(GRAASP_SCHEMA_ID);
 
@@ -121,6 +121,7 @@ const EditParametersForm = (props) => {
             value={value}
             onChange={(event) => updateValue(event.target.value, paramIdx)}
             inputProps={{ className: PARAMETER_VALUE_CLASS }}
+            disabled={disabled}
           />
         );
       }
@@ -135,6 +136,7 @@ const EditParametersForm = (props) => {
             error={invalid}
             helperText={invalid && t('Please provide an integer')}
             inputProps={{ className: PARAMETER_VALUE_CLASS }}
+            disabled={disabled}
           />
         );
       }
@@ -149,6 +151,7 @@ const EditParametersForm = (props) => {
             error={invalid}
             helperText={invalid && t('Please provide a number')}
             inputProps={{ className: PARAMETER_VALUE_CLASS }}
+            disabled={disabled}
           />
         );
       }
@@ -167,6 +170,7 @@ const EditParametersForm = (props) => {
             onChange={(newValue) => {
               updateValue({ ...value, [schemaId]: newValue }, paramIdx);
             }}
+            disabled={disabled}
           />
         );
       }
@@ -192,6 +196,7 @@ const EditParametersForm = (props) => {
                 onChange={(event) => {
                   setSchemaId(event.target.value);
                 }}
+                disabled={disabled}
               >
                 {schemas.entrySeq().map(([sid, { label }]) => (
                   <MenuItem value={sid} key={label}>
@@ -226,6 +231,7 @@ const EditParametersForm = (props) => {
                         )
                       }
                       inputProps={{ className: PARAMETER_NAME_CLASS }}
+                      disabled={disabled}
                     />
                   </Grid>
                   <Grid item xs={5}>
@@ -237,6 +243,7 @@ const EditParametersForm = (props) => {
                           updateType(event.target.value, paramIdx);
                         }}
                         className={PARAMETER_TYPE_CLASS}
+                        disabled={disabled}
                       >
                         {Object.values(PARAMETER_TYPES).map(
                           (paramType, idx) => (
@@ -260,6 +267,7 @@ const EditParametersForm = (props) => {
                       <IconButton
                         size="small"
                         onClick={() => deleteParam(paramIdx)}
+                        disabled={disabled}
                       >
                         <RemoveCircleOutlineIcon />
                       </IconButton>
@@ -282,6 +290,7 @@ const EditParametersForm = (props) => {
                         updateDescription(event.target.value, paramIdx);
                       }}
                       inputProps={{ className: PARAMETER_DESCRIPTION_CLASS }}
+                      disabled={disabled}
                     />
                   </Grid>
                   <Grid
@@ -318,6 +327,7 @@ const EditParametersForm = (props) => {
               addParam();
             }}
             id={ADD_PARAMETER_BUTTON_ID}
+            disabled={disabled}
           >
             {t('Add parameter')}
           </Button>
@@ -345,12 +355,14 @@ EditParametersForm.propTypes = {
   id: PropTypes.string,
   className: PropTypes.string,
   schemas: PropTypes.instanceOf(Map).isRequired,
+  disabled: PropTypes.bool,
 };
 
 EditParametersForm.defaultProps = {
   onChange: () => {},
   id: null,
   className: null,
+  disabled: false,
 };
 
 const mapStateToProps = ({ schema }) => ({

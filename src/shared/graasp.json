@@ -1,0 +1,126 @@
+{
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": ["actions", "users", "metadata"],
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "_id",
+              "user",
+              "verb",
+              "space",
+              "geolocation",
+              "createdAt"
+            ],
+            "properties": {
+              "_id": { "type": "string" },
+              "user": { "type": "string" },
+              "sessionId": { "type": ["string", "null"] },
+              "data": {},
+              "visibility": { "type": "string" },
+              "verb": { "type": "string" },
+              "space": { "type": "string" },
+              "format": { "type": "string" },
+              "appInstance": { "type": "string" },
+              "userType": { "type": "string" },
+              "geolocation": {
+                "type": "object",
+                "required": ["country", "ll"],
+                "properties": {
+                  "range": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": [{ "type": "number" }, { "type": "number" }]
+                  },
+                  "country": { "type": "string" },
+                  "eu": { "type": "string" },
+                  "timezone": { "type": "string" },
+                  "city": { "type": "string" },
+                  "ll": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": [{ "type": "number" }, { "type": "number" }]
+                  },
+                  "metro": { "type": "number" },
+                  "area": { "type": "number" }
+                }
+              },
+              "createdAt": { "type": "string" },
+              "updatedAt": { "type": "string" },
+              "__v": { "type": "number" }
+            }
+          }
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": { "type": "string" },
+              "name": { "type": "string" },
+              "type": { "type": "string" }
+            }
+          }
+        },
+        "appInstances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": { "type": "string" },
+              "url": { "type": "string" },
+              "name": { "type": "string" },
+              "settings": {}
+            }
+          }
+        },
+        "appInstanceResources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": { "type": "string" },
+              "user": { "type": "string" },
+              "sessionId": { "type": ["string", "null"] },
+              "data": {},
+              "ownership": { "type": "string" },
+              "visibility": { "type": "string" },
+              "type": { "type": "string" },
+              "format": { "type": "string" },
+              "appInstance": { "type": "string" },
+              "createdAt": { "type": "string" },
+              "updatedAt": { "type": "string" },
+              "__v": { "type": "number" }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["spaceTree"],
+          "properties": {
+            "spaceTree": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "name": { "type": "string" },
+                  "parentId": { "type": ["string", "null"] }
+                }
+              }
+            },
+            "createdAt": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

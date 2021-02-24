@@ -47,6 +47,8 @@ const getSchemas = require('./getSchemas');
 const setSchema = require('./setSchema');
 const deleteSchema = require('./deleteSchema');
 const openUrlInBrowser = require('./openUrlInBrowser');
+const getAlgorithmCode = require('./getAlgorithmCode');
+const addBuiltInAlgorithm = require('./addBuiltInAlgorithm');
 
 module.exports = {
   getDataset,
@@ -94,4 +96,6 @@ module.exports = {
   setSchema,
   deleteSchema,
   openUrlInBrowser,
+  getAlgorithmCode,
+  addBuiltInAlgorithm,
 };

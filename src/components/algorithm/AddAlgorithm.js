@@ -4,8 +4,11 @@ import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
@@ -13,7 +16,12 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { addAlgorithm } from '../../actions';
+import {
+  addAlgorithm,
+  addBuiltInAlgorithm,
+  clearAlgorithm,
+  getAlgorithmCode,
+} from '../../actions';
 import { ADD_OPTIONS, FILE_FILTERS } from '../../config/constants';
 import {
   ADD_ALGORITHM_BACK_BUTTON_ID,
@@ -23,6 +31,7 @@ import {
   ADD_ALGORITHM_FROM_FILE_OPTION_ID,
   ADD_ALGORITHM_NAME_ID,
   ADD_ALGORITHM_SAVE_BUTTON_ID,
+  ADD_ALGORITHM_BUILT_IN_OPTION_ID,
 } from '../../config/selectors';
 import { AUTHORS } from '../../shared/constants';
 import { areParametersValid } from '../../utils/parameter';
@@ -32,6 +41,7 @@ import PythonEditor from '../common/editor/PythonEditor';
 import Main from '../common/Main';
 import EditParametersForm from '../parameter/EditParametersForm';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
+import GRAASP_ALGORITHMS from '../../shared/graaspAlgorithms';
 
 const styles = (theme) => ({
   saveButton: {
@@ -53,10 +63,14 @@ class AddAlgorithm extends Component {
     code: PYTHON_TEMPLATE_CODE,
     option: ADD_OPTIONS.FILE,
     parameters: [],
+    builtInAlgoId: '',
   };
 
   static propTypes = {
     dispatchAddAlgorithm: PropTypes.func.isRequired,
+    dispatchAddBuiltInAlgorithm: PropTypes.func.isRequired,
+    dispatchGetAlgorithmCode: PropTypes.func.isRequired,
+    dispatchClearAlgorithm: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       saveButton: PropTypes.string.isRequired,
@@ -65,7 +79,13 @@ class AddAlgorithm extends Component {
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
     }).isRequired,
+    builtInAlgoCode: PropTypes.string.isRequired,
   };
+
+  componentWillUnmount() {
+    const { dispatchClearAlgorithm } = this.props;
+    dispatchClearAlgorithm();
+  }
 
   handleNameOnChange = (event) => {
     this.setState({ name: event.target.value });
@@ -87,6 +107,16 @@ class AddAlgorithm extends Component {
     }
   };
 
+  handleBuiltInAlgoOnChange = ({ target: { value } }) => {
+    const algorithm = GRAASP_ALGORITHMS.find(({ id }) => id === value);
+    if (algorithm) {
+      const { name, description, parameters, filename } = algorithm;
+      this.setState({ name, description, builtInAlgoId: value, parameters });
+      const { dispatchGetAlgorithmCode } = this.props;
+      dispatchGetAlgorithmCode({ filename, isGraasp: true });
+    }
+  };
+
   handleCodeOnChange = (code) => {
     this.setState({ code });
   };
@@ -102,6 +132,7 @@ class AddAlgorithm extends Component {
   handleSave = () => {
     const {
       dispatchAddAlgorithm,
+      dispatchAddBuiltInAlgorithm,
       history: { goBack },
     } = this.props;
     const {
@@ -111,20 +142,27 @@ class AddAlgorithm extends Component {
       code,
       option,
       parameters,
+      builtInAlgoId,
     } = this.state;
-    const author = AUTHORS.USER;
-    const payload =
-      option === ADD_OPTIONS.FILE
-        ? { name, description, author, parameters, fileLocation }
-        : { name, description, author, parameters, code };
-
     const onSuccess = goBack;
 
-    dispatchAddAlgorithm({ payload, onSuccess });
+    if (option === ADD_OPTIONS.BUILT_IN) {
+      if (builtInAlgoId) {
+        dispatchAddBuiltInAlgorithm({ id: builtInAlgoId }, onSuccess);
+      }
+    } else {
+      const author = AUTHORS.USER;
+      const payload =
+        option === ADD_OPTIONS.FILE
+          ? { name, description, author, parameters, fileLocation }
+          : { name, description, author, parameters, code };
+
+      dispatchAddAlgorithm(payload, onSuccess);
+    }
   };
 
   render() {
-    const { t, classes } = this.props;
+    const { t, classes, builtInAlgoCode } = this.props;
     const {
       name,
       description,
@@ -132,6 +170,7 @@ class AddAlgorithm extends Component {
       fileLocation,
       code,
       parameters,
+      builtInAlgoId,
     } = this.state;
 
     const isValid =
@@ -144,7 +183,7 @@ class AddAlgorithm extends Component {
         <Container>
           <h1>{t('Add Algorithm')}</h1>
           <Grid container spacing={5} justify="space-between">
-            <Grid item xs={option === ADD_OPTIONS.FILE ? 5 : 7}>
+            <Grid item xs={7}>
               <FormControl component="fieldset">
                 <RadioGroup
                   aria-label="add-option"
@@ -158,6 +197,12 @@ class AddAlgorithm extends Component {
                     id={ADD_ALGORITHM_FROM_FILE_OPTION_ID}
                   />
                   <FormControlLabel
+                    value={ADD_OPTIONS.BUILT_IN}
+                    control={<Radio color="primary" />}
+                    label={t('Add built-in algorithm')}
+                    id={ADD_ALGORITHM_BUILT_IN_OPTION_ID}
+                  />
+                  <FormControlLabel
                     value={ADD_OPTIONS.EDITOR}
                     control={<Radio color="primary" />}
                     label={t('Write algorithm')}
@@ -165,35 +210,68 @@ class AddAlgorithm extends Component {
                   />
                 </RadioGroup>
               </FormControl>
-              {option === ADD_OPTIONS.FILE ? (
-                <Grid container alignItems="center">
-                  <Grid item xs={11}>
-                    <TextField
-                      margin="dense"
-                      label={t('Select algorithm')}
-                      onChange={this.handleLocationInput}
-                      value={fileLocation}
-                      helperText={t('(Required)')}
-                      required
-                      fullWidth
-                      id={ADD_ALGORITHM_FILE_LOCATION_ID}
-                    />
+              {
+                // eslint-disable-next-line no-nested-ternary
+                option === ADD_OPTIONS.FILE ? (
+                  <Grid container alignItems="center">
+                    <Grid item xs={5}>
+                      <TextField
+                        margin="dense"
+                        label={t('Select algorithm')}
+                        onChange={this.handleLocationInput}
+                        value={fileLocation}
+                        helperText={t('(Required)')}
+                        required
+                        fullWidth
+                        id={ADD_ALGORITHM_FILE_LOCATION_ID}
+                      />
+                    </Grid>
+                    <Grid item xs={1}>
+                      <BrowseFileButton
+                        filters={[FILE_FILTERS.PYTHON, FILE_FILTERS.ALL]}
+                        onBrowseFileCallback={this.handleBrowseFileCallback}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={1}>
-                    <BrowseFileButton
-                      filters={[FILE_FILTERS.PYTHON, FILE_FILTERS.ALL]}
-                      onBrowseFileCallback={this.handleBrowseFileCallback}
-                    />
+                ) : option === ADD_OPTIONS.EDITOR ? (
+                  <PythonEditor
+                    parameters={parameters}
+                    code={code}
+                    onCodeChange={this.handleCodeOnChange}
+                    onSave={() => isValid && this.handleSave()}
+                  />
+                ) : (
+                  <Grid container spacing={2}>
+                    <Grid item xs={5}>
+                      <FormControl fullWidth>
+                        <InputLabel id="built-in-algorithm-select-label">
+                          {t('Algorithm')}
+                        </InputLabel>
+                        <Select
+                          labelId="built-in-algorithm-select-label"
+                          value={builtInAlgoId}
+                          onChange={this.handleBuiltInAlgoOnChange}
+                        >
+                          {GRAASP_ALGORITHMS.map(({ id, name: algoName }) => (
+                            <MenuItem value={id} key={id}>
+                              {algoName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    {builtInAlgoId && (
+                      <Grid item xs={12}>
+                        <PythonEditor
+                          parameters={parameters}
+                          code={builtInAlgoCode}
+                          readOnly
+                        />
+                      </Grid>
+                    )}
                   </Grid>
-                </Grid>
-              ) : (
-                <PythonEditor
-                  parameters={parameters}
-                  code={code}
-                  onCodeChange={this.handleCodeOnChange}
-                  onSave={() => isValid && this.handleSave()}
-                />
-              )}
+                )
+              }
             </Grid>
             <Grid item xs={5}>
               <TextField
@@ -205,6 +283,7 @@ class AddAlgorithm extends Component {
                 required
                 fullWidth
                 id={ADD_ALGORITHM_NAME_ID}
+                disabled={option === ADD_OPTIONS.BUILT_IN}
               />
               <TextField
                 margin="dense"
@@ -216,10 +295,12 @@ class AddAlgorithm extends Component {
                 helperText={t('(Optional)')}
                 fullWidth
                 id={ADD_ALGORITHM_DESCRIPTION_ID}
+                disabled={option === ADD_OPTIONS.BUILT_IN}
               />
               <EditParametersForm
                 parameters={parameters}
                 onChange={this.handleParamsOnChange}
+                disabled={option === ADD_OPTIONS.BUILT_IN}
               />
             </Grid>
           </Grid>
@@ -245,11 +326,21 @@ class AddAlgorithm extends Component {
   }
 }
 
+const mapStateToProps = ({ algorithms }) => ({
+  builtInAlgoCode: algorithms.getIn(['current', 'content', 'code']) || '',
+});
+
 const mapDispatchToProps = {
   dispatchAddAlgorithm: addAlgorithm,
+  dispatchAddBuiltInAlgorithm: addBuiltInAlgorithm,
+  dispatchClearAlgorithm: clearAlgorithm,
+  dispatchGetAlgorithmCode: getAlgorithmCode,
 };
 
-const ConnectedComponent = connect(null, mapDispatchToProps)(AddAlgorithm);
+const ConnectedComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddAlgorithm);
 
 const StyledComponent = withStyles(styles, { withTheme: true })(
   ConnectedComponent,

@@ -19,7 +19,7 @@ const {
   ALGORITHMS_FOLDER,
   VAR_FOLDER,
 } = require('./config/paths');
-const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
+const GRAASP_ALGORITHMS = require('../shared/graaspAlgorithms');
 const { AUTHORS } = require('../shared/constants');
 const { getFileStats } = require('./utils/file');
 
@@ -65,6 +65,32 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   return db;
 };
 
+const addGraaspAlgorithm = (db, algorithm) => {
+  const { id, filename } = algorithm;
+  const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
+  const destPath = path.join(ALGORITHMS_FOLDER, filename);
+
+  fs.copyFileSync(srcPath, destPath);
+
+  // get file data
+  const { sizeInKiloBytes, createdAt, lastModified } = getFileStats(destPath);
+  const metadata = {
+    ...algorithm,
+    filepath: destPath,
+    createdAt,
+    lastModified,
+    size: sizeInKiloBytes,
+  };
+
+  if (db.get(ALGORITHMS_COLLECTION).find({ id }).value()) {
+    // edit
+    db.get(ALGORITHMS_COLLECTION).find({ id }).assign(metadata).write();
+  } else {
+    // add
+    db.get(ALGORITHMS_COLLECTION).push(metadata).write();
+  }
+};
+
 const ensureAlgorithmsExist = async (db) => {
   try {
     // create the algorithms folder if it doesn't already exist
@@ -99,29 +125,11 @@ const ensureAlgorithmsExist = async (db) => {
           isDevWithModification ||
           isProdWithNewVersion
         ) {
-          fs.copyFileSync(srcPath, destPath);
-        }
-
-        try {
-          // check if algo entry is in metadata db
-          if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-            // get file data
-            const { sizeInKiloBytes, createdAt, lastModified } = getFileStats(
-              destPath,
-            );
-
-            db.get(ALGORITHMS_COLLECTION)
-              .push({
-                ...algo,
-                filepath: destPath,
-                createdAt,
-                lastModified,
-                size: sizeInKiloBytes,
-              })
-              .write();
+          try {
+            addGraaspAlgorithm(db, algo);
+          } catch (e) {
+            logger.error(e);
           }
-        } catch (e) {
-          logger.error(e);
         }
       }
     });
@@ -151,4 +159,5 @@ module.exports = {
   bootstrapDatabase,
   ensureAlgorithmsExist,
   addDefaultSchemas,
+  addGraaspAlgorithm,
 };

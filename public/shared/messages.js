@@ -114,6 +114,8 @@ const SUCCESS_DELETING_ALL_MESSAGE =
   'All application data was cleared successfully.';
 const ERROR_DELETING_ALL_MESSAGE =
   'There was an error deleting some application data. Try clearing the remaining data manually.';
+const ERROR_GETTING_ALGORITHM_CODE_MESSAGE =
+  'The was an error retrieving the algorithm code';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -178,4 +180,5 @@ module.exports = {
   ERROR_OPENING_URL_IN_BROWSER_MESSAGE,
   SUCCESS_DELETING_ALL_MESSAGE,
   ERROR_DELETING_ALL_MESSAGE,
+  ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
 };
