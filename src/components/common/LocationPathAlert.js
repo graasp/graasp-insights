@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
-import { openPathInExplorer } from '../../actions/explorer';
+import { openPath } from '../../actions/path';
 
 const styles = (theme) => ({
   folderString: {
@@ -41,10 +41,7 @@ class LocationPathAlert extends Component {
     return (
       <Alert severity="info" className={classes.infoAlert}>
         {text}
-        <Button
-          onClick={() => openPathInExplorer(path)}
-          className={classes.folderString}
-        >
+        <Button onClick={() => openPath(path)} className={classes.folderString}>
           {path}
         </Button>
       </Alert>

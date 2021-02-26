@@ -52,7 +52,7 @@ const {
   GET_FILE_SIZE_LIMIT_CHANNEL,
   GET_SETTINGS_CHANNEL,
   SHOW_CONFIRM_OPEN_DATASET_CHANNEL,
-  OPEN_PATH_IN_EXPLORER_CHANNEL,
+  OPEN_PATH_CHANNEL,
   GET_SCHEMAS_CHANNEL,
   SET_SCHEMA_CHANNEL,
   DELETE_SCHEMA_CHANNEL,
@@ -98,7 +98,7 @@ const {
   getSettings,
   showConfirmOpenDatasetPrompt,
   getFileSizeLimit,
-  openPathInExplorer,
+  openPath,
   getSchemas,
   setSchema,
   deleteSchema,
@@ -455,8 +455,8 @@ app.on('ready', async () => {
   // called when getting settings
   ipcMain.on(GET_SETTINGS_CHANNEL, getSettings(mainWindow, db));
 
-  // called when opening a path in the explorer
-  ipcMain.on(OPEN_PATH_IN_EXPLORER_CHANNEL, openPathInExplorer(mainWindow));
+  // called when opening a path
+  ipcMain.on(OPEN_PATH_CHANNEL, openPath(mainWindow));
 
   // called when opening a link to open it in a browser
   ipcMain.on(OPEN_URL_IN_BROWSER_CHANNEL, openUrlInBrowser(mainWindow));
