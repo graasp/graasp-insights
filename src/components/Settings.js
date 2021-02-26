@@ -10,6 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Main from './common/Main';
 import { formatFileSize } from '../shared/formatting';
 import { langs } from '../config/i18n';
@@ -18,6 +20,7 @@ import {
   setFileSizeLimit,
   setLanguage,
   getFileSizeLimit,
+  clearDatabase,
 } from '../actions';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
@@ -32,12 +35,20 @@ import {
 const styles = (theme) => ({
   formControl: {
     width: theme.spacing(35),
-    margin: theme.spacing(1, 0),
+    margin: theme.spacing(2, 0),
   },
   content: {
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
+  },
+  clearDatabaseButton: {
+    marginTop: theme.spacing(1),
+    backgroundColor: '#D22B2B',
+    color: '#FFF',
+    '&:hover': {
+      backgroundColor: '#C41E3A',
+    },
   },
 });
 
@@ -51,6 +62,7 @@ const Settings = (props) => {
     dispatchSetFileSizeLimit,
     fileSizeLimit = DEFAULT_FILE_SIZE_LIMIT,
     dispatchGetFileSizeLimit,
+    dispatchClearDatabase,
   } = props;
   dispatchGetLanguage();
   dispatchGetFileSizeLimit();
@@ -134,12 +146,38 @@ const Settings = (props) => {
     );
   };
 
+  const renderClearDatabase = () => {
+    const handleClearDatabase = () => {
+      dispatchClearDatabase();
+    };
+
+    return (
+      <FormControl className={classes.formControl}>
+        <FormLabel>{t('Clear Application Data')}</FormLabel>
+        <FormHelperText>
+          {t(
+            'Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.',
+          )}
+        </FormHelperText>
+        <Button
+          variant="contained"
+          className={classes.clearDatabaseButton}
+          startIcon={<DeleteIcon />}
+          onClick={handleClearDatabase}
+        >
+          {t('Clear all data')}
+        </Button>
+      </FormControl>
+    );
+  };
+
   return (
     <Main id={SETTINGS_MAIN_ID}>
       <Container className={classes.content}>
         <Typography variant="h4">{t('Settings')}</Typography>
         {renderLanguageSelect()}
         {renderFileSizeLimit()}
+        {renderClearDatabase()}
       </Container>
     </Main>
   );
@@ -151,11 +189,13 @@ Settings.propTypes = {
   dispatchSetLanguage: PropTypes.func.isRequired,
   dispatchGetFileSizeLimit: PropTypes.func.isRequired,
   dispatchSetFileSizeLimit: PropTypes.func.isRequired,
+  dispatchClearDatabase: PropTypes.func.isRequired,
   fileSizeLimit: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     formControl: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
+    clearDatabaseButton: PropTypes.string.isRequired,
   }).isRequired,
   i18n: PropTypes.shape({
     changeLanguage: PropTypes.func.isRequired,
@@ -172,6 +212,7 @@ const mapDispatchToProps = {
   dispatchSetLanguage: setLanguage,
   dispatchSetFileSizeLimit: setFileSizeLimit,
   dispatchGetFileSizeLimit: getFileSizeLimit,
+  dispatchClearDatabase: clearDatabase,
 };
 
 const ConnectedComponent = connect(

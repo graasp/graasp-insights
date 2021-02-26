@@ -22,6 +22,8 @@ module.exports = {
   GET_ALGORITHMS_CHANNEL: 'algorithms:get',
   SHOW_SAVE_AS_PROMPT_CHANNEL: 'prompt:save-as:show',
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL: 'prompt:delete:confirm',
+  SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL: 'prompt:clearDatabase:confirm',
+  CLEAR_DATABASE_CHANNEL: 'database:clear',
   DELETE_ALGORITHM_CHANNEL: 'algorithm:delete',
   CHECK_PYTHON_INSTALLATION_CHANNEL: 'settings:python:check',
   EXPORT_DATASET_CHANNEL: 'dataset:export',
