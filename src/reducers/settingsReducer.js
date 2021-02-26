@@ -15,7 +15,8 @@ import {
   FLAG_GETTING_SETTINGS,
   GET_SETTINGS_SUCCESS,
 } from '../shared/types';
-import { DEFAULT_FILE_SIZE_LIMIT, DEFAULT_LANGUAGE } from '../config/constants';
+import { DEFAULT_LANGUAGE } from '../config/constants';
+import { DEFAULT_FILE_SIZE_LIMIT } from '../shared/constants';
 
 const INITIAL_STATE = Map({
   lang: DEFAULT_LANGUAGE,

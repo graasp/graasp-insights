@@ -28,7 +28,7 @@ import {
   ERROR_CLEARING_DATASET_MESSAGE,
   ERROR_OPENING_DATASET_MESSAGE,
 } from '../shared/messages';
-import { DEFAULT_FILE_SIZE_LIMIT } from '../config/constants';
+import { DEFAULT_FILE_SIZE_LIMIT } from '../shared/constants';
 
 export const getDatasets = () => (dispatch) => {
   const flagGettingDatasets = createFlag(FLAG_GETTING_DATASETS);
@@ -146,10 +146,12 @@ export const clearDataset = () => (dispatch) => {
 
 export const openDataset = ({ dataset, onConfirm }) => (dispatch, getState) => {
   try {
-    const fileSizeLimit = getState().settings.get(
-      'fileSizeLimit',
-      DEFAULT_FILE_SIZE_LIMIT,
-    );
+    let fileSizeLimit = getState().settings.get('fileSizeLimit');
+
+    // in case no limit is not set, accept 0
+    fileSizeLimit = !Number.isInteger(fileSizeLimit)
+      ? DEFAULT_FILE_SIZE_LIMIT
+      : fileSizeLimit;
 
     // automatically open if dataset is smaller than limit
     if (dataset.size < fileSizeLimit) {
