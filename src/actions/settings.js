@@ -6,8 +6,8 @@ import {
   GET_FILE_SIZE_LIMIT_CHANNEL,
   SET_FILE_SIZE_LIMIT_CHANNEL,
   GET_SETTINGS_CHANNEL,
-  SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
-  DELETE_ALL_CHANNEL,
+  SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
+  CLEAR_DATABASE_CHANNEL,
 } from '../shared/channels';
 import {
   ERROR_MESSAGE_HEADER,
@@ -139,17 +139,17 @@ const checkPythonInstallation = () => (dispatch) => {
   }
 };
 
-const deleteAll = () => (dispatch) => {
+const clearDatabase = () => (dispatch) => {
   const flagDeletingAll = createFlag(FLAG_DELETING_ALL);
   try {
-    window.ipcRenderer.send(SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL);
+    window.ipcRenderer.send(SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL);
     window.ipcRenderer.once(
-      SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
+      SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
       (event, shouldDelete) => {
         if (shouldDelete) {
           dispatch(flagDeletingAll(true));
-          window.ipcRenderer.send(DELETE_ALL_CHANNEL);
-          window.ipcRenderer.once(DELETE_ALL_CHANNEL, (e, response) =>
+          window.ipcRenderer.send(CLEAR_DATABASE_CHANNEL);
+          window.ipcRenderer.once(CLEAR_DATABASE_CHANNEL, (e, response) =>
             dispatch(response),
           );
         }
@@ -169,5 +169,5 @@ export {
   checkPythonInstallation,
   getFileSizeLimit,
   setFileSizeLimit,
-  deleteAll,
+  clearDatabase,
 };

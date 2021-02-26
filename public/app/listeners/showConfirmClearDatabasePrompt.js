@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { dialog } = require('electron');
 const {
-  SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
+  SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
 } = require('../../shared/channels');
 const logger = require('../logger');
 
-const showConfirmDeleteAllPrompt = (mainWindow) => () => {
+const showConfirmClearDatabasePrompt = (mainWindow) => () => {
   logger.debug('showing confirm prompt to delete all data in application');
 
   const options = {
@@ -19,10 +19,10 @@ const showConfirmDeleteAllPrompt = (mainWindow) => () => {
 
   dialog.showMessageBox(mainWindow, options).then(({ response }) => {
     mainWindow.webContents.send(
-      SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
+      SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
       response,
     );
   });
 };
 
-module.exports = showConfirmDeleteAllPrompt;
+module.exports = showConfirmClearDatabasePrompt;

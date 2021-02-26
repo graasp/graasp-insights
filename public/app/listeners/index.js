@@ -36,8 +36,8 @@ const {
   cancelAllRunningExecutions,
 } = require('./cancelExecution');
 const showConfirmDeletePrompt = require('./showConfirmDeletePrompt');
-const showConfirmDeleteAllPrompt = require('./showConfirmDeleteAllPrompt');
-const deleteAll = require('./deleteAll');
+const showConfirmClearDatabasePrompt = require('./showConfirmClearDatabasePrompt');
+const clearDatabase = require('./clearDatabase');
 const setFileSizeLimit = require('./setFileSizeLimit');
 const getFileSizeLimit = require('./getFileSizeLimit');
 const getSettings = require('./getSettings');
@@ -83,8 +83,8 @@ module.exports = {
   cancelAllRunningExecutions,
   cancelExecution,
   showConfirmDeletePrompt,
-  showConfirmDeleteAllPrompt,
-  deleteAll,
+  showConfirmClearDatabasePrompt,
+  clearDatabase,
   setFileSizeLimit,
   getFileSizeLimit,
   getSettings,

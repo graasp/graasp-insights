@@ -20,7 +20,7 @@ import {
   setFileSizeLimit,
   setLanguage,
   getFileSizeLimit,
-  deleteAll,
+  clearDatabase,
 } from '../actions';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
@@ -42,7 +42,7 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  deleteAllButton: {
+  clearDatabaseButton: {
     marginTop: theme.spacing(1),
     backgroundColor: '#D22B2B',
     color: '#FFF',
@@ -62,7 +62,7 @@ const Settings = (props) => {
     dispatchSetFileSizeLimit,
     fileSizeLimit = DEFAULT_FILE_SIZE_LIMIT,
     dispatchGetFileSizeLimit,
-    dispatchDeleteAll,
+    dispatchClearDatabase,
   } = props;
   dispatchGetLanguage();
   dispatchGetFileSizeLimit();
@@ -146,9 +146,9 @@ const Settings = (props) => {
     );
   };
 
-  const renderDeleteAll = () => {
-    const handleDeleteAll = () => {
-      dispatchDeleteAll();
+  const renderClearDatabase = () => {
+    const handleClearDatabase = () => {
+      dispatchClearDatabase();
     };
 
     return (
@@ -161,9 +161,9 @@ const Settings = (props) => {
         </FormHelperText>
         <Button
           variant="contained"
-          className={classes.deleteAllButton}
+          className={classes.clearDatabaseButton}
           startIcon={<DeleteIcon />}
-          onClick={handleDeleteAll}
+          onClick={handleClearDatabase}
         >
           {t('Clear all data')}
         </Button>
@@ -177,7 +177,7 @@ const Settings = (props) => {
         <Typography variant="h4">{t('Settings')}</Typography>
         {renderLanguageSelect()}
         {renderFileSizeLimit()}
-        {renderDeleteAll()}
+        {renderClearDatabase()}
       </Container>
     </Main>
   );
@@ -189,13 +189,13 @@ Settings.propTypes = {
   dispatchSetLanguage: PropTypes.func.isRequired,
   dispatchGetFileSizeLimit: PropTypes.func.isRequired,
   dispatchSetFileSizeLimit: PropTypes.func.isRequired,
-  dispatchDeleteAll: PropTypes.func.isRequired,
+  dispatchClearDatabase: PropTypes.func.isRequired,
   fileSizeLimit: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     formControl: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    deleteAllButton: PropTypes.string.isRequired,
+    clearDatabaseButton: PropTypes.string.isRequired,
   }).isRequired,
   i18n: PropTypes.shape({
     changeLanguage: PropTypes.func.isRequired,
@@ -212,7 +212,7 @@ const mapDispatchToProps = {
   dispatchSetLanguage: setLanguage,
   dispatchSetFileSizeLimit: setFileSizeLimit,
   dispatchGetFileSizeLimit: getFileSizeLimit,
-  dispatchDeleteAll: deleteAll,
+  dispatchClearDatabase: clearDatabase,
 };
 
 const ConnectedComponent = connect(

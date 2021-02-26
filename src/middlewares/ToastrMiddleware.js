@@ -49,8 +49,8 @@ import {
   SET_SCHEMA_ERROR,
   DELETE_SCHEMA_SUCCESS,
   DELETE_SCHEMA_ERROR,
-  DELETE_ALL_SUCCESS,
-  DELETE_ALL_ERROR,
+  CLEAR_DATABASE_SUCCESS,
+  CLEAR_DATABASE_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -253,7 +253,7 @@ const middleware = () => (next) => (action) => {
     case DELETE_SCHEMA_ERROR:
       message = ERROR_DELETING_SCHEMA_MESSAGE;
       break;
-    case DELETE_ALL_ERROR:
+    case CLEAR_DATABASE_ERROR:
       message = ERROR_DELETING_ALL_MESSAGE;
       break;
 
@@ -300,7 +300,7 @@ const middleware = () => (next) => (action) => {
     case DELETE_SCHEMA_SUCCESS:
       message = SUCCESS_DELETING_SCHEMA_MESSAGE;
       break;
-    case DELETE_ALL_SUCCESS:
+    case CLEAR_DATABASE_SUCCESS:
       message = SUCCESS_DELETING_ALL_MESSAGE;
       break;
     default:

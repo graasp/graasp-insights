@@ -46,8 +46,8 @@ const {
   DELETE_EXECUTION_CHANNEL,
   STOP_EXECUTION_CHANNEL,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
-  SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
-  DELETE_ALL_CHANNEL,
+  SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
+  CLEAR_DATABASE_CHANNEL,
   SET_FILE_SIZE_LIMIT_CHANNEL,
   GET_FILE_SIZE_LIMIT_CHANNEL,
   GET_SETTINGS_CHANNEL,
@@ -92,8 +92,8 @@ const {
   cancelAllRunningExecutions,
   cancelExecution,
   showConfirmDeletePrompt,
-  showConfirmDeleteAllPrompt,
-  deleteAll,
+  showConfirmClearDatabasePrompt,
+  clearDatabase,
   setFileSizeLimit,
   getSettings,
   showConfirmOpenDatasetPrompt,
@@ -356,8 +356,8 @@ app.on('ready', async () => {
   );
 
   ipcMain.on(
-    SHOW_CONFIRM_DELETE_ALL_PROMPT_CHANNEL,
-    showConfirmDeleteAllPrompt(mainWindow),
+    SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
+    showConfirmClearDatabasePrompt(mainWindow),
   );
 
   ipcMain.on(
@@ -410,7 +410,7 @@ app.on('ready', async () => {
   ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, setSampleDatabase(mainWindow, db));
 
   // called when deleting all datasets, schemas, algorithms, executions, and results
-  ipcMain.on(DELETE_ALL_CHANNEL, deleteAll(mainWindow, db));
+  ipcMain.on(CLEAR_DATABASE_CHANNEL, clearDatabase(mainWindow, db));
 
   // called when setting the database
   ipcMain.on(SET_DATABASE_CHANNEL, setDatabase(mainWindow, db));
