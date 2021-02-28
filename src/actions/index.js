@@ -6,3 +6,4 @@ export * from './algorithms';
 export * from './executions';
 export * from './schema';
 export * from './browser';
+export * from './pipeline';

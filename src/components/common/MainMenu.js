@@ -13,6 +13,7 @@ import TimelineIcon from '@material-ui/icons/Timeline';
 import SettingsIcon from '@material-ui/icons/Settings';
 import TuneIcon from '@material-ui/icons/Tune';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 import { withTranslation } from 'react-i18next';
 import {
   HOME_PATH,
@@ -24,6 +25,7 @@ import {
   VISUALIZATIONS_PATH,
   SETTINGS_PATH,
   SCHEMAS_PATH,
+  PIPELINES_PATH,
 } from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
@@ -34,6 +36,7 @@ import {
   RESULTS_MENU_ITEM_ID,
   SETTINGS_MENU_ITEM_ID,
   SCHEMAS_MENU_ITEM_ID,
+  PIPELINES_MENU_ITEM_ID,
 } from '../../config/selectors';
 
 export class MainMenu extends Component {
@@ -189,6 +192,17 @@ export class MainMenu extends Component {
             <TuneIcon />
           </ListItemIcon>
           <ListItemText primary={t('Executions')} />
+        </MenuItem>
+        <MenuItem
+          id={PIPELINES_MENU_ITEM_ID}
+          selected={path === PIPELINES_PATH}
+          onClick={() => this.handleClick(PIPELINES_PATH)}
+          button
+        >
+          <ListItemIcon>
+            <DeviceHubIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Pipelines')} />
         </MenuItem>
         <MenuItem
           selected={path === RESULTS_PATH}
