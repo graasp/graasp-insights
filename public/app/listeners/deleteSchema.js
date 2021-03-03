@@ -5,7 +5,10 @@ const {
   DELETE_SCHEMA_SUCCESS,
   DELETE_SCHEMA_ERROR,
 } = require('../../shared/types');
-const { SCHEMAS_COLLECTION, DATASETS_COLLECTION } = require('../db');
+const {
+  SCHEMAS_COLLECTION,
+  DATASETS_COLLECTION,
+} = require('../../shared/constants');
 
 const deleteSchema = (mainWindow, db) => async (event, { id }) => {
   try {

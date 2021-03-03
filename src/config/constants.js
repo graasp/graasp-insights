@@ -3,8 +3,6 @@ import { PARAMETER_TYPES } from '../shared/constants';
 import theme from '../theme';
 import { generateTextColorFromBackground } from '../utils/color';
 
-export const DATASETS_COLLECTION = 'datasets';
-
 export const DEFAULT_LANGUAGE = 'en';
 export const DEFAULT_PROTOCOL = 'https';
 

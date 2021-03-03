@@ -4,7 +4,10 @@ const { SET_SCHEMA_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const { SET_SCHEMA_SUCCESS, SET_SCHEMA_ERROR } = require('../../shared/types');
-const { DATASETS_COLLECTION, SCHEMAS_COLLECTION } = require('../db');
+const {
+  DATASETS_COLLECTION,
+  SCHEMAS_COLLECTION,
+} = require('../../shared/constants');
 const generateSchemaFromJSON = require('../schema/generateSchemaFromJSON');
 const { validateSchema } = require('../schema/detectSchemas');
 

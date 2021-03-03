@@ -1,6 +1,12 @@
 // this file needs to use module.exports as it is used both by react and electron
 // the original file is located in src/shared and is duplicated in public/shared
 
+const DATASETS_COLLECTION = 'datasets';
+const ALGORITHMS_COLLECTION = 'algorithms';
+const EXECUTIONS_COLLECTION = 'executions';
+const SETTINGS_COLLECTION = 'settings';
+const SCHEMAS_COLLECTION = 'schemas';
+
 const ALGORITHM_TYPES = {
   ANONYMIZATION: 'anonymization',
   UTILS: 'utils',
@@ -45,6 +51,11 @@ const FILE_SIZE_LIMIT_OPTIONS = [0, 500, 1000, 2500, 5000, 10000];
 const DEFAULT_FILE_SIZE_LIMIT = FILE_SIZE_LIMIT_OPTIONS[2];
 
 module.exports = {
+  DATASETS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
+  SETTINGS_COLLECTION,
+  SCHEMAS_COLLECTION,
   ALGORITHM_TYPES,
   APP_BACKGROUND_COLOR,
   AUTHORS,

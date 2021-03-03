@@ -1,6 +1,6 @@
 const fs = require('fs');
 const logger = require('../logger');
-const { ALGORITHMS_COLLECTION } = require('../db');
+const { ALGORITHMS_COLLECTION } = require('../../shared/constants');
 const { SAVE_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const {
   SAVE_ALGORITHM_SUCCESS,

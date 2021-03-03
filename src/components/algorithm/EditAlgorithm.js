@@ -30,6 +30,8 @@ import PythonEditor from '../common/editor/PythonEditor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
 import EditParametersForm from '../parameter/EditParametersForm';
+import { AUTHORS } from '../../shared/constants';
+import { ALGORITHMS_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -40,6 +42,9 @@ const styles = (theme) => ({
     position: 'fixed',
     right: theme.spacing(2),
     bottom: theme.spacing(2),
+  },
+  graaspEditAlert: {
+    marginBottom: theme.spacing(2),
   },
 });
 
@@ -59,14 +64,16 @@ class EditAlgorithm extends Component {
       }).isRequired,
     }).isRequired,
     history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
+      push: PropTypes.func.isRequired,
     }).isRequired,
     dispatchGetAlgorithm: PropTypes.func.isRequired,
     dispatchSaveAlgorithm: PropTypes.func.isRequired,
     dispatchClearAlgorithm: PropTypes.func.isRequired,
+    dispatchAddAlgorithm: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       infoAlert: PropTypes.string.isRequired,
       backButton: PropTypes.string.isRequired,
+      graaspEditAlert: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     activity: PropTypes.bool.isRequired,
@@ -118,12 +125,33 @@ class EditAlgorithm extends Component {
   };
 
   handleSave = () => {
-    const { dispatchSaveAlgorithm, algorithm } = this.props;
+    const {
+      dispatchSaveAlgorithm,
+      dispatchAddAlgorithm,
+      algorithm,
+      history: { push },
+    } = this.props;
     const { name, description, code, parameters } = this.state;
 
     if (algorithm && name) {
       const id = algorithm.get('id');
       const filepath = algorithm.get('filepath');
+      const author = algorithm.get('author');
+
+      // add a new algorithm on edit if the original algorithm is from Graasp
+      if (author === AUTHORS.GRAASP) {
+        dispatchAddAlgorithm({
+          algorithm: {
+            ...algorithm.toJS(),
+            code,
+            name,
+            description,
+            parameters,
+            author: AUTHORS.USER,
+          },
+        });
+        return push(ALGORITHMS_PATH);
+      }
 
       const metadata = {
         id,
@@ -132,14 +160,16 @@ class EditAlgorithm extends Component {
         description,
         parameters,
       };
-      dispatchSaveAlgorithm({ metadata, code });
+      return dispatchSaveAlgorithm({ metadata, code });
     }
+    return false;
   };
 
   render() {
     const { t, classes, algorithm, activity } = this.props;
     const { name, description, code, parameters } = this.state;
     const isValid = name && areParametersValid(parameters);
+    const author = algorithm.get('author');
 
     if (activity) {
       return (
@@ -166,6 +196,11 @@ class EditAlgorithm extends Component {
       <Main id={EDIT_ALGORITHM_MAIN_ID}>
         <Container>
           <h1>{t('Edit Algorithm')}</h1>
+          {author === AUTHORS.GRAASP && (
+            <Alert className={classes.graaspEditAlert} severity="info">
+              {t('Editing a Graasp algorithm will create a new algorithm.')}
+            </Alert>
+          )}
           <Grid container spacing={2} justify="center">
             <Grid item xs={7}>
               <PythonEditor

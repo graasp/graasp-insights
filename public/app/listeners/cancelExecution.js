@@ -1,8 +1,10 @@
 const kill = require('tree-kill');
 const { ERROR_GENERAL } = require('../../shared/errors');
-const { EXECUTIONS_COLLECTION } = require('../db');
 const logger = require('../logger');
-const { EXECUTION_STATUSES } = require('../../shared/constants');
+const {
+  EXECUTION_STATUSES,
+  EXECUTIONS_COLLECTION,
+} = require('../../shared/constants');
 const { STOP_EXECUTION_CHANNEL } = require('../../shared/channels');
 const {
   STOP_EXECUTION_SUCCESS,

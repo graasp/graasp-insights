@@ -1,4 +1,3 @@
-const { DATASETS_COLLECTION } = require('../db');
 const { GET_DATASETS_CHANNEL } = require('../../shared/channels');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
@@ -6,7 +5,10 @@ const {
   GET_DATASETS_ERROR,
 } = require('../../shared/types');
 const logger = require('../logger');
-const { DATASET_TYPES } = require('../../shared/constants');
+const {
+  DATASET_TYPES,
+  DATASETS_COLLECTION,
+} = require('../../shared/constants');
 const { DATASETS_FOLDER } = require('../config/paths');
 
 const getDatasets = (mainWindow, db) => async () => {

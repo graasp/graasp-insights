@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import { withTranslation } from 'react-i18next';
-import { EDITOR_PROGRAMMING_LANGUAGES } from '../../../config/constants';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-xcode';
+import clsx from 'clsx';
+import { withStyles } from '@material-ui/core';
+import { EDITOR_PROGRAMMING_LANGUAGES } from '../../../config/constants';
 
+const styles = () => ({
+  disabled: {
+    background: '#eeeeee',
+  },
+});
 class Editor extends Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
@@ -14,6 +21,9 @@ class Editor extends Component {
     onCodeChange: PropTypes.func,
     readOnly: PropTypes.bool,
     onSave: PropTypes.func,
+    classes: PropTypes.shape({
+      disabled: PropTypes.string.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -30,7 +40,14 @@ class Editor extends Component {
   };
 
   render() {
-    const { t, code, programmingLanguage, readOnly, onSave } = this.props;
+    const {
+      t,
+      code,
+      programmingLanguage,
+      readOnly,
+      onSave,
+      classes,
+    } = this.props;
 
     if (
       !Object.values(EDITOR_PROGRAMMING_LANGUAGES).includes(programmingLanguage)
@@ -40,9 +57,10 @@ class Editor extends Component {
 
     return (
       <AceEditor
+        className={clsx({ [classes.disabled]: readOnly })}
         placeholder={t('your code goes here')}
         mode={programmingLanguage}
-        theme="xcode"
+        theme={readOnly ? 'kuroir' : 'xcode'}
         onChange={this.onChange}
         highlightActiveLine
         value={code}
@@ -68,4 +86,6 @@ class Editor extends Component {
   }
 }
 
-export default withTranslation()(Editor);
+const StyledComponent = withStyles(styles)(Editor);
+
+export default withTranslation()(StyledComponent);

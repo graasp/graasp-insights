@@ -15,6 +15,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import Alert from '@material-ui/lab/Alert';
 import { withRouter } from 'react-router';
 import {
   addAlgorithm,
@@ -32,6 +33,8 @@ import {
   ADD_ALGORITHM_NAME_ID,
   ADD_ALGORITHM_SAVE_BUTTON_ID,
   ADD_ALGORITHM_BUILT_IN_OPTION_ID,
+  DEFAULT_ALGORITHM_SELECT_ID,
+  buildDefaultAlgorithmOptionId,
 } from '../../config/selectors';
 import { AUTHORS } from '../../shared/constants';
 import { areParametersValid } from '../../utils/parameter';
@@ -52,6 +55,9 @@ const styles = (theme) => ({
     position: 'fixed',
     right: theme.spacing(2),
     bottom: theme.spacing(2),
+  },
+  disabledCodeAlert: {
+    width: '100%',
   },
 });
 
@@ -75,6 +81,7 @@ class AddAlgorithm extends Component {
     classes: PropTypes.shape({
       saveButton: PropTypes.string.isRequired,
       backButton: PropTypes.string.isRequired,
+      disabledCodeAlert: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
@@ -152,12 +159,14 @@ class AddAlgorithm extends Component {
       }
     } else {
       const author = AUTHORS.USER;
-      const payload =
-        option === ADD_OPTIONS.FILE
-          ? { name, description, author, parameters, fileLocation }
-          : { name, description, author, parameters, code };
 
-      dispatchAddAlgorithm(payload, onSuccess);
+      dispatchAddAlgorithm(
+        {
+          algorithm: { name, description, author, parameters, code },
+          fileLocation,
+        },
+        onSuccess,
+      );
     }
   };
 
@@ -248,12 +257,17 @@ class AddAlgorithm extends Component {
                           {t('Algorithm')}
                         </InputLabel>
                         <Select
+                          id={DEFAULT_ALGORITHM_SELECT_ID}
                           labelId="built-in-algorithm-select-label"
                           value={builtInAlgoId}
                           onChange={this.handleBuiltInAlgoOnChange}
                         >
                           {GRAASP_ALGORITHMS.map(({ id, name: algoName }) => (
-                            <MenuItem value={id} key={id}>
+                            <MenuItem
+                              id={buildDefaultAlgorithmOptionId(id)}
+                              value={id}
+                              key={id}
+                            >
                               {algoName}
                             </MenuItem>
                           ))}
@@ -261,13 +275,23 @@ class AddAlgorithm extends Component {
                       </FormControl>
                     </Grid>
                     {builtInAlgoId && (
-                      <Grid item xs={12}>
-                        <PythonEditor
-                          parameters={parameters}
-                          code={builtInAlgoCode}
-                          readOnly
-                        />
-                      </Grid>
+                      <>
+                        <Alert
+                          severity="info"
+                          className={classes.disabledCodeAlert}
+                        >
+                          {t(
+                            'Built-in algorithms are default algorithms provided by the application developer. These algorithms cannot be edited.',
+                          )}
+                        </Alert>
+                        <Grid item xs={12}>
+                          <PythonEditor
+                            parameters={parameters}
+                            code={builtInAlgoCode}
+                            readOnly
+                          />
+                        </Grid>
+                      </>
                     )}
                   </Grid>
                 )

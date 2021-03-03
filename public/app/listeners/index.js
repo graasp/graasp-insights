@@ -24,7 +24,7 @@ const showSaveAsPrompt = require('./showSaveAsPrompt');
 const exportResult = require('./exportResult');
 const getAlgorithm = require('./getAlgorithm');
 const saveAlgorithm = require('./saveAlgorithm');
-const addAlgorithm = require('./addAlgorithm');
+const { addAlgorithm, addPythonAlgorithm } = require('./addAlgorithm');
 const browseFile = require('./browseFile');
 const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
@@ -98,4 +98,5 @@ module.exports = {
   openUrlInBrowser,
   getAlgorithmCode,
   addBuiltInAlgorithm,
+  addPythonAlgorithm,
 };

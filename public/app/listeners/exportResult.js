@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { EXPORT_RESULT_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION } = require('../../shared/constants');
 const {
   EXPORT_RESULT_SUCCESS,
   EXPORT_RESULT_ERROR,

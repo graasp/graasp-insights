@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { withTranslation } from 'react-i18next';
 import { getDatabase, setSampleDatabase, setDatabase } from '../../actions';
 import Loader from '../common/Loader';
-import { DATASETS_COLLECTION } from '../../config/constants';
+import { DATASETS_COLLECTION } from '../../shared/constants';
 
 export class DatabaseEditor extends Component {
   static propTypes = {
@@ -55,7 +55,7 @@ export class DatabaseEditor extends Component {
       <div>
         <Typography variant="h6">{t('Manually Edit the Database')}</Typography>
         <ReactJson
-          collapsed
+          collapsed={1}
           src={database}
           onEdit={this.handleEdit}
           onAdd={this.handleEdit}

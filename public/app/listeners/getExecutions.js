@@ -1,4 +1,4 @@
-const { EXECUTIONS_COLLECTION } = require('../db');
+const { EXECUTIONS_COLLECTION } = require('../../shared/constants');
 const { GET_EXECUTIONS_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const {

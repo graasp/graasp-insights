@@ -19,15 +19,15 @@ const {
   ALGORITHMS_FOLDER,
   VAR_FOLDER,
 } = require('./config/paths');
-const GRAASP_ALGORITHMS = require('../shared/graaspAlgorithms');
-const { AUTHORS } = require('../shared/constants');
-const { getFileStats } = require('./utils/file');
-
-const DATASETS_COLLECTION = 'datasets';
-const ALGORITHMS_COLLECTION = 'algorithms';
-const EXECUTIONS_COLLECTION = 'executions';
-const SETTINGS_COLLECTION = 'settings';
-const SCHEMAS_COLLECTION = 'schemas';
+const {
+  AUTHORS,
+  DATASETS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
+  SCHEMAS_COLLECTION,
+  SETTINGS_COLLECTION,
+} = require('../shared/constants');
+const { addPythonAlgorithm } = require('./listeners/addAlgorithm');
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -66,29 +66,10 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
 };
 
 const addGraaspAlgorithm = (db, algorithm) => {
-  const { id, filename } = algorithm;
+  const { filename } = algorithm;
   const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
-  const destPath = path.join(ALGORITHMS_FOLDER, filename);
 
-  fs.copyFileSync(srcPath, destPath);
-
-  // get file data
-  const { sizeInKiloBytes, createdAt, lastModified } = getFileStats(destPath);
-  const metadata = {
-    ...algorithm,
-    filepath: destPath,
-    createdAt,
-    lastModified,
-    size: sizeInKiloBytes,
-  };
-
-  if (db.get(ALGORITHMS_COLLECTION).find({ id }).value()) {
-    // edit
-    db.get(ALGORITHMS_COLLECTION).find({ id }).assign(metadata).write();
-  } else {
-    // add
-    db.get(ALGORITHMS_COLLECTION).push(metadata).write();
-  }
+  addPythonAlgorithm({ algorithm, fileLocation: srcPath }, db);
 };
 
 const ensureAlgorithmsExist = async (db) => {
@@ -102,7 +83,7 @@ const ensureAlgorithmsExist = async (db) => {
     const isNewVersion = lastVersion !== currentVersion;
 
     // set default algorithms
-    [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
+    [GRAASP_UTILS, USER_UTILS].forEach((algo) => {
       const { filename } = algo;
       const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
       const destPath = path.join(ALGORITHMS_FOLDER, filename);

@@ -1,5 +1,5 @@
 const Ajv = require('ajv');
-const { SCHEMAS_COLLECTION } = require('../db');
+const { SCHEMAS_COLLECTION } = require('../../shared/constants');
 
 const ajv = new Ajv();
 

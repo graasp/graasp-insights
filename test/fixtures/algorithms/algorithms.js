@@ -38,6 +38,15 @@ export const PREEXISTING_USER_ALGORITHM = {
   filepath: path.join(__dirname, './sample_algorithm.py'),
 };
 
+export const PREEXISTING_GRAASP_ALGORITHM = {
+  id: 'pre-existing-graasp-algorithm',
+  name: 'Pre-existing graasp algorithm',
+  description: 'some description for a graasp algorithm',
+  author: AUTHORS.GRAASP,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  filepath: path.join(__dirname, './sample_algorithm.py'),
+};
+
 export const ALGORITHM_WITH_PARAMETERS = {
   id: 'algorithm-with-parameters',
   name: 'Algorithm with parameters',

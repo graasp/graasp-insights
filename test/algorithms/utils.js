@@ -28,6 +28,9 @@ import {
   PARAMETER_VALUE_CLASS,
   ADD_PARAMETER_BUTTON_ID,
   buildParameterTypeOptionClass,
+  ADD_ALGORITHM_BUILT_IN_OPTION_ID,
+  DEFAULT_ALGORITHM_SELECT_ID,
+  buildDefaultAlgorithmOptionId,
 } from '../../src/config/selectors';
 import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
@@ -148,6 +151,15 @@ export const editAlgorithm = async (client, { name, description }) => {
   await nameEl.setValue(name);
   await clearInput(descriptionEl);
   await descriptionEl.addValue(description);
+};
+
+export const addDefaultAlgorithm = async (client, { id }) => {
+  const editorOption = await client.$(`#${ADD_ALGORITHM_BUILT_IN_OPTION_ID}`);
+  await editorOption.click();
+
+  const algorithmSelect = await client.$(`#${DEFAULT_ALGORITHM_SELECT_ID}`);
+  await algorithmSelect.click();
+  await (await client.$(`#${buildDefaultAlgorithmOptionId(id)}`)).click();
 };
 
 export const addParameters = async (client, { parameters }) => {

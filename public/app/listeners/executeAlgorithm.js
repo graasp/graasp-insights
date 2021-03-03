@@ -3,16 +3,14 @@ const path = require('path');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/paths');
 const { createNewDataset } = require('./loadDataset');
-const {
-  DATASETS_COLLECTION,
-  ALGORITHMS_COLLECTION,
-  EXECUTIONS_COLLECTION,
-} = require('../db');
 const { buildExecuteAlgorithmChannel } = require('../../shared/channels');
 const {
   PROGRAMMING_LANGUAGES,
   EXECUTION_STATUSES,
   DATASET_TYPES,
+  DATASETS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
 } = require('../../shared/constants');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const {

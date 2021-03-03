@@ -1,5 +1,6 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
+import GRAASP_ALGORITHMS from '../../src/shared/graaspAlgorithms';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
@@ -17,6 +18,7 @@ import {
   clickAddButton,
   getNumberOfAlgorithms,
   addParameters,
+  addDefaultAlgorithm,
 } from './utils';
 
 describe('Add Algorithm Scenarios', function () {
@@ -123,6 +125,26 @@ describe('Add Algorithm Scenarios', function () {
       expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
 
       await checkAlgorithmRowLayout(client, ALGORITHM_WITH_PARAMETERS);
+    }),
+  );
+
+  it(
+    'Adds default algorithm',
+    mochaAsync(async () => {
+      const { client } = app;
+      const algorithm = GRAASP_ALGORITHMS[0];
+
+      const nbAlgosPrev = await getNumberOfAlgorithms(client);
+
+      // add algorithm
+      await clickAddButton(client);
+      await addDefaultAlgorithm(client, { id: algorithm.id });
+      await clickAddAlgoSaveButton(client);
+
+      const nbAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
+
+      await checkAlgorithmRowLayout(client, algorithm);
     }),
   );
 });

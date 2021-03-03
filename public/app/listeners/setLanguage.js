@@ -5,7 +5,7 @@ const {
   SET_LANGUAGE_SUCCESS,
   SET_LANGUAGE_ERROR,
 } = require('../../shared/types');
-const { SETTINGS_COLLECTION } = require('../db');
+const { SETTINGS_COLLECTION } = require('../../shared/constants');
 
 const setLanguage = (mainWindow, db) => async (event, lang) => {
   try {

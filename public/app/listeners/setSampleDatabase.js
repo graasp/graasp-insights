@@ -14,7 +14,6 @@ const {
   SET_SAMPLE_DATABASE_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
-const { ensureAlgorithmsExist } = require('../db');
 
 const setSampleDatabase = (mainWindow, db) => async () => {
   try {
@@ -26,8 +25,6 @@ const setSampleDatabase = (mainWindow, db) => async () => {
       path.join(__dirname, '../data/sampleDataset.json'),
       SAMPLE_DATASET_FILEPATH,
     );
-
-    await ensureAlgorithmsExist(db);
 
     const database = db.getState();
 

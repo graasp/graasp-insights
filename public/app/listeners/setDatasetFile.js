@@ -6,7 +6,7 @@ const {
   SET_DATASET_FILE_ERROR,
 } = require('../../shared/types');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
-const { DATASETS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION } = require('../../shared/constants');
 const { detectSchemas } = require('../schema/detectSchemas');
 
 const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
