@@ -27,7 +27,7 @@ const {
   SCHEMAS_COLLECTION,
   SETTINGS_COLLECTION,
 } = require('../shared/constants');
-const { addPythonAlgorithm } = require('./listeners/addAlgorithm');
+const { addDefaultAlgorithmUtil } = require('./listeners/addDefaultAlgorithm');
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -65,13 +65,6 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   return db;
 };
 
-const addGraaspAlgorithm = (db, algorithm) => {
-  const { filename } = algorithm;
-  const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
-
-  addPythonAlgorithm({ algorithm, fileLocation: srcPath }, db);
-};
-
 const ensureAlgorithmsExist = async (db) => {
   try {
     // create the algorithms folder if it doesn't already exist
@@ -107,7 +100,7 @@ const ensureAlgorithmsExist = async (db) => {
           isProdWithNewVersion
         ) {
           try {
-            addGraaspAlgorithm(db, algo);
+            addDefaultAlgorithmUtil(algo, db);
           } catch (e) {
             logger.error(e);
           }
@@ -140,5 +133,4 @@ module.exports = {
   bootstrapDatabase,
   ensureAlgorithmsExist,
   addDefaultSchemas,
-  addGraaspAlgorithm,
 };

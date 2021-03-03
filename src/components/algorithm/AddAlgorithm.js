@@ -19,7 +19,7 @@ import Alert from '@material-ui/lab/Alert';
 import { withRouter } from 'react-router';
 import {
   addAlgorithm,
-  addBuiltInAlgorithm,
+  addDefaultAlgorithm,
   clearAlgorithm,
   getAlgorithmCode,
 } from '../../actions';
@@ -32,7 +32,7 @@ import {
   ADD_ALGORITHM_FROM_FILE_OPTION_ID,
   ADD_ALGORITHM_NAME_ID,
   ADD_ALGORITHM_SAVE_BUTTON_ID,
-  ADD_ALGORITHM_BUILT_IN_OPTION_ID,
+  ADD_ALGORITHM_DEFAULT_OPTION_ID,
   DEFAULT_ALGORITHM_SELECT_ID,
   buildDefaultAlgorithmOptionId,
 } from '../../config/selectors';
@@ -69,12 +69,12 @@ class AddAlgorithm extends Component {
     code: PYTHON_TEMPLATE_CODE,
     option: ADD_OPTIONS.FILE,
     parameters: [],
-    builtInAlgoId: '',
+    defaultAlgoId: '',
   };
 
   static propTypes = {
     dispatchAddAlgorithm: PropTypes.func.isRequired,
-    dispatchAddBuiltInAlgorithm: PropTypes.func.isRequired,
+    dispatchAddDefaultAlgorithm: PropTypes.func.isRequired,
     dispatchGetAlgorithmCode: PropTypes.func.isRequired,
     dispatchClearAlgorithm: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
@@ -86,7 +86,7 @@ class AddAlgorithm extends Component {
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
     }).isRequired,
-    builtInAlgoCode: PropTypes.string.isRequired,
+    defaultAlgoCode: PropTypes.string.isRequired,
   };
 
   componentWillUnmount() {
@@ -114,11 +114,11 @@ class AddAlgorithm extends Component {
     }
   };
 
-  handleBuiltInAlgoOnChange = ({ target: { value } }) => {
+  handleDefautAlgoOnChange = ({ target: { value } }) => {
     const algorithm = GRAASP_ALGORITHMS.find(({ id }) => id === value);
     if (algorithm) {
       const { name, description, parameters, filename } = algorithm;
-      this.setState({ name, description, builtInAlgoId: value, parameters });
+      this.setState({ name, description, defaultAlgoId: value, parameters });
       const { dispatchGetAlgorithmCode } = this.props;
       dispatchGetAlgorithmCode({ filename, isGraasp: true });
     }
@@ -139,7 +139,7 @@ class AddAlgorithm extends Component {
   handleSave = () => {
     const {
       dispatchAddAlgorithm,
-      dispatchAddBuiltInAlgorithm,
+      dispatchAddDefaultAlgorithm,
       history: { goBack },
     } = this.props;
     const {
@@ -149,13 +149,13 @@ class AddAlgorithm extends Component {
       code,
       option,
       parameters,
-      builtInAlgoId,
+      defaultAlgoId,
     } = this.state;
     const onSuccess = goBack;
 
-    if (option === ADD_OPTIONS.BUILT_IN) {
-      if (builtInAlgoId) {
-        dispatchAddBuiltInAlgorithm({ id: builtInAlgoId }, onSuccess);
+    if (option === ADD_OPTIONS.DEFAULT) {
+      if (defaultAlgoId) {
+        dispatchAddDefaultAlgorithm({ id: defaultAlgoId }, onSuccess);
       }
     } else {
       const author = AUTHORS.USER;
@@ -171,7 +171,7 @@ class AddAlgorithm extends Component {
   };
 
   render() {
-    const { t, classes, builtInAlgoCode } = this.props;
+    const { t, classes, defaultAlgoCode } = this.props;
     const {
       name,
       description,
@@ -179,7 +179,7 @@ class AddAlgorithm extends Component {
       fileLocation,
       code,
       parameters,
-      builtInAlgoId,
+      defaultAlgoId,
     } = this.state;
 
     const isValid =
@@ -206,10 +206,10 @@ class AddAlgorithm extends Component {
                     id={ADD_ALGORITHM_FROM_FILE_OPTION_ID}
                   />
                   <FormControlLabel
-                    value={ADD_OPTIONS.BUILT_IN}
+                    value={ADD_OPTIONS.DEFAULT}
                     control={<Radio color="primary" />}
-                    label={t('Add built-in algorithm')}
-                    id={ADD_ALGORITHM_BUILT_IN_OPTION_ID}
+                    label={t('Add default algorithm')}
+                    id={ADD_ALGORITHM_DEFAULT_OPTION_ID}
                   />
                   <FormControlLabel
                     value={ADD_OPTIONS.EDITOR}
@@ -253,14 +253,14 @@ class AddAlgorithm extends Component {
                   <Grid container spacing={2}>
                     <Grid item xs={5}>
                       <FormControl fullWidth>
-                        <InputLabel id="built-in-algorithm-select-label">
+                        <InputLabel id="default-algorithm-select-label">
                           {t('Algorithm')}
                         </InputLabel>
                         <Select
                           id={DEFAULT_ALGORITHM_SELECT_ID}
-                          labelId="built-in-algorithm-select-label"
-                          value={builtInAlgoId}
-                          onChange={this.handleBuiltInAlgoOnChange}
+                          labelId="default-algorithm-select-label"
+                          value={defaultAlgoId}
+                          onChange={this.handleDefaultAlgoOnChange}
                         >
                           {GRAASP_ALGORITHMS.map(({ id, name: algoName }) => (
                             <MenuItem
@@ -274,20 +274,20 @@ class AddAlgorithm extends Component {
                         </Select>
                       </FormControl>
                     </Grid>
-                    {builtInAlgoId && (
+                    {defaultAlgoId && (
                       <>
                         <Alert
                           severity="info"
                           className={classes.disabledCodeAlert}
                         >
                           {t(
-                            'Built-in algorithms are default algorithms provided by the application developer. These algorithms cannot be edited.',
+                            'Default algorithms are default algorithms provided by the application developer. These algorithms cannot be edited.',
                           )}
                         </Alert>
                         <Grid item xs={12}>
                           <PythonEditor
                             parameters={parameters}
-                            code={builtInAlgoCode}
+                            code={defaultAlgoCode}
                             readOnly
                           />
                         </Grid>
@@ -307,7 +307,7 @@ class AddAlgorithm extends Component {
                 required
                 fullWidth
                 id={ADD_ALGORITHM_NAME_ID}
-                disabled={option === ADD_OPTIONS.BUILT_IN}
+                disabled={option === ADD_OPTIONS.DEFAULT}
               />
               <TextField
                 margin="dense"
@@ -319,12 +319,12 @@ class AddAlgorithm extends Component {
                 helperText={t('(Optional)')}
                 fullWidth
                 id={ADD_ALGORITHM_DESCRIPTION_ID}
-                disabled={option === ADD_OPTIONS.BUILT_IN}
+                disabled={option === ADD_OPTIONS.DEFAULT}
               />
               <EditParametersForm
                 parameters={parameters}
                 onChange={this.handleParamsOnChange}
-                disabled={option === ADD_OPTIONS.BUILT_IN}
+                disabled={option === ADD_OPTIONS.DEFAULT}
               />
             </Grid>
           </Grid>
@@ -351,12 +351,12 @@ class AddAlgorithm extends Component {
 }
 
 const mapStateToProps = ({ algorithms }) => ({
-  builtInAlgoCode: algorithms.getIn(['current', 'content', 'code']) || '',
+  defaultAlgoCode: algorithms.getIn(['current', 'content', 'code']) || '',
 });
 
 const mapDispatchToProps = {
   dispatchAddAlgorithm: addAlgorithm,
-  dispatchAddBuiltInAlgorithm: addBuiltInAlgorithm,
+  dispatchAddDefaultAlgorithm: addDefaultAlgorithm,
   dispatchClearAlgorithm: clearAlgorithm,
   dispatchGetAlgorithmCode: getAlgorithmCode,
 };

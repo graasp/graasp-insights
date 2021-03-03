@@ -31,7 +31,7 @@ module.exports = {
   GET_ALGORITHM_CHANNEL: 'algorithm:get',
   SAVE_ALGORITHM_CHANNEL: 'algorithm:save',
   ADD_ALGORITHM_CHANNEL: 'algorithm:add',
-  ADD_BUILT_IN_ALGORITHM_CHANNEL: 'algorithm:add-built-in',
+  ADD_DEFAULT_ALGORITHM_CHANNEL: 'algorithm:add:default',
   BROWSE_FILE_CHANNEL: 'file:browse',
   GET_UTILS_CHANNEL: 'utils:get',
   SAVE_UTILS_CHANNEL: 'utils:save',

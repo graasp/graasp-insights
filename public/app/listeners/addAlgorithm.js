@@ -48,9 +48,6 @@ const addPythonAlgorithm = ({ algorithm, fileLocation }, db) => {
     size: sizeInKiloBytes,
   };
 
-  logger.debug(metadata);
-  logger.debug(ALGORITHMS_COLLECTION);
-
   db.get(ALGORITHMS_COLLECTION).push(metadata).write();
 };
 

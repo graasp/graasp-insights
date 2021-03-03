@@ -6,7 +6,7 @@ import {
   DELETE_ALGORITHM_CHANNEL,
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
-  ADD_BUILT_IN_ALGORITHM_CHANNEL,
+  ADD_DEFAULT_ALGORITHM_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
@@ -127,13 +127,13 @@ export const addAlgorithm = (payload, onSuccess) => (dispatch) => {
   }
 };
 
-export const addBuiltInAlgorithm = ({ id }, onSuccess) => (dispatch) => {
+export const addDefaultAlgorithm = ({ id }, onSuccess) => (dispatch) => {
   const flagAddingAlgorithm = createFlag(FLAG_ADDING_ALGORITHM);
   try {
     dispatch(flagAddingAlgorithm(true));
-    window.ipcRenderer.send(ADD_BUILT_IN_ALGORITHM_CHANNEL, { id });
+    window.ipcRenderer.send(ADD_DEFAULT_ALGORITHM_CHANNEL, { id });
     window.ipcRenderer.once(
-      ADD_BUILT_IN_ALGORITHM_CHANNEL,
+      ADD_DEFAULT_ALGORITHM_CHANNEL,
       async (event, response) => {
         dispatch(response);
         // eslint-disable-next-line no-unused-expressions

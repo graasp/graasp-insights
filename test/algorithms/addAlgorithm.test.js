@@ -21,7 +21,7 @@ import {
   addDefaultAlgorithm,
 } from './utils';
 
-describe('Add Algorithm Scenarios', function () {
+describe.only('Add Algorithm Scenarios', function () {
   this.timeout(DEFAULT_GLOBAL_TIMEOUT);
   let app = null;
 

@@ -76,7 +76,7 @@ export const ADD_ALGORITHM_BACK_BUTTON_ID = 'addAlgorithmBackButton';
 export const ADD_ALGORITHM_FROM_FILE_OPTION_ID = 'addAlgorithmFromFileOption';
 export const ADD_ALGORITHM_FROM_EDITOR_OPTION_ID =
   'addAlgorithmFromEditorOption';
-export const ADD_ALGORITHM_BUILT_IN_OPTION_ID = 'addAlgorithmBuiltInOption';
+export const ADD_ALGORITHM_DEFAULT_OPTION_ID = 'addAlgorithmDefaultOption';
 export const EDIT_ALGORITHM_NAME_ID = 'editAlgorithmName';
 export const EDIT_ALGORITHM_DESCRIPTION_ID = 'editAlgorithmDescription';
 export const EDIT_ALGORITHM_SAVE_BUTTON_ID = 'editAlgorithmSaveButton';

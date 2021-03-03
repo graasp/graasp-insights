@@ -37,7 +37,7 @@ const {
   EXPORT_RESULT_CHANNEL,
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
-  ADD_BUILT_IN_ALGORITHM_CHANNEL,
+  ADD_DEFAULT_ALGORITHM_CHANNEL,
   BROWSE_FILE_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
@@ -105,7 +105,7 @@ const {
   setSchema,
   deleteSchema,
   openUrlInBrowser,
-  addBuiltInAlgorithm,
+  addDefaultAlgorithm,
   getAlgorithmCode,
 } = require('./app/listeners');
 const env = require('./env.json');
@@ -441,10 +441,10 @@ app.on('ready', async () => {
   // called when adding an algorithm
   ipcMain.on(ADD_ALGORITHM_CHANNEL, addAlgorithm(mainWindow, db));
 
-  // called when adding a built-in algorithm
+  // called when adding a default algorithm
   ipcMain.on(
-    ADD_BUILT_IN_ALGORITHM_CHANNEL,
-    addBuiltInAlgorithm(mainWindow, db),
+    ADD_DEFAULT_ALGORITHM_CHANNEL,
+    addDefaultAlgorithm(mainWindow, db),
   );
 
   // called when browsing a file
