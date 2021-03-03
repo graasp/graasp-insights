@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -34,7 +36,7 @@ import {
 
 const styles = (theme) => ({
   formControl: {
-    width: theme.spacing(35),
+    width: '50%',
     margin: theme.spacing(2, 0),
   },
   content: {
@@ -49,6 +51,9 @@ const styles = (theme) => ({
     '&:hover': {
       backgroundColor: '#C41E3A',
     },
+  },
+  sampleDatabaseCheckboxLabel: {
+    fontSize: '1em',
   },
 });
 
@@ -66,6 +71,7 @@ const Settings = (props) => {
   } = props;
   dispatchGetLanguage();
   dispatchGetFileSizeLimit();
+  let checkboxRef = useRef(null);
 
   const handleChangeLanguage = async (event) => {
     const { value: newLang } = event.target;
@@ -148,8 +154,19 @@ const Settings = (props) => {
 
   const renderClearDatabase = () => {
     const handleClearDatabase = () => {
-      dispatchClearDatabase();
+      dispatchClearDatabase({ useSampleDatabase: checkboxRef.checked });
     };
+
+    const useSampleDatabaseCheckbox = (
+      <Checkbox
+        color="primary"
+        inputProps={{
+          'aria-label': 'primary checkbox',
+          // eslint-disable-next-line no-return-assign
+          ref: (ref) => (checkboxRef = ref),
+        }}
+      />
+    );
 
     return (
       <FormControl className={classes.formControl}>
@@ -159,6 +176,11 @@ const Settings = (props) => {
             'Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.',
           )}
         </FormHelperText>
+        <FormControlLabel
+          classes={{ label: classes.sampleDatabaseCheckboxLabel }}
+          control={useSampleDatabaseCheckbox}
+          label="Use Default Dataset"
+        />
         <Button
           variant="contained"
           className={classes.clearDatabaseButton}
@@ -196,6 +218,7 @@ Settings.propTypes = {
     formControl: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     clearDatabaseButton: PropTypes.string.isRequired,
+    sampleDatabaseCheckboxLabel: PropTypes.string.isRequired,
   }).isRequired,
   i18n: PropTypes.shape({
     changeLanguage: PropTypes.func.isRequired,

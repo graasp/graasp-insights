@@ -12,7 +12,7 @@ const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
 const logger = require('./app/logger');
 const { ICON_PATH, PRODUCT_NAME } = require('./app/config/config');
-const { DATABASE_PATH, ALGORITHMS_FOLDER } = require('./app/config/paths');
+const { DATABASE_PATH } = require('./app/config/paths');
 const isMac = require('./app/utils/isMac');
 const {
   LOAD_DATASET_CHANNEL,
@@ -109,12 +109,7 @@ const {
   getAlgorithmCode,
 } = require('./app/listeners');
 const env = require('./env.json');
-const {
-  ensureDatabaseExists,
-  bootstrapDatabase,
-  ensureAlgorithmsExist,
-  addDefaultSchemas,
-} = require('./app/db');
+const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -342,8 +337,6 @@ const generateMenu = () => {
 app.on('ready', async () => {
   await ensureDatabaseExists(DATABASE_PATH);
   const db = bootstrapDatabase(DATABASE_PATH);
-  await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
-  await addDefaultSchemas(db);
 
   // set version file in var folder
   // used to detect first install

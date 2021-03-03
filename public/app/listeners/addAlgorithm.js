@@ -16,8 +16,8 @@ const {
 const { getFileStats } = require('../utils/file');
 
 const addPythonAlgorithm = ({ algorithm, fileLocation }, db) => {
-  logger.debug('add python algorithm');
   const { name, description, author, code, parameters, type } = algorithm;
+  logger.debug(`add python algorithm ${name}`);
 
   const id = ObjectId().str;
   const filename = `${id}.py`;

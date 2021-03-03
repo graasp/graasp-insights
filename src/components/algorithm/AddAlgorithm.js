@@ -114,7 +114,7 @@ class AddAlgorithm extends Component {
     }
   };
 
-  handleDefautAlgoOnChange = ({ target: { value } }) => {
+  handleDefaultAlgoOnChange = ({ target: { value } }) => {
     const algorithm = GRAASP_ALGORITHMS.find(({ id }) => id === value);
     if (algorithm) {
       const { name, description, parameters, filename } = algorithm;

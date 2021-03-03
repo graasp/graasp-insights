@@ -37,7 +37,7 @@ const {
 } = require('./cancelExecution');
 const showConfirmDeletePrompt = require('./showConfirmDeletePrompt');
 const showConfirmClearDatabasePrompt = require('./showConfirmClearDatabasePrompt');
-const clearDatabase = require('./clearDatabase');
+const { clearDatabase, clearDatabaseUtil } = require('./clearDatabase');
 const setFileSizeLimit = require('./setFileSizeLimit');
 const getFileSizeLimit = require('./getFileSizeLimit');
 const getSettings = require('./getSettings');
@@ -103,4 +103,5 @@ module.exports = {
   addDefaultAlgorithm,
   addDefaultAlgorithmUtil,
   addPythonAlgorithm,
+  clearDatabaseUtil,
 };

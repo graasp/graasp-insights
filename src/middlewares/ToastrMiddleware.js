@@ -52,6 +52,8 @@ import {
   CLEAR_DATABASE_SUCCESS,
   CLEAR_DATABASE_ERROR,
   GET_ALGORITHM_CODE_ERROR,
+  SET_SAMPLE_DATABASE_SUCCESS,
+  SET_SAMPLE_DATABASE_ERROR,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -106,6 +108,8 @@ import {
   SUCCESS_DELETING_ALL_MESSAGE,
   ERROR_DELETING_ALL_MESSAGE,
   ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
+  ERROR_SETTING_SAMPLE_DATABASE_MESSAGE,
+  SUCCESS_SETTING_SAMPLE_DATABASE_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -265,6 +269,9 @@ const middleware = () => (next) => (action) => {
     case CLEAR_DATABASE_ERROR:
       message = ERROR_DELETING_ALL_MESSAGE;
       break;
+    case SET_SAMPLE_DATABASE_ERROR:
+      message = ERROR_SETTING_SAMPLE_DATABASE_MESSAGE;
+      break;
 
     // success messages
     case LOAD_DATASET_SUCCESS:
@@ -311,6 +318,9 @@ const middleware = () => (next) => (action) => {
       break;
     case CLEAR_DATABASE_SUCCESS:
       message = SUCCESS_DELETING_ALL_MESSAGE;
+      break;
+    case SET_SAMPLE_DATABASE_SUCCESS:
+      message = SUCCESS_SETTING_SAMPLE_DATABASE_MESSAGE;
       break;
     default:
       break;

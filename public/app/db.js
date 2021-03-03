@@ -12,7 +12,6 @@ const {
   GRAASP_UTILS,
   USER_UTILS,
 } = require('./config/config');
-const { DEFAULT_SCHEMAS } = require('./schema/config');
 const {
   DATABASE_PATH,
   DATASETS_FOLDER,
@@ -45,24 +44,6 @@ const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
       logger.error(writeErr);
     }
   }
-};
-
-const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
-  const adapter = new FileSync(dbPath);
-  const db = low(adapter);
-
-  // create the datasets folder if it doesn't already exist
-  fse.ensureDirSync(DATASETS_FOLDER);
-
-  // set some defaults (required if json file is empty)
-  db.defaults({
-    [DATASETS_COLLECTION]: [],
-    [ALGORITHMS_COLLECTION]: [],
-    [EXECUTIONS_COLLECTION]: [],
-    [SETTINGS_COLLECTION]: {},
-    [SCHEMAS_COLLECTION]: {},
-  }).write();
-  return db;
 };
 
 const ensureAlgorithmsExist = async (db) => {
@@ -112,15 +93,27 @@ const ensureAlgorithmsExist = async (db) => {
   }
 };
 
-const addDefaultSchemas = async (db) => {
-  Object.entries(DEFAULT_SCHEMAS).forEach(([id, schemaInfo]) => {
-    if (!db.get(SCHEMAS_COLLECTION).has(id).value()) {
-      const createdAt = Date.now();
-      db.get(SCHEMAS_COLLECTION)
-        .set(id, { ...schemaInfo, createdAt })
-        .write();
-    }
-  });
+const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
+  const adapter = new FileSync(dbPath);
+  const db = low(adapter);
+
+  // create the necessary folders if they don't already exist
+  fse.ensureDirSync(DATASETS_FOLDER);
+  fse.ensureDirSync(ALGORITHMS_FOLDER);
+  fse.ensureDirSync(EXECUTIONS_COLLECTION);
+  fse.ensureDirSync(SCHEMAS_COLLECTION);
+
+  // set some defaults (required if json file is empty)
+  db.defaults({
+    [DATASETS_COLLECTION]: [],
+    [ALGORITHMS_COLLECTION]: [],
+    [EXECUTIONS_COLLECTION]: [],
+    [SETTINGS_COLLECTION]: {},
+    [SCHEMAS_COLLECTION]: {},
+  }).write();
+
+  ensureAlgorithmsExist(db);
+  return db;
 };
 
 module.exports = {
@@ -132,5 +125,4 @@ module.exports = {
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
-  addDefaultSchemas,
 };
