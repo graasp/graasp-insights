@@ -25,7 +25,7 @@ import {
 import {
   DEFAULT_FILE_SIZE_LIMIT,
   FILE_SIZE_LIMIT_OPTIONS,
-} from '../config/constants';
+} from '../shared/constants';
 import {
   SETTINGS_FILE_SIZE_LIMIT_SELECT_ID,
   SETTINGS_LANG_SELECT,

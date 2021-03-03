@@ -5,8 +5,8 @@ const path = require('path');
 const VAR_FOLDER = path.join(app.getPath('userData'), 'var');
 const DATABASE_PATH = `${VAR_FOLDER}/db.json`;
 const ICON_PATH = 'app/assets/icon.png';
-const DATASETS_FOLDER = `${VAR_FOLDER}/datasets`;
-const ALGORITHMS_FOLDER = `${VAR_FOLDER}/algorithms`;
+const DATASETS_FOLDER = path.join(VAR_FOLDER, `datasets`);
+const ALGORITHMS_FOLDER = path.join(VAR_FOLDER, 'algorithms');
 const SAMPLE_DATASET_FILEPATH = path.resolve(
   `${DATASETS_FOLDER}/sampleDataset.json`,
 );

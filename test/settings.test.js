@@ -17,12 +17,12 @@ import {
   SETTINGS_FILE_SIZE_LIMIT_SELECT_ID,
   SETTINGS_LANG_SELECT,
 } from '../src/config/selectors';
+import { DEFAULT_LANGUAGE } from '../src/config/constants';
+import { DATASET_1000_KB } from './fixtures/datasets/datasets';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
-  DEFAULT_LANGUAGE,
   FILE_SIZE_LIMIT_OPTIONS,
-} from '../src/config/constants';
-import { DATASET_1000_KB } from './fixtures/datasets/datasets';
+} from '../src/shared/constants';
 
 const isLanguageSetTo = async (client, value) => {
   const lang = await (

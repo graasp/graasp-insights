@@ -101,8 +101,7 @@ const ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE =
 const ERROR_OPENING_DATASET_MESSAGE = 'There was an error opening the dataset';
 const ERROR_GETTING_SETTINGS_MESSAGE =
   'There was an error retrieving the settings';
-const ERROR_OPENING_PATH_IN_EXPLORER_MESSAGE =
-  'There was an error opening the path in the explorer';
+const ERROR_OPENING_PATH_MESSAGE = 'There was an error opening the given path';
 const ERROR_GETTING_SCHEMAS_MESSAGE =
   'There was an error retrieving the schemas';
 const SUCCESS_SETTING_SCHEMA_MESSAGE = 'The schema was saved successfully';
@@ -170,7 +169,7 @@ module.exports = {
   ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_OPENING_DATASET_MESSAGE,
   ERROR_GETTING_SETTINGS_MESSAGE,
-  ERROR_OPENING_PATH_IN_EXPLORER_MESSAGE,
+  ERROR_OPENING_PATH_MESSAGE,
   ERROR_GETTING_SCHEMAS_MESSAGE,
   SUCCESS_SETTING_SCHEMA_MESSAGE,
   ERROR_SETTING_SCHEMA_MESSAGE,

@@ -6,7 +6,11 @@ const {
   SCHEMAS_COLLECTION,
 } = require('../db');
 const { SAMPLE_DATASET_FILEPATH } = require('../config/paths');
-const { GRAASP_SCHEMA_ID, DATASET_TYPES } = require('../../shared/constants');
+const {
+  GRAASP_SCHEMA_ID,
+  DATASET_TYPES,
+  DEFAULT_FILE_SIZE_LIMIT,
+} = require('../../shared/constants');
 const { DEFAULT_SCHEMAS } = require('../schema/config');
 
 module.exports = {
@@ -24,6 +28,8 @@ module.exports = {
   ],
   [ALGORITHMS_COLLECTION]: [],
   [EXECUTIONS_COLLECTION]: [],
-  [SETTINGS_COLLECTION]: {},
+  [SETTINGS_COLLECTION]: {
+    fileSizeLimit: DEFAULT_FILE_SIZE_LIMIT,
+  },
   [SCHEMAS_COLLECTION]: DEFAULT_SCHEMAS,
 };

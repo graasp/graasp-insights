@@ -15,9 +15,17 @@ const formatFileSize = (sizeInKb) => {
 };
 
 const getNameFromLocation = (fileLocation) => {
-  return path
-    .basename(fileLocation)
-    .slice(0, -path.extname(fileLocation).length);
+  let name = '';
+  // osx locations
+  if (fileLocation.includes('/')) {
+    name = path.basename(fileLocation);
+  } else {
+    // for windows locations
+    // bug: basename returns full path for windows
+    const str = fileLocation.split('\\');
+    name = str[str.length - 1];
+  }
+  return name.slice(0, -path.extname(fileLocation).length);
 };
 
 module.exports = { getNameFromLocation, formatFileSize };
