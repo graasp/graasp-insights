@@ -7,13 +7,21 @@ import i18n from '../src/config/i18n';
 import { createApplication, closeApplication } from './application';
 import { DEFAULT_GLOBAL_TIMEOUT } from './constants';
 import {
+  ALGORITHMS_EMPTY_ALERT_ID,
   ALGORITHMS_MENU_ITEM_ID,
   buildDatasetsListViewButtonClass,
+  buildSchemaTagClass,
+  DATASETS_EMPTY_ALERT_ID,
   DATASETS_MAIN_ID,
   DATASETS_MENU_ITEM_ID,
   DATASET_SCREEN_MAIN_ID,
+  EXECUTIONS_ALERT_NO_DATASET_ID,
   EXECUTIONS_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
+  SCHEMAS_EMPTY_ALERT_ID,
+  SCHEMAS_TABLE_ID,
+  SETTINGS_CLEAR_DATABASE_BUTTON_ID,
+  SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID,
   SETTINGS_FILE_SIZE_LIMIT_SELECT_ID,
   SETTINGS_LANG_SELECT,
 } from '../src/config/selectors';
@@ -21,8 +29,13 @@ import { DEFAULT_LANGUAGE } from '../src/config/constants';
 import { DATASET_1000_KB } from './fixtures/datasets/datasets';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
+  GRAASP_SCHEMA_ID,
   FILE_SIZE_LIMIT_OPTIONS,
 } from '../src/shared/constants';
+import { PREEXISTING_GRAASP_ALGORITHM } from './fixtures/algorithms/algorithms';
+import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
+import { checkAlgorithmRowLayout } from './algorithms/utils';
+import GRAASP_ALGORITHMS from '../public/shared/graaspAlgorithms';
 
 const isLanguageSetTo = async (client, value) => {
   const lang = await (
@@ -60,11 +73,20 @@ const changeFileSizeLimit = async (client, value) => {
   }
 };
 
+const clearDatabase = async (client, { useSampleDatabase = false } = {}) => {
+  if (useSampleDatabase) {
+    await (
+      await client.$(`#${SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID}`)
+    ).click();
+  }
+  await (await client.$(`#${SETTINGS_CLEAR_DATABASE_BUTTON_ID}`)).click();
+};
+
 describe('Settings Scenarios', function () {
   this.timeout(DEFAULT_GLOBAL_TIMEOUT);
   let app = null;
 
-  afterEach(function () {
+  afterEach(() => {
     return closeApplication(app);
   });
 
@@ -169,6 +191,85 @@ describe('Settings Scenarios', function () {
 
         // user cancels, so we are on datasets page
         await client.expectElementToExist(`#${DATASET_SCREEN_MAIN_ID}`);
+      }),
+    );
+  });
+
+  describe('Clear database', () => {
+    beforeEach(
+      mochaAsync(async () => {
+        app = await createApplication({
+          database: {
+            datasets: [DATASET_1000_KB],
+            algorithms: [PREEXISTING_GRAASP_ALGORITHM],
+            schemas: [DEFAULT_SCHEMAS[GRAASP_SCHEMA_ID]],
+          },
+          responses: {
+            showMessageDialogResponse: 1,
+          },
+        });
+      }),
+    );
+
+    it(
+      'Clear database',
+      mochaAsync(async () => {
+        const { client } = app;
+
+        await client.goToSettings();
+        await clearDatabase(client);
+
+        // empty datasets
+        await client.goToDatasets();
+        await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
+
+        // empty algorithms
+        await client.goToAlgorithms();
+        await client.expectElementToExist(`#${ALGORITHMS_EMPTY_ALERT_ID}`);
+
+        // empty executions
+        await client.goToExecutions();
+        await client.expectElementToExist(`#${EXECUTIONS_ALERT_NO_DATASET_ID}`);
+
+        // empty schemas
+        await client.goToSchemas();
+        await client.expectElementToExist(`#${SCHEMAS_EMPTY_ALERT_ID}`);
+      }),
+    );
+
+    it(
+      'Clear database and use sample database',
+      mochaAsync(async () => {
+        const { client } = app;
+
+        await client.goToSettings();
+        await clearDatabase(client, { useSampleDatabase: true });
+
+        // empty datasets
+        await client.goToDatasets();
+        await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
+
+        // contains graasp algorithms
+        await client.goToAlgorithms();
+        for (const algorithm of GRAASP_ALGORITHMS) {
+          // eslint-disable-next-line no-await-in-loop
+          await checkAlgorithmRowLayout(client, algorithm);
+        }
+
+        // empty executions
+        await client.goToExecutions();
+        await client.expectElementToExist(`#${EXECUTIONS_ALERT_NO_DATASET_ID}`);
+
+        // contains default schemas
+        await client.goToSchemas();
+        const schemaExistencePromises = Object.values(
+          DEFAULT_SCHEMAS,
+        ).map(({ label }) =>
+          client.expectElementToExist(
+            `#${SCHEMAS_TABLE_ID} .${buildSchemaTagClass(label)}`,
+          ),
+        );
+        await Promise.all(schemaExistencePromises);
       }),
     );
   });

@@ -31,6 +31,8 @@ import {
   MISSING_FILE_DATASET,
 } from './fixtures/datasets/datasets';
 import { ADD_DATASET_PAUSE } from './time';
+import { GRAASP_SCHEMA_ID } from '../src/shared/constants';
+import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
 
 const fillAddDatasetForm = async (client, { name, description, filepath }) => {
   const basename = path.basename(filepath, '.json');
@@ -132,6 +134,9 @@ describe('Datasets Scenarios', function () {
   beforeEach(
     mochaAsync(async () => {
       app = await createApplication({
+        database: {
+          schemas: [DEFAULT_SCHEMAS[GRAASP_SCHEMA_ID]],
+        },
         responses: { showMessageDialogResponse: 1 },
       });
     }),

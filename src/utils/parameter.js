@@ -1,9 +1,11 @@
+import _ from 'lodash';
 import { PARAMETER_TYPES } from '../shared/constants';
 
 // verify if the parameter value satisfies the type
 export const isParameterValid = ({ type, value }) => {
   switch (type) {
     case PARAMETER_TYPES.FIELD_SELECTOR:
+      return !_.isEmpty(value);
     case PARAMETER_TYPES.STRING_INPUT:
       return true;
     case PARAMETER_TYPES.FLOAT_INPUT:

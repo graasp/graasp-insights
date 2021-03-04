@@ -1,13 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable func-names */
 import { expect } from 'chai';
-import GRAASP_ALGORITHMS from '../../public/shared/graaspAlgorithms';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   REPLACEMENT_ALGORITHM,
   SIMPLE_ALGORITHM,
   PREEXISTING_USER_ALGORITHM,
+  PREEXISTING_GRAASP_ALGORITHM,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
@@ -30,7 +30,12 @@ describe('Algorithms Scenarios', function () {
   beforeEach(
     mochaAsync(async () => {
       app = await createApplication({
-        database: { algorithms: [PREEXISTING_USER_ALGORITHM] },
+        database: {
+          algorithms: [
+            PREEXISTING_USER_ALGORITHM,
+            PREEXISTING_GRAASP_ALGORITHM,
+          ],
+        },
         responses: { showMessageDialogResponse: 1 },
       });
       const { client } = app;
@@ -41,18 +46,6 @@ describe('Algorithms Scenarios', function () {
   afterEach(() => {
     return closeApplication(app);
   });
-
-  it(
-    'Correctly initialize Graasp algorithms',
-    mochaAsync(async () => {
-      const { client } = app;
-
-      for (const algorithm of GRAASP_ALGORITHMS) {
-        // eslint-disable-next-line no-await-in-loop
-        await checkAlgorithmRowLayout(client, algorithm);
-      }
-    }),
-  );
 
   it(
     'Correctly delete an algorithm',

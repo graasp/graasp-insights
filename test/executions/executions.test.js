@@ -163,6 +163,7 @@ describe('Executions Scenarios', function () {
         app = await createApplication({
           database: {
             datasets: [EXECUTION_FAST.dataset],
+            algorithms: [EXECUTION_FAST.algorithm],
           },
         });
         const { client } = app;

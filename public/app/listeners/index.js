@@ -24,7 +24,7 @@ const showSaveAsPrompt = require('./showSaveAsPrompt');
 const exportResult = require('./exportResult');
 const getAlgorithm = require('./getAlgorithm');
 const saveAlgorithm = require('./saveAlgorithm');
-const { addAlgorithm, addPythonAlgorithm } = require('./addAlgorithm');
+const { addAlgorithm, addPythonAlgorithmInDb } = require('./addAlgorithm');
 const browseFile = require('./browseFile');
 const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
@@ -44,13 +44,13 @@ const getSettings = require('./getSettings');
 const showConfirmOpenDatasetPrompt = require('./showConfirmOpenDatasetPrompt');
 const openPath = require('./openPath');
 const getSchemas = require('./getSchemas');
-const setSchema = require('./setSchema');
+const { setSchema, saveSchemaInDb } = require('./setSchema');
 const deleteSchema = require('./deleteSchema');
 const openUrlInBrowser = require('./openUrlInBrowser');
 const getAlgorithmCode = require('./getAlgorithmCode');
 const {
   addDefaultAlgorithm,
-  addDefaultAlgorithmUtil,
+  saveDefaultAlgorithmInDb,
 } = require('./addDefaultAlgorithm');
 
 module.exports = {
@@ -101,7 +101,8 @@ module.exports = {
   openUrlInBrowser,
   getAlgorithmCode,
   addDefaultAlgorithm,
-  addDefaultAlgorithmUtil,
-  addPythonAlgorithm,
+  saveDefaultAlgorithmInDb,
+  addPythonAlgorithmInDb,
   clearDatabaseUtil,
+  saveSchemaInDb,
 };

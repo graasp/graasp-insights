@@ -26,7 +26,7 @@ const {
   SCHEMAS_COLLECTION,
   SETTINGS_COLLECTION,
 } = require('../shared/constants');
-const { addDefaultAlgorithmUtil } = require('./listeners/addDefaultAlgorithm');
+const { saveDefaultAlgorithmInDb } = require('./listeners/addDefaultAlgorithm');
 
 // use promisified fs
 const fsPromises = fs.promises;
@@ -46,7 +46,7 @@ const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
   }
 };
 
-const ensureAlgorithmsExist = async (db) => {
+const ensureAlgorithmsExist = (db) => {
   try {
     // create the algorithms folder if it doesn't already exist
     fse.ensureDirSync(ALGORITHMS_FOLDER);
@@ -81,7 +81,7 @@ const ensureAlgorithmsExist = async (db) => {
           isProdWithNewVersion
         ) {
           try {
-            addDefaultAlgorithmUtil(algo, db);
+            saveDefaultAlgorithmInDb(algo, db);
           } catch (e) {
             logger.error(e);
           }
@@ -100,8 +100,6 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   // create the necessary folders if they don't already exist
   fse.ensureDirSync(DATASETS_FOLDER);
   fse.ensureDirSync(ALGORITHMS_FOLDER);
-  fse.ensureDirSync(EXECUTIONS_COLLECTION);
-  fse.ensureDirSync(SCHEMAS_COLLECTION);
 
   // set some defaults (required if json file is empty)
   db.defaults({

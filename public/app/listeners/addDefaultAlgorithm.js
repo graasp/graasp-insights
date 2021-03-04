@@ -8,13 +8,13 @@ const {
 const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
 const GRAASP_ALGORITHMS = require('../../shared/graaspAlgorithms');
 const { ALGORITHMS_FOLDER_NAME } = require('../config/config');
-const { addPythonAlgorithm } = require('./addAlgorithm');
+const { addPythonAlgorithmInDb } = require('./addAlgorithm');
 
-const addDefaultAlgorithmUtil = (algorithm, db) => {
+const saveDefaultAlgorithmInDb = (algorithm, db) => {
   const { filename } = algorithm;
   const srcPath = path.join(__dirname, '..', ALGORITHMS_FOLDER_NAME, filename);
 
-  addPythonAlgorithm({ algorithm, fileLocation: srcPath }, db);
+  addPythonAlgorithmInDb({ algorithm, fileLocation: srcPath }, db);
 };
 
 const addDefaultAlgorithm = (mainWindow, db) => async (event, { id }) => {
@@ -27,7 +27,7 @@ const addDefaultAlgorithm = (mainWindow, db) => async (event, { id }) => {
       });
     }
 
-    addDefaultAlgorithmUtil(algorithm, db);
+    saveDefaultAlgorithmInDb(algorithm, db);
 
     return mainWindow.webContents.send(ADD_DEFAULT_ALGORITHM_CHANNEL, {
       type: ADD_ALGORITHM_SUCCESS,
@@ -48,4 +48,4 @@ const addDefaultAlgorithm = (mainWindow, db) => async (event, { id }) => {
   }
 };
 
-module.exports = { addDefaultAlgorithm, addDefaultAlgorithmUtil };
+module.exports = { addDefaultAlgorithm, saveDefaultAlgorithmInDb };

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import _ from 'lodash';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Alert from '@material-ui/lab/Alert';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -12,7 +14,6 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import { Alert } from '@material-ui/lab';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
@@ -26,6 +27,10 @@ import {
   PARAMETER_VALUE_CLASS,
   ADD_PARAMETER_BUTTON_ID,
   buildParameterTypeOptionClass,
+  buildAlertFieldSelectorUndefinedSchema,
+  ALERT_FIELD_SELECTOR_NO_SCHEMA_AVAILABLE_ID,
+  PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
+  buildParameterSchemaOption,
 } from '../../config/selectors';
 import { PARAMETER_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import { setFieldSelectorAttributes } from '../../shared/utils';
@@ -57,8 +62,19 @@ const useStyles = makeStyles((theme) => ({
 
 const EditParametersForm = (props) => {
   const { t, parameters, onChange, id, className, schemas, disabled } = props;
+
+  // get schemaId from definition, suppose only one schema is defined
+  const schemaIdFromDefinition = parameters
+    .map(({ value }) => (_.isObject(value) ? Object.keys(value) : null))
+    .flat()
+    .find((schemaId) => Boolean(schemaId));
+
   const classes = useStyles();
-  const [schemaId, setSchemaId] = useState(GRAASP_SCHEMA_ID);
+  const [schemaId, setSchemaId] = useState(
+    schemaIdFromDefinition ||
+      schemas.get(GRAASP_SCHEMA_ID)?.id ||
+      schemas.first()?.id,
+  );
 
   const updateParam = (updatedParam, paramIdx) => {
     // replace the param at the right index with the updated one
@@ -156,12 +172,53 @@ const EditParametersForm = (props) => {
         );
       }
       case PARAMETER_TYPES.FIELD_SELECTOR: {
+        // if no schema is defined
+        if (!schemaId && !disabled) {
+          return (
+            <Alert
+              severity="error"
+              className={classes.infoAlert}
+              id={ALERT_FIELD_SELECTOR_NO_SCHEMA_AVAILABLE_ID}
+            >
+              {t('There is no schema available to select fields from.')}
+            </Alert>
+          );
+        }
+
         let fieldSelection;
         if (schemaId in value) {
           fieldSelection = value[schemaId];
-        } else {
-          const schema = schemas.get(schemaId)?.schema;
+        }
+        // needed schemas is missing
+        if (!schemas.get(schemaId)) {
+          return (
+            <Alert
+              severity="error"
+              className={classes.infoAlert}
+              id={buildAlertFieldSelectorUndefinedSchema(schemaId)}
+            >
+              {t(
+                'A necessary schema is missing. Problems might occur when executing this algorithm.',
+              )}
+            </Alert>
+          );
+        }
+
+        const { schema } = schemas.get(schemaId);
+
+        try {
           fieldSelection = setFieldSelectorAttributes(schema, false, 1);
+        } catch (e) {
+          // catch errors coming from a wrong schema definition
+          return (
+            <Alert
+              severity="error"
+              className={classes.infoAlert}
+              id={buildAlertFieldSelectorUndefinedSchema(schemaId)}
+            >
+              {t('An error occured. This schema is not properly defined.')}
+            </Alert>
+          );
         }
 
         return (
@@ -192,6 +249,7 @@ const EditParametersForm = (props) => {
             <FormControl>
               <InputLabel>{t('Schema')}</InputLabel>
               <Select
+                id={PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID}
                 value={schemaId}
                 onChange={(event) => {
                   setSchemaId(event.target.value);
@@ -199,7 +257,11 @@ const EditParametersForm = (props) => {
                 disabled={disabled}
               >
                 {schemas.entrySeq().map(([sid, { label }]) => (
-                  <MenuItem value={sid} key={label}>
+                  <MenuItem
+                    value={sid}
+                    key={label}
+                    id={buildParameterSchemaOption(sid)}
+                  >
                     {label}
                   </MenuItem>
                 ))}

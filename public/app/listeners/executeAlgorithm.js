@@ -82,7 +82,7 @@ const executeAlgorithm = (mainWindow, db) => (
     // prepare success callback function
     // copy tmp as new result dataset
     // update execution and return it
-    const onSuccess = () => {
+    const onSuccess = ({ log }) => {
       // save result in db
       const newResult = createNewResultDataset(
         {
@@ -100,6 +100,7 @@ const executeAlgorithm = (mainWindow, db) => (
         .assign({
           status: EXECUTION_STATUSES.SUCCESS,
           result: { id: newResult.id },
+          log,
         })
         .unset('pid')
         .write();

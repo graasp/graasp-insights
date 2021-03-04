@@ -120,3 +120,17 @@ export const buildDatasetRowClass = (name) => `datasetRow-${parseName(name)}`;
 export const DEFAULT_ALGORITHM_SELECT_ID = 'defaultAlgorithmSelect';
 export const buildDefaultAlgorithmOptionId = (id) =>
   `defaultAlgorithmOption-${id}`;
+export const buildAlertFieldSelectorUndefinedSchema = (id) =>
+  `alertFieldSelectorUndefinedSchema-${id}`;
+export const ALERT_FIELD_SELECTOR_NO_SCHEMA_AVAILABLE_ID =
+  'alertFieldSelectorNoSchemaAvailable';
+export const PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID =
+  'parametersFieldSelectorSelectSchemas';
+export const buildParameterSchemaOption = (id) => `parameterSchemaOption-${id}`;
+export const buildFieldSelectorCheckbox = (name) =>
+  `fieldSelectorCheckbox-${name}`;
+export const SETTINGS_CLEAR_DATABASE_BUTTON_ID = 'settingsClearDatabaseButton';
+export const ALGORITHMS_EMPTY_ALERT_ID = 'algorithmsEmptyAlert';
+export const SCHEMAS_EMPTY_ALERT_ID = 'schemasEmptyAlert';
+export const SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID =
+  'settingsClearDatavaseSampleDbCheckbox';

@@ -19,9 +19,13 @@ import {
   editAlgorithm,
 } from './utils';
 
-describe.only('Edit Algorithm Scenarios', function () {
+describe('Edit Algorithm Scenarios', function () {
   this.timeout(DEFAULT_GLOBAL_TIMEOUT);
   let app = null;
+
+  afterEach(() => {
+    return closeApplication(app);
+  });
 
   describe('General', () => {
     beforeEach(
@@ -33,10 +37,6 @@ describe.only('Edit Algorithm Scenarios', function () {
         await client.goToAlgorithms();
       }),
     );
-
-    afterEach(async () => {
-      await closeApplication(app);
-    });
 
     it(
       'Correclty edits an algorithm',
@@ -81,7 +81,7 @@ describe.only('Edit Algorithm Scenarios', function () {
       }),
     );
 
-    it(
+    it.only(
       'Editing a Graasp algorithm create a new algorithm',
       mochaAsync(async () => {
         const { client } = app;

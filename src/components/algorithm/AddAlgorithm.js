@@ -22,6 +22,7 @@ import {
   addDefaultAlgorithm,
   clearAlgorithm,
   getAlgorithmCode,
+  getSchemas,
 } from '../../actions';
 import { ADD_OPTIONS, FILE_FILTERS } from '../../config/constants';
 import {
@@ -77,6 +78,7 @@ class AddAlgorithm extends Component {
     dispatchAddDefaultAlgorithm: PropTypes.func.isRequired,
     dispatchGetAlgorithmCode: PropTypes.func.isRequired,
     dispatchClearAlgorithm: PropTypes.func.isRequired,
+    dispatchGetSchemas: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       saveButton: PropTypes.string.isRequired,
@@ -88,6 +90,11 @@ class AddAlgorithm extends Component {
     }).isRequired,
     defaultAlgoCode: PropTypes.string.isRequired,
   };
+
+  componentDidMount() {
+    const { dispatchGetSchemas } = this.props;
+    dispatchGetSchemas();
+  }
 
   componentWillUnmount() {
     const { dispatchClearAlgorithm } = this.props;
@@ -321,11 +328,14 @@ class AddAlgorithm extends Component {
                 id={ADD_ALGORITHM_DESCRIPTION_ID}
                 disabled={option === ADD_OPTIONS.DEFAULT}
               />
-              <EditParametersForm
-                parameters={parameters}
-                onChange={this.handleParamsOnChange}
-                disabled={option === ADD_OPTIONS.DEFAULT}
-              />
+              {/* hide parameters when adding from file */}
+              {option !== ADD_OPTIONS.FILE && (
+                <EditParametersForm
+                  parameters={parameters}
+                  onChange={this.handleParamsOnChange}
+                  disabled={option === ADD_OPTIONS.DEFAULT}
+                />
+              )}
             </Grid>
           </Grid>
           <div className={classes.saveButton}>
@@ -359,6 +369,7 @@ const mapDispatchToProps = {
   dispatchAddDefaultAlgorithm: addDefaultAlgorithm,
   dispatchClearAlgorithm: clearAlgorithm,
   dispatchGetAlgorithmCode: getAlgorithmCode,
+  dispatchGetSchemas: getSchemas,
 };
 
 const ConnectedComponent = connect(

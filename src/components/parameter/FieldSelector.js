@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { anySelected } from '../../utils/parameter';
 import { fieldSelectorUnselectAll } from '../../shared/utils';
+import { buildFieldSelectorCheckbox } from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   shifted: {
@@ -125,6 +126,7 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
         control={
           // eslint-disable-next-line react/jsx-wrap-multilines
           <Checkbox
+            id={buildFieldSelectorCheckbox(name)}
             checked={selected}
             onChange={handleCheckboxOnChange}
             color="primary"

@@ -1,17 +1,20 @@
 import path from 'path';
-import GRAASP_SCHEMA from '../../../public/shared/graasp.json';
 import {
   AUTHORS,
   PARAMETER_TYPES,
   PROGRAMMING_LANGUAGES,
-  GRAASP_SCHEMA_ID,
+  ALGORITHM_TYPES,
 } from '../../../src/shared/constants';
-import { setFieldSelectorAttributes } from '../../../src/shared/utils';
+import {
+  INITIAL_UNDEFINED_SCHEMA,
+  INITIAL_CORRUPTED_SCHEMA,
+} from '../schema/schemas';
 
 export const MISSING_FILE_ALGORITHM = {
   name: 'Algorithm name',
   description: 'Algorithm description',
   fileLocation: path.resolve(__dirname, './missingfile.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
 };
 
 export const SIMPLE_ALGORITHM = {
@@ -20,6 +23,7 @@ export const SIMPLE_ALGORITHM = {
   fileLocation: path.resolve(__dirname, './sample_algorithm.py'),
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.ANONYMIZATION,
 };
 
 export const REPLACEMENT_ALGORITHM = {
@@ -27,6 +31,7 @@ export const REPLACEMENT_ALGORITHM = {
   description: 'Replacing algorithm description',
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.ANONYMIZATION,
 };
 
 export const PREEXISTING_USER_ALGORITHM = {
@@ -36,6 +41,7 @@ export const PREEXISTING_USER_ALGORITHM = {
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   filepath: path.join(__dirname, './sample_algorithm.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
 };
 
 export const PREEXISTING_GRAASP_ALGORITHM = {
@@ -45,6 +51,7 @@ export const PREEXISTING_GRAASP_ALGORITHM = {
   author: AUTHORS.GRAASP,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   filepath: path.join(__dirname, './sample_algorithm.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
 };
 
 export const ALGORITHM_WITH_PARAMETERS = {
@@ -54,6 +61,7 @@ export const ALGORITHM_WITH_PARAMETERS = {
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   filepath: path.join(__dirname, './sample_algorithm.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
   parameters: [
     {
       name: 'param_integer',
@@ -77,9 +85,60 @@ export const ALGORITHM_WITH_PARAMETERS = {
       name: 'param_field_selector',
       type: PARAMETER_TYPES.FIELD_SELECTOR,
       description: 'field selector parameters description',
-      value: {
-        [GRAASP_SCHEMA_ID]: setFieldSelectorAttributes(GRAASP_SCHEMA, false, 2),
-      },
+      value: ['data'],
+    },
+  ],
+};
+
+export const ALGORITHM_WITH_UNDEFINED_FIELD_SELECTORS = {
+  id: 'algorithm-with-undefined-field-selectors',
+  name: 'Algorithm with undefined field selectors',
+  description: 'Description of algorithm with undefined field selectors',
+  author: AUTHORS.USER,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  filepath: path.join(__dirname, './sample_algorithm.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
+  parameters: [
+    {
+      schema: INITIAL_UNDEFINED_SCHEMA.id,
+      name: 'param_field_selector1',
+      type: PARAMETER_TYPES.FIELD_SELECTOR,
+      description: 'undefined field selector',
+    },
+  ],
+};
+
+export const ALGORITHM_WITH_CORRUPTED_FIELD_SELECTORS = {
+  id: 'algorithm-with-corrupted-field-selectors',
+  name: 'Algorithm with corrupted field selectors',
+  description: 'Description of algorithm with corrupted field selectors',
+  author: AUTHORS.USER,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  filepath: path.join(__dirname, './sample_algorithm.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
+  parameters: [
+    {
+      schema: INITIAL_CORRUPTED_SCHEMA.id,
+      name: 'param_field_selector2',
+      type: PARAMETER_TYPES.FIELD_SELECTOR,
+      description: 'incorrect schema field selector',
+    },
+  ],
+};
+
+export const ALGORITHM_WITH_NO_SCHEMA_FIELD_SELECTORS = {
+  id: 'algorithm-with-no-schema-field-selectors',
+  name: 'Algorithm with no schema field selectors',
+  description: 'Description of algorithm with no schema field selectors',
+  author: AUTHORS.USER,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  filepath: path.join(__dirname, './sample_algorithm.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
+  parameters: [
+    {
+      name: 'param_field_selector',
+      type: PARAMETER_TYPES.FIELD_SELECTOR,
+      description: 'no schema field selector',
     },
   ],
 };
@@ -91,6 +150,7 @@ export const ALGORITHM_WITH_INTEGER_PARAMETER = {
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   filepath: path.join(__dirname, './algorithm_with_integer_parameter.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
   parameters: [
     {
       name: 'positive_integer',
@@ -108,6 +168,7 @@ export const ALGORITHM_WITH_FLOAT_PARAMETER = {
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   filepath: path.join(__dirname, './algorithm_with_float_parameter.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
   parameters: [
     {
       name: 'positive_float',
@@ -125,6 +186,7 @@ export const ALGORITHM_WITH_STRING_PARAMETER = {
   author: AUTHORS.USER,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   filepath: path.join(__dirname, './algorithm_with_string_parameter.py'),
+  type: ALGORITHM_TYPES.ANONYMIZATION,
   parameters: [
     {
       name: 'password',

@@ -14,6 +14,7 @@ import {
   DATASETS_MAIN_ID,
   SCHEMAS_ADD_BUTTON_ID,
   SCHEMAS_DELETE_SCHEMA_BUTTON_CLASS,
+  SCHEMAS_EMPTY_ALERT_ID,
   SCHEMAS_TABLE_ID,
   SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS,
   SCHEMA_DESCRIPTION_CLASS,
@@ -22,7 +23,6 @@ import {
   SCHEMA_VIEW_LABEL_ID,
   SCHEMA_VIEW_SAVE_BUTTON_ID,
 } from '../src/config/selectors';
-import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
 import {
   BLANK_SCHEMA,
   REPLACEMENT_SCHEMA,
@@ -114,20 +114,6 @@ describe('Schemas Schenarios', function () {
   });
 
   it(
-    'Correctly adds default schemas',
-    mochaAsync(async () => {
-      const { client } = app;
-
-      await client.goToSchemas();
-      Object.values(DEFAULT_SCHEMAS).forEach(async ({ label }) => {
-        await client.expectElementToExist(
-          `#${SCHEMAS_TABLE_ID} .${buildSchemaTagClass(label)}`,
-        );
-      });
-    }),
-  );
-
-  it(
     'Correctly adds, edits and deletes blank schema',
     mochaAsync(async () => {
       const { client } = app;
@@ -176,10 +162,7 @@ describe('Schemas Schenarios', function () {
       await deleteSchema(client, REPLACEMENT_SCHEMA);
 
       // verify deletion
-      await client.expectElementToNotExist(
-        `#${SCHEMAS_TABLE_ID}`,
-        `.${buildSchemaRowClass(REPLACEMENT_SCHEMA.label)}`,
-      );
+      await client.expectElementToExist(`#${SCHEMAS_EMPTY_ALERT_ID}`);
     }),
   );
 

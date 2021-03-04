@@ -15,6 +15,7 @@ const DEFAULT_LANG = 'en';
 
 const GRAASP_UTILS = {
   id: 'graasp-utils',
+  name: 'graasp_utils',
   filename: 'graasp_utils.py',
   filepath: path.join(ALGORITHMS_FOLDER, 'graasp_utils.py'),
   language: PROGRAMMING_LANGUAGES.PYTHON,
@@ -24,6 +25,7 @@ const GRAASP_UTILS = {
 
 const USER_UTILS = {
   id: 'users-utils',
+  name: 'utils',
   filename: 'utils.py',
   filepath: path.join(ALGORITHMS_FOLDER, 'utils.py'),
   language: PROGRAMMING_LANGUAGES.PYTHON,

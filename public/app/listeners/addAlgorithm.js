@@ -15,14 +15,16 @@ const {
 } = require('../../shared/constants');
 const { getFileStats } = require('../utils/file');
 
-const addPythonAlgorithm = ({ algorithm, fileLocation }, db) => {
+const addPythonAlgorithmInDb = ({ algorithm, fileLocation }, db) => {
   const { name, description, author, code, parameters, type } = algorithm;
+  let { filepath } = algorithm;
   logger.debug(`add python algorithm ${name}`);
 
   const id = ObjectId().str;
   const filename = `${id}.py`;
-  const filepath = path.join(ALGORITHMS_FOLDER, filename);
-  const language = PROGRAMMING_LANGUAGES.PYTHON;
+  if (!filepath) {
+    filepath = path.join(ALGORITHMS_FOLDER, filename);
+  }
 
   // copy or create file
   if (fileLocation) {
@@ -41,7 +43,7 @@ const addPythonAlgorithm = ({ algorithm, fileLocation }, db) => {
     filename,
     filepath,
     author,
-    language,
+    language: PROGRAMMING_LANGUAGES.PYTHON,
     parameters,
     createdAt,
     lastModified,
@@ -56,7 +58,7 @@ const addAlgorithm = (mainWindow, db) => async (
   { algorithm, fileLocation },
 ) => {
   try {
-    addPythonAlgorithm({ algorithm, fileLocation }, db);
+    addPythonAlgorithmInDb({ algorithm, fileLocation }, db);
 
     return mainWindow.webContents.send(ADD_ALGORITHM_CHANNEL, {
       type: ADD_ALGORITHM_SUCCESS,
@@ -77,4 +79,4 @@ const addAlgorithm = (mainWindow, db) => async (
   }
 };
 
-module.exports = { addAlgorithm, addPythonAlgorithm };
+module.exports = { addAlgorithm, addPythonAlgorithmInDb };

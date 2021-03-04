@@ -34,6 +34,7 @@ import {
   ALGORITHM_DELETE_BUTTON_CLASS,
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
+  ALGORITHMS_EMPTY_ALERT_ID,
 } from '../../config/selectors';
 import LocationPathAlert from '../common/LocationPathAlert';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
@@ -150,7 +151,11 @@ class Algorithms extends Component {
     if (!algorithms.size) {
       return (
         <Main>
-          <Alert severity="info" className={classes.infoAlert}>
+          <Alert
+            id={ALGORITHMS_EMPTY_ALERT_ID}
+            severity="info"
+            className={classes.infoAlert}
+          >
             {t('No algorithms are available')}
           </Alert>
           {this.renderAddButon()}

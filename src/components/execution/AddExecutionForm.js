@@ -240,6 +240,7 @@ class AddExecutionForm extends Component {
   renderExecuteButton = () => {
     const { sourceId, algorithmId, parameters } = this.state;
     const { t, pythonVersion, classes } = this.props;
+
     const valid =
       sourceId &&
       algorithmId &&

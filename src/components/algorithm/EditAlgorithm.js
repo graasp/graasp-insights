@@ -15,6 +15,7 @@ import {
   addAlgorithm,
   clearAlgorithm,
   getAlgorithm,
+  getSchemas,
   saveAlgorithm,
 } from '../../actions';
 import {
@@ -70,6 +71,7 @@ class EditAlgorithm extends Component {
     dispatchSaveAlgorithm: PropTypes.func.isRequired,
     dispatchClearAlgorithm: PropTypes.func.isRequired,
     dispatchAddAlgorithm: PropTypes.func.isRequired,
+    dispatchGetSchemas: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       infoAlert: PropTypes.string.isRequired,
       backButton: PropTypes.string.isRequired,
@@ -85,9 +87,11 @@ class EditAlgorithm extends Component {
       match: {
         params: { id },
       },
+      dispatchGetSchemas,
     } = this.props;
 
     dispatchGetAlgorithm({ id });
+    dispatchGetSchemas();
   }
 
   componentDidUpdate({ algorithm: prevAlgorithm }) {
@@ -270,6 +274,7 @@ const mapDispatchToProps = {
   dispatchSaveAlgorithm: saveAlgorithm,
   dispatchAddAlgorithm: addAlgorithm,
   dispatchClearAlgorithm: clearAlgorithm,
+  dispatchGetSchemas: getSchemas,
 };
 
 const ConnectedComponent = connect(

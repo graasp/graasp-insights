@@ -7,6 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Alert from '@material-ui/lab/Alert';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
@@ -18,6 +19,7 @@ import { buildSchemaPath } from '../../config/paths';
 import {
   buildSchemaRowClass,
   SCHEMAS_DELETE_SCHEMA_BUTTON_CLASS,
+  SCHEMAS_EMPTY_ALERT_ID,
   SCHEMAS_TABLE_ID,
   SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS,
   SCHEMA_DESCRIPTION_CLASS,
@@ -49,6 +51,9 @@ const styles = (theme) => ({
     display: 'inline-block',
     margin: theme.spacing(1),
   },
+  infoAlert: {
+    margin: theme.spacing(2),
+  },
 });
 
 class Schemas extends Component {
@@ -67,6 +72,7 @@ class Schemas extends Component {
       schemaContent: PropTypes.string.isRequired,
       buttonGroup: PropTypes.string.isRequired,
       schemaDescription: PropTypes.string.isRequired,
+      infoAlert: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -99,6 +105,21 @@ class Schemas extends Component {
       return (
         <Main>
           <Loader />
+        </Main>
+      );
+    }
+
+    if (!schemas.size) {
+      return (
+        <Main>
+          <Alert
+            id={SCHEMAS_EMPTY_ALERT_ID}
+            severity="info"
+            className={classes.infoAlert}
+          >
+            {t('No schemas are available')}
+          </Alert>
+          <AddSchemaButton />
         </Main>
       );
     }

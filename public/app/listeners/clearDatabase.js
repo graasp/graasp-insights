@@ -7,16 +7,22 @@ const {
   CLEAR_DATABASE_ERROR,
   CLEAR_DATABASE_SUCCESS,
 } = require('../../shared/types');
-const sampleDatabase = require('../data/sample');
-const { SETTINGS_COLLECTION } = require('../../shared/constants');
+const {
+  EXECUTIONS_COLLECTION,
+  DATASETS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+  SCHEMAS_COLLECTION,
+} = require('../../shared/constants');
 const { bootstrapDatabase } = require('../db');
 
 const clearDatabaseUtil = (db) => {
-  // keep settings
-  const settings = db.get(SETTINGS_COLLECTION).value();
+  logger.debug('clear database');
 
-  // set data with necessary fields
-  db.setState({ ...sampleDatabase, [SETTINGS_COLLECTION]: settings }).write();
+  db.get(ALGORITHMS_COLLECTION).remove().write();
+  db.get(DATASETS_COLLECTION).remove().write();
+  db.get(EXECUTIONS_COLLECTION).remove().write();
+  // unset schemas since it is an object
+  db.set(SCHEMAS_COLLECTION, {}).write();
 
   // remove files from folders
   fs.rmdirSync(ALGORITHMS_FOLDER, { recursive: true });

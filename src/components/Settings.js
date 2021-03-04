@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Tooltip from '@material-ui/core/Tooltip';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -12,8 +13,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
+import InfoIcon from '@material-ui/icons/Info';
 import Main from './common/Main';
 import { formatFileSize } from '../shared/formatting';
 import { langs } from '../config/i18n';
@@ -32,6 +35,8 @@ import {
   SETTINGS_FILE_SIZE_LIMIT_SELECT_ID,
   SETTINGS_LANG_SELECT,
   SETTINGS_MAIN_ID,
+  SETTINGS_CLEAR_DATABASE_BUTTON_ID,
+  SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID,
 } from '../config/selectors';
 
 const styles = (theme) => ({
@@ -159,6 +164,7 @@ const Settings = (props) => {
 
     const useSampleDatabaseCheckbox = (
       <Checkbox
+        id={SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID}
         color="primary"
         inputProps={{
           'aria-label': 'primary checkbox',
@@ -176,12 +182,25 @@ const Settings = (props) => {
             'Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.',
           )}
         </FormHelperText>
-        <FormControlLabel
-          classes={{ label: classes.sampleDatabaseCheckboxLabel }}
-          control={useSampleDatabaseCheckbox}
-          label="Use Default Dataset"
-        />
+        <div>
+          <FormControlLabel
+            classes={{ label: classes.sampleDatabaseCheckboxLabel }}
+            control={useSampleDatabaseCheckbox}
+            label="Use Sample Dataset"
+          />
+          <Tooltip
+            title={t(
+              'The sample database is composed of algorithms designed to process Graasp datasets.',
+            )}
+            placement="right"
+          >
+            <IconButton color="primary">
+              <InfoIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </div>
         <Button
+          id={SETTINGS_CLEAR_DATABASE_BUTTON_ID}
           variant="contained"
           className={classes.clearDatabaseButton}
           startIcon={<DeleteIcon />}
