@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
-import GRAASP_ALGORITHMS from '../../src/shared/graaspAlgorithms';
+import GRAASP_ALGORITHMS from '../../src/shared/data/graaspAlgorithms';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {

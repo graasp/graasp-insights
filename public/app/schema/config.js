@@ -1,5 +1,5 @@
 const { GRAASP_SCHEMA_ID } = require('../../shared/constants');
-const GRAASP_SCHEMA = require('../../shared/graasp');
+const GRAASP_SCHEMA = require('../../shared/data/graaspSchema');
 
 const DEFAULT_SCHEMAS = {
   [GRAASP_SCHEMA_ID]: {

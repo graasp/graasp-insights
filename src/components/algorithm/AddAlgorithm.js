@@ -45,7 +45,7 @@ import PythonEditor from '../common/editor/PythonEditor';
 import Main from '../common/Main';
 import EditParametersForm from '../parameter/EditParametersForm';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
-import GRAASP_ALGORITHMS from '../../shared/graaspAlgorithms';
+import GRAASP_ALGORITHMS from '../../shared/data/graaspAlgorithms';
 
 const styles = (theme) => ({
   saveButton: {

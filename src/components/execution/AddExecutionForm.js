@@ -314,7 +314,7 @@ class AddExecutionForm extends Component {
     if (!algorithms.size) {
       return (
         <Alert severity="info" className={classes.infoAlert}>
-          {t('No algorithms are available')}
+          {t('No algorithms available')}
         </Alert>
       );
     }

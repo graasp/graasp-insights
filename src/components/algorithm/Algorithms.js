@@ -156,7 +156,7 @@ class Algorithms extends Component {
             severity="info"
             className={classes.infoAlert}
           >
-            {t('No algorithms are available')}
+            {t('No algorithms available')}
           </Alert>
           {this.renderAddButon()}
         </Main>

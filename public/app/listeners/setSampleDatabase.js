@@ -6,7 +6,7 @@ const {
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const { saveDefaultAlgorithmInDb } = require('./addDefaultAlgorithm');
-const GRAASP_ALGORITHMS = require('../../shared/graaspAlgorithms');
+const GRAASP_ALGORITHMS = require('../../shared/data/graaspAlgorithms');
 const { clearDatabaseUtil } = require('./clearDatabase');
 const { DEFAULT_SCHEMAS } = require('../schema/config');
 const { saveSchemaInDb } = require('./setSchema');

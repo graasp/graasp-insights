@@ -117,7 +117,7 @@ class Schemas extends Component {
             severity="info"
             className={classes.infoAlert}
           >
-            {t('No schemas are available')}
+            {t('No schemas available')}
           </Alert>
           <AddSchemaButton />
         </Main>

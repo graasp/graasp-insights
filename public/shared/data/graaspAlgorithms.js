@@ -3,10 +3,10 @@ const {
   PROGRAMMING_LANGUAGES,
   AUTHORS,
   PARAMETER_TYPES,
-} = require('./constants');
-const { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } = require('./constants');
-const { setFieldSelectorAttributes } = require('./utils');
-const GRAASP_SCHEMA = require('./graasp');
+} = require('../constants');
+const { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } = require('../constants');
+const { setFieldSelectorAttributes } = require('../utils');
+const GRAASP_SCHEMA = require('./graaspSchema');
 
 const GRAASP_ALGORITHMS = [
   {

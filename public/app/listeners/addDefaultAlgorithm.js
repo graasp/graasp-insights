@@ -6,7 +6,7 @@ const {
   ADD_ALGORITHM_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
-const GRAASP_ALGORITHMS = require('../../shared/graaspAlgorithms');
+const GRAASP_ALGORITHMS = require('../../shared/data/graaspAlgorithms');
 const { ALGORITHMS_FOLDER_NAME } = require('../config/config');
 const { addPythonAlgorithmInDb } = require('./addAlgorithm');
 

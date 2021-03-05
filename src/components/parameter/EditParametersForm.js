@@ -189,7 +189,7 @@ const EditParametersForm = (props) => {
         if (schemaId in value) {
           fieldSelection = value[schemaId];
         }
-        // needed schemas is missing
+        // needed schema is missing
         if (!schemas.get(schemaId)) {
           return (
             <Alert

@@ -35,7 +35,7 @@ import {
 import { PREEXISTING_GRAASP_ALGORITHM } from './fixtures/algorithms/algorithms';
 import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
 import { checkAlgorithmRowLayout } from './algorithms/utils';
-import GRAASP_ALGORITHMS from '../public/shared/graaspAlgorithms';
+import GRAASP_ALGORITHMS from '../public/shared/data/graaspAlgorithms';
 
 const isLanguageSetTo = async (client, value) => {
   const lang = await (

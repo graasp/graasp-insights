@@ -186,7 +186,7 @@ const Settings = (props) => {
           <FormControlLabel
             classes={{ label: classes.sampleDatabaseCheckboxLabel }}
             control={useSampleDatabaseCheckbox}
-            label="Use Sample Dataset"
+            label={t('Use Sample Dataset')}
           />
           <Tooltip
             title={t(
