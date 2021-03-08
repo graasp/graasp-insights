@@ -81,7 +81,7 @@ describe('Edit Algorithm Scenarios', function () {
       }),
     );
 
-    it.only(
+    it(
       'Editing a Graasp algorithm create a new algorithm',
       mochaAsync(async () => {
         const { client } = app;

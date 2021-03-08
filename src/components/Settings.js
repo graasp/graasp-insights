@@ -186,11 +186,11 @@ const Settings = (props) => {
           <FormControlLabel
             classes={{ label: classes.sampleDatabaseCheckboxLabel }}
             control={useSampleDatabaseCheckbox}
-            label={t('Use Sample Dataset')}
+            label={t('Reload Default Algorithms and Schema')}
           />
           <Tooltip
             title={t(
-              'The sample database is composed of algorithms designed to process Graasp datasets.',
+              'Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.',
             )}
             placement="right"
           >

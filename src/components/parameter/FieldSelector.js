@@ -39,9 +39,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FieldSelector = ({ schema, onChange, disabled }) => {
-  const { properties } = schema;
   const { t } = useTranslation();
   const classes = useStyles();
+
+  if (!schema || !schema.properties) {
+    return null;
+  }
+
+  const { properties } = schema;
 
   return (
     <Paper elevation={2}>

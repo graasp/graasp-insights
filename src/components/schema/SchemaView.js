@@ -97,7 +97,7 @@ class SchemaView extends Component {
     }).isRequired,
   };
 
-  componentDidMount() {
+  componentDidUpdate({ schemas: prevSchemas }) {
     const {
       schemas,
       match: {
@@ -105,15 +105,18 @@ class SchemaView extends Component {
       },
     } = this.props;
 
-    const {
-      label,
-      description,
-      tagStyle,
-      schema: schemaDef,
-      createdAt,
-    } = schemas.get(id);
+    if (schemas.get(id) !== prevSchemas.get(id)) {
+      const {
+        label,
+        description,
+        tagStyle,
+        schema: schemaDef,
+        createdAt,
+      } = schemas.get(id);
 
-    this.setState({ label, description, tagStyle, schemaDef, createdAt });
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ label, description, tagStyle, schemaDef, createdAt });
+    }
   }
 
   handleLabelOnChange = ({ target: { value: label } }) => {
@@ -190,6 +193,22 @@ class SchemaView extends Component {
 
     const schema = schemas.get(id);
     const isGraasp = id === GRAASP_SCHEMA_ID;
+
+    if (!schema) {
+      return (
+        <Main>
+          <Container>
+            <Alert severity="error" className={classes.infoAlert}>
+              {t('An unexpected error happened while opening the schema.')}
+            </Alert>
+            <BackButton
+              id={SCHEMA_VIEW_BACK_BUTTON_ID}
+              className={classes.backButton}
+            />
+          </Container>
+        </Main>
+      );
+    }
 
     return (
       <Main>
