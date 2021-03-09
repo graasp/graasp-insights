@@ -7,15 +7,12 @@ const {
 const { ERROR_GENERAL } = require('../../shared/errors');
 const { saveDefaultAlgorithmInDb } = require('./addDefaultAlgorithm');
 const GRAASP_ALGORITHMS = require('../../shared/data/graaspAlgorithms');
-const { clearDatabaseUtil } = require('./clearDatabase');
 const { DEFAULT_SCHEMAS } = require('../schema/config');
 const { saveSchemaInDb } = require('./setSchema');
 
 const setSampleDatabase = (mainWindow, db) => async () => {
   logger.debug('set sample database');
   try {
-    clearDatabaseUtil(db);
-
     // add algorithm one by one
     // eslint-disable-next-line no-restricted-syntax
     for (const algo of GRAASP_ALGORITHMS) {

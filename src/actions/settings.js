@@ -29,7 +29,6 @@ import {
   FLAG_DELETING_ALL,
 } from '../shared/types';
 import { createFlag } from './common';
-import { setSampleDatabase } from './developer';
 
 const flagGettingSettings = createFlag(FLAG_GETTING_SETTINGS);
 const flagGettingLanguage = createFlag(FLAG_GETTING_LANGUAGE);
@@ -140,7 +139,7 @@ const checkPythonInstallation = () => (dispatch) => {
   }
 };
 
-const clearDatabase = ({ useSampleDatabase }) => (dispatch) => {
+const clearDatabase = () => (dispatch) => {
   const flagDeletingAll = createFlag(FLAG_DELETING_ALL);
   try {
     window.ipcRenderer.send(SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL);
@@ -148,19 +147,13 @@ const clearDatabase = ({ useSampleDatabase }) => (dispatch) => {
       SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
       (event, shouldDelete) => {
         if (shouldDelete) {
-          // clear and set sample database
-          if (useSampleDatabase) {
-            dispatch(setSampleDatabase());
-          }
           // clear and use empty database
-          else {
-            dispatch(flagDeletingAll(true));
-            window.ipcRenderer.send(CLEAR_DATABASE_CHANNEL);
-            window.ipcRenderer.once(CLEAR_DATABASE_CHANNEL, (e, response) => {
-              dispatch(response);
-              dispatch(flagDeletingAll(false));
-            });
-          }
+          dispatch(flagDeletingAll(true));
+          window.ipcRenderer.send(CLEAR_DATABASE_CHANNEL);
+          window.ipcRenderer.once(CLEAR_DATABASE_CHANNEL, (e, response) => {
+            dispatch(response);
+            dispatch(flagDeletingAll(false));
+          });
         }
       },
     );

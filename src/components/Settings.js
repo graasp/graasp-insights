@@ -1,22 +1,17 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import Tooltip from '@material-ui/core/Tooltip';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
-import InfoIcon from '@material-ui/icons/Info';
 import Main from './common/Main';
 import { formatFileSize } from '../shared/formatting';
 import { langs } from '../config/i18n';
@@ -26,6 +21,7 @@ import {
   setLanguage,
   getFileSizeLimit,
   clearDatabase,
+  setSampleDatabase,
 } from '../actions';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
@@ -73,10 +69,10 @@ const Settings = (props) => {
     fileSizeLimit = DEFAULT_FILE_SIZE_LIMIT,
     dispatchGetFileSizeLimit,
     dispatchClearDatabase,
+    dispatchSetSampleDatabase,
   } = props;
   dispatchGetLanguage();
   dispatchGetFileSizeLimit();
-  let checkboxRef = useRef(null);
 
   const handleChangeLanguage = async (event) => {
     const { value: newLang } = event.target;
@@ -157,23 +153,32 @@ const Settings = (props) => {
     );
   };
 
-  const renderClearDatabase = () => {
-    const handleClearDatabase = () => {
-      dispatchClearDatabase({ useSampleDatabase: checkboxRef.checked });
-    };
-
-    const useSampleDatabaseCheckbox = (
-      <Checkbox
-        id={SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID}
-        color="primary"
-        inputProps={{
-          'aria-label': 'primary checkbox',
-          // eslint-disable-next-line no-return-assign
-          ref: (ref) => (checkboxRef = ref),
-        }}
-      />
+  const renderAddGraaspAlgorithms = () => {
+    return (
+      <FormControl className={classes.formControl}>
+        <FormLabel>{t('Load Sample Data')}</FormLabel>
+        <FormHelperText>
+          {t(
+            'Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.',
+          )}
+        </FormHelperText>
+        <Button
+          id={SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID}
+          variant="contained"
+          onClick={dispatchSetSampleDatabase}
+          color="primary"
+        >
+          {t('Reload Graasp Algorithms and Schema')}
+        </Button>
+      </FormControl>
     );
+  };
 
+  const handleClearDatabase = () => {
+    dispatchClearDatabase();
+  };
+
+  const renderClearDatabase = () => {
     return (
       <FormControl className={classes.formControl}>
         <FormLabel>{t('Clear Application Data')}</FormLabel>
@@ -182,23 +187,6 @@ const Settings = (props) => {
             'Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.',
           )}
         </FormHelperText>
-        <div>
-          <FormControlLabel
-            classes={{ label: classes.sampleDatabaseCheckboxLabel }}
-            control={useSampleDatabaseCheckbox}
-            label={t('Reload Default Algorithms and Schema')}
-          />
-          <Tooltip
-            title={t(
-              'Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.',
-            )}
-            placement="right"
-          >
-            <IconButton color="primary">
-              <InfoIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </div>
         <Button
           id={SETTINGS_CLEAR_DATABASE_BUTTON_ID}
           variant="contained"
@@ -218,6 +206,7 @@ const Settings = (props) => {
         <Typography variant="h4">{t('Settings')}</Typography>
         {renderLanguageSelect()}
         {renderFileSizeLimit()}
+        {renderAddGraaspAlgorithms()}
         {renderClearDatabase()}
       </Container>
     </Main>
@@ -231,6 +220,7 @@ Settings.propTypes = {
   dispatchGetFileSizeLimit: PropTypes.func.isRequired,
   dispatchSetFileSizeLimit: PropTypes.func.isRequired,
   dispatchClearDatabase: PropTypes.func.isRequired,
+  dispatchSetSampleDatabase: PropTypes.func.isRequired,
   fileSizeLimit: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
@@ -255,6 +245,7 @@ const mapDispatchToProps = {
   dispatchSetFileSizeLimit: setFileSizeLimit,
   dispatchGetFileSizeLimit: getFileSizeLimit,
   dispatchClearDatabase: clearDatabase,
+  dispatchSetSampleDatabase: setSampleDatabase,
 };
 
 const ConnectedComponent = connect(

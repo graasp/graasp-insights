@@ -215,7 +215,7 @@ class AddAlgorithm extends Component {
                   <FormControlLabel
                     value={ADD_OPTIONS.DEFAULT}
                     control={<Radio color="primary" />}
-                    label={t('Add default algorithm')}
+                    label={t('Add Graasp algorithm')}
                     id={ADD_ALGORITHM_DEFAULT_OPTION_ID}
                   />
                   <FormControlLabel
