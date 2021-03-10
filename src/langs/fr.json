@@ -141,6 +141,23 @@
     "Delete Schema": "Supprimer le Schéma",
     "Add Schema": "Ajouter le Schéma",
     "Add a Schema": "Ajouter un Schéma",
-    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "Vous pouvez imposer la présence de champs avec l'attribut \"required\". Plus d'informations sur les schémas JSON sur"
+    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "Vous pouvez imposer la présence de champs avec l'attribut \"required\". Plus d'informations sur les schémas JSON sur",
+    "Load Graasp Data": "Importer les données de Graasp",
+    "Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.": "Mis à disposition par les développeurs de l'application, ces algorithmes et schémas sont optimisés pour analyser les données de Graasp.",
+    "Load Graasp Algorithms and Schema": "Importer les algorithmes et schéma pour Graasp",
+    "Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.": "Supprimer tous les datasets, schémas, algorithmes, exécutions et résultats. Une confirmation sera demandée après avoir cliqué sur ce boutton.",
+    "Clear Application Data": "Supprimer les données de l'application",
+    "Clear all data": "Supprimer toutes les données",
+    "No schemas available": "Aucun schéma disponible",
+    "Add Graasp algorithm": "Ajouter un algorithme pour Graasp",
+    "Dataset loaded successfully": "Le dataset a été importé avec succès",
+    "The schema was saved successfully": "Le schéma a été sauvé avec succès",
+    "The algorithm was added successfully": "L'algorithme a été ajouté avec succès",
+    "The execution  was executed successfully": "L'exécution s'est déroulée sans erreur",
+    "View result": "Voir le résultat",
+    "Export result": "Exporter le résultat",
+    "Remove result": "Supprimer le résultat",
+    "Edit result": "Modifier le résultat",
+    "Publish result": "Publier le résultat"
   }
 }

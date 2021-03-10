@@ -221,7 +221,7 @@ Settings.propTypes = {
   dispatchSetFileSizeLimit: PropTypes.func.isRequired,
   dispatchClearDatabase: PropTypes.func.isRequired,
   dispatchSetGraaspDatabase: PropTypes.func.isRequired,
-  fileSizeLimit: PropTypes.number.isRequired,
+  fileSizeLimit: PropTypes.number,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     formControl: PropTypes.string.isRequired,
@@ -232,6 +232,10 @@ Settings.propTypes = {
   i18n: PropTypes.shape({
     changeLanguage: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+Settings.defaultProps = {
+  fileSizeLimit: DEFAULT_FILE_SIZE_LIMIT,
 };
 
 const mapStateToProps = ({ settings }) => ({
