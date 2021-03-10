@@ -8,6 +8,7 @@ import {
   GET_SETTINGS_CHANNEL,
   SHOW_CONFIRM_CLEAR_DATABASE_PROMPT_CHANNEL,
   CLEAR_DATABASE_CHANNEL,
+  SET_GRAASP_DATABASE_CHANNEL,
 } from '../shared/channels';
 import {
   ERROR_MESSAGE_HEADER,
@@ -17,6 +18,7 @@ import {
   ERROR_SETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_GETTING_FILE_SIZE_LIMIT_MESSAGE,
   ERROR_GETTING_SETTINGS_MESSAGE,
+  ERROR_SETTING_GRAASP_DATABASE_MESSAGE,
   ERROR_DELETING_ALL_MESSAGE,
 } from '../shared/messages';
 import {
@@ -27,6 +29,7 @@ import {
   FLAG_CHECKING_PYTHON_VERSION,
   FLAG_GETTING_SETTINGS,
   FLAG_DELETING_ALL,
+  FLAG_SETTING_GRAASP_DATABASE,
 } from '../shared/types';
 import { createFlag } from './common';
 
@@ -163,6 +166,24 @@ const clearDatabase = () => (dispatch) => {
   }
 };
 
+const setGraaspDatabase = async () => (dispatch) => {
+  const flagSetGraaspDatabase = createFlag(FLAG_SETTING_GRAASP_DATABASE);
+  try {
+    dispatch(flagSetGraaspDatabase(true));
+    // load data
+    window.ipcRenderer.send(SET_GRAASP_DATABASE_CHANNEL);
+    window.ipcRenderer.once(SET_GRAASP_DATABASE_CHANNEL, (event, response) => {
+      dispatch(response);
+      dispatch(flagSetGraaspDatabase(false));
+    });
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_SETTING_GRAASP_DATABASE_MESSAGE);
+    dispatch(flagSetGraaspDatabase(false));
+  }
+};
+
 export {
   getSettings,
   getLanguage,
@@ -171,4 +192,5 @@ export {
   getFileSizeLimit,
   setFileSizeLimit,
   clearDatabase,
+  setGraaspDatabase,
 };

@@ -20,7 +20,7 @@ const {
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
   GET_DATABASE_CHANNEL,
-  SET_SAMPLE_DATABASE_CHANNEL,
+  SET_GRAASP_DATABASE_CHANNEL,
   SET_DATABASE_CHANNEL,
   DELETE_DATASET_CHANNEL,
   SET_LANGUAGE_CHANNEL,
@@ -68,7 +68,7 @@ const {
   getDatasets,
   setDatabase,
   deleteDataset,
-  setSampleDatabase,
+  setGraaspDatabase,
   getLanguage,
   setLanguage,
   getResult,
@@ -404,7 +404,7 @@ app.on('ready', async () => {
   ipcMain.on(GET_DATABASE_CHANNEL, getDatabase(mainWindow, db));
 
   // called when setting the sample database
-  ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, setSampleDatabase(mainWindow, db));
+  ipcMain.on(SET_GRAASP_DATABASE_CHANNEL, setGraaspDatabase(mainWindow, db));
 
   // called when deleting all datasets, schemas, algorithms, executions, and results
   ipcMain.on(CLEAR_DATABASE_CHANNEL, clearDatabase(mainWindow, db));

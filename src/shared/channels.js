@@ -12,7 +12,7 @@ module.exports = {
   SET_DATASET_FILE_CHANNEL: 'dataset:file:set',
   GET_DATABASE_CHANNEL: 'developer:database:get',
   SET_DATABASE_CHANNEL: 'developer:database:set',
-  SET_SAMPLE_DATABASE_CHANNEL: 'developer:database:sample:set',
+  SET_GRAASP_DATABASE_CHANNEL: 'settings:database:graasp:set',
   DELETE_DATASET_CHANNEL: 'dataset:delete',
   GET_LANGUAGE_CHANNEL: 'settings:lang:get',
   SET_LANGUAGE_CHANNEL: 'settings:lang:set',

@@ -204,10 +204,22 @@ const EditParametersForm = (props) => {
           );
         }
 
-        const { schema } = schemas.get(schemaId);
-
         try {
+          const { schema } = schemas.get(schemaId);
+
           fieldSelection = setFieldSelectorAttributes(schema, false, 1);
+
+          if (!schema || _.isEmpty(fieldSelection)) {
+            return (
+              <Alert
+                severity="error"
+                className={classes.infoAlert}
+                id={buildAlertFieldSelectorUndefinedSchema(schemaId)}
+              >
+                {t('An error occured. This schema is not properly defined.')}
+              </Alert>
+            );
+          }
         } catch (e) {
           // catch errors coming from a wrong schema definition
           return (

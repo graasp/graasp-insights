@@ -8,7 +8,7 @@ const getDataset = require('./getDataset');
 const getDatasets = require('./getDatasets');
 const setDatabase = require('./setDatabase');
 const deleteDataset = require('./deleteDataset');
-const setSampleDatabase = require('./setSampleDatabase');
+const setGraaspDatabase = require('./setGraaspDatabase');
 const setLanguage = require('./setLanguage');
 const getLanguage = require('./getLanguage');
 const getResult = require('./getResult');
@@ -61,7 +61,7 @@ module.exports = {
   executePythonAlgorithm,
   loadDataset,
   setDatabase,
-  setSampleDatabase,
+  setGraaspDatabase,
   setLanguage,
   getLanguage,
   getResult,

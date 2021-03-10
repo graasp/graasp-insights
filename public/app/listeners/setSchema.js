@@ -11,8 +11,8 @@ const {
 const generateSchemaFromJSON = require('../schema/generateSchemaFromJSON');
 const { validateSchema } = require('../schema/detectSchemas');
 
-const saveSchemaInDb = (schema, db) => {
-  const { id, label, description, tagStyle, schemaDef } = schema;
+const saveSchemaInDb = (schemaToSave, db) => {
+  const { id, label, description, tagStyle, schema } = schemaToSave;
   let { createdAt } = schema;
 
   const lastModified = Date.now();
@@ -26,7 +26,7 @@ const saveSchemaInDb = (schema, db) => {
     label,
     description,
     tagStyle,
-    schema: schemaDef,
+    schema,
     createdAt,
     lastModified,
   };
@@ -55,8 +55,6 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
       const content = fs.readFileSync(filepath, 'utf8');
       const json = JSON.parse(content);
       schemaDef = generateSchemaFromJSON(json);
-      logger.debug('schemaDef: ', json);
-      logger.debug('schemaDef: ', schemaDef);
     } else if (!schemaDef) {
       schemaDef = { type: 'object', required: [], properties: {} };
     }
@@ -79,7 +77,10 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
       db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
     });
 
-    const schemaToStore = saveSchemaInDb({ ...schema, id, schemaDef }, db);
+    const schemaToStore = saveSchemaInDb(
+      { ...schema, id, schema: schemaDef },
+      db,
+    );
 
     mainWindow.webContents.send(SET_SCHEMA_CHANNEL, {
       type: SET_SCHEMA_SUCCESS,

@@ -45,7 +45,6 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case SET_FILE_SIZE_LIMIT_SUCCESS:
     case GET_FILE_SIZE_LIMIT_SUCCESS:
       return state.setIn(['fileSizeLimit'], payload);
-
     default:
       return state;
   }

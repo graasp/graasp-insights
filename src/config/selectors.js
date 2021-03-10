@@ -134,3 +134,5 @@ export const ALGORITHMS_EMPTY_ALERT_ID = 'algorithmsEmptyAlert';
 export const SCHEMAS_EMPTY_ALERT_ID = 'schemasEmptyAlert';
 export const SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID =
   'settingsClearDatavaseSampleDbCheckbox';
+export const SETTINGS_LOAD_GRAASP_DATABASE_ID = 'settingsLoadGraaspDatabase';
+export const SCHEMA_CONTENT_ID = 'schemaContent';

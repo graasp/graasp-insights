@@ -9,19 +9,20 @@ import { DEFAULT_GLOBAL_TIMEOUT } from './constants';
 import {
   ALGORITHMS_EMPTY_ALERT_ID,
   ALGORITHMS_MENU_ITEM_ID,
+  ALGORITHM_TABLE_ID,
   buildDatasetsListViewButtonClass,
-  buildSchemaTagClass,
   DATASETS_EMPTY_ALERT_ID,
   DATASETS_MAIN_ID,
   DATASETS_MENU_ITEM_ID,
   DATASET_SCREEN_MAIN_ID,
+  DATASET_TABLE_ID,
   EXECUTIONS_ALERT_NO_DATASET_ID,
   EXECUTIONS_MENU_ITEM_ID,
   RESULTS_MENU_ITEM_ID,
   SCHEMAS_EMPTY_ALERT_ID,
   SCHEMAS_TABLE_ID,
+  SETTINGS_LOAD_GRAASP_DATABASE_ID,
   SETTINGS_CLEAR_DATABASE_BUTTON_ID,
-  SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID,
   SETTINGS_FILE_SIZE_LIMIT_SELECT_ID,
   SETTINGS_LANG_SELECT,
 } from '../src/config/selectors';
@@ -34,8 +35,6 @@ import {
 } from '../src/shared/constants';
 import { PREEXISTING_GRAASP_ALGORITHM } from './fixtures/algorithms/algorithms';
 import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
-import { checkAlgorithmRowLayout } from './algorithms/utils';
-import GRAASP_ALGORITHMS from '../public/shared/data/graaspAlgorithms';
 
 const isLanguageSetTo = async (client, value) => {
   const lang = await (
@@ -73,13 +72,12 @@ const changeFileSizeLimit = async (client, value) => {
   }
 };
 
-const clearDatabase = async (client, { useSampleDatabase = false } = {}) => {
-  if (useSampleDatabase) {
-    await (
-      await client.$(`#${SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID}`)
-    ).click();
-  }
+const clearDatabase = async (client) => {
   await (await client.$(`#${SETTINGS_CLEAR_DATABASE_BUTTON_ID}`)).click();
+};
+
+const loadGraaspAlgorithms = async (client) => {
+  await (await client.$(`#${SETTINGS_LOAD_GRAASP_DATABASE_ID}`)).click();
 };
 
 describe('Settings Scenarios', function () {
@@ -236,40 +234,43 @@ describe('Settings Scenarios', function () {
         await client.expectElementToExist(`#${SCHEMAS_EMPTY_ALERT_ID}`);
       }),
     );
+  });
+
+  describe('Load Graasp Database', () => {
+    beforeEach(
+      mochaAsync(async () => {
+        app = await createApplication({
+          database: {
+            datasets: [DATASET_1000_KB],
+            algorithms: [PREEXISTING_GRAASP_ALGORITHM],
+            schemas: [DEFAULT_SCHEMAS[GRAASP_SCHEMA_ID]],
+          },
+          responses: {
+            showMessageDialogResponse: 1,
+          },
+        });
+      }),
+    );
 
     it(
-      'Clear database and use sample database',
+      'Load Graasp Database',
       mochaAsync(async () => {
         const { client } = app;
 
         await client.goToSettings();
-        await clearDatabase(client, { useSampleDatabase: true });
+        await loadGraaspAlgorithms(client);
 
-        // empty datasets
         await client.goToDatasets();
-        await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
+        await client.expectElementToExist(`#${DATASET_TABLE_ID}`);
+        // todo: check dataset
 
-        // contains graasp algorithms
         await client.goToAlgorithms();
-        for (const algorithm of GRAASP_ALGORITHMS) {
-          // eslint-disable-next-line no-await-in-loop
-          await checkAlgorithmRowLayout(client, algorithm);
-        }
+        await client.expectElementToExist(`#${ALGORITHM_TABLE_ID}`);
+        // todo: check algorithms
 
-        // empty executions
-        await client.goToExecutions();
-        await client.expectElementToExist(`#${EXECUTIONS_ALERT_NO_DATASET_ID}`);
-
-        // contains default schemas
         await client.goToSchemas();
-        const schemaExistencePromises = Object.values(
-          DEFAULT_SCHEMAS,
-        ).map(({ label }) =>
-          client.expectElementToExist(
-            `#${SCHEMAS_TABLE_ID} .${buildSchemaTagClass(label)}`,
-          ),
-        );
-        await Promise.all(schemaExistencePromises);
+        await client.expectElementToExist(`#${SCHEMAS_TABLE_ID}`);
+        // todo: check schemas
       }),
     );
   });

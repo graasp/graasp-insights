@@ -2,7 +2,7 @@ const { SIMPLE_DATASET } = require('../datasets/datasets');
 
 const INITIAL_UNDEFINED_SCHEMA = {
   id: 'undefined-schema',
-  label: 'Graasp',
+  label: 'Undefined Schema',
   description: 'undefined schema definition',
   schema: undefined,
   tagStyle: {
@@ -12,7 +12,7 @@ const INITIAL_UNDEFINED_SCHEMA = {
 };
 const INITIAL_CORRUPTED_SCHEMA = {
   id: 'corrupted-schema',
-  label: 'Graasp',
+  label: 'Corrupted Schema',
   description: 'corrupted schema definition',
   schema: { some: 'schema' },
   tagStyle: {

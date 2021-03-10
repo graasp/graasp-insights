@@ -13,10 +13,10 @@ const ERROR_GETTING_ALGORITHMS_MESSAGE =
   'There was an error retrieving the algorithms';
 const ERROR_GETTING_ALGORITHM_MESSAGE =
   'There was an error retrieving the algorithm';
-const ERROR_SETTING_SAMPLE_DATABASE_MESSAGE =
-  'There was an error setting the sample database';
-const SUCCESS_SETTING_SAMPLE_DATABASE_MESSAGE =
-  'The sample database was successfully set';
+const ERROR_SETTING_GRAASP_DATABASE_MESSAGE =
+  'There was an error setting the Graasp database';
+const SUCCESS_SETTING_GRAASP_DATABASE_MESSAGE =
+  'The Graasp database was successfully set';
 const ERROR_SETTING_DATABASE_MESSAGE =
   'There was an error setting the database';
 const ERROR_GETTING_DATABASE_MESSAGE =
@@ -124,8 +124,8 @@ module.exports = {
   SUCCESS_MESSAGE_HEADER,
   ERROR_GETTING_DATASET_MESSAGE,
   ERROR_GETTING_DATASETS_MESSAGE,
-  ERROR_SETTING_SAMPLE_DATABASE_MESSAGE,
-  SUCCESS_SETTING_SAMPLE_DATABASE_MESSAGE,
+  ERROR_SETTING_GRAASP_DATABASE_MESSAGE,
+  SUCCESS_SETTING_GRAASP_DATABASE_MESSAGE,
   ERROR_SETTING_DATABASE_MESSAGE,
   ERROR_GETTING_DATABASE_MESSAGE,
   SUCCESS_LOADING_DATASET_MESSAGE,

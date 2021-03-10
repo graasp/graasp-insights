@@ -21,7 +21,7 @@ import {
   setLanguage,
   getFileSizeLimit,
   clearDatabase,
-  setSampleDatabase,
+  setGraaspDatabase,
 } from '../actions';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
@@ -32,7 +32,7 @@ import {
   SETTINGS_LANG_SELECT,
   SETTINGS_MAIN_ID,
   SETTINGS_CLEAR_DATABASE_BUTTON_ID,
-  SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID,
+  SETTINGS_LOAD_GRAASP_DATABASE_ID,
 } from '../config/selectors';
 
 const styles = (theme) => ({
@@ -69,7 +69,7 @@ const Settings = (props) => {
     fileSizeLimit = DEFAULT_FILE_SIZE_LIMIT,
     dispatchGetFileSizeLimit,
     dispatchClearDatabase,
-    dispatchSetSampleDatabase,
+    dispatchSetGraaspDatabase,
   } = props;
   dispatchGetLanguage();
   dispatchGetFileSizeLimit();
@@ -153,22 +153,22 @@ const Settings = (props) => {
     );
   };
 
-  const renderAddGraaspAlgorithms = () => {
+  const renderLoadGraaspDatabase = () => {
     return (
       <FormControl className={classes.formControl}>
-        <FormLabel>{t('Load Sample Data')}</FormLabel>
+        <FormLabel>{t('Load Graasp Data')}</FormLabel>
         <FormHelperText>
           {t(
             'Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.',
           )}
         </FormHelperText>
         <Button
-          id={SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID}
+          id={SETTINGS_LOAD_GRAASP_DATABASE_ID}
           variant="contained"
-          onClick={dispatchSetSampleDatabase}
+          onClick={dispatchSetGraaspDatabase}
           color="primary"
         >
-          {t('Reload Graasp Algorithms and Schema')}
+          {t('Load Graasp Algorithms and Schema')}
         </Button>
       </FormControl>
     );
@@ -206,7 +206,7 @@ const Settings = (props) => {
         <Typography variant="h4">{t('Settings')}</Typography>
         {renderLanguageSelect()}
         {renderFileSizeLimit()}
-        {renderAddGraaspAlgorithms()}
+        {renderLoadGraaspDatabase()}
         {renderClearDatabase()}
       </Container>
     </Main>
@@ -220,7 +220,7 @@ Settings.propTypes = {
   dispatchGetFileSizeLimit: PropTypes.func.isRequired,
   dispatchSetFileSizeLimit: PropTypes.func.isRequired,
   dispatchClearDatabase: PropTypes.func.isRequired,
-  dispatchSetSampleDatabase: PropTypes.func.isRequired,
+  dispatchSetGraaspDatabase: PropTypes.func.isRequired,
   fileSizeLimit: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
@@ -245,7 +245,7 @@ const mapDispatchToProps = {
   dispatchSetFileSizeLimit: setFileSizeLimit,
   dispatchGetFileSizeLimit: getFileSizeLimit,
   dispatchClearDatabase: clearDatabase,
-  dispatchSetSampleDatabase: setSampleDatabase,
+  dispatchSetGraaspDatabase: setGraaspDatabase,
 };
 
 const ConnectedComponent = connect(

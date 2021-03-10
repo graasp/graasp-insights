@@ -17,6 +17,7 @@ import {
   SCHEMAS_EMPTY_ALERT_ID,
   SCHEMAS_TABLE_ID,
   SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS,
+  SCHEMA_CONTENT_ID,
   SCHEMA_DESCRIPTION_CLASS,
   SCHEMA_VIEW_BACK_BUTTON_ID,
   SCHEMA_VIEW_DESCRIPTION_ID,
@@ -210,6 +211,17 @@ describe('Schemas Schenarios', function () {
 
       // verify schema info
       await checkSchemaLayout(client, SCHEMA_FROM_DATASET);
+
+      // go to schema view
+      const schemaViewButton = await client.$(
+        `#${SCHEMAS_TABLE_ID} .${buildSchemaRowClass(
+          SCHEMA_FROM_DATASET.label,
+        )} .${SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS}`,
+      );
+      await schemaViewButton.click();
+      // check content is not empty
+      const content = await client.$(`#${SCHEMA_CONTENT_ID} .object-size`);
+      expect(await content.getText()).to.include('3 items');
 
       // verify schema tag in dataset
       await client.goToDatasets();

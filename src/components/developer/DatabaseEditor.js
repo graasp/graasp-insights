@@ -14,7 +14,7 @@ export class DatabaseEditor extends Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
     dispatchGetDatabase: PropTypes.func.isRequired,
-    dispatchSetSampleDatabase: PropTypes.func.isRequired,
+    dispatchSetGraaspDatabase: PropTypes.func.isRequired,
     dispatchSetDatabase: PropTypes.func.isRequired,
     database: PropTypes.shape({
       [DATASETS_COLLECTION]: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -36,8 +36,8 @@ export class DatabaseEditor extends Component {
   };
 
   handleUseSampleDatabase = () => {
-    const { dispatchSetSampleDatabase } = this.props;
-    dispatchSetSampleDatabase();
+    const { dispatchSetGraaspDatabase } = this.props;
+    dispatchSetGraaspDatabase();
   };
 
   render() {
@@ -80,7 +80,7 @@ const mapStateToProps = ({ developer }) => ({
 
 const mapDispatchToProps = {
   dispatchGetDatabase: getDatabase,
-  dispatchSetSampleDatabase: setSampleDatabase,
+  dispatchSetGraaspDatabase: setSampleDatabase,
   dispatchSetDatabase: setDatabase,
 };
 

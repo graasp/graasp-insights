@@ -18,6 +18,7 @@ import { withRouter } from 'react-router';
 import { openUrlInBrowser, setSchema } from '../../actions';
 import { JSON_SCHEMA_GETTING_STARTED_URL } from '../../config/constants';
 import {
+  SCHEMA_CONTENT_ID,
   SCHEMA_VIEW_BACK_BUTTON_ID,
   SCHEMA_VIEW_DESCRIPTION_ID,
   SCHEMA_VIEW_LABEL_ID,
@@ -97,6 +98,10 @@ class SchemaView extends Component {
     }).isRequired,
   };
 
+  componentDidMount() {
+    this.setSchema();
+  }
+
   componentDidUpdate({ schemas: prevSchemas }) {
     const {
       schemas,
@@ -106,6 +111,18 @@ class SchemaView extends Component {
     } = this.props;
 
     if (schemas.get(id) !== prevSchemas.get(id)) {
+      this.setSchema();
+    }
+  }
+
+  setSchema = () => {
+    const {
+      schemas,
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    if (schemas.get(id)) {
       const {
         label,
         description,
@@ -117,7 +134,7 @@ class SchemaView extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ label, description, tagStyle, schemaDef, createdAt });
     }
-  }
+  };
 
   handleLabelOnChange = ({ target: { value: label } }) => {
     this.setState({
@@ -232,7 +249,7 @@ class SchemaView extends Component {
                   </Button>
                 </Alert>
               )}
-              <Paper className={classes.schemaContent}>
+              <Paper id={SCHEMA_CONTENT_ID} className={classes.schemaContent}>
                 <ReactJson
                   collapsed={4}
                   src={schemaDef}
