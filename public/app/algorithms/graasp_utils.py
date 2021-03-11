@@ -6,7 +6,7 @@ import platform
 
 def open_file(file, permission='r'):
     version = platform.python_version()[0]
-    if version == 3:
+    if version == "3":
         return open(file, permission, encoding="utf8")
     else:
         return open(file, permission)

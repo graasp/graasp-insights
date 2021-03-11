@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import _ from 'lodash';
 import Button from '@material-ui/core/Button';
+import _ from 'lodash';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Alert from '@material-ui/lab/Alert';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -14,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { Alert } from '@material-ui/lab';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
@@ -29,8 +29,8 @@ import {
   buildParameterTypeOptionClass,
   buildAlertFieldSelectorUndefinedSchema,
   ALERT_FIELD_SELECTOR_NO_SCHEMA_AVAILABLE_ID,
-  PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
   buildParameterSchemaOption,
+  PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
 } from '../../config/selectors';
 import { PARAMETER_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import { setFieldSelectorAttributes } from '../../shared/utils';
@@ -185,10 +185,6 @@ const EditParametersForm = (props) => {
           );
         }
 
-        let fieldSelection;
-        if (schemaId in value) {
-          fieldSelection = value[schemaId];
-        }
         // needed schema is missing
         if (!schemas.get(schemaId)) {
           return (
@@ -204,12 +200,32 @@ const EditParametersForm = (props) => {
           );
         }
 
-        try {
-          const { schema } = schemas.get(schemaId);
+        let fieldSelection;
+        if (schemaId in value) {
+          fieldSelection = value[schemaId];
+        } else {
+          try {
+            const { schema } = schemas.get(schemaId);
 
-          fieldSelection = setFieldSelectorAttributes(schema, false, 1);
+            fieldSelection = setFieldSelectorAttributes(schema, false, 1);
 
-          if (!schema || _.isEmpty(fieldSelection)) {
+            if (
+              !schema ||
+              _.isEmpty(fieldSelection) ||
+              _.isEmpty(fieldSelection.properties)
+            ) {
+              return (
+                <Alert
+                  severity="error"
+                  className={classes.infoAlert}
+                  id={buildAlertFieldSelectorUndefinedSchema(schemaId)}
+                >
+                  {t('An error occured. This schema is not properly defined.')}
+                </Alert>
+              );
+            }
+          } catch (e) {
+            // catch errors coming from a wrong schema definition
             return (
               <Alert
                 severity="error"
@@ -220,17 +236,6 @@ const EditParametersForm = (props) => {
               </Alert>
             );
           }
-        } catch (e) {
-          // catch errors coming from a wrong schema definition
-          return (
-            <Alert
-              severity="error"
-              className={classes.infoAlert}
-              id={buildAlertFieldSelectorUndefinedSchema(schemaId)}
-            >
-              {t('An error occured. This schema is not properly defined.')}
-            </Alert>
-          );
         }
 
         return (

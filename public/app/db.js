@@ -25,6 +25,7 @@ const {
   EXECUTIONS_COLLECTION,
   SCHEMAS_COLLECTION,
   SETTINGS_COLLECTION,
+  EXECUTION_STATUSES,
 } = require('../shared/constants');
 const { saveDefaultAlgorithmInDb } = require('./listeners/addDefaultAlgorithm');
 
@@ -93,6 +94,18 @@ const ensureAlgorithmsExist = (db) => {
   }
 };
 
+const ensureExecutionsStatus = (db) => {
+  // running executions should be stopped
+  const collection = db.get(EXECUTIONS_COLLECTION);
+  const executions = collection
+    .filter({ status: EXECUTION_STATUSES.RUNNING })
+    .value();
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { id } of executions) {
+    collection.find({ id }).assign({ status: EXECUTIONS_COLLECTION.ERROR });
+  }
+};
+
 const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   const adapter = new FileSync(dbPath);
   const db = low(adapter);
@@ -111,6 +124,7 @@ const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
   }).write();
 
   ensureAlgorithmsExist(db);
+  ensureExecutionsStatus(db);
   return db;
 };
 
