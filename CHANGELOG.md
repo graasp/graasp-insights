@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/graasp/graasp-insights/compare/v0.1.3...v0.1.4) (2021-03-11)
+
+### Features
+
+- add built-in algorithm ([aa0cca8](https://github.com/graasp/graasp-insights/commit/aa0cca87bd61a2c137a1c98b6159db2e5e2183c6))
+- add button in settings tab to clear database and all data from app ([e784377](https://github.com/graasp/graasp-insights/commit/e784377b7d0090f3b5a67d5b91527837e602b9ab)), closes [#137](https://github.com/graasp/graasp-insights/issues/137)
+- add sample database application possible when clearing database ([a63b817](https://github.com/graasp/graasp-insights/commit/a63b8173d0e040604e64a8d622cf5a0517b1ddf7))
+
+### Bug Fixes
+
+- open path in explorer, detect name from file location correctly ([29842bb](https://github.com/graasp/graasp-insights/commit/29842bb297300de8596ce69f34f50a331e09dbf1))
+- refactor graasp algorithms definition for build ([cbc27eb](https://github.com/graasp/graasp-insights/commit/cbc27eb54b5bd837dd42febd0e2aeb22a77a423d))
+- show alert on empty or undefined schema on execution, save schema from datasets ([35c3083](https://github.com/graasp/graasp-insights/commit/35c308302b25eabb940becd5b914bcc45a0c03e6))
+
+### Tests
+
+- update tests for algorithm parameters, clear database setting, catch missing schema errors ([29f2ce5](https://github.com/graasp/graasp-insights/commit/29f2ce52ce4c5b543acf9f242fac6a63654c2094))
+
 ### [0.1.3](https://github.com/graasp/graasp-insights/compare/v0.1.2...v0.1.3) (2021-02-17)
 
 ### Build System
