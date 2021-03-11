@@ -28,6 +28,12 @@ import {
   PARAMETER_VALUE_CLASS,
   ADD_PARAMETER_BUTTON_ID,
   buildParameterTypeOptionClass,
+  ADD_ALGORITHM_DEFAULT_OPTION_ID,
+  DEFAULT_ALGORITHM_SELECT_ID,
+  buildDefaultAlgorithmOptionId,
+  PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
+  buildParameterSchemaOption,
+  buildFieldSelectorCheckbox,
 } from '../../src/config/selectors';
 import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
@@ -150,9 +156,18 @@ export const editAlgorithm = async (client, { name, description }) => {
   await descriptionEl.addValue(description);
 };
 
+export const addDefaultAlgorithm = async (client, { id }) => {
+  const editorOption = await client.$(`#${ADD_ALGORITHM_DEFAULT_OPTION_ID}`);
+  await editorOption.click();
+
+  const algorithmSelect = await client.$(`#${DEFAULT_ALGORITHM_SELECT_ID}`);
+  await algorithmSelect.click();
+  await (await client.$(`#${buildDefaultAlgorithmOptionId(id)}`)).click();
+};
+
 export const addParameters = async (client, { parameters }) => {
   const addParameterButton = await client.$(`#${ADD_PARAMETER_BUTTON_ID}`);
-  for (const { name, type, description, value } of parameters) {
+  for (const { name, type, description, value, schema } of parameters) {
     await addParameterButton.click();
     const parameterElements = await client.$$(`.${PARAMETER_CLASS}`);
     const lastParameter = parameterElements[parameterElements.length - 1];
@@ -172,6 +187,27 @@ export const addParameters = async (client, { parameters }) => {
     );
     await descriptionElem.setValue(description);
 
+    if (type === PARAMETER_TYPES.FIELD_SELECTOR) {
+      // select schema
+      if (schema) {
+        const schemaSelect = await client.$(
+          `#${PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID}`,
+        );
+        await schemaSelect.click();
+        await (
+          await client.$(`#${buildParameterSchemaOption(schema)}`)
+        ).click();
+      }
+
+      // check field checkboxes
+      // suppose unique checkbox name
+      if (value) {
+        for (const v of value) {
+          const field = await client.$(`#${buildFieldSelectorCheckbox(v)}`);
+          await field.click();
+        }
+      }
+    }
     if (type !== PARAMETER_TYPES.FIELD_SELECTOR) {
       const valueElem = await lastParameter.$(`.${PARAMETER_VALUE_CLASS}`);
       await clearInput(valueElem);

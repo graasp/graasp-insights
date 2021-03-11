@@ -1,7 +1,10 @@
 const fs = require('fs');
 const { DELETE_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { ALGORITHMS_COLLECTION, EXECUTIONS_COLLECTION } = require('../db');
+const {
+  ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
+} = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   DELETE_ALGORITHM_ERROR,

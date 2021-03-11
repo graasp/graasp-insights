@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { anySelected } from '../../utils/parameter';
 import { fieldSelectorUnselectAll } from '../../shared/utils';
+import { buildFieldSelectorCheckbox } from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   shifted: {
@@ -37,10 +38,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FieldSelector = ({ schema, onChange }) => {
-  const { properties } = schema;
+const FieldSelector = ({ schema, onChange, disabled }) => {
   const { t } = useTranslation();
   const classes = useStyles();
+
+  if (!schema || !schema.properties) {
+    return null;
+  }
+
+  const { properties } = schema;
 
   return (
     <Paper elevation={2}>
@@ -55,6 +61,7 @@ const FieldSelector = ({ schema, onChange }) => {
               properties: { ...properties, [key]: updatedField },
             });
           }}
+          disabled={disabled}
         />
       ))}
       <Button
@@ -62,6 +69,7 @@ const FieldSelector = ({ schema, onChange }) => {
         size="small"
         onClick={() => onChange(fieldSelectorUnselectAll(schema))}
         disableRipple
+        disabled={disabled}
       >
         {t('Unselect all')}
       </Button>
@@ -74,13 +82,15 @@ FieldSelector.propTypes = {
     properties: PropTypes.shape({}).isRequired,
   }).isRequired,
   onChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 FieldSelector.defaultProps = {
   onChange: () => {},
+  disabled: false,
 };
 
-const FieldSelectorTree = ({ name, field, onChange }) => {
+const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
   const { type, selected, expanded } = field;
   const properties = type?.includes('object')
     ? field.properties
@@ -121,6 +131,7 @@ const FieldSelectorTree = ({ name, field, onChange }) => {
         control={
           // eslint-disable-next-line react/jsx-wrap-multilines
           <Checkbox
+            id={buildFieldSelectorCheckbox(name)}
             checked={selected}
             onChange={handleCheckboxOnChange}
             color="primary"
@@ -130,6 +141,7 @@ const FieldSelectorTree = ({ name, field, onChange }) => {
               properties &&
               anySelected({ type: 'object', properties })
             }
+            disabled={disabled}
           />
         }
         label={name}
@@ -158,6 +170,7 @@ const FieldSelectorTree = ({ name, field, onChange }) => {
                         },
                       });
                 }}
+                disabled={disabled}
               />
             );
           })}
@@ -180,10 +193,12 @@ FieldSelectorTree.propTypes = {
     ]),
   }).isRequired,
   onChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 FieldSelectorTree.defaultProps = {
   onChange: () => {},
+  disabled: false,
 };
 
 export default FieldSelector;

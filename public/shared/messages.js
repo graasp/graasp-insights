@@ -13,8 +13,10 @@ const ERROR_GETTING_ALGORITHMS_MESSAGE =
   'There was an error retrieving the algorithms';
 const ERROR_GETTING_ALGORITHM_MESSAGE =
   'There was an error retrieving the algorithm';
-const ERROR_SETTING_SAMPLE_DATABASE_MESSAGE =
-  'There was an error setting the sample database';
+const ERROR_SETTING_GRAASP_DATABASE_MESSAGE =
+  'There was an error setting the Graasp database';
+const SUCCESS_SETTING_GRAASP_DATABASE_MESSAGE =
+  'The Graasp database was successfully set';
 const ERROR_SETTING_DATABASE_MESSAGE =
   'There was an error setting the database';
 const ERROR_GETTING_DATABASE_MESSAGE =
@@ -114,13 +116,16 @@ const SUCCESS_DELETING_ALL_MESSAGE =
   'All application data was cleared successfully.';
 const ERROR_DELETING_ALL_MESSAGE =
   'There was an error deleting some application data. Try clearing the remaining data manually.';
+const ERROR_GETTING_ALGORITHM_CODE_MESSAGE =
+  'The was an error retrieving the algorithm code';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
   SUCCESS_MESSAGE_HEADER,
   ERROR_GETTING_DATASET_MESSAGE,
   ERROR_GETTING_DATASETS_MESSAGE,
-  ERROR_SETTING_SAMPLE_DATABASE_MESSAGE,
+  ERROR_SETTING_GRAASP_DATABASE_MESSAGE,
+  SUCCESS_SETTING_GRAASP_DATABASE_MESSAGE,
   ERROR_SETTING_DATABASE_MESSAGE,
   ERROR_GETTING_DATABASE_MESSAGE,
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -178,4 +183,5 @@ module.exports = {
   ERROR_OPENING_URL_IN_BROWSER_MESSAGE,
   SUCCESS_DELETING_ALL_MESSAGE,
   ERROR_DELETING_ALL_MESSAGE,
+  ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
 };

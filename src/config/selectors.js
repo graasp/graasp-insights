@@ -1,4 +1,4 @@
-const parseName = (name) => name.split(' ').join('');
+const parseName = (name) => name?.split(' ').join('');
 
 export const SETTINGS_MENU_ITEM_ID = 'settingsMenuItem';
 export const ALGORITHMS_MENU_ITEM_ID = 'algorithmsMenuItem';
@@ -76,6 +76,7 @@ export const ADD_ALGORITHM_BACK_BUTTON_ID = 'addAlgorithmBackButton';
 export const ADD_ALGORITHM_FROM_FILE_OPTION_ID = 'addAlgorithmFromFileOption';
 export const ADD_ALGORITHM_FROM_EDITOR_OPTION_ID =
   'addAlgorithmFromEditorOption';
+export const ADD_ALGORITHM_DEFAULT_OPTION_ID = 'addAlgorithmDefaultOption';
 export const EDIT_ALGORITHM_NAME_ID = 'editAlgorithmName';
 export const EDIT_ALGORITHM_DESCRIPTION_ID = 'editAlgorithmDescription';
 export const EDIT_ALGORITHM_SAVE_BUTTON_ID = 'editAlgorithmSaveButton';
@@ -116,3 +117,22 @@ export const SCHEMA_DESCRIPTION_CLASS = 'schemaDescription';
 export const SCHEMA_VIEW_SAVE_BUTTON_ID = 'schemaViewSaveButton';
 export const SCHEMA_VIEW_BACK_BUTTON_ID = 'schemaViewBackButton';
 export const buildDatasetRowClass = (name) => `datasetRow-${parseName(name)}`;
+export const DEFAULT_ALGORITHM_SELECT_ID = 'defaultAlgorithmSelect';
+export const buildDefaultAlgorithmOptionId = (id) =>
+  `defaultAlgorithmOption-${id}`;
+export const buildAlertFieldSelectorUndefinedSchema = (id) =>
+  `alertFieldSelectorUndefinedSchema-${id}`;
+export const ALERT_FIELD_SELECTOR_NO_SCHEMA_AVAILABLE_ID =
+  'alertFieldSelectorNoSchemaAvailable';
+export const PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID =
+  'parametersFieldSelectorSelectSchemas';
+export const buildParameterSchemaOption = (id) => `parameterSchemaOption-${id}`;
+export const buildFieldSelectorCheckbox = (name) =>
+  `fieldSelectorCheckbox-${name}`;
+export const SETTINGS_CLEAR_DATABASE_BUTTON_ID = 'settingsClearDatabaseButton';
+export const ALGORITHMS_EMPTY_ALERT_ID = 'algorithmsEmptyAlert';
+export const SCHEMAS_EMPTY_ALERT_ID = 'schemasEmptyAlert';
+export const SETTINGS_CLEAR_DATABASE_SAMPLE_DB_CHECKBOX_ID =
+  'settingsClearDatavaseSampleDbCheckbox';
+export const SETTINGS_LOAD_GRAASP_DATABASE_ID = 'settingsLoadGraaspDatabase';
+export const SCHEMA_CONTENT_ID = 'schemaContent';

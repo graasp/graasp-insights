@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { EXPORT_DATASET_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION } = require('../../shared/constants');
 const {
   EXPORT_DATASET_SUCCESS,
   EXPORT_DATASET_ERROR,

@@ -76,3 +76,12 @@ When you first run or build the application, a file called `env.json` will be cr
 You are now ready to launch Graasp Insights! Simply run `yarn start` in your terminal, and the application will be launched.
 
 Please submit any contributions, ideas, or issues you identify to the application's [GitHub repository](https://github.com/graasp/graasp-insights).
+
+### Build the application
+
+Run `yarn dist`. MacOS systems can build the application for all other systems. Windows can only create a distribution for Windows.
+
+#### Licenses
+
+Licenses are displayed to the user during the application installation. The configuration follows the instructions for [`electron-builder`](https://www.electron.build/configuration/configuration). When building the application on macOS, the license saved in `public/license_en.txt` is used for all distributions, including for windows' `.exe` executable.
+However, a build on Windows requires a windows-encoded license `public/windows_license.txt` to deal with special characters.

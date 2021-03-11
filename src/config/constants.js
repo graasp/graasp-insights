@@ -3,8 +3,6 @@ import { PARAMETER_TYPES } from '../shared/constants';
 import theme from '../theme';
 import { generateTextColorFromBackground } from '../utils/color';
 
-export const DATASETS_COLLECTION = 'datasets';
-
 export const DEFAULT_LANGUAGE = 'en';
 export const DEFAULT_PROTOCOL = 'https';
 
@@ -33,6 +31,7 @@ export const EDITOR_PROGRAMMING_LANGUAGES = {
 export const ADD_OPTIONS = {
   FILE: 'file',
   EDITOR: 'editor',
+  DEFAULT: 'default',
 };
 
 // Default latitude and longitude for centering map in ActionsMap.js. Zurich coordinates used below.

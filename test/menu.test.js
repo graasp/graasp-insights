@@ -20,7 +20,7 @@ describe('Menu Scenarios', function () {
     }),
   );
 
-  afterEach(function () {
+  afterEach(() => {
     return closeApplication(app);
   });
 

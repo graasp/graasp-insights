@@ -11,8 +11,8 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
 const logger = require('./app/logger');
-const { ICON_PATH, PRODUCT_NAME } = require('./app/config/config');
-const { DATABASE_PATH, ALGORITHMS_FOLDER } = require('./app/config/paths');
+const { PRODUCT_NAME } = require('./app/config/config');
+const { DATABASE_PATH, ICON_PATH } = require('./app/config/paths');
 const isMac = require('./app/utils/isMac');
 const {
   LOAD_DATASET_CHANNEL,
@@ -20,7 +20,7 @@ const {
   GET_DATASET_CHANNEL,
   GET_DATASETS_CHANNEL,
   GET_DATABASE_CHANNEL,
-  SET_SAMPLE_DATABASE_CHANNEL,
+  SET_GRAASP_DATABASE_CHANNEL,
   SET_DATABASE_CHANNEL,
   DELETE_DATASET_CHANNEL,
   SET_LANGUAGE_CHANNEL,
@@ -37,6 +37,7 @@ const {
   EXPORT_RESULT_CHANNEL,
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
+  ADD_DEFAULT_ALGORITHM_CHANNEL,
   BROWSE_FILE_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
@@ -57,6 +58,7 @@ const {
   SET_SCHEMA_CHANNEL,
   DELETE_SCHEMA_CHANNEL,
   OPEN_URL_IN_BROWSER_CHANNEL,
+  GET_ALGORITHM_CODE_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -66,7 +68,7 @@ const {
   getDatasets,
   setDatabase,
   deleteDataset,
-  setSampleDatabase,
+  setGraaspDatabase,
   getLanguage,
   setLanguage,
   getResult,
@@ -103,14 +105,11 @@ const {
   setSchema,
   deleteSchema,
   openUrlInBrowser,
+  addDefaultAlgorithm,
+  getAlgorithmCode,
 } = require('./app/listeners');
 const env = require('./env.json');
-const {
-  ensureDatabaseExists,
-  bootstrapDatabase,
-  ensureAlgorithmsExist,
-  addDefaultSchemas,
-} = require('./app/db');
+const { bootstrapDatabase } = require('./app/db');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -244,7 +243,7 @@ const standardFileSubmenu = [
         bug_link_text: 'Report a Bug/Issue',
         // we cannot use homepage from package.json as
         // create-react-app uses it to build the frontend
-        homepage: 'https://graasp.org/',
+        homepage: 'https://insights.graasp.org/',
       });
     },
   },
@@ -336,14 +335,7 @@ const generateMenu = () => {
 };
 
 app.on('ready', async () => {
-  await ensureDatabaseExists(DATABASE_PATH);
-  const db = bootstrapDatabase(DATABASE_PATH);
-  await ensureAlgorithmsExist(db, ALGORITHMS_FOLDER);
-  await addDefaultSchemas(db);
-
-  // set version file in var folder
-  // used to detect first install
-  db.set('version', app.getVersion()).write();
+  const db = await bootstrapDatabase(DATABASE_PATH);
 
   createWindow();
   generateMenu();
@@ -407,7 +399,7 @@ app.on('ready', async () => {
   ipcMain.on(GET_DATABASE_CHANNEL, getDatabase(mainWindow, db));
 
   // called when setting the sample database
-  ipcMain.on(SET_SAMPLE_DATABASE_CHANNEL, setSampleDatabase(mainWindow, db));
+  ipcMain.on(SET_GRAASP_DATABASE_CHANNEL, setGraaspDatabase(mainWindow, db));
 
   // called when deleting all datasets, schemas, algorithms, executions, and results
   ipcMain.on(CLEAR_DATABASE_CHANNEL, clearDatabase(mainWindow, db));
@@ -436,6 +428,12 @@ app.on('ready', async () => {
 
   // called when adding an algorithm
   ipcMain.on(ADD_ALGORITHM_CHANNEL, addAlgorithm(mainWindow, db));
+
+  // called when adding a default algorithm
+  ipcMain.on(
+    ADD_DEFAULT_ALGORITHM_CHANNEL,
+    addDefaultAlgorithm(mainWindow, db),
+  );
 
   // called when browsing a file
   ipcMain.on(BROWSE_FILE_CHANNEL, browseFile(mainWindow));
@@ -469,6 +467,9 @@ app.on('ready', async () => {
 
   // called when deleting a schema
   ipcMain.on(DELETE_SCHEMA_CHANNEL, deleteSchema(mainWindow, db));
+
+  // called when reading the code of an algorithm
+  ipcMain.on(GET_ALGORITHM_CODE_CHANNEL, getAlgorithmCode(mainWindow));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

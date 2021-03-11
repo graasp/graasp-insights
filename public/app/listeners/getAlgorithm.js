@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { GET_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { ALGORITHMS_COLLECTION } = require('../db');
+const { ALGORITHMS_COLLECTION } = require('../../shared/constants');
 const {
   GET_ALGORITHM_ERROR,
   GET_ALGORITHM_SUCCESS,

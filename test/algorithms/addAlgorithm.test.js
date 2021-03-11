@@ -1,11 +1,11 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
+import GRAASP_ALGORITHMS from '../../src/shared/data/graaspAlgorithms';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   MISSING_FILE_ALGORITHM,
   SIMPLE_ALGORITHM,
-  ALGORITHM_WITH_PARAMETERS,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
@@ -16,7 +16,7 @@ import {
   clickAddAlgoSaveButton,
   clickAddButton,
   getNumberOfAlgorithms,
-  addParameters,
+  addDefaultAlgorithm,
 } from './utils';
 
 describe('Add Algorithm Scenarios', function () {
@@ -107,22 +107,22 @@ describe('Add Algorithm Scenarios', function () {
   );
 
   it(
-    'Adds algorithm with parameters',
+    'Adds default algorithm',
     mochaAsync(async () => {
       const { client } = app;
+      const algorithm = GRAASP_ALGORITHMS[0];
 
       const nbAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
       await clickAddButton(client);
-      await addAlgorithmFromEditor(client, ALGORITHM_WITH_PARAMETERS);
-      await addParameters(client, ALGORITHM_WITH_PARAMETERS);
+      await addDefaultAlgorithm(client, { id: algorithm.id });
       await clickAddAlgoSaveButton(client);
 
       const nbAlgosAfter = await getNumberOfAlgorithms(client);
       expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
 
-      await checkAlgorithmRowLayout(client, ALGORITHM_WITH_PARAMETERS);
+      await checkAlgorithmRowLayout(client, algorithm);
     }),
   );
 });

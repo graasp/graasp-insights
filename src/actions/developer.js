@@ -7,8 +7,9 @@ import {
 } from '../shared/types';
 import {
   GET_DATABASE_CHANNEL,
-  SET_SAMPLE_DATABASE_CHANNEL,
   SET_DATABASE_CHANNEL,
+  CLEAR_DATABASE_CHANNEL,
+  SET_GRAASP_DATABASE_CHANNEL,
 } from '../shared/channels';
 import {
   ERROR_GETTING_DATABASE_MESSAGE,
@@ -54,13 +55,22 @@ const setDatabase = async (database) => (dispatch) => {
   }
 };
 
+// reuse clear and set graasp database calls
 const setSampleDatabase = async () => (dispatch) => {
   try {
     dispatch(flagSettingSampleDatabase(true));
-    window.ipcRenderer.send(SET_SAMPLE_DATABASE_CHANNEL);
-    window.ipcRenderer.once(SET_SAMPLE_DATABASE_CHANNEL, (event, response) => {
-      dispatch(response);
-      dispatch(flagSettingSampleDatabase(false));
+    // clear database first
+    window.ipcRenderer.send(CLEAR_DATABASE_CHANNEL);
+    window.ipcRenderer.once(CLEAR_DATABASE_CHANNEL, () => {
+      // load data
+      window.ipcRenderer.send(SET_GRAASP_DATABASE_CHANNEL);
+      window.ipcRenderer.once(
+        SET_GRAASP_DATABASE_CHANNEL,
+        (event, response) => {
+          dispatch(response);
+          dispatch(flagSettingSampleDatabase(false));
+        },
+      );
     });
   } catch (err) {
     // eslint-disable-next-line no-console

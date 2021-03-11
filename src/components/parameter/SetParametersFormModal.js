@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import Button from '@material-ui/core/Button';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SaveIcon from '@material-ui/icons/Save';
@@ -7,6 +8,7 @@ import Container from '@material-ui/core/Container';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
+import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -121,6 +123,16 @@ const SetParametersFormModal = (props) => {
         } else {
           const schema = schemas.get(schemaId)?.schema;
           fieldSelection = setFieldSelectorAttributes(schema, false, 1);
+        }
+
+        if (_.isEmpty(fieldSelection)) {
+          return (
+            <Alert severity="error">
+              {t(
+                'You cannot select fields because the selected schema is empty or corrupted.',
+              )}
+            </Alert>
+          );
         }
 
         return (

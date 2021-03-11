@@ -1,7 +1,10 @@
 const fs = require('fs');
 const { DELETE_DATASET_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION, EXECUTIONS_COLLECTION } = require('../db');
+const {
+  DATASETS_COLLECTION,
+  EXECUTIONS_COLLECTION,
+} = require('../../shared/constants');
 const {
   DELETE_DATASET_SUCCESS,
   DELETE_DATASET_ERROR,

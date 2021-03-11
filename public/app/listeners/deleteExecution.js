@@ -1,6 +1,6 @@
 const { DELETE_EXECUTION_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { EXECUTIONS_COLLECTION } = require('../db');
+const { EXECUTIONS_COLLECTION } = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   DELETE_EXECUTION_SUCCESS,

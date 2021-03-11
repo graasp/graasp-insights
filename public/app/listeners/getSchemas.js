@@ -1,4 +1,4 @@
-const { SCHEMAS_COLLECTION } = require('../db');
+const { SCHEMAS_COLLECTION } = require('../../shared/constants');
 const { GET_SCHEMAS_CHANNEL } = require('../../shared/channels');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {

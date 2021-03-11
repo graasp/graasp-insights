@@ -18,6 +18,7 @@ import { withRouter } from 'react-router';
 import { openUrlInBrowser, setSchema } from '../../actions';
 import { JSON_SCHEMA_GETTING_STARTED_URL } from '../../config/constants';
 import {
+  SCHEMA_CONTENT_ID,
   SCHEMA_VIEW_BACK_BUTTON_ID,
   SCHEMA_VIEW_DESCRIPTION_ID,
   SCHEMA_VIEW_LABEL_ID,
@@ -98,6 +99,10 @@ class SchemaView extends Component {
   };
 
   componentDidMount() {
+    this.setSchema();
+  }
+
+  componentDidUpdate({ schemas: prevSchemas }) {
     const {
       schemas,
       match: {
@@ -105,16 +110,31 @@ class SchemaView extends Component {
       },
     } = this.props;
 
-    const {
-      label,
-      description,
-      tagStyle,
-      schema: schemaDef,
-      createdAt,
-    } = schemas.get(id);
-
-    this.setState({ label, description, tagStyle, schemaDef, createdAt });
+    if (schemas.get(id) !== prevSchemas.get(id)) {
+      this.setSchema();
+    }
   }
+
+  setSchema = () => {
+    const {
+      schemas,
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    if (schemas.get(id)) {
+      const {
+        label,
+        description,
+        tagStyle,
+        schema: schemaDef,
+        createdAt,
+      } = schemas.get(id);
+
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ label, description, tagStyle, schemaDef, createdAt });
+    }
+  };
 
   handleLabelOnChange = ({ target: { value: label } }) => {
     this.setState({
@@ -191,6 +211,22 @@ class SchemaView extends Component {
     const schema = schemas.get(id);
     const isGraasp = id === GRAASP_SCHEMA_ID;
 
+    if (!schema) {
+      return (
+        <Main>
+          <Container>
+            <Alert severity="error" className={classes.infoAlert}>
+              {t('An unexpected error happened while opening the schema.')}
+            </Alert>
+            <BackButton
+              id={SCHEMA_VIEW_BACK_BUTTON_ID}
+              className={classes.backButton}
+            />
+          </Container>
+        </Main>
+      );
+    }
+
     return (
       <Main>
         <Container>
@@ -213,7 +249,7 @@ class SchemaView extends Component {
                   </Button>
                 </Alert>
               )}
-              <Paper className={classes.schemaContent}>
+              <Paper id={SCHEMA_CONTENT_ID} className={classes.schemaContent}>
                 <ReactJson
                   collapsed={4}
                   src={schemaDef}

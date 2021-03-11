@@ -6,8 +6,6 @@ const executePythonAlgorithm = (
   { algorithmFilepath, filepath, tmpPath, parameters, schemaId },
   { onRun, onStop, onSuccess, onError, clean },
 ) => {
-  let errorLog = '';
-
   // for each parameter, prepares a pair [--parameter_name, parameter_value] for the command line
   const preparedParameters =
     parameters
@@ -28,12 +26,10 @@ const executePythonAlgorithm = (
       })
       .flat() || [];
 
-  const process = spawn('python', [
-    algorithmFilepath,
-    filepath,
-    tmpPath,
-    ...preparedParameters,
-  ]);
+  const args = [algorithmFilepath, filepath, tmpPath, ...preparedParameters];
+  let log = `python ${args}`;
+
+  const process = spawn('python', args);
 
   onRun({ pid: process.pid });
 
@@ -44,13 +40,13 @@ const executePythonAlgorithm = (
 
   process.stderr.on('data', (data) => {
     logger.error(data);
-    errorLog += data;
+    log += data;
   });
 
   process.on('close', (code) => {
     switch (code) {
       case 0:
-        onSuccess();
+        onSuccess({ log });
         break;
       // null = kill with tree kill
       case null:
@@ -58,7 +54,7 @@ const executePythonAlgorithm = (
         break;
       default:
         logger.error(`python process exited with code ${code}`);
-        onError({ code, log: errorLog });
+        onError({ code, log });
     }
     clean();
   });

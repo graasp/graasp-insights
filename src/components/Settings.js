@@ -21,6 +21,7 @@ import {
   setLanguage,
   getFileSizeLimit,
   clearDatabase,
+  setGraaspDatabase,
 } from '../actions';
 import {
   DEFAULT_FILE_SIZE_LIMIT,
@@ -30,11 +31,13 @@ import {
   SETTINGS_FILE_SIZE_LIMIT_SELECT_ID,
   SETTINGS_LANG_SELECT,
   SETTINGS_MAIN_ID,
+  SETTINGS_CLEAR_DATABASE_BUTTON_ID,
+  SETTINGS_LOAD_GRAASP_DATABASE_ID,
 } from '../config/selectors';
 
 const styles = (theme) => ({
   formControl: {
-    width: theme.spacing(35),
+    width: '50%',
     margin: theme.spacing(2, 0),
   },
   content: {
@@ -50,6 +53,9 @@ const styles = (theme) => ({
       backgroundColor: '#C41E3A',
     },
   },
+  sampleDatabaseCheckboxLabel: {
+    fontSize: '1em',
+  },
 });
 
 const Settings = (props) => {
@@ -63,6 +69,7 @@ const Settings = (props) => {
     fileSizeLimit = DEFAULT_FILE_SIZE_LIMIT,
     dispatchGetFileSizeLimit,
     dispatchClearDatabase,
+    dispatchSetGraaspDatabase,
   } = props;
   dispatchGetLanguage();
   dispatchGetFileSizeLimit();
@@ -146,11 +153,32 @@ const Settings = (props) => {
     );
   };
 
-  const renderClearDatabase = () => {
-    const handleClearDatabase = () => {
-      dispatchClearDatabase();
-    };
+  const renderLoadGraaspDatabase = () => {
+    return (
+      <FormControl className={classes.formControl}>
+        <FormLabel>{t('Load Graasp Data')}</FormLabel>
+        <FormHelperText>
+          {t(
+            'Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.',
+          )}
+        </FormHelperText>
+        <Button
+          id={SETTINGS_LOAD_GRAASP_DATABASE_ID}
+          variant="contained"
+          onClick={dispatchSetGraaspDatabase}
+          color="primary"
+        >
+          {t('Load Graasp Algorithms and Schema')}
+        </Button>
+      </FormControl>
+    );
+  };
 
+  const handleClearDatabase = () => {
+    dispatchClearDatabase();
+  };
+
+  const renderClearDatabase = () => {
     return (
       <FormControl className={classes.formControl}>
         <FormLabel>{t('Clear Application Data')}</FormLabel>
@@ -160,6 +188,7 @@ const Settings = (props) => {
           )}
         </FormHelperText>
         <Button
+          id={SETTINGS_CLEAR_DATABASE_BUTTON_ID}
           variant="contained"
           className={classes.clearDatabaseButton}
           startIcon={<DeleteIcon />}
@@ -177,6 +206,7 @@ const Settings = (props) => {
         <Typography variant="h4">{t('Settings')}</Typography>
         {renderLanguageSelect()}
         {renderFileSizeLimit()}
+        {renderLoadGraaspDatabase()}
         {renderClearDatabase()}
       </Container>
     </Main>
@@ -190,16 +220,22 @@ Settings.propTypes = {
   dispatchGetFileSizeLimit: PropTypes.func.isRequired,
   dispatchSetFileSizeLimit: PropTypes.func.isRequired,
   dispatchClearDatabase: PropTypes.func.isRequired,
-  fileSizeLimit: PropTypes.number.isRequired,
+  dispatchSetGraaspDatabase: PropTypes.func.isRequired,
+  fileSizeLimit: PropTypes.number,
   t: PropTypes.func.isRequired,
   classes: PropTypes.shape({
     formControl: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     clearDatabaseButton: PropTypes.string.isRequired,
+    sampleDatabaseCheckboxLabel: PropTypes.string.isRequired,
   }).isRequired,
   i18n: PropTypes.shape({
     changeLanguage: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+Settings.defaultProps = {
+  fileSizeLimit: DEFAULT_FILE_SIZE_LIMIT,
 };
 
 const mapStateToProps = ({ settings }) => ({
@@ -213,6 +249,7 @@ const mapDispatchToProps = {
   dispatchSetFileSizeLimit: setFileSizeLimit,
   dispatchGetFileSizeLimit: getFileSizeLimit,
   dispatchClearDatabase: clearDatabase,
+  dispatchSetGraaspDatabase: setGraaspDatabase,
 };
 
 const ConnectedComponent = connect(

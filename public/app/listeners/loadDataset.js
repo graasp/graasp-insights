@@ -4,13 +4,15 @@ const ObjectId = require('bson-objectid');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/paths');
 const { ERROR_GENERAL } = require('../../shared/errors');
-const { DATASETS_COLLECTION } = require('../db');
 const { LOAD_DATASET_CHANNEL } = require('../../shared/channels');
 const {
   LOAD_DATASET_SUCCESS,
   LOAD_DATASET_ERROR,
 } = require('../../shared/types');
-const { DATASET_TYPES } = require('../../shared/constants');
+const {
+  DATASET_TYPES,
+  DATASETS_COLLECTION,
+} = require('../../shared/constants');
 const { detectSchemas } = require('../schema/detectSchemas');
 const { getFileStats } = require('../utils/file');
 

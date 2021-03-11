@@ -1,7 +1,6 @@
 const { GRAASP_SCHEMA_ID } = require('../../shared/constants');
-const GRAASP_SCHEMA = require('./graasp');
+const GRAASP_SCHEMA = require('../../shared/data/graaspSchema');
 
-const now = Date.now();
 const DEFAULT_SCHEMAS = {
   [GRAASP_SCHEMA_ID]: {
     id: GRAASP_SCHEMA_ID,
@@ -13,8 +12,6 @@ const DEFAULT_SCHEMAS = {
       backgroundColor: '#5050d2',
       color: 'white',
     },
-    createdAt: now,
-    lastModified: now,
   },
 };
 

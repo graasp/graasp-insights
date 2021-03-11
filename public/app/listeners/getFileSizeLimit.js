@@ -5,7 +5,7 @@ const {
   GET_FILE_SIZE_LIMIT_SUCCESS,
   GET_FILE_SIZE_LIMIT_ERROR,
 } = require('../../shared/types');
-const { SETTINGS_COLLECTION } = require('../db');
+const { SETTINGS_COLLECTION } = require('../../shared/constants');
 
 const getFileSizeLimit = (mainWindow, db) => async () => {
   try {

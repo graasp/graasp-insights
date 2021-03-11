@@ -240,6 +240,7 @@ class AddExecutionForm extends Component {
   renderExecuteButton = () => {
     const { sourceId, algorithmId, parameters } = this.state;
     const { t, pythonVersion, classes } = this.props;
+
     const valid =
       sourceId &&
       algorithmId &&
@@ -313,7 +314,7 @@ class AddExecutionForm extends Component {
     if (!algorithms.size) {
       return (
         <Alert severity="info" className={classes.infoAlert}>
-          {t('No algorithms are available')}
+          {t('No algorithms available')}
         </Alert>
       );
     }

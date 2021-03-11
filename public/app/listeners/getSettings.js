@@ -5,7 +5,7 @@ const {
   GET_SETTINGS_SUCCESS,
   GET_SETTINGS_ERROR,
 } = require('../../shared/types');
-const { SETTINGS_COLLECTION } = require('../db');
+const { SETTINGS_COLLECTION } = require('../../shared/constants');
 
 const getSettings = (mainWindow, db) => async () => {
   try {

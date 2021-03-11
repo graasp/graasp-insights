@@ -54,7 +54,8 @@
       "displayName": "static public field",
       "propTypes": "static public field"
     }],
-    "react/state-in-constructor": ["error", "never"]
+    "react/state-in-constructor": ["error", "never"],
+    "no-console": ["error", { "allow": ["warn", "error"] }] 
   },
   "overrides": [{
     "files": ["test/**/*.js"],

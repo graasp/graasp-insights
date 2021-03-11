@@ -4,23 +4,46 @@ const { SET_SCHEMA_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const { SET_SCHEMA_SUCCESS, SET_SCHEMA_ERROR } = require('../../shared/types');
-const { DATASETS_COLLECTION, SCHEMAS_COLLECTION } = require('../db');
+const {
+  DATASETS_COLLECTION,
+  SCHEMAS_COLLECTION,
+} = require('../../shared/constants');
 const generateSchemaFromJSON = require('../schema/generateSchemaFromJSON');
 const { validateSchema } = require('../schema/detectSchemas');
 
+const saveSchemaInDb = (schemaToSave, db) => {
+  const { id, label, description, tagStyle, schema } = schemaToSave;
+  let { createdAt } = schema;
+
+  const lastModified = Date.now();
+
+  if (!createdAt) {
+    createdAt = Date.now();
+  }
+
+  const schemaToStore = {
+    id,
+    label,
+    description,
+    tagStyle,
+    schema,
+    createdAt,
+    lastModified,
+  };
+
+  db.get(SCHEMAS_COLLECTION).set(id, schemaToStore).write();
+
+  return schemaToStore;
+};
+
 const setSchema = (mainWindow, db) => async (event, schema) => {
   try {
-    const { label, description, tagStyle, fromDataset } = schema;
-    let { id, schema: schemaDef, createdAt } = schema;
+    const { fromDataset } = schema;
+    let { id, schema: schemaDef } = schema;
 
     if (!id) {
       id = ObjectId().str;
     }
-    if (!createdAt) {
-      createdAt = Date.now();
-    }
-
-    const lastModified = Date.now();
 
     if (fromDataset) {
       // generate schema from dataset
@@ -54,17 +77,11 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
       db.get(DATASETS_COLLECTION).nth(idx).assign({ schemaIds }).write();
     });
 
-    const schemaToStore = {
-      id,
-      label,
-      description,
-      tagStyle,
-      schema: schemaDef,
-      createdAt,
-      lastModified,
-    };
+    const schemaToStore = saveSchemaInDb(
+      { ...schema, id, schema: schemaDef },
+      db,
+    );
 
-    db.get(SCHEMAS_COLLECTION).set(id, schemaToStore).write();
     mainWindow.webContents.send(SET_SCHEMA_CHANNEL, {
       type: SET_SCHEMA_SUCCESS,
       payload: schemaToStore,
@@ -78,4 +95,4 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
   }
 };
 
-module.exports = setSchema;
+module.exports = { setSchema, saveSchemaInDb };

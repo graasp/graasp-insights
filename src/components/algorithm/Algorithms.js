@@ -24,7 +24,6 @@ import {
   ADD_ALGORITHM_PATH,
   EDIT_UTILS_PATH,
 } from '../../config/paths';
-import { AUTHORS } from '../../shared/constants';
 import {
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -35,6 +34,7 @@ import {
   ALGORITHM_DELETE_BUTTON_CLASS,
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
+  ALGORITHMS_EMPTY_ALERT_ID,
 } from '../../config/selectors';
 import LocationPathAlert from '../common/LocationPathAlert';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
@@ -151,8 +151,12 @@ class Algorithms extends Component {
     if (!algorithms.size) {
       return (
         <Main>
-          <Alert severity="info" className={classes.infoAlert}>
-            {t('No algorithms are available')}
+          <Alert
+            id={ALGORITHMS_EMPTY_ALERT_ID}
+            severity="info"
+            className={classes.infoAlert}
+          >
+            {t('No algorithms available')}
           </Alert>
           {this.renderAddButon()}
         </Main>
@@ -228,7 +232,6 @@ class Algorithms extends Component {
       const lastModifiedString = lastModified
         ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
-      const isByGraasp = author === AUTHORS.GRAASP;
       const quickActions = [
         <Tooltip title={t('Edit Algorithm')} key="edit">
           <IconButton
@@ -239,24 +242,14 @@ class Algorithms extends Component {
             <EditIcon />
           </IconButton>
         </Tooltip>,
-        <Tooltip
-          title={
-            isByGraasp
-              ? t('You cannot delete algorithms from Graasp')
-              : t('Delete algorithm')
-          }
-          key="delete"
-        >
-          <span>
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete({ id, name })}
-              disabled={isByGraasp}
-              className={ALGORITHM_DELETE_BUTTON_CLASS}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </span>
+        <Tooltip title={t('Delete algorithm')} key="delete">
+          <IconButton
+            aria-label="delete"
+            onClick={() => this.handleDelete({ id, name })}
+            className={ALGORITHM_DELETE_BUTTON_CLASS}
+          >
+            <DeleteIcon />
+          </IconButton>
         </Tooltip>,
       ];
       return {

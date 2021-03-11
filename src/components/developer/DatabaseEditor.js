@@ -8,13 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import { withTranslation } from 'react-i18next';
 import { getDatabase, setSampleDatabase, setDatabase } from '../../actions';
 import Loader from '../common/Loader';
-import { DATASETS_COLLECTION } from '../../config/constants';
+import { DATASETS_COLLECTION } from '../../shared/constants';
 
 export class DatabaseEditor extends Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
     dispatchGetDatabase: PropTypes.func.isRequired,
-    dispatchSetSampleDatabase: PropTypes.func.isRequired,
+    dispatchSetGraaspDatabase: PropTypes.func.isRequired,
     dispatchSetDatabase: PropTypes.func.isRequired,
     database: PropTypes.shape({
       [DATASETS_COLLECTION]: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -36,8 +36,8 @@ export class DatabaseEditor extends Component {
   };
 
   handleUseSampleDatabase = () => {
-    const { dispatchSetSampleDatabase } = this.props;
-    dispatchSetSampleDatabase();
+    const { dispatchSetGraaspDatabase } = this.props;
+    dispatchSetGraaspDatabase();
   };
 
   render() {
@@ -55,7 +55,7 @@ export class DatabaseEditor extends Component {
       <div>
         <Typography variant="h6">{t('Manually Edit the Database')}</Typography>
         <ReactJson
-          collapsed
+          collapsed={1}
           src={database}
           onEdit={this.handleEdit}
           onAdd={this.handleEdit}
@@ -80,7 +80,7 @@ const mapStateToProps = ({ developer }) => ({
 
 const mapDispatchToProps = {
   dispatchGetDatabase: getDatabase,
-  dispatchSetSampleDatabase: setSampleDatabase,
+  dispatchSetGraaspDatabase: setSampleDatabase,
   dispatchSetDatabase: setDatabase,
 };
 

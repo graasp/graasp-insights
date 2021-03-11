@@ -8,7 +8,7 @@ const getDataset = require('./getDataset');
 const getDatasets = require('./getDatasets');
 const setDatabase = require('./setDatabase');
 const deleteDataset = require('./deleteDataset');
-const setSampleDatabase = require('./setSampleDatabase');
+const setGraaspDatabase = require('./setGraaspDatabase');
 const setLanguage = require('./setLanguage');
 const getLanguage = require('./getLanguage');
 const getResult = require('./getResult');
@@ -24,7 +24,7 @@ const showSaveAsPrompt = require('./showSaveAsPrompt');
 const exportResult = require('./exportResult');
 const getAlgorithm = require('./getAlgorithm');
 const saveAlgorithm = require('./saveAlgorithm');
-const addAlgorithm = require('./addAlgorithm');
+const { addAlgorithm, addPythonAlgorithmInDb } = require('./addAlgorithm');
 const browseFile = require('./browseFile');
 const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
@@ -37,16 +37,21 @@ const {
 } = require('./cancelExecution');
 const showConfirmDeletePrompt = require('./showConfirmDeletePrompt');
 const showConfirmClearDatabasePrompt = require('./showConfirmClearDatabasePrompt');
-const clearDatabase = require('./clearDatabase');
+const { clearDatabase, clearDatabaseUtil } = require('./clearDatabase');
 const setFileSizeLimit = require('./setFileSizeLimit');
 const getFileSizeLimit = require('./getFileSizeLimit');
 const getSettings = require('./getSettings');
 const showConfirmOpenDatasetPrompt = require('./showConfirmOpenDatasetPrompt');
 const openPath = require('./openPath');
 const getSchemas = require('./getSchemas');
-const setSchema = require('./setSchema');
+const { setSchema, saveSchemaInDb } = require('./setSchema');
 const deleteSchema = require('./deleteSchema');
 const openUrlInBrowser = require('./openUrlInBrowser');
+const getAlgorithmCode = require('./getAlgorithmCode');
+const {
+  addDefaultAlgorithm,
+  saveDefaultAlgorithmInDb,
+} = require('./addDefaultAlgorithm');
 
 module.exports = {
   getDataset,
@@ -56,7 +61,7 @@ module.exports = {
   executePythonAlgorithm,
   loadDataset,
   setDatabase,
-  setSampleDatabase,
+  setGraaspDatabase,
   setLanguage,
   getLanguage,
   getResult,
@@ -94,4 +99,10 @@ module.exports = {
   setSchema,
   deleteSchema,
   openUrlInBrowser,
+  getAlgorithmCode,
+  addDefaultAlgorithm,
+  saveDefaultAlgorithmInDb,
+  addPythonAlgorithmInDb,
+  clearDatabaseUtil,
+  saveSchemaInDb,
 };

@@ -6,9 +6,11 @@ import {
   DELETE_ALGORITHM_CHANNEL,
   SAVE_ALGORITHM_CHANNEL,
   ADD_ALGORITHM_CHANNEL,
+  ADD_DEFAULT_ALGORITHM_CHANNEL,
   GET_UTILS_CHANNEL,
   SAVE_UTILS_CHANNEL,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+  GET_ALGORITHM_CODE_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_ALGORITHMS,
@@ -20,6 +22,7 @@ import {
   FLAG_CLEARING_ALGORITHM,
   FLAG_GETTING_UTILS,
   FLAG_SAVING_UTILS,
+  FLAG_GETTING_ALGORITHM_CODE,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -31,6 +34,7 @@ import {
   ERROR_CLEARING_ALGORITHM_MESSAGE,
   ERROR_GETTING_UTILS_MESSAGE,
   ERROR_SAVING_UTILS_MESSAGE,
+  ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
 } from '../shared/messages';
 
 export const getAlgorithms = () => (dispatch) => {
@@ -106,7 +110,7 @@ export const saveAlgorithm = (algorithm) => (dispatch) => {
   }
 };
 
-export const addAlgorithm = ({ payload, onSuccess }) => (dispatch) => {
+export const addAlgorithm = (payload, onSuccess) => (dispatch) => {
   const flagAddingAlgorithm = createFlag(FLAG_ADDING_ALGORITHM);
   try {
     dispatch(flagAddingAlgorithm(true));
@@ -117,6 +121,26 @@ export const addAlgorithm = ({ payload, onSuccess }) => (dispatch) => {
       onSuccess?.();
       return dispatch(flagAddingAlgorithm(false));
     });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_ADDING_ALGORITHM_MESSAGE);
+    dispatch(flagAddingAlgorithm(false));
+  }
+};
+
+export const addDefaultAlgorithm = ({ id }, onSuccess) => (dispatch) => {
+  const flagAddingAlgorithm = createFlag(FLAG_ADDING_ALGORITHM);
+  try {
+    dispatch(flagAddingAlgorithm(true));
+    window.ipcRenderer.send(ADD_DEFAULT_ALGORITHM_CHANNEL, { id });
+    window.ipcRenderer.once(
+      ADD_DEFAULT_ALGORITHM_CHANNEL,
+      async (event, response) => {
+        dispatch(response);
+        // eslint-disable-next-line no-unused-expressions
+        onSuccess?.();
+        return dispatch(flagAddingAlgorithm(false));
+      },
+    );
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_ADDING_ALGORITHM_MESSAGE);
     dispatch(flagAddingAlgorithm(false));
@@ -163,5 +187,23 @@ export const saveUtils = (userUtils) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_SAVING_UTILS_MESSAGE);
     dispatch(flagSavingUtils(false));
+  }
+};
+
+export const getAlgorithmCode = (payload) => (dispatch) => {
+  const flagGettingAlgorithmCode = createFlag(FLAG_GETTING_ALGORITHM_CODE);
+  try {
+    dispatch(flagGettingAlgorithmCode(true));
+    window.ipcRenderer.send(GET_ALGORITHM_CODE_CHANNEL, payload);
+    window.ipcRenderer.once(
+      GET_ALGORITHM_CODE_CHANNEL,
+      async (event, response) => {
+        dispatch(response);
+        return dispatch(flagGettingAlgorithmCode(false));
+      },
+    );
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_ALGORITHM_CODE_MESSAGE);
+    dispatch(flagGettingAlgorithmCode(false));
   }
 };

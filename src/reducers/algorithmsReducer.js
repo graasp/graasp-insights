@@ -11,6 +11,7 @@ import {
   FLAG_CLEARING_ALGORITHM,
   GET_UTILS_SUCCESS,
   FLAG_GETTING_UTILS,
+  GET_ALGORITHM_CODE_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -47,6 +48,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         .setIn(['folder'], payload.folder);
     case GET_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map(payload));
+    case GET_ALGORITHM_CODE_SUCCESS:
+      return state.setIn(['current', 'content', 'code'], payload);
     case CLEAR_ALGORITHM_SUCCESS:
       return state.setIn(['current', 'content'], Map());
     case GET_UTILS_SUCCESS: {

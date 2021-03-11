@@ -1,11 +1,11 @@
 const ObjectId = require('bson-objectid');
+const { CREATE_EXECUTION_CHANNEL } = require('../../shared/channels');
 const {
+  EXECUTION_STATUSES,
   EXECUTIONS_COLLECTION,
   ALGORITHMS_COLLECTION,
   DATASETS_COLLECTION,
-} = require('../db');
-const { CREATE_EXECUTION_CHANNEL } = require('../../shared/channels');
-const { EXECUTION_STATUSES } = require('../../shared/constants');
+} = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   CREATE_EXECUTION_SUCCESS,

@@ -9,6 +9,11 @@
  * @return {object} - schema with selected and expanded values for each property
  */
 const setFieldSelectorAttributes = (schema, selected, expandUntilDepth) => {
+  if (!schema || !schema.properties) {
+    console.error('provided schema is undefined or corrupted');
+    return {};
+  }
+
   const setField = (field, depth) => {
     const { type, properties, items } = field;
 

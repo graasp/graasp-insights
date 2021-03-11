@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { GET_DATASET_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION } = require('../db');
+const { DATASETS_COLLECTION } = require('../../shared/constants');
 const {
   GET_DATASET_SUCCESS,
   GET_DATASET_ERROR,

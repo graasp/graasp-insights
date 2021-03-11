@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { app } = require('electron');
 const mkdirp = require('mkdirp');
+const _ = require('lodash');
 const path = require('path');
 const low = require('lowdb');
 const fs = require('fs');
@@ -12,25 +13,36 @@ const {
   GRAASP_UTILS,
   USER_UTILS,
 } = require('./config/config');
-const { DEFAULT_SCHEMAS } = require('./schema/config');
 const {
   DATABASE_PATH,
   DATASETS_FOLDER,
   ALGORITHMS_FOLDER,
   VAR_FOLDER,
 } = require('./config/paths');
-const GRAASP_ALGORITHMS = require('./config/graaspAlgorithms');
-const { AUTHORS } = require('../shared/constants');
-const { getFileStats } = require('./utils/file');
-
-const DATASETS_COLLECTION = 'datasets';
-const ALGORITHMS_COLLECTION = 'algorithms';
-const EXECUTIONS_COLLECTION = 'executions';
-const SETTINGS_COLLECTION = 'settings';
-const SCHEMAS_COLLECTION = 'schemas';
+const {
+  AUTHORS,
+  DATASETS_COLLECTION,
+  ALGORITHMS_COLLECTION,
+  EXECUTIONS_COLLECTION,
+  SCHEMAS_COLLECTION,
+  SETTINGS_COLLECTION,
+  EXECUTION_STATUSES,
+  DEFAULT_FILE_SIZE_LIMIT,
+} = require('../shared/constants');
+const { saveDefaultAlgorithmInDb } = require('./listeners/addDefaultAlgorithm');
 
 // use promisified fs
 const fsPromises = fs.promises;
+
+const sampleDatabase = {
+  [DATASETS_COLLECTION]: [],
+  [ALGORITHMS_COLLECTION]: [],
+  [EXECUTIONS_COLLECTION]: [],
+  [SETTINGS_COLLECTION]: {
+    fileSizeLimit: DEFAULT_FILE_SIZE_LIMIT,
+  },
+  [SCHEMAS_COLLECTION]: {},
+};
 
 // bootstrap database
 const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
@@ -47,25 +59,7 @@ const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
   }
 };
 
-const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
-  const adapter = new FileSync(dbPath);
-  const db = low(adapter);
-
-  // create the datasets folder if it doesn't already exist
-  fse.ensureDirSync(DATASETS_FOLDER);
-
-  // set some defaults (required if json file is empty)
-  db.defaults({
-    [DATASETS_COLLECTION]: [],
-    [ALGORITHMS_COLLECTION]: [],
-    [EXECUTIONS_COLLECTION]: [],
-    [SETTINGS_COLLECTION]: {},
-    [SCHEMAS_COLLECTION]: {},
-  }).write();
-  return db;
-};
-
-const ensureAlgorithmsExist = async (db) => {
+const ensureAlgorithmsExist = (db) => {
   try {
     // create the algorithms folder if it doesn't already exist
     fse.ensureDirSync(ALGORITHMS_FOLDER);
@@ -76,7 +70,7 @@ const ensureAlgorithmsExist = async (db) => {
     const isNewVersion = lastVersion !== currentVersion;
 
     // set default algorithms
-    [...GRAASP_ALGORITHMS, GRAASP_UTILS, USER_UTILS].forEach((algo) => {
+    [GRAASP_UTILS, USER_UTILS].forEach((algo) => {
       const { filename } = algo;
       const srcPath = path.join(__dirname, ALGORITHMS_FOLDER_NAME, filename);
       const destPath = path.join(ALGORITHMS_FOLDER, filename);
@@ -99,29 +93,11 @@ const ensureAlgorithmsExist = async (db) => {
           isDevWithModification ||
           isProdWithNewVersion
         ) {
-          fs.copyFileSync(srcPath, destPath);
-        }
-
-        try {
-          // check if algo entry is in metadata db
-          if (!db.get(ALGORITHMS_COLLECTION).find({ filename }).value()) {
-            // get file data
-            const { sizeInKiloBytes, createdAt, lastModified } = getFileStats(
-              destPath,
-            );
-
-            db.get(ALGORITHMS_COLLECTION)
-              .push({
-                ...algo,
-                filepath: destPath,
-                createdAt,
-                lastModified,
-                size: sizeInKiloBytes,
-              })
-              .write();
+          try {
+            saveDefaultAlgorithmInDb(algo, db);
+          } catch (e) {
+            logger.error(e);
           }
-        } catch (e) {
-          logger.error(e);
         }
       }
     });
@@ -130,15 +106,42 @@ const ensureAlgorithmsExist = async (db) => {
   }
 };
 
-const addDefaultSchemas = async (db) => {
-  Object.entries(DEFAULT_SCHEMAS).forEach(([id, schemaInfo]) => {
-    if (!db.get(SCHEMAS_COLLECTION).has(id).value()) {
-      const createdAt = Date.now();
-      db.get(SCHEMAS_COLLECTION)
-        .set(id, { ...schemaInfo, createdAt })
-        .write();
-    }
-  });
+const ensureExecutionsStatus = (db) => {
+  // running executions should be stopped
+  const collection = db.get(EXECUTIONS_COLLECTION);
+  const executions = collection
+    .filter({ status: EXECUTION_STATUSES.RUNNING })
+    .value();
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { id } of executions) {
+    collection.find({ id }).assign({ status: EXECUTIONS_COLLECTION.ERROR });
+  }
+};
+
+const ensureDatabaseContent = (db) => {
+  // create the necessary folders if they don't already exist
+  fse.ensureDirSync(DATASETS_FOLDER);
+  fse.ensureDirSync(ALGORITHMS_FOLDER);
+
+  ensureAlgorithmsExist(db);
+  ensureExecutionsStatus(db);
+
+  // set version file in var folder
+  // used to detect first install
+  db.set('version', app.getVersion()).write();
+};
+
+const bootstrapDatabase = async (dbPath = DATABASE_PATH) => {
+  await ensureDatabaseExists(DATABASE_PATH);
+  const adapter = new FileSync(dbPath);
+  const db = low(adapter);
+
+  // set some defaults (required if json file is empty)
+  db.defaults(_.cloneDeep(sampleDatabase)).write();
+
+  ensureDatabaseContent(db);
+
+  return db;
 };
 
 module.exports = {
@@ -150,5 +153,6 @@ module.exports = {
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
-  addDefaultSchemas,
+  sampleDatabase,
+  ensureDatabaseContent,
 };

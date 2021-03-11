@@ -43,7 +43,7 @@
     "Dataset": "Dataset",
     "Algorithm": "Algorithm",
     "Load a dataset first": "Load a dataset first",
-    "No algorithms are available": "No algorithms are available",
+    "No algorithms available": "No algorithms available",
     "Execute": "Execute",
     "Executions": "Executions",
     "Author": "Author",
@@ -143,6 +143,23 @@
     "Delete Schema": "Delete Schema",
     "Add Schema": "Add Schema",
     "Add a Schema": "Add a Schema",
-    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at"
+    "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at": "You can enforce the presence of fields with the \"required\" attribute. Learn more about JSON schemas at",
+    "Load Graasp Data": "Load Graasp Data",
+    "Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.": "Provided by the application developer, these algorithms and schema are optimized to process Graasp datasets.",
+    "Load Graasp Algorithms and Schema": "Load Graasp Algorithms and Schema",
+    "Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.": "Delete all of your datasets, schemas, algorithms, executions, and results. You will have a chance to confirm this action after clicking the button.",
+    "Clear Application Data": "Clear Application Data",
+    "Clear all data": "Clear all data",
+    "No schemas available": "No schemas available",
+    "Add Graasp algorithm": "Add Graasp algorithm",
+    "Dataset loaded successfully": "Dataset loaded successfully",
+    "The schema was saved successfully": "The schema was saved successfully",
+    "The algorithm was added successfully": "The algorithm was added successfully",
+    "The execution  was executed successfully": "The execution  was executed successfully",
+    "View result": "View result",
+    "Export result": "Export result",
+    "Remove result": "Remove result",
+    "Edit result": "Edit result",
+    "Publish result": "Publish result"
   }
 }
