@@ -11,8 +11,8 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 const openAboutWindow = require('about-window').default;
 const logger = require('./app/logger');
-const { ICON_PATH, PRODUCT_NAME } = require('./app/config/config');
-const { DATABASE_PATH } = require('./app/config/paths');
+const { PRODUCT_NAME } = require('./app/config/config');
+const { DATABASE_PATH, ICON_PATH } = require('./app/config/paths');
 const isMac = require('./app/utils/isMac');
 const {
   LOAD_DATASET_CHANNEL,
@@ -109,7 +109,7 @@ const {
   getAlgorithmCode,
 } = require('./app/listeners');
 const env = require('./env.json');
-const { ensureDatabaseExists, bootstrapDatabase } = require('./app/db');
+const { bootstrapDatabase } = require('./app/db');
 
 // add keys to process
 Object.keys(env).forEach((key) => {
@@ -243,7 +243,7 @@ const standardFileSubmenu = [
         bug_link_text: 'Report a Bug/Issue',
         // we cannot use homepage from package.json as
         // create-react-app uses it to build the frontend
-        homepage: 'https://graasp.org/',
+        homepage: 'https://insights.graasp.org/',
       });
     },
   },
@@ -335,12 +335,7 @@ const generateMenu = () => {
 };
 
 app.on('ready', async () => {
-  await ensureDatabaseExists(DATABASE_PATH);
-  const db = bootstrapDatabase(DATABASE_PATH);
-
-  // set version file in var folder
-  // used to detect first install
-  db.set('version', app.getVersion()).write();
+  const db = await bootstrapDatabase(DATABASE_PATH);
 
   createWindow();
   generateMenu();

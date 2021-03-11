@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { app } = require('electron');
 const mkdirp = require('mkdirp');
+const _ = require('lodash');
 const path = require('path');
 const low = require('lowdb');
 const fs = require('fs');
@@ -26,11 +27,22 @@ const {
   SCHEMAS_COLLECTION,
   SETTINGS_COLLECTION,
   EXECUTION_STATUSES,
+  DEFAULT_FILE_SIZE_LIMIT,
 } = require('../shared/constants');
 const { saveDefaultAlgorithmInDb } = require('./listeners/addDefaultAlgorithm');
 
 // use promisified fs
 const fsPromises = fs.promises;
+
+const sampleDatabase = {
+  [DATASETS_COLLECTION]: [],
+  [ALGORITHMS_COLLECTION]: [],
+  [EXECUTIONS_COLLECTION]: [],
+  [SETTINGS_COLLECTION]: {
+    fileSizeLimit: DEFAULT_FILE_SIZE_LIMIT,
+  },
+  [SCHEMAS_COLLECTION]: {},
+};
 
 // bootstrap database
 const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
@@ -106,25 +118,29 @@ const ensureExecutionsStatus = (db) => {
   }
 };
 
-const bootstrapDatabase = (dbPath = DATABASE_PATH) => {
-  const adapter = new FileSync(dbPath);
-  const db = low(adapter);
-
+const ensureDatabaseContent = (db) => {
   // create the necessary folders if they don't already exist
   fse.ensureDirSync(DATASETS_FOLDER);
   fse.ensureDirSync(ALGORITHMS_FOLDER);
 
-  // set some defaults (required if json file is empty)
-  db.defaults({
-    [DATASETS_COLLECTION]: [],
-    [ALGORITHMS_COLLECTION]: [],
-    [EXECUTIONS_COLLECTION]: [],
-    [SETTINGS_COLLECTION]: {},
-    [SCHEMAS_COLLECTION]: {},
-  }).write();
-
   ensureAlgorithmsExist(db);
   ensureExecutionsStatus(db);
+
+  // set version file in var folder
+  // used to detect first install
+  db.set('version', app.getVersion()).write();
+};
+
+const bootstrapDatabase = async (dbPath = DATABASE_PATH) => {
+  await ensureDatabaseExists(DATABASE_PATH);
+  const adapter = new FileSync(dbPath);
+  const db = low(adapter);
+
+  // set some defaults (required if json file is empty)
+  db.defaults(_.cloneDeep(sampleDatabase)).write();
+
+  ensureDatabaseContent(db);
+
   return db;
 };
 
@@ -137,4 +153,6 @@ module.exports = {
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
+  sampleDatabase,
+  ensureDatabaseContent,
 };
