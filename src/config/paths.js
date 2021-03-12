@@ -38,3 +38,4 @@ export const buildPipelinePath = (id = ':id') => {
 export const buildEditPipelinePath = (id = ':id') => {
   return `/edit-pipeline/${id}`;
 };
+export const buildExecutionPath = (id = ':id') => `/execution/${id}`;

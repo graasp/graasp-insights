@@ -4,16 +4,12 @@ import { List } from 'immutable';
 import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-import SuccessIcon from '@material-ui/icons/Done';
-import ErrorIcon from '@material-ui/icons/Clear';
 import CancelIcon from '@material-ui/icons/Cancel';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import clsx from 'clsx';
 import Table from '../common/Table';
 import {
   getDatasets,
@@ -25,24 +21,18 @@ import {
   cancelExecution,
 } from '../../actions';
 import Loader from '../common/Loader';
+import { DEFAULT_LOCALE_DATE } from '../../config/constants';
+import { buildExecutionPath } from '../../config/paths';
 import {
-  CIRCLE_PROGRESS_SIZE,
-  DEFAULT_LOCALE_DATE,
-} from '../../config/constants';
-import {
-  buildDatasetPath,
-  buildEditAlgorithmPath,
-  buildResultPath,
-} from '../../config/paths';
-import {
-  buildExecutionRowAlgorithmButtonId,
-  buildExecutionRowSourceButtonId,
   EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
-  EXECUTION_TABLE_ROW_BUTTON_CLASS,
 } from '../../config/selectors';
 import { EXECUTION_STATUSES } from '../../shared/constants';
+import ExecutionStatusIcon from './ExecutionStatusIcon';
+import ResultViewButton from './ResultViewButton';
+import AlgorithmViewButton from './AlgorithmViewButton';
+import DatasetViewButton from './DatasetViewButton';
 
 const styles = () => ({
   link: {
@@ -58,7 +48,6 @@ class ExecutionTable extends Component {
     }).isRequired,
     datasets: PropTypes.instanceOf(List),
     results: PropTypes.instanceOf(List),
-    algorithms: PropTypes.instanceOf(List),
     executions: PropTypes.instanceOf(List),
     t: PropTypes.func.isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
@@ -75,7 +64,6 @@ class ExecutionTable extends Component {
 
   static defaultProps = {
     datasets: null,
-    algorithms: null,
     executions: null,
     results: null,
   };
@@ -103,37 +91,15 @@ class ExecutionTable extends Component {
     dispatchCancelExecution({ id: execution.id });
   };
 
-  handleSourceView = (sourceId) => {
+  handleView = (executionId) => {
     const {
       history: { push },
     } = this.props;
-    push(buildDatasetPath(sourceId));
-  };
-
-  handleAlgorithmView = (algorithmId) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildEditAlgorithmPath(algorithmId));
-  };
-
-  handleResultView = (resultId) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildResultPath(resultId));
+    push(buildExecutionPath(executionId));
   };
 
   render() {
-    const {
-      t,
-      executions,
-      datasets,
-      algorithms,
-      isLoading,
-      classes,
-      results,
-    } = this.props;
+    const { t, executions, isLoading } = this.props;
 
     if (isLoading) {
       return <Loader />;
@@ -188,122 +154,24 @@ class ExecutionTable extends Component {
     ];
 
     const rows = executions.reverse().map((execution) => {
-      const {
-        id,
-        executedAt,
-        algorithm: { id: algorithmId, name: algorithmName },
-        source: { id: sourceId, name: sourceName },
-        result: { id: resultId, name: resultName },
-        status,
-      } = execution;
+      const { id, executedAt, algorithm, source, result, status } = execution;
 
       const executedAtString = executedAt
         ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
 
-      const sName =
-        sourceName ||
-        [...datasets, ...results].find(
-          ({ id: thisSourceId }) => thisSourceId === sourceId,
-        )?.name ||
-        t('Unknown');
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      const sourceNameButton = <DatasetViewButton {...source} />;
 
-      const sourceProps = sourceId
-        ? {
-            id: buildExecutionRowSourceButtonId(sourceId),
-            onClick: () => this.handleSourceView(sourceId),
-          }
-        : {
-            disabled: true,
-          };
-      const sourceNameButton = (
-        <Button
-          className={clsx(classes.link, EXECUTION_TABLE_ROW_BUTTON_CLASS)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...sourceProps}
-        >
-          {sName}
-        </Button>
-      );
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      const algorithmButton = <AlgorithmViewButton {...algorithm} />;
 
-      const aName =
-        algorithmName ||
-        algorithms.find(
-          ({ id: thisAlgorithmId }) => thisAlgorithmId === algorithmId,
-        )?.name ||
-        t('Unknown');
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      const resultButton = <ResultViewButton {...result} />;
 
-      const algorithmProps = algorithmId
-        ? {
-            id: buildExecutionRowAlgorithmButtonId(algorithmId),
-            onClick: () => this.handleAlgorithmView(algorithmId),
-          }
-        : {
-            disabled: true,
-          };
-      const algorithmButton = (
-        <Button
-          className={clsx(classes.link, EXECUTION_TABLE_ROW_BUTTON_CLASS)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...algorithmProps}
-        >
-          {aName}
-        </Button>
-      );
+      const statusIcon = <ExecutionStatusIcon status={status} />;
 
-      const rName =
-        resultName ||
-        results.find(({ id: thisResultId }) => thisResultId === resultId)
-          ?.name ||
-        t('Unknown');
-      const resultProps = resultId
-        ? {
-            onClick: () => this.handleResultView(resultId),
-          }
-        : {
-            disabled: true,
-          };
-      const resultButton = (
-        <Button
-          className={clsx(classes.link, EXECUTION_TABLE_ROW_BUTTON_CLASS)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...resultProps}
-        >
-          {rName}
-        </Button>
-      );
-
-      let statusIcon = null;
-      switch (status) {
-        case EXECUTION_STATUSES.SUCCESS:
-          statusIcon = (
-            <Tooltip title={t('Execution successful')}>
-              <SuccessIcon className={status} style={{ color: 'green' }} />
-            </Tooltip>
-          );
-          break;
-        case EXECUTION_STATUSES.ERROR:
-          statusIcon = (
-            <Tooltip title={t('An error occurred during execution')}>
-              <ErrorIcon className={status} style={{ color: 'red' }} />
-            </Tooltip>
-          );
-          break;
-        case EXECUTION_STATUSES.RUNNING:
-          statusIcon = (
-            <Tooltip title={t('Execution running...')}>
-              <CircularProgress
-                className={status}
-                size={CIRCLE_PROGRESS_SIZE}
-              />
-            </Tooltip>
-          );
-          break;
-        default:
-          break;
-      }
-
-      const quickActions =
+      const cancelOrRemoveButton =
         status === EXECUTION_STATUSES.RUNNING ? (
           <Tooltip title={t('Cancel execution')} key="cancel">
             <IconButton
@@ -326,6 +194,17 @@ class ExecutionTable extends Component {
           </Tooltip>
         );
 
+      const quickActions = (
+        <>
+          <Tooltip title={t('View execution')} key="delete">
+            <IconButton aria-label="delete" onClick={() => this.handleView(id)}>
+              <VisibilityIcon />
+            </IconButton>
+          </Tooltip>
+          {cancelOrRemoveButton}
+        </>
+      );
+
       return {
         key: id,
         sourceName: sourceNameButton,
@@ -343,7 +222,6 @@ class ExecutionTable extends Component {
 
 const mapStateToProps = ({ dataset, algorithms, executions, result }) => ({
   datasets: dataset.get('datasets'),
-  algorithms: algorithms.get('algorithms'),
   isLoading:
     Boolean(dataset.getIn(['activity']).size) &&
     Boolean(algorithms.getIn(['activity']).size) &&

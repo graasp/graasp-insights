@@ -144,6 +144,13 @@ const executeAlgorithm = (mainWindow, db) => (
       );
     };
 
+    const onLog = ({ log }) => {
+      db.get(EXECUTIONS_COLLECTION)
+        .find({ id: executionId })
+        .assign({ log })
+        .write();
+    };
+
     // error handling when executing
     const onError = ({ code, log }) => {
       logger.error(
@@ -153,7 +160,7 @@ const executeAlgorithm = (mainWindow, db) => (
         .find({ id: executionId })
         .assign({ status: EXECUTION_STATUSES.ERROR, log })
         .unset('pid')
-        .value();
+        .write();
 
       // check whether mainWindow still exist in case of
       // the app quits before the process get killed
@@ -171,7 +178,7 @@ const executeAlgorithm = (mainWindow, db) => (
       case PROGRAMMING_LANGUAGES.PYTHON:
         return executePythonAlgorithm(
           { algorithmFilepath, filepath, tmpPath, parameters, schemaId },
-          { onRun, onStop, onSuccess, onError, clean },
+          { onRun, onStop, onSuccess, onError, clean, onLog },
         );
 
       default:

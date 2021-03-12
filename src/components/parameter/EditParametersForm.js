@@ -341,17 +341,19 @@ const EditParametersForm = (props) => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={1}>
-                    <Tooltip title={t('Remove parameter')}>
-                      <IconButton
-                        size="small"
-                        onClick={() => deleteParam(paramIdx)}
-                        disabled={disabled}
-                      >
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
+                  {!disabled && (
+                    <Grid item xs={1}>
+                      <Tooltip title={t('Remove parameter')}>
+                        <IconButton
+                          size="small"
+                          onClick={() => deleteParam(paramIdx)}
+                          disabled={disabled}
+                        >
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  )}
                 </Grid>
                 <Grid container spacing={1}>
                   <Grid
@@ -397,20 +399,22 @@ const EditParametersForm = (props) => {
               </Alert>
             </Grid>
           ))}
-        <Grid item>
-          <Button
-            className={classes.addParameterButton}
-            variant="contained"
-            size="small"
-            onClick={() => {
-              addParam();
-            }}
-            id={ADD_PARAMETER_BUTTON_ID}
-            disabled={disabled}
-          >
-            {t('Add parameter')}
-          </Button>
-        </Grid>
+        {!disabled && (
+          <Grid item>
+            <Button
+              className={classes.addParameterButton}
+              variant="contained"
+              size="small"
+              onClick={() => {
+                addParam();
+              }}
+              id={ADD_PARAMETER_BUTTON_ID}
+              disabled={disabled}
+            >
+              {t('Add parameter')}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

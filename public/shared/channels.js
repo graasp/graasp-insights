@@ -56,4 +56,5 @@ module.exports = {
   SAVE_PIPELINE_CHANNEL: 'pipeline:save',
   ADD_PIPELINE_CHANNEL: 'pipeline:add',
   DELETE_PIPELINE_CHANNEL: 'pipeline:delete',
+  GET_EXECUTION_CHANNEL: 'execution:get',
 };

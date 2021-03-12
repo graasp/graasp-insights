@@ -24,6 +24,7 @@ import {
   PIPELINES_PATH,
   ADD_PIPELINE_PATH,
   buildEditPipelinePath,
+  buildExecutionPath,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -44,6 +45,7 @@ import SchemaView from './components/schema/SchemaView';
 import Pipelines from './components/pipeline/Pipelines';
 import EditPipeline from './components/pipeline/EditPipeline';
 import AddPipeline from './components/pipeline/AddPipeline';
+import ExecutionView from './components/execution/ExecutionView';
 
 export class App extends Component {
   state = { height: 0 };
@@ -119,6 +121,11 @@ export class App extends Component {
                 component={EditPipeline}
               />
               <Route exact path={ADD_PIPELINE_PATH} component={AddPipeline} />
+              <Route
+                exact
+                path={buildExecutionPath()}
+                component={ExecutionView}
+              />
               <Route exact path={SETTINGS_PATH} component={Settings} />
               <Route
                 exact
