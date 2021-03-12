@@ -36,3 +36,14 @@ export const DATASET_1000_KB = {
   type: DATASET_TYPES.SOURCE,
   schemaIds: [GRAASP_SCHEMA_ID],
 };
+
+export const DATASET_FOR_SCHEMA = {
+  id: 'dataset-for-schema',
+  name: 'dataset for schema',
+  filepath: path.join(__dirname, './datasetForSchema.json'),
+  size: 1000,
+  createdAt: Date.now(),
+  lastModified: Date.now(),
+  type: DATASET_TYPES.SOURCE,
+  schemaIds: [],
+};

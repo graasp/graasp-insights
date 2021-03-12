@@ -27,9 +27,12 @@ import {
 import {
   BLANK_SCHEMA,
   REPLACEMENT_SCHEMA,
-  SCHEMA_FROM_DATASET,
+  SCHEMAS_FROM_DATASET,
 } from './fixtures/schema/schemas';
-import { SIMPLE_DATASET } from './fixtures/datasets/datasets';
+import {
+  DATASET_FOR_SCHEMA,
+  SIMPLE_DATASET,
+} from './fixtures/datasets/datasets';
 
 const fillAddSchemaForm = async (
   client,
@@ -103,7 +106,7 @@ describe('Schemas Schenarios', function () {
     mochaAsync(async () => {
       app = await createApplication({
         database: {
-          datasets: [SIMPLE_DATASET],
+          datasets: [SIMPLE_DATASET, DATASET_FOR_SCHEMA],
         },
         responses: { showMessageDialogResponse: 1 },
       });
@@ -193,43 +196,46 @@ describe('Schemas Schenarios', function () {
     }),
   );
 
-  it(
-    'Correctly adds a schema from a dataset',
-    mochaAsync(async () => {
-      const { client } = app;
+  for (const schema of SCHEMAS_FROM_DATASET) {
+    it(
+      `Correctly adds schema ${schema.label} from a dataset`,
+      // eslint-disable-next-line no-loop-func
+      mochaAsync(async () => {
+        const { client } = app;
 
-      await client.goToSchemas();
+        await client.goToSchemas();
 
-      // click add schema button, fill the form and click add schema confirm button
-      const addSchemaButton = await client.$(`#${SCHEMAS_ADD_BUTTON_ID}`);
-      await addSchemaButton.click();
-      await fillAddSchemaForm(client, SCHEMA_FROM_DATASET);
-      const addSchemaConfirmButton = await client.$(
-        `#${ADD_SCHEMA_CONFIRM_BUTTON_ID}`,
-      );
-      await addSchemaConfirmButton.click();
+        // click add schema button, fill the form and click add schema confirm button
+        const addSchemaButton = await client.$(`#${SCHEMAS_ADD_BUTTON_ID}`);
+        await addSchemaButton.click();
+        await fillAddSchemaForm(client, schema);
+        const addSchemaConfirmButton = await client.$(
+          `#${ADD_SCHEMA_CONFIRM_BUTTON_ID}`,
+        );
+        await addSchemaConfirmButton.click();
 
-      // verify schema info
-      await checkSchemaLayout(client, SCHEMA_FROM_DATASET);
+        // verify schema info
+        await checkSchemaLayout(client, schema);
 
-      // go to schema view
-      const schemaViewButton = await client.$(
-        `#${SCHEMAS_TABLE_ID} .${buildSchemaRowClass(
-          SCHEMA_FROM_DATASET.label,
-        )} .${SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS}`,
-      );
-      await schemaViewButton.click();
-      // check content is not empty
-      const content = await client.$(`#${SCHEMA_CONTENT_ID} .object-size`);
-      expect(await content.getText()).to.include('3 items');
+        // go to schema view
+        const schemaViewButton = await client.$(
+          `#${SCHEMAS_TABLE_ID} .${buildSchemaRowClass(
+            schema.label,
+          )} .${SCHEMAS_VIEW_SCHEMA_BUTTON_CLASS}`,
+        );
+        await schemaViewButton.click();
+        // check content is not empty
+        const content = await client.$(`#${SCHEMA_CONTENT_ID} .object-size`);
+        expect(await content.getText()).to.include('3 items');
 
-      // verify schema tag in dataset
-      await client.goToDatasets();
-      await client.expectElementToExist(
-        `#${DATASETS_MAIN_ID} .${buildDatasetRowClass(
-          SIMPLE_DATASET.name,
-        )} .${buildSchemaTagClass(SCHEMA_FROM_DATASET.label)}`,
-      );
-    }),
-  );
+        // verify schema tag in dataset
+        await client.goToDatasets();
+        await client.expectElementToExist(
+          `#${DATASETS_MAIN_ID} .${buildDatasetRowClass(
+            schema.fromDataset,
+          )} .${buildSchemaTagClass(schema.label)}`,
+        );
+      }),
+    );
+  }
 });
