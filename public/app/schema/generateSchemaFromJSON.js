@@ -50,7 +50,7 @@ const generateSchemaFromJSON = (value, requiredDepth = 1) => {
       return {
         type: 'array',
         items: {
-          type: types.length > 1 ? types : types[0],
+          type: types.length > 1 ? types : types[0] || 'null',
           required: requiredDepth > 0 ? Object.keys(properties) : [],
           properties,
         },
@@ -59,7 +59,7 @@ const generateSchemaFromJSON = (value, requiredDepth = 1) => {
     return {
       type: 'array',
       items: {
-        type: types.length > 1 ? types : types[0],
+        type: types.length > 1 ? types : types[0] || 'null',
       },
     };
   }
