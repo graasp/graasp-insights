@@ -1,4 +1,4 @@
-const { SIMPLE_DATASET } = require('../datasets/datasets');
+const { SIMPLE_DATASET, DATASET_FOR_SCHEMA } = require('../datasets/datasets');
 
 const INITIAL_UNDEFINED_SCHEMA = {
   id: 'undefined-schema',
@@ -31,16 +31,24 @@ const REPLACEMENT_SCHEMA = {
   description: 'Schema that has been replaced',
 };
 
-const SCHEMA_FROM_DATASET = {
-  label: 'From dataset',
-  description: 'Schema generated from a dataset',
-  fromDataset: SIMPLE_DATASET.name,
-};
+const SCHEMAS_FROM_DATASET = [
+  {
+    label: 'From dataset 1',
+    description: 'Schema generated from a dataset 1',
+    fromDataset: SIMPLE_DATASET.name,
+  },
+
+  {
+    label: 'From dataset 2',
+    description: 'Schema generated from a dataset 2',
+    fromDataset: DATASET_FOR_SCHEMA.name,
+  },
+];
 
 module.exports = {
   BLANK_SCHEMA,
   REPLACEMENT_SCHEMA,
-  SCHEMA_FROM_DATASET,
+  SCHEMAS_FROM_DATASET,
   INITIAL_CORRUPTED_SCHEMA,
   INITIAL_UNDEFINED_SCHEMA,
 };

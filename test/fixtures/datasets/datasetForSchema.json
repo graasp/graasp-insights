@@ -1,0 +1,176 @@
+{
+  "data": [
+    {
+      "object": {
+        "device": {
+          "navigator": {
+            "appCodeName": "Mozilla",
+            "appName": "Netscape",
+            "language": "en-gb",
+            "platform": "MacIntel",
+            "product": "Gecko"
+          },
+          "browser": {
+            "name": "safari",
+            "version": 13.1,
+            "safari": true
+          },
+          "screen": {
+            "height": 900,
+            "width": 1440,
+            "innerWidth": 773,
+            "outerWidth": 1285,
+            "innerHeight": 507,
+            "outerHeight": 830
+          },
+          "features": {
+            "mobile": false,
+            "desktop": true,
+            "touch": false,
+            "portrait": false,
+            "landscape": true,
+            "retina": true,
+            "multiplebgs": true,
+            "boxshadow": true,
+            "borderimage": true,
+            "borderradius": true,
+            "cssreflections": true,
+            "fontface": false,
+            "rgba": true
+          }
+        }
+      },
+      "target": {
+        "id": null,
+        "displayName": "",
+        "objectType": ""
+      }
+    },
+    {
+      "object": {
+        "content": {
+          "version": "0.0",
+          "help": "somestring",
+          "useConfigurationHelp": false,
+          "autoLoadLatestResource": true,
+          "showResourceName": false,
+          "singleDocumentMode": true,
+          "showImportExport": false,
+          "showLoadExamples": false,
+          "showLoadConfiguration": true,
+          "showModelJson": false,
+          "autoSave": true,
+          "defaultResourceName": "",
+          "loadInitialResource": true,
+          "initialResourceString": "somestring",
+          "collaborationStartup": "disabled",
+          "collaborationEnable": false,
+          "collaborationBroadcastMode": false,
+          "collaborationPreserveClientModel": false,
+          "collaborationShowOwnClicks": true,
+          "collaborationShowCursors": true,
+          "collaborationExpectGroupState": true,
+          "collaborationDebug": false,
+          "collaborationHideLoadingDialog": false,
+          "collaborationShowTextBoxFocus": false,
+          "collaborationEnableUndoRedo": false,
+          "collaborationIgnoreGroups": false,
+          "usePeerFeedback": false,
+          "allowWithdrawingFeedbackRequest": false,
+          "showNotifications": true,
+          "peerFeedbackConfiguration": {
+            "explanation": "",
+            "peerFeedbackQuestionConfigurations": []
+          },
+          "verifyLogActions": true,
+          "showStartupTimes": false,
+          "configUISettings": {
+            "showHideSections": {
+              "i_timeline_configuration_timeline": true
+            }
+          },
+          "mockLogAccessorStartPoint": "Now",
+          "mockLogAccessorDeltaT": 0,
+          "useCustomContainerTitle": false,
+          "customContainerTitle": "",
+          "questions": [
+            {
+              "id": "someid",
+              "text": "somestring",
+              "formatted": "somestring",
+              "placeholder": "Enter your answer",
+              "avatar": false,
+              "type": "input",
+              "sliders": [
+                {
+                  "name": "not average - average",
+                  "color": "blue",
+                  "shape": "circle",
+                  "value": null,
+                  "options": {
+                    "floor": 0,
+                    "ceil": 100,
+                    "showTicks": false
+                  }
+                }
+              ],
+              "options": [],
+              "columns": [],
+              "likert_rows": [],
+              "likert_columns": [],
+              "emphasis": true,
+              "rich_text": false,
+              "chemistry": false,
+              "math": false,
+              "attempts": 1,
+              "show_correct_answer": true
+            },
+            {
+              "id": "someid",
+              "text": "somestring",
+              "formatted": "somestring",
+              "placeholder": "Enter your answer",
+              "avatar": false,
+              "type": "tabular",
+              "sliders": [],
+              "options": [],
+              "columns": [
+                {
+                  "name": "student",
+                  "type": "open",
+                  "html": "<input type=\"text\" placeholder=\"Type here\"/>"
+                },
+                {
+                  "name": "description of approach",
+                  "type": "open",
+                  "html": "<input type=\"text\" placeholder=\"Type here\"/>"
+                },
+                {
+                  "name": "explanation",
+                  "type": "open",
+                  "html": "<input type=\"text\" placeholder=\"Type here\"/>"
+                }
+              ],
+              "likert_rows": [],
+              "likert_columns": [],
+              "emphasis": true,
+              "rich_text": false,
+              "chemistry": false,
+              "math": false,
+              "attempts": 1,
+              "show_correct_answer": true
+            }
+          ],
+          "enable_questions": false
+        },
+        "id": "345"
+      },
+      "target": {
+        "id": "675",
+        "objectType": "configuration",
+        "displayName": "Timeline configuration",
+        "forApplication": "timeline"
+      }
+    }
+  ]
+}
