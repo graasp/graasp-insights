@@ -1,11 +1,11 @@
 const { GET_PIPELINE_CHANNEL } = require('../../shared/channels');
-const logger = require('../logger');
-const { PIPELINES_COLLECTION } = require('../db');
+const { PIPELINES_COLLECTION } = require('../../shared/constants');
+const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   GET_PIPELINE_SUCCESS,
   GET_PIPELINE_ERROR,
 } = require('../../shared/types');
-const { ERROR_GENERAL } = require('../../shared/errors');
+const logger = require('../logger');
 
 const getPipeline = (mainWindow, db) => async (event, { id }) => {
   try {

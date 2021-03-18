@@ -1,5 +1,5 @@
-const { PIPELINES_COLLECTION } = require('../db');
 const { GET_PIPELINES_CHANNEL } = require('../../shared/channels');
+const { PIPELINES_COLLECTION } = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   GET_PIPELINES_SUCCESS,
