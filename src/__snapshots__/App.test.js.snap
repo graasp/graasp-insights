@@ -367,6 +367,21 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
+          path="/pipelines"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/edit-pipeline/:id"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/add-pipeline"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
           path="/settings"
         />
         <Route

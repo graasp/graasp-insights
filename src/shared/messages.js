@@ -118,6 +118,12 @@ const ERROR_DELETING_ALL_MESSAGE =
   'There was an error deleting some application data. Try clearing the remaining data manually.';
 const ERROR_GETTING_ALGORITHM_CODE_MESSAGE =
   'The was an error retrieving the algorithm code';
+const ERROR_GETTING_PIPELINES_MESSAGE =
+  'There was an error retrieving the pipelines';
+const ERROR_GETTING_PIPELINE_MESSAGE =
+  'There was an error retrieving the pipeline';
+const ERROR_CLEARING_PIPELINE_MESSAGE =
+  'There was an error clearing the pipeline';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -184,4 +190,7 @@ module.exports = {
   SUCCESS_DELETING_ALL_MESSAGE,
   ERROR_DELETING_ALL_MESSAGE,
   ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
+  ERROR_GETTING_PIPELINES_MESSAGE,
+  ERROR_GETTING_PIPELINE_MESSAGE,
+  ERROR_CLEARING_PIPELINE_MESSAGE,
 };

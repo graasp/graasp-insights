@@ -14,6 +14,8 @@ export const EXECUTIONS_PATH = '/executions';
 export const VISUALIZATIONS_PATH = '/visualizations';
 export const SCHEMAS_PATH = '/schemas';
 export const SCHEMA_PATH = '/schema/:id';
+export const PIPELINES_PATH = '/pipelines';
+export const ADD_PIPELINE_PATH = '/add-pipeline';
 
 export const buildDatasetPath = (id = ':id') => {
   return `/dataset/${id}`;
@@ -28,3 +30,11 @@ export const buildEditAlgorithmPath = (id = ':id') => {
 };
 
 export const buildSchemaPath = (id = ':id') => `/schema/${id}`;
+
+export const buildPipelinePath = (id = ':id') => {
+  return `/pipeline/${id}`;
+};
+
+export const buildEditPipelinePath = (id = ':id') => {
+  return `/edit-pipeline/${id}`;
+};

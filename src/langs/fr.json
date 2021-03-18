@@ -158,6 +158,7 @@
     "Export result": "Exporter le résultat",
     "Remove result": "Supprimer le résultat",
     "Edit result": "Modifier le résultat",
-    "Publish result": "Publier le résultat"
+    "Publish result": "Publier le résultat",
+    "Pipeline": "Pipeline"
   }
 }

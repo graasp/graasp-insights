@@ -7,6 +7,7 @@ import settings from './settingsReducer';
 import algorithms from './algorithmsReducer';
 import executions from './executionsReducer';
 import schema from './schemaReducer';
+import pipeline from './pipelineReducer';
 
 export default combineReducers({
   toastr,
@@ -17,4 +18,5 @@ export default combineReducers({
   algorithms,
   executions,
   schema,
+  pipeline,
 });

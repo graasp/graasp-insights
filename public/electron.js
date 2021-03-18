@@ -59,6 +59,8 @@ const {
   DELETE_SCHEMA_CHANNEL,
   OPEN_URL_IN_BROWSER_CHANNEL,
   GET_ALGORITHM_CODE_CHANNEL,
+  GET_PIPELINES_CHANNEL,
+  GET_PIPELINE_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -107,6 +109,8 @@ const {
   openUrlInBrowser,
   addDefaultAlgorithm,
   getAlgorithmCode,
+  getPipelines,
+  getPipeline,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { bootstrapDatabase } = require('./app/db');
@@ -470,6 +474,11 @@ app.on('ready', async () => {
 
   // called when reading the code of an algorithm
   ipcMain.on(GET_ALGORITHM_CODE_CHANNEL, getAlgorithmCode(mainWindow));
+  // called when getting pipelines
+  ipcMain.on(GET_PIPELINES_CHANNEL, getPipelines(mainWindow, db));
+
+  // called when getting a pipeline
+  ipcMain.on(GET_PIPELINE_CHANNEL, getPipeline(mainWindow, db));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

@@ -21,6 +21,9 @@ import {
   VISUALIZATIONS_PATH,
   SCHEMAS_PATH,
   SCHEMA_PATH,
+  PIPELINES_PATH,
+  ADD_PIPELINE_PATH,
+  buildEditPipelinePath,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -38,6 +41,9 @@ import Executions from './components/Executions';
 import Visualizations from './components/Visualizations';
 import Schemas from './components/schema/Schemas';
 import SchemaView from './components/schema/SchemaView';
+import Pipelines from './components/pipeline/Pipelines';
+import EditPipeline from './components/pipeline/EditPipeline';
+import AddPipeline from './components/pipeline/AddPipeline';
 
 export class App extends Component {
   state = { height: 0 };
@@ -106,6 +112,13 @@ export class App extends Component {
               <Route exact path={RESULT_PATH} component={DatasetScreen} />
               <Route exact path={HOME_PATH} component={Datasets} />
               <Route exact path={EXECUTIONS_PATH} component={Executions} />
+              <Route exact path={PIPELINES_PATH} component={Pipelines} />
+              <Route
+                exact
+                path={buildEditPipelinePath()}
+                component={EditPipeline}
+              />
+              <Route exact path={ADD_PIPELINE_PATH} component={AddPipeline} />
               <Route exact path={SETTINGS_PATH} component={Settings} />
               <Route
                 exact

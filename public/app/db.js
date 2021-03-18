@@ -27,6 +27,7 @@ const {
   SCHEMAS_COLLECTION,
   SETTINGS_COLLECTION,
   EXECUTION_STATUSES,
+  PIPELINES_COLLECTION,
   DEFAULT_FILE_SIZE_LIMIT,
 } = require('../shared/constants');
 const { saveDefaultAlgorithmInDb } = require('./listeners/addDefaultAlgorithm');
@@ -42,6 +43,7 @@ const sampleDatabase = {
     fileSizeLimit: DEFAULT_FILE_SIZE_LIMIT,
   },
   [SCHEMAS_COLLECTION]: {},
+  [PIPELINES_COLLECTION]: [],
 };
 
 // bootstrap database
@@ -150,6 +152,7 @@ module.exports = {
   EXECUTIONS_COLLECTION,
   SETTINGS_COLLECTION,
   SCHEMAS_COLLECTION,
+  PIPELINES_COLLECTION,
   ensureDatabaseExists,
   bootstrapDatabase,
   ensureAlgorithmsExist,
