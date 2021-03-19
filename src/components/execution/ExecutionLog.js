@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getExecution } from '../../actions';
 import { GET_EXECUTION_INTERVAL_TIME } from '../../config/constants';
+import { EXECUTION_VIEW_LOG_ID } from '../../config/selectors';
 import { EXECUTION_STATUSES } from '../../shared/constants';
 import ExecutionStatusIcon from './ExecutionStatusIcon';
 
@@ -52,7 +53,9 @@ const ExecutionLog = ({ id }) => {
         />
       </Typography>
       <Paper className={classes.content}>
-        <pre className={classes.log}>{execution.get('log')}</pre>
+        <pre id={EXECUTION_VIEW_LOG_ID} className={classes.log}>
+          {execution.get('log')}
+        </pre>
       </Paper>
     </>
   );

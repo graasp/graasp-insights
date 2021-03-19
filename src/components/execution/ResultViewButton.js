@@ -25,7 +25,9 @@ const ResultViewButton = ({ id, name }) => {
       }),
     );
 
-  return <LinkButton text={resultName} onClick={onClick} disabled={!id} />;
+  return (
+    <LinkButton id={id} text={resultName} onClick={onClick} disabled={!id} />
+  );
 };
 
 ResultViewButton.propTypes = {

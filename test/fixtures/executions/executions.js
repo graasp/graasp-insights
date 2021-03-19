@@ -2,6 +2,7 @@ import path from 'path';
 import {
   DATASET_TYPES,
   GRAASP_SCHEMA_ID,
+  PARAMETER_TYPES,
 } from '../../../public/shared/constants';
 import { AUTHORS, PROGRAMMING_LANGUAGES } from '../../../src/shared/constants';
 import {
@@ -110,6 +111,7 @@ export const EXECUTION_WITH_SUCCESSFUL_INTEGER_PARAMETER = {
     {
       name: 'positive_integer',
       value: 42,
+      type: PARAMETER_TYPES.INTEGER_INPUT,
     },
   ],
 };
@@ -130,6 +132,7 @@ export const EXECUTION_WITH_FAILING_INTEGER_PARAMETER = {
     {
       name: 'positive_integer',
       value: -42,
+      type: PARAMETER_TYPES.INTEGER_INPUT,
     },
   ],
 };
@@ -150,6 +153,7 @@ export const EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER = {
     {
       name: 'positive_float',
       value: 42.0,
+      type: PARAMETER_TYPES.FLOAT_INPUT,
     },
   ],
 };
@@ -170,6 +174,7 @@ export const EXECUTION_WITH_FAILING_FLOAT_PARAMETER = {
     {
       name: 'positive_float',
       value: -33.0,
+      type: PARAMETER_TYPES.FLOAT_INPUT,
     },
   ],
 };
@@ -190,6 +195,7 @@ export const EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER = {
     {
       name: 'password',
       value: 'PASSWORD',
+      type: PARAMETER_TYPES.STRING_INPUT,
     },
   ],
 };
@@ -210,6 +216,7 @@ export const EXECUTION_WITH_FAILING_STRING_PARAMETER = {
     {
       name: 'password',
       value: "i don't know",
+      type: PARAMETER_TYPES.STRING_INPUT,
     },
   ],
 };

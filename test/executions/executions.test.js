@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { mochaAsync, clearInput } from '../utils';
+import { mochaAsync } from '../utils';
 import {
   createApplication,
   closeApplication,
@@ -10,10 +10,8 @@ import {
   WAIT_FOR_SLOW_ALGORITHMS_PAUSE,
 } from '../constants';
 import {
-  buildExecutionAlgorithmOptionId,
-  buildExecutionDatasetOptionId,
-  buildExecutionRowAlgorithmButtonId,
-  buildExecutionRowSourceButtonId,
+  buildExecutionAlgorithmButtonId,
+  buildExecutionSourceButtonId,
   DATASET_BACK_BUTTON_ID,
   DATASET_SCREEN_MAIN_ID,
   EDIT_ALGORITHM_MAIN_ID,
@@ -24,12 +22,9 @@ import {
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_MAIN_ID,
   EXECUTIONS_TABLE_ID,
-  EXECUTION_FORM_NAME_INPUT_ID,
   EXECUTION_TABLE_ROW_BUTTON_CLASS,
+  QUIT_MENU_ITEM_ID,
   RESULTS_MAIN_ID,
-  SET_PARAMETERS_BUTTON_ID,
-  SET_PARAMETERS_SAVE_BUTTON_ID,
-  buildParameterValueInputId,
 } from '../../src/config/selectors';
 import {
   EXECUTION_FAST,
@@ -46,42 +41,7 @@ import {
 import { EXECUTION_STATUSES } from '../../src/shared/constants';
 import { deleteDataset } from '../dataset.test';
 import { clickAlgoDeleteButton } from '../algorithms/utils';
-
-const createExecution = async (
-  client,
-  { dataset, algorithm, name, parameters },
-) => {
-  const datasetSelect = await client.$(`#${EXECUTIONS_DATASETS_SELECT_ID}`);
-  await datasetSelect.click();
-  await (
-    await client.$(`#${buildExecutionDatasetOptionId(dataset.id)}`)
-  ).click();
-  const algorithmSelect = await client.$(`#${EXECUTIONS_ALGORITHMS_SELECT_ID}`);
-  await algorithmSelect.click();
-  await (
-    await client.$(`#${buildExecutionAlgorithmOptionId(algorithm.id)}`)
-  ).click();
-
-  await (await client.$(`#${EXECUTION_FORM_NAME_INPUT_ID}`)).addValue(name);
-
-  if (parameters) {
-    const setParametersButton = await client.$(`#${SET_PARAMETERS_BUTTON_ID}`);
-    await setParametersButton.click();
-    for (const { name: parameterName, value } of parameters) {
-      const parameterTextField = await client.$(
-        `#${buildParameterValueInputId(parameterName)}`,
-      );
-      await clearInput(parameterTextField);
-      parameterTextField.addValue(value);
-    }
-
-    await (await client.$(`#${SET_PARAMETERS_SAVE_BUTTON_ID}`)).click();
-  }
-
-  await client.pause(1000);
-
-  await (await client.$(`#${EXECUTIONS_EXECUTE_BUTTON_ID}`)).click();
-};
+import { createExecution } from './utils';
 
 const checkExecutionRowLayout = async (
   client,
@@ -92,13 +52,11 @@ const checkExecutionRowLayout = async (
 
   const resultName = name || `${dataset.name}_${algorithm.name}`;
 
-  const sourceName = await tr.$(
-    `#${buildExecutionRowSourceButtonId(dataset.id)}`,
-  );
+  const sourceName = await tr.$(`#${buildExecutionSourceButtonId(dataset.id)}`);
   expect(await sourceName.getText()).to.contain(dataset.name);
 
   const algoName = await tr.$(
-    `#${buildExecutionRowAlgorithmButtonId(algorithm.id)}`,
+    `#${buildExecutionAlgorithmButtonId(algorithm.id)}`,
   );
   expect(await algoName.getText()).to.contain(algorithm.name);
 
@@ -450,7 +408,7 @@ describe('Executions Scenarios', function () {
 
             // check algo is displayed
             const datasetButton = await client.$(
-              `#${buildExecutionRowSourceButtonId(fastDatasetId)}`,
+              `#${buildExecutionSourceButtonId(fastDatasetId)}`,
             );
             await datasetButton.click();
             expect(
@@ -462,7 +420,7 @@ describe('Executions Scenarios', function () {
 
             // check algo is displayed
             const algoButton = await client.$(
-              `#${buildExecutionRowAlgorithmButtonId(fastAlgoId)}`,
+              `#${buildExecutionAlgorithmButtonId(fastAlgoId)}`,
             );
             await algoButton.click();
             expect(
@@ -667,7 +625,7 @@ describe('Executions Scenarios', function () {
 
             // quit
             await client.pause(100);
-            await closeApplication(app);
+            await client.goTo(QUIT_MENU_ITEM_ID);
 
             // open new app
             app = await createApplication({ varFolder });

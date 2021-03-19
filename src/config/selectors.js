@@ -51,9 +51,9 @@ export const EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS =
   'executionsExecutionDeleteButton';
 export const EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS =
   'executionsExecutionCancelButton';
-export const buildExecutionRowSourceButtonId = (id) =>
+export const buildExecutionSourceButtonId = (id) =>
   `executionRowSourceButton-${id}`;
-export const buildExecutionRowAlgorithmButtonId = (id) =>
+export const buildExecutionAlgorithmButtonId = (id) =>
   `executionRowAlgorithmButton-${id}`;
 export const EDIT_ALGORITHM_MAIN_ID = 'editAlgorithmMain';
 export const DATASET_SCREEN_MAIN_ID = 'datasetScreenMain';
@@ -162,3 +162,8 @@ export const buildPanelAlgorithmPipelineAccordionId = (id) =>
 export const buildRemoveAlgorithmPipelineAccordionButtonId = (id) =>
   `button${id}-remove`;
 export const buildPanelTypographyAlgorithmId = (id, i) => `algorithm${i}-${id}`;
+export const buildExecutionViewButtonId = (sourceId, algoId) =>
+  `executionViewButton-${sourceId}-${algoId}`;
+export const EXECUTION_VIEW_LOG_ID = `executionViewLog`;
+export const EXECUTION_VIEW_TABLE_ID = 'executionViewTable';
+export const buildParameterId = (name) => `parameter-${parseName(name)}`;

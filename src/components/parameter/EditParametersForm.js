@@ -31,6 +31,7 @@ import {
   ALERT_FIELD_SELECTOR_NO_SCHEMA_AVAILABLE_ID,
   buildParameterSchemaOption,
   PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
+  buildParameterId,
 } from '../../config/selectors';
 import { PARAMETER_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import { setFieldSelectorAttributes } from '../../shared/utils';
@@ -125,12 +126,13 @@ const EditParametersForm = (props) => {
   };
 
   const renderParam = (param, paramIdx) => {
-    const { type: paramType, value } = param;
+    const { type: paramType, value, name } = param;
     const invalid = !isParameterValid(param);
     switch (paramType) {
       case PARAMETER_TYPES.STRING_INPUT: {
         return (
           <TextField
+            id={buildParameterId(name)}
             label={t('Default value')}
             size="small"
             fullWidth
@@ -144,6 +146,7 @@ const EditParametersForm = (props) => {
       case PARAMETER_TYPES.INTEGER_INPUT: {
         return (
           <TextField
+            id={buildParameterId(name)}
             label={t('Default value')}
             size="small"
             fullWidth
@@ -159,6 +162,7 @@ const EditParametersForm = (props) => {
       case PARAMETER_TYPES.FLOAT_INPUT: {
         return (
           <TextField
+            id={buildParameterId(name)}
             label={t('Default value')}
             size="small"
             fullWidth
@@ -240,6 +244,7 @@ const EditParametersForm = (props) => {
 
         return (
           <FieldSelector
+            id={buildParameterId(name)}
             schema={fieldSelection}
             onChange={(newValue) => {
               updateValue({ ...value, [schemaId]: newValue }, paramIdx);

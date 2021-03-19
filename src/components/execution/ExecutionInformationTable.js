@@ -13,6 +13,7 @@ import AlgorithmViewButton from './AlgorithmViewButton';
 import DatasetViewButton from './DatasetViewButton';
 import ResultViewButton from './ResultViewButton';
 import EditParametersForm from '../parameter/EditParametersForm';
+import { EXECUTION_VIEW_TABLE_ID } from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   parameters: {
@@ -49,7 +50,7 @@ function ExecutionInformationTable() {
   return (
     <>
       <Typography variant="h5">{t('Information')}</Typography>
-      <TableContainer component={Paper}>
+      <TableContainer id={EXECUTION_VIEW_TABLE_ID} component={Paper}>
         <Table aria-label="simple table">
           <TableBody>
             <TableRow>

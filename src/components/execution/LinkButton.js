@@ -12,11 +12,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function LinkButton({ className, onClick, text, disabled }) {
+function LinkButton({ className, onClick, text, disabled, id }) {
   const classes = useStyles();
 
   return (
     <Button
+      id={id}
       onClick={onClick}
       className={clsx(
         classes.link,
@@ -31,6 +32,7 @@ function LinkButton({ className, onClick, text, disabled }) {
 }
 
 LinkButton.propTypes = {
+  id: PropTypes.string,
   className: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
@@ -38,7 +40,8 @@ LinkButton.propTypes = {
 };
 
 LinkButton.defaultProps = {
-  className: '',
+  className: null,
+  id: null,
   disabled: false,
 };
 

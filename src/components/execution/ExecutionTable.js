@@ -24,6 +24,7 @@ import Loader from '../common/Loader';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import { buildExecutionPath } from '../../config/paths';
 import {
+  buildExecutionViewButtonId,
   EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
@@ -160,11 +161,19 @@ class ExecutionTable extends Component {
         ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
 
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      const sourceNameButton = <DatasetViewButton {...source} />;
+      const sourceNameButton = (
+        <DatasetViewButton
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...source}
+        />
+      );
 
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      const algorithmButton = <AlgorithmViewButton {...algorithm} />;
+      const algorithmButton = (
+        <AlgorithmViewButton
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...algorithm}
+        />
+      );
 
       // eslint-disable-next-line react/jsx-props-no-spreading
       const resultButton = <ResultViewButton {...result} />;
@@ -197,7 +206,11 @@ class ExecutionTable extends Component {
       const quickActions = (
         <>
           <Tooltip title={t('View execution')} key="delete">
-            <IconButton aria-label="delete" onClick={() => this.handleView(id)}>
+            <IconButton
+              id={buildExecutionViewButtonId(source.id, algorithm.id)}
+              aria-label="delete"
+              onClick={() => this.handleView(id)}
+            >
               <VisibilityIcon />
             </IconButton>
           </Tooltip>
