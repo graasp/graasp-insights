@@ -26,7 +26,7 @@ import {
   buildPipelineRowClass,
 } from '../../config/selectors';
 
-import { clearPipeline, getPipelines } from '../../actions';
+import { clearPipeline, getPipelines, deletePipeline } from '../../actions';
 import {
   EXECUTIONS_PATH,
   buildEditPipelinePath,
@@ -72,7 +72,9 @@ const Pipelines = (props) => {
     push(ADD_PIPELINE_PATH);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = ({ id, name }) => {
+    dispatch(deletePipeline({ id, name }));
+  };
 
   const handleEdit = (id) => {
     push(buildEditPipelinePath(id));
@@ -123,7 +125,7 @@ const Pipelines = (props) => {
         <span>
           <IconButton
             aria-label="delete"
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete({ id, name })}
             className={PIPELINE_DELETE_BUTTON_CLASS}
           >
             <DeleteIcon />

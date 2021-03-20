@@ -54,6 +54,9 @@ const {
 } = require('./addDefaultAlgorithm');
 const getPipelines = require('./getPipelines');
 const getPipeline = require('./getPipeline');
+const savePipeline = require('./savePipeline');
+const addPipeline = require('./addPipeline');
+const deletePipeline = require('./deletePipeline');
 
 module.exports = {
   getDataset,
@@ -109,4 +112,7 @@ module.exports = {
   saveSchemaInDb,
   getPipelines,
   getPipeline,
+  savePipeline,
+  addPipeline,
+  deletePipeline,
 };

@@ -35,6 +35,7 @@ const EditPipeline = (props) => {
     match: {
       params: { id },
     },
+    history: { push },
   } = props;
 
   const pipeline = useSelector((state) => state.pipeline.get('current'));
@@ -54,10 +55,12 @@ const EditPipeline = (props) => {
       <Container className={classes.content}>
         <Typography variant="h4">{t('Edit Pipeline')}</Typography>
         <PipelineForm
+          id={pipeline.get('id') || ''}
           pipelineAlgorithms={pipeline.get('algorithms') || []}
           name={pipeline.get('name') || ''}
-          description={pipeline.get('description') || []}
-          handleSave={() => {}}
+          description={pipeline.get('description') || ''}
+          handleSave
+          handleHistory={push}
         />
       </Container>
       <BackButton
@@ -78,6 +81,9 @@ EditPipeline.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 };
 

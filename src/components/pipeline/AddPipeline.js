@@ -26,17 +26,23 @@ const styles = (theme) => ({
 });
 
 const AddPipeline = (props) => {
-  const { t, classes } = props;
+  const {
+    t,
+    classes,
+    history: { push },
+  } = props;
 
   return (
     <Main>
       <Container className={classes.content}>
         <Typography variant="h4">{t('Add Pipeline')}</Typography>
         <PipelineForm
+          id=""
           pipelineAlgorithms={[]}
           name=""
           description=""
-          handleSave={() => {}}
+          handleSave={false}
+          handleHistory={push}
         />
       </Container>
       <BackButton
@@ -52,6 +58,9 @@ AddPipeline.propTypes = {
   classes: PropTypes.shape({
     content: PropTypes.string.isRequired,
     backButton: PropTypes.string.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 };
 

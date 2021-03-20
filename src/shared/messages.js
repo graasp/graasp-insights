@@ -124,6 +124,10 @@ const ERROR_GETTING_PIPELINE_MESSAGE =
   'There was an error retrieving the pipeline';
 const ERROR_CLEARING_PIPELINE_MESSAGE =
   'There was an error clearing the pipeline';
+const ERROR_SAVING_PIPELINE_MESSAGE = 'There was an error saving the pipeline';
+const ERROR_ADDING_PIPELINE_MESSAGE = 'There was an error adding the pipeline';
+const ERROR_DELETING_PIPELINE_MESSAGE =
+  'There was an error deleting the pipeline';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -193,4 +197,7 @@ module.exports = {
   ERROR_GETTING_PIPELINES_MESSAGE,
   ERROR_GETTING_PIPELINE_MESSAGE,
   ERROR_CLEARING_PIPELINE_MESSAGE,
+  ERROR_SAVING_PIPELINE_MESSAGE,
+  ERROR_ADDING_PIPELINE_MESSAGE,
+  ERROR_DELETING_PIPELINE_MESSAGE,
 };
