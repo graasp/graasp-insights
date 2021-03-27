@@ -17,8 +17,8 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import Main from '../common/Main';
 import Table from '../common/Table';
 import {
-  PIPELINE_DELETE_BUTTON_CLASS,
   PIPELINE_EDIT_BUTTON_CLASS,
+  PIPELINE_DELETE_BUTTON_CLASS,
   PIPELINE_EXECUTION_BUTTON_CLASS,
   PIPELINE_NAME_CLASS,
   PIPELINE_TABLE_ID,
@@ -114,7 +114,7 @@ const Pipelines = (props) => {
       </Tooltip>,
       <Tooltip title={t('Execute')} key="execute">
         <IconButton
-          aria-label="edit"
+          aria-label="execute"
           onClick={() => handleExecution()}
           className={PIPELINE_EXECUTION_BUTTON_CLASS}
         >

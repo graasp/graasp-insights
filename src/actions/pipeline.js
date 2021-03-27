@@ -91,7 +91,6 @@ export const addPipeline = (pipeline) => (dispatch) => {
     window.ipcRenderer.send(ADD_PIPELINE_CHANNEL, pipeline);
     window.ipcRenderer.once(ADD_PIPELINE_CHANNEL, async (event, response) => {
       dispatch(response);
-      // onSuccess?.();
       return dispatch(flagAddingPipeline(false));
     });
   } catch (err) {

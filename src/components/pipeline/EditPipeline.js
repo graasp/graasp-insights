@@ -7,11 +7,15 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import SaveIcon from '@material-ui/icons/Save';
 
 import Main from '../common/Main';
 import BackButton from '../common/BackButton';
 
-import { EDIT_PIPELINE_BACK_BUTTON_ID } from '../../config/selectors';
+import {
+  EDIT_PIPELINE_BACK_BUTTON_ID,
+  PIPELINE_HANDLE_SAVE_ID,
+} from '../../config/selectors';
 import { clearPipeline, getPipeline } from '../../actions';
 import PipelineForm from './PipelineForm';
 
@@ -35,7 +39,6 @@ const EditPipeline = (props) => {
     match: {
       params: { id },
     },
-    history: { push },
   } = props;
 
   const pipeline = useSelector((state) => state.pipeline.get('current'));
@@ -59,8 +62,9 @@ const EditPipeline = (props) => {
           pipelineAlgorithms={pipeline.get('algorithms') || []}
           name={pipeline.get('name') || ''}
           description={pipeline.get('description') || ''}
-          handleSave
-          handleHistory={push}
+          confirmButtonOnClick={PIPELINE_HANDLE_SAVE_ID}
+          confirmButtonStartIcon={<SaveIcon />}
+          confirmButtonText={t('Save')}
         />
       </Container>
       <BackButton

@@ -8,6 +8,7 @@ import {
   FLAG_CLEARING_PIPELINE,
   CLEAR_PIPELINE_SUCCESS,
   FLAG_DELETING_PIPELINE,
+  ADD_PIPELINE_SUCCESS,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -30,6 +31,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['pipelines'], List(payload));
     case CLEAR_PIPELINE_SUCCESS:
       return state.setIn(['current'], Map());
+    case ADD_PIPELINE_SUCCESS:
+      return state.updateIn(['pipelines'], updateActivityList(payload));
     default:
       return state;
   }

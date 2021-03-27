@@ -25,6 +25,7 @@ const addPipeline = (mainWindow, db) => async (event, { metadata }) => {
 
     return mainWindow.webContents.send(ADD_PIPELINE_CHANNEL, {
       type: ADD_PIPELINE_SUCCESS,
+      payload: pipeline,
     });
   } catch (err) {
     logger.error(err);

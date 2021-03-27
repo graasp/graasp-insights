@@ -5,10 +5,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import AddIcon from '@material-ui/icons/Add';
 
 import Main from '../common/Main';
 import BackButton from '../common/BackButton';
-import { ADD_PIPELINE_BACK_BUTTON_ID } from '../../config/selectors';
+import {
+  ADD_PIPELINE_BACK_BUTTON_ID,
+  PIPELINE_HANDLE_ADD_ID,
+} from '../../config/selectors';
 
 import PipelineForm from './PipelineForm';
 
@@ -26,23 +30,16 @@ const styles = (theme) => ({
 });
 
 const AddPipeline = (props) => {
-  const {
-    t,
-    classes,
-    history: { push },
-  } = props;
+  const { t, classes } = props;
 
   return (
     <Main>
       <Container className={classes.content}>
         <Typography variant="h4">{t('Add Pipeline')}</Typography>
         <PipelineForm
-          id=""
-          pipelineAlgorithms={[]}
-          name=""
-          description=""
-          handleSave={false}
-          handleHistory={push}
+          confirmButtonOnClick={PIPELINE_HANDLE_ADD_ID}
+          confirmButtonStartIcon={<AddIcon />}
+          confirmButtonText={t('Add')}
         />
       </Container>
       <BackButton

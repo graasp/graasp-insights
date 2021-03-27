@@ -27,6 +27,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CodeIcon from '@material-ui/icons/Code';
 import { useSelector } from 'react-redux';
+import { toastr } from 'react-redux-toastr';
+import {
+  ADD_ALGORITHM_PIPELINE_ACCORDION_BUTTON_ID,
+  ALGORITHM_DIALOG_PIPELINE_ACCORDION_SELECT_ID,
+  CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
+  CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
+} from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -42,11 +49,11 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const [algorithm, setAlgorithm] = useState('');
+  const [selectedAlgorithmId, setSelectedAlgorithmId] = useState('');
   const [open, setOpen] = useState(false);
 
   const applicationAlgorithms = useSelector(({ algorithms }) =>
-    algorithms.get('algorithms').toArray(),
+    algorithms.get('algorithms'),
   );
 
   const handleAccordionToggle = (panel) => (event, isExpanded) => {
@@ -54,7 +61,7 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
   };
 
   const handleAlgorithmChange = (event) => {
-    setAlgorithm(event.target.value);
+    setSelectedAlgorithmId(event.target.value);
   };
 
   const removeAlgorithmFromPipeline = (i) => {
@@ -73,21 +80,23 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
   };
 
   const cancelDialog = () => {
-    setAlgorithm('');
+    setSelectedAlgorithmId('');
     closeDialog();
   };
 
   const addAlgorithmToPipeline = () => {
     const algorithmToPipeline = applicationAlgorithms.find(
-      (x) => x.id === algorithm,
+      (x) => x.id === selectedAlgorithmId,
     );
     if (algorithmToPipeline) {
       setPipelineAlgorithms([
         ...pipelineAlgorithms,
         { id: algorithmToPipeline.id },
       ]);
+    } else {
+      toastr.error(t('No algorithm found'));
     }
-    setAlgorithm('');
+    setSelectedAlgorithmId('');
     closeDialog();
   };
 
@@ -100,7 +109,7 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
             <Accordion
               expanded={expanded === `panel${i + 1}`}
               onChange={handleAccordionToggle(`panel${i + 1}`)}
-              key={`panel${i + 1}-accordion`}
+              id={`panel${i + 1}-accordion`}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -110,7 +119,7 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
                 <ListItemIcon>
                   <CodeIcon />
                 </ListItemIcon>
-                <Typography variant="subtitle1" id={`name${i + 1}`}>
+                <Typography variant="subtitle1" id={`name${algo.id}`}>
                   {applicationAlgorithms.find((x) => x.id === algo.id).name}
                 </Typography>
               </AccordionSummary>
@@ -134,7 +143,7 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
         <Accordion expanded={false} onClick={openDialog}>
           <AccordionSummary
             aria-controls="add-algorithm-content"
-            id="add-algorithm-header"
+            id={ADD_ALGORITHM_PIPELINE_ACCORDION_BUTTON_ID}
           >
             <ListItemIcon>
               <AddIcon />
@@ -159,12 +168,12 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
                   {t('Algorithm')}
                 </InputLabel>
                 <Select
-                  id="select-algorithm"
-                  value={algorithm}
+                  id={ALGORITHM_DIALOG_PIPELINE_ACCORDION_SELECT_ID}
+                  value={selectedAlgorithmId}
                   onChange={handleAlgorithmChange}
                 >
                   {applicationAlgorithms.map((algo) => (
-                    <MenuItem value={algo.id} key={algo.id}>
+                    <MenuItem value={algo.id} id={algo.id}>
                       {algo.name}
                     </MenuItem>
                   ))}
@@ -173,10 +182,19 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={cancelDialog} color="primary">
+            <Button
+              onClick={cancelDialog}
+              id={CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID}
+              color="primary"
+            >
               {t('Cancel')}
             </Button>
-            <Button onClick={addAlgorithmToPipeline} color="primary" autoFocus>
+            <Button
+              onClick={addAlgorithmToPipeline}
+              id={CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID}
+              color="primary"
+              autoFocus
+            >
               {t('Confirm')}
             </Button>
           </DialogActions>

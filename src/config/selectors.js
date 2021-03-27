@@ -139,13 +139,23 @@ export const SETTINGS_LOAD_GRAASP_DATABASE_ID = 'settingsLoadGraaspDatabase';
 export const SCHEMA_CONTENT_ID = 'schemaContent';
 export const EDIT_PIPELINE_NAME_ID = 'editPipelineName';
 export const EDIT_PIPELINE_DESCRIPTION_ID = 'editPipelineDescription';
-export const EDIT_PIPELINE_SAVE_BUTTON_ID = 'editPipelineSaveButton';
+export const PIPELINE_FORM_SAVE_BUTTON_ID = 'pipelineFormSaveButton';
 export const EDIT_PIPELINE_BACK_BUTTON_ID = 'editPipelineBackButton';
 export const ADD_PIPELINE_BACK_BUTTON_ID = 'addPipelineBackButton';
 export const PIPELINE_DELETE_BUTTON_CLASS = 'pipelineDeleteButton';
 export const buildPipelineRowClass = (name) => `pipelineRow-${parseName(name)}`;
-export const PIPELINE_EDIT_BUTTON_CLASS = 'pipelineEditButton';
 export const PIPELINE_EXECUTION_BUTTON_CLASS = 'pipelineExecutionButton';
 export const PIPELINE_NAME_CLASS = 'pipelineName';
 export const PIPELINE_TABLE_ID = 'pipelineTable';
 export const PIPELINE_ADD_BUTTON_ID = 'pipelineAddButton';
+export const PIPELINE_EDIT_BUTTON_CLASS = 'pipelineEditButton';
+export const PIPELINE_HANDLE_ADD_ID = 'pipelineHandleAdd';
+export const PIPELINE_HANDLE_SAVE_ID = 'pipelineHandleSave';
+export const ADD_ALGORITHM_PIPELINE_ACCORDION_BUTTON_ID =
+  'addAlgorithmPipelineAccordionButton';
+export const ALGORITHM_DIALOG_PIPELINE_ACCORDION_SELECT_ID =
+  'algorithmDialogPipelineAccordionSelect';
+export const CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID =
+  'cancelAddAlgorithmPipelineAccordion';
+export const CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID =
+  'confirmAddAlgorithmPipelineAccordion';

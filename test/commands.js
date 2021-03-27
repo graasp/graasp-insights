@@ -8,6 +8,7 @@ import {
   RESULTS_MENU_ITEM_ID,
   SCHEMAS_MENU_ITEM_ID,
   SETTINGS_MENU_ITEM_ID,
+  PIPELINES_MENU_ITEM_ID,
 } from '../src/config/selectors';
 import { openDrawer } from './utils';
 
@@ -30,6 +31,10 @@ export const setUpClientCommands = ({ client }) => {
 
   client.addCommand('goToExecutions', async () => {
     await client.goTo(EXECUTIONS_MENU_ITEM_ID);
+  });
+
+  client.addCommand('goToPipelines', async () => {
+    await client.goTo(PIPELINES_MENU_ITEM_ID);
   });
 
   client.addCommand('goToResults', async () => {
