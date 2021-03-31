@@ -28,6 +28,7 @@ const setUpDatabase = async (database = {}, varFolderPath) => {
       datasets: originalDatasets = [],
       algorithms: originalAlgorithms = [],
       schemas: originalSchemas = [],
+      pipelines = [],
     } = database;
     const datasets = JSON.parse(JSON.stringify(originalDatasets || []));
     for (const dataset of datasets) {
@@ -51,6 +52,7 @@ const setUpDatabase = async (database = {}, varFolderPath) => {
     const newDatabase = {
       datasets,
       algorithms,
+      pipelines,
       schemas,
     };
 

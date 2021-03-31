@@ -12,6 +12,8 @@ import {
   CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
   PIPELINE_DELETE_BUTTON_CLASS,
   PIPELINE_EDIT_BUTTON_CLASS,
+  buildPanelAlgorithmPipelineAccordionId,
+  buildRemoveAlgorithmPipelineAccordionButtonId,
 } from '../../src/config/selectors';
 import { clearInput } from '../utils';
 
@@ -48,11 +50,6 @@ export const checkPipelineRowLayout = async (client, pipeline) => {
   expect(
     await (await matchedAlgorithm.$(`.${PIPELINE_NAME_CLASS}`)).getText(),
   ).to.equal(name);
-};
-
-export const getNumberOfAlgorithms = async (client) => {
-  return (await client.$$(`#${PIPELINE_TABLE_ID} .${PIPELINE_NAME_CLASS}`))
-    .length;
 };
 
 export const addPipeline = async (client, { name, description }) => {
@@ -94,12 +91,12 @@ export const clickEditPipelineButton = async (client, { name }) => {
 
 export const removeAlgorithmPipeline = async (client, algorithmIndex) => {
   const expandAccordionAlgorithmSelect = await client.$(
-    `#panel${algorithmIndex + 1}-accordion`,
+    `#${buildPanelAlgorithmPipelineAccordionId(algorithmIndex)}`,
   );
   await expandAccordionAlgorithmSelect.click();
 
   const removeAlgorithmSelect = await client.$(
-    `#button${algorithmIndex + 1}-remove`,
+    `#${buildRemoveAlgorithmPipelineAccordionButtonId(algorithmIndex)}`,
   );
   await removeAlgorithmSelect.click();
 };

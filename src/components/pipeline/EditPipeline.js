@@ -12,12 +12,10 @@ import SaveIcon from '@material-ui/icons/Save';
 import Main from '../common/Main';
 import BackButton from '../common/BackButton';
 
-import {
-  EDIT_PIPELINE_BACK_BUTTON_ID,
-  PIPELINE_HANDLE_SAVE_ID,
-} from '../../config/selectors';
-import { clearPipeline, getPipeline } from '../../actions';
+import { EDIT_PIPELINE_BACK_BUTTON_ID } from '../../config/selectors';
+import { clearPipeline, getPipeline, savePipeline } from '../../actions';
 import PipelineForm from './PipelineForm';
+import { PIPELINES_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
   backButton: {
@@ -39,6 +37,7 @@ const EditPipeline = (props) => {
     match: {
       params: { id },
     },
+    history: { push },
   } = props;
 
   const pipeline = useSelector((state) => state.pipeline.get('current'));
@@ -58,13 +57,19 @@ const EditPipeline = (props) => {
       <Container className={classes.content}>
         <Typography variant="h4">{t('Edit Pipeline')}</Typography>
         <PipelineForm
-          id={pipeline.get('id') || ''}
           pipelineAlgorithms={pipeline.get('algorithms') || []}
           name={pipeline.get('name') || ''}
           description={pipeline.get('description') || ''}
-          confirmButtonOnClick={PIPELINE_HANDLE_SAVE_ID}
           confirmButtonStartIcon={<SaveIcon />}
           confirmButtonText={t('Save')}
+          onSubmit={(data) => {
+            const metadata = {
+              ...data,
+              id: pipeline.get('id') || '',
+            };
+            dispatch(savePipeline({ metadata }));
+            return push(PIPELINES_PATH);
+          }}
         />
       </Container>
       <BackButton

@@ -149,8 +149,6 @@ export const PIPELINE_NAME_CLASS = 'pipelineName';
 export const PIPELINE_TABLE_ID = 'pipelineTable';
 export const PIPELINE_ADD_BUTTON_ID = 'pipelineAddButton';
 export const PIPELINE_EDIT_BUTTON_CLASS = 'pipelineEditButton';
-export const PIPELINE_HANDLE_ADD_ID = 'pipelineHandleAdd';
-export const PIPELINE_HANDLE_SAVE_ID = 'pipelineHandleSave';
 export const ADD_ALGORITHM_PIPELINE_ACCORDION_BUTTON_ID =
   'addAlgorithmPipelineAccordionButton';
 export const ALGORITHM_DIALOG_PIPELINE_ACCORDION_SELECT_ID =
@@ -159,3 +157,7 @@ export const CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID =
   'cancelAddAlgorithmPipelineAccordion';
 export const CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID =
   'confirmAddAlgorithmPipelineAccordion';
+export const buildPanelAlgorithmPipelineAccordionId = (id) =>
+  `panel${id + 1}-accordion`;
+export const buildRemoveAlgorithmPipelineAccordionButtonId = (id) =>
+  `button${id + 1}-remove`;

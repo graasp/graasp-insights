@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
@@ -12,24 +11,19 @@ import {
   PIPELINE_FORM_SAVE_BUTTON_ID,
   EDIT_PIPELINE_NAME_ID,
   EDIT_PIPELINE_DESCRIPTION_ID,
-  PIPELINE_HANDLE_ADD_ID,
-  PIPELINE_HANDLE_SAVE_ID,
 } from '../../config/selectors';
 import PipelineAccordion from './PipelineAccordion';
-import { savePipeline, addPipeline, getAlgorithms } from '../../actions';
-import { PIPELINES_PATH } from '../../config/paths';
+import { getAlgorithms } from '../../actions';
 
 const PipelineForm = (props) => {
   const {
-    id,
     name,
     description,
     confirmButtonStartIcon,
     confirmButtonText,
-    confirmButtonOnClick,
+    onSubmit,
     pipelineAlgorithms,
   } = props;
-  const { push } = useHistory();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [pipelineAlgos, setPipelineAlgos] = useState(pipelineAlgorithms);
@@ -61,35 +55,12 @@ const PipelineForm = (props) => {
   };
 
   const handleButtonOnClick = () => {
-    const handleAddPipeline = () => {
-      const metadata = {
-        name: pipelineName,
-        description: pipelineDescription,
-        algorithms: pipelineAlgos,
-      };
-      dispatch(addPipeline({ metadata }));
-      return push(PIPELINES_PATH);
+    const metadata = {
+      name: pipelineName,
+      description: pipelineDescription,
+      algorithms: pipelineAlgos,
     };
-    const handleSavePipeline = () => {
-      const metadata = {
-        id,
-        name: pipelineName,
-        description: pipelineDescription,
-        algorithms: pipelineAlgos,
-      };
-      dispatch(savePipeline({ metadata }));
-      return push(PIPELINES_PATH);
-    };
-
-    switch (confirmButtonOnClick) {
-      case PIPELINE_HANDLE_ADD_ID:
-        handleAddPipeline();
-        break;
-      case PIPELINE_HANDLE_SAVE_ID:
-        handleSavePipeline();
-        break;
-      default:
-    }
+    onSubmit(metadata);
   };
 
   return (
@@ -140,14 +111,12 @@ const PipelineForm = (props) => {
 };
 
 PipelineForm.defaultProps = {
-  id: '',
   name: '',
   description: '',
   pipelineAlgorithms: [],
 };
 
 PipelineForm.propTypes = {
-  id: PropTypes.string,
   pipelineAlgorithms: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -158,6 +127,6 @@ PipelineForm.propTypes = {
   description: PropTypes.string,
   confirmButtonStartIcon: PropTypes.func.isRequired,
   confirmButtonText: PropTypes.string.isRequired,
-  confirmButtonOnClick: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 export default PipelineForm;

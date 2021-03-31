@@ -1,6 +1,7 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -9,12 +10,11 @@ import AddIcon from '@material-ui/icons/Add';
 
 import Main from '../common/Main';
 import BackButton from '../common/BackButton';
-import {
-  ADD_PIPELINE_BACK_BUTTON_ID,
-  PIPELINE_HANDLE_ADD_ID,
-} from '../../config/selectors';
+import { ADD_PIPELINE_BACK_BUTTON_ID } from '../../config/selectors';
 
 import PipelineForm from './PipelineForm';
+import { addPipeline } from '../../actions';
+import { PIPELINES_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
   backButton: {
@@ -30,16 +30,23 @@ const styles = (theme) => ({
 });
 
 const AddPipeline = (props) => {
-  const { t, classes } = props;
-
+  const {
+    t,
+    classes,
+    history: { push },
+  } = props;
+  const dispatch = useDispatch();
   return (
     <Main>
       <Container className={classes.content}>
         <Typography variant="h4">{t('Add Pipeline')}</Typography>
         <PipelineForm
-          confirmButtonOnClick={PIPELINE_HANDLE_ADD_ID}
           confirmButtonStartIcon={<AddIcon />}
           confirmButtonText={t('Add')}
+          onSubmit={(metadata) => {
+            dispatch(addPipeline({ metadata }));
+            return push(PIPELINES_PATH);
+          }}
         />
       </Container>
       <BackButton

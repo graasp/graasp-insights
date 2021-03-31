@@ -6,10 +6,8 @@ import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   PRIMARY_PIPELINE,
   SECONDARY_PIPELINE,
-  FIRST_ALGORITHM,
   SECOND_ALGORITHM,
-  THIRD_ALGORITHM,
-  SECOND_ALGORITHM_INDEX,
+  ALGORITHMS_PIPELINES,
 } from '../fixtures/pipelines/pipelines';
 import { mochaAsync } from '../utils';
 import {
@@ -34,8 +32,7 @@ describe('Pipelines Scenarios', function () {
     mochaAsync(async () => {
       app = await createApplication({
         database: {
-          pipelines: [PRIMARY_PIPELINE, SECONDARY_PIPELINE],
-          algorithms: [FIRST_ALGORITHM, SECOND_ALGORITHM, THIRD_ALGORITHM],
+          algorithms: ALGORITHMS_PIPELINES,
         },
         responses: { showMessageDialogResponse: 1 },
       });
@@ -59,9 +56,9 @@ describe('Pipelines Scenarios', function () {
       await clickAddButton(client);
       await addPipeline(client, PRIMARY_PIPELINE);
 
-      await addAlgorithmToPipeline(client, FIRST_ALGORITHM);
-      await addAlgorithmToPipeline(client, SECOND_ALGORITHM);
-      await addAlgorithmToPipeline(client, THIRD_ALGORITHM);
+      for (const algo of ALGORITHMS_PIPELINES) {
+        await addAlgorithmToPipeline(client, algo);
+      }
 
       await clickSavePipelineButton(client);
       await checkPipelineRowLayout(client, PRIMARY_PIPELINE);
@@ -71,7 +68,10 @@ describe('Pipelines Scenarios', function () {
 
       // edit pipeline
       await clickEditPipelineButton(client, PRIMARY_PIPELINE);
-      await removeAlgorithmPipeline(client, SECOND_ALGORITHM_INDEX);
+      await removeAlgorithmPipeline(
+        client,
+        ALGORITHMS_PIPELINES.findIndex((x) => x.id === SECOND_ALGORITHM.id),
+      );
       await editNamePipeline(client, SECONDARY_PIPELINE);
       await editDescriptionPipeline(client, SECONDARY_PIPELINE);
       await clickSavePipelineButton(client);
