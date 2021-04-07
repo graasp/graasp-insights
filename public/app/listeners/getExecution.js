@@ -5,7 +5,7 @@ const {
   GET_EXECUTION_ERROR,
 } = require('../../shared/types');
 const { ERROR_GENERAL } = require('../../shared/errors');
-const { EXECUTIONS_COLLECTION } = require('../../../src/shared/constants');
+const { EXECUTIONS_COLLECTION } = require('../../shared/constants');
 
 const getExecution = (mainWindow, db) => async (event, { id }) => {
   try {

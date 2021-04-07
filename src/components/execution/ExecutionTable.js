@@ -24,6 +24,9 @@ import Loader from '../common/Loader';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import { buildExecutionPath } from '../../config/paths';
 import {
+  buildExecutionAlgorithmButtonId,
+  buildExecutionResultButtonId,
+  buildExecutionSourceButtonId,
   buildExecutionViewButtonId,
   EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
@@ -163,6 +166,7 @@ class ExecutionTable extends Component {
 
       const sourceNameButton = (
         <DatasetViewButton
+          linkId={buildExecutionSourceButtonId(source.id)}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...source}
         />
@@ -170,13 +174,19 @@ class ExecutionTable extends Component {
 
       const algorithmButton = (
         <AlgorithmViewButton
+          linkId={buildExecutionAlgorithmButtonId(algorithm.id)}
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...algorithm}
         />
       );
 
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      const resultButton = <ResultViewButton {...result} />;
+      const resultButton = (
+        <ResultViewButton
+          linkId={buildExecutionResultButtonId(result.id)}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...result}
+        />
+      );
 
       const statusIcon = <ExecutionStatusIcon status={status} />;
 
@@ -205,10 +215,10 @@ class ExecutionTable extends Component {
 
       const quickActions = (
         <>
-          <Tooltip title={t('View execution')} key="delete">
+          <Tooltip title={t('View execution')} key="view">
             <IconButton
               id={buildExecutionViewButtonId(source.id, algorithm.id)}
-              aria-label="delete"
+              aria-label="view"
               onClick={() => this.handleView(id)}
             >
               <VisibilityIcon />

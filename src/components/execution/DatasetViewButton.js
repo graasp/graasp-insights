@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { buildDatasetPath } from '../../config/paths';
 import LinkButton from './LinkButton';
 import { openDataset } from '../../actions';
-import { buildExecutionSourceButtonId } from '../../config/selectors';
 
-const DatasetViewButton = ({ id, name }) => {
+const DatasetViewButton = ({ id, name, linkId }) => {
   const datasets = useSelector(({ dataset }) => dataset.get('datasets'));
   const results = useSelector(({ result }) => result.get('results'));
   const { push } = useHistory();
@@ -31,7 +30,7 @@ const DatasetViewButton = ({ id, name }) => {
 
   return (
     <LinkButton
-      id={buildExecutionSourceButtonId(id)}
+      id={linkId}
       text={datasetName}
       onClick={onClick}
       disabled={!id}
@@ -42,10 +41,12 @@ const DatasetViewButton = ({ id, name }) => {
 DatasetViewButton.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
+  linkId: PropTypes.string,
 };
 
 DatasetViewButton.defaultProps = {
   name: null,
+  linkId: null,
 };
 
 export default DatasetViewButton;

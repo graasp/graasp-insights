@@ -7,7 +7,7 @@ import { buildResultPath } from '../../config/paths';
 import LinkButton from './LinkButton';
 import { openDataset } from '../../actions';
 
-const ResultViewButton = ({ id, name }) => {
+const ResultViewButton = ({ id, name, linkId }) => {
   const results = useSelector(({ result }) => result.get('results'));
   const { push } = useHistory();
   const dispatch = useDispatch();
@@ -26,17 +26,24 @@ const ResultViewButton = ({ id, name }) => {
     );
 
   return (
-    <LinkButton id={id} text={resultName} onClick={onClick} disabled={!id} />
+    <LinkButton
+      id={linkId}
+      text={resultName}
+      onClick={onClick}
+      disabled={!id}
+    />
   );
 };
 
 ResultViewButton.propTypes = {
   name: PropTypes.string,
   id: PropTypes.string.isRequired,
+  linkId: PropTypes.string,
 };
 
 ResultViewButton.defaultProps = {
   name: null,
+  linkId: null,
 };
 
 export default ResultViewButton;

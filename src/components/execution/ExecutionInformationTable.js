@@ -13,7 +13,12 @@ import AlgorithmViewButton from './AlgorithmViewButton';
 import DatasetViewButton from './DatasetViewButton';
 import ResultViewButton from './ResultViewButton';
 import EditParametersForm from '../parameter/EditParametersForm';
-import { EXECUTION_VIEW_TABLE_ID } from '../../config/selectors';
+import {
+  buildExecutionAlgorithmButtonId,
+  buildExecutionResultButtonId,
+  buildExecutionSourceButtonId,
+  EXECUTION_VIEW_TABLE_ID,
+} from '../../config/selectors';
 
 const useStyles = makeStyles((theme) => ({
   parameters: {
@@ -27,16 +32,31 @@ function ExecutionInformationTable() {
   const execution = useSelector(({ executions }) => executions.get('current'));
 
   const dataset = execution.get('source') || {};
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  const datasetButton = <DatasetViewButton {...dataset} />;
+  const datasetButton = (
+    <DatasetViewButton
+      linkId={buildExecutionSourceButtonId(dataset.id)}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...dataset}
+    />
+  );
 
   const algorithm = execution.get('algorithm') || {};
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  const algorithmButton = <AlgorithmViewButton {...algorithm} />;
+  const algorithmButton = (
+    <AlgorithmViewButton
+      linkId={buildExecutionAlgorithmButtonId(algorithm.id)}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...algorithm}
+    />
+  );
 
   const result = execution.get('result') || {};
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  const resultButton = <ResultViewButton {...result} />;
+  const resultButton = (
+    <ResultViewButton
+      linkId={buildExecutionResultButtonId(result.id)}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...result}
+    />
+  );
 
   const params = execution.get('parameters');
   const parameters = params?.length ? (

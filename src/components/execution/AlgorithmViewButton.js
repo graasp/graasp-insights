@@ -5,9 +5,8 @@ import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import { buildEditAlgorithmPath } from '../../config/paths';
 import LinkButton from './LinkButton';
-import { buildExecutionAlgorithmButtonId } from '../../config/selectors';
 
-const AlgorithmViewButton = ({ id, name }) => {
+const AlgorithmViewButton = ({ id, name, linkId }) => {
   const algorithms = useSelector(({ algorithms: a }) => a.get('algorithms'));
   const { push } = useHistory();
   const { t } = useTranslation();
@@ -21,7 +20,7 @@ const AlgorithmViewButton = ({ id, name }) => {
 
   return (
     <LinkButton
-      id={buildExecutionAlgorithmButtonId(id)}
+      id={linkId}
       text={algorithmName}
       onClick={onClick}
       disabled={!id}
@@ -32,10 +31,12 @@ const AlgorithmViewButton = ({ id, name }) => {
 AlgorithmViewButton.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
+  linkId: PropTypes.string,
 };
 
 AlgorithmViewButton.defaultProps = {
   name: null,
+  linkId: null,
 };
 
 export default AlgorithmViewButton;
