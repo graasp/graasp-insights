@@ -52,6 +52,15 @@ const EditPipeline = (props) => {
     };
   }, [dispatch, id]);
 
+  const handleSubmitPipelineForm = (data) => {
+    const metadata = {
+      ...data,
+      id: pipeline.get('id') || '',
+    };
+    dispatch(savePipeline({ metadata }));
+    push(PIPELINES_PATH);
+  };
+
   return (
     <Main>
       <Container className={classes.content}>
@@ -62,14 +71,7 @@ const EditPipeline = (props) => {
           description={pipeline.get('description') || ''}
           confirmButtonStartIcon={<SaveIcon />}
           confirmButtonText={t('Save')}
-          onSubmit={(data) => {
-            const metadata = {
-              ...data,
-              id: pipeline.get('id') || '',
-            };
-            dispatch(savePipeline({ metadata }));
-            return push(PIPELINES_PATH);
-          }}
+          onSubmit={handleSubmitPipelineForm}
         />
       </Container>
       <BackButton

@@ -158,6 +158,7 @@ export const CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID =
 export const CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID =
   'confirmAddAlgorithmPipelineAccordion';
 export const buildPanelAlgorithmPipelineAccordionId = (id) =>
-  `panel${id + 1}-accordion`;
+  `panel${id}-accordion`;
 export const buildRemoveAlgorithmPipelineAccordionButtonId = (id) =>
-  `button${id + 1}-remove`;
+  `button${id}-remove`;
+export const buildPanelTypographyAlgorithmId = (id, i) => `algorithm${i}-${id}`;

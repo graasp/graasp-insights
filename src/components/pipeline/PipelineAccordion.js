@@ -12,15 +12,6 @@ import {
   Divider,
   ListItemIcon,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Select,
-  InputLabel,
-  FormControl,
-  MenuItem,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,21 +21,16 @@ import { useSelector } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import {
   ADD_ALGORITHM_PIPELINE_ACCORDION_BUTTON_ID,
-  ALGORITHM_DIALOG_PIPELINE_ACCORDION_SELECT_ID,
   buildPanelAlgorithmPipelineAccordionId,
+  buildPanelTypographyAlgorithmId,
   buildRemoveAlgorithmPipelineAccordionButtonId,
-  CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
-  CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
 } from '../../config/selectors';
 import { ERROR_GETTING_ALGORITHM_PIPELINE_MESSAGE } from '../../shared/messages';
+import ChooseAlgorithmDialog from './ChooseAlgorithmDialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 150,
   },
 }));
 
@@ -111,28 +97,32 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
     <Container>
       <Typography variant="h6">{t('Pipeline Schema')}</Typography>
       <div className={classes.wrapper}>
-        {completePipelineAlgorithms?.map((algo, i) => {
+        {completePipelineAlgorithms?.map((algorithm, i) => {
           return (
             <Accordion
-              expanded={expanded === `panel${i + 1}`}
-              onChange={handleAccordionToggle(`panel${i + 1}`)}
+              expanded={expanded === `panel${i}`}
+              onChange={handleAccordionToggle(`panel${i}`)}
               id={buildPanelAlgorithmPipelineAccordionId(i)}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${i + 1}-content`}
-                id={`panel${i + 1}-header`}
+                aria-controls={`panel${i}-content`}
+                id={`panel${i}-header`}
               >
                 <ListItemIcon>
                   <CodeIcon />
                 </ListItemIcon>
-                <Typography variant="subtitle1" id={`name${algo.id}`}>
-                  {algo.name}
+
+                <Typography
+                  variant="subtitle1"
+                  id={buildPanelTypographyAlgorithmId(algorithm.id, i)}
+                >
+                  {algorithm.name}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails />
               <Divider />
-              <AccordionActions id={`accordion${i + 1}-action`}>
+              <AccordionActions id={`accordion${i}-action`}>
                 <Button
                   size="small"
                   color="primary"
@@ -159,53 +149,14 @@ const PipelineAccordion = ({ pipelineAlgorithms, setPipelineAlgorithms }) => {
           </AccordionSummary>
         </Accordion>
 
-        <Dialog
+        <ChooseAlgorithmDialog
           open={open}
-          onClose={closeDialog}
-          aria-labelledby="alert-dialog-algorithms"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {t('Choose your algorithm')}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-algorithm">
-              <FormControl className={classes.formControl}>
-                <InputLabel id="input-label-algorithm">
-                  {t('Algorithm')}
-                </InputLabel>
-                <Select
-                  id={ALGORITHM_DIALOG_PIPELINE_ACCORDION_SELECT_ID}
-                  value={selectedAlgorithmId}
-                  onChange={handleAlgorithmChange}
-                >
-                  {applicationAlgorithms.map(({ id, name }) => (
-                    <MenuItem value={id} id={id}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={cancelDialog}
-              id={CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID}
-              color="primary"
-            >
-              {t('Cancel')}
-            </Button>
-            <Button
-              onClick={addAlgorithmToPipeline}
-              id={CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID}
-              color="primary"
-              autoFocus
-            >
-              {t('Confirm')}
-            </Button>
-          </DialogActions>
-        </Dialog>
+          closeDialog={closeDialog}
+          cancelDialog={cancelDialog}
+          selectedAlgorithmId={selectedAlgorithmId}
+          handleAlgorithmChange={handleAlgorithmChange}
+          addAlgorithmToPipeline={addAlgorithmToPipeline}
+        />
       </div>
     </Container>
   );

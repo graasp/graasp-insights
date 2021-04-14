@@ -12,10 +12,13 @@ import {
   CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
   PIPELINE_DELETE_BUTTON_CLASS,
   PIPELINE_EDIT_BUTTON_CLASS,
+  EDIT_PIPELINE_BACK_BUTTON_ID,
   buildPanelAlgorithmPipelineAccordionId,
+  buildPanelTypographyAlgorithmId,
   buildRemoveAlgorithmPipelineAccordionButtonId,
 } from '../../src/config/selectors';
 import { clearInput } from '../utils';
+import { ALGORITHMS_PIPELINES } from '../fixtures/pipelines/pipelines';
 
 export const clickAddButton = async (client) => {
   const addButton = await client.$(`#${PIPELINE_ADD_BUTTON_ID}`);
@@ -130,4 +133,44 @@ export const editDescriptionPipeline = async (client, { description }) => {
   const descriptionEl = await client.$(`#${EDIT_PIPELINE_DESCRIPTION_ID}`);
   await clearInput(descriptionEl);
   await descriptionEl.addValue(description);
+};
+
+export const clickEditPipelineBackButton = async (client) => {
+  const backButton = await client.$(`#${EDIT_PIPELINE_BACK_BUTTON_ID}`);
+  await backButton.click();
+};
+
+export const checkAlgorithmStillInPipeline = async (client, algorithm) => {
+  const algorithmIndex = ALGORITHMS_PIPELINES.findIndex(
+    (x) => x.id === algorithm.id,
+  );
+
+  const expandAccordionAlgorithmSelect = await client.$(
+    `#${buildPanelAlgorithmPipelineAccordionId(algorithmIndex)}`,
+  );
+  await expandAccordionAlgorithmSelect.click();
+
+  const nameAlgorithmPipelineSelect = await client.$(
+    `#${buildPanelTypographyAlgorithmId(algorithm.id, algorithmIndex)}`,
+  );
+
+  expect(await nameAlgorithmPipelineSelect.getText()).to.equal(algorithm.name);
+};
+
+export const checkOrderAlgorithmPipeline = async (client) => {
+  for (const algorithm of ALGORITHMS_PIPELINES) {
+    const { name, id } = algorithm;
+    const algorithmIndex = ALGORITHMS_PIPELINES.findIndex((x) => x.id === id);
+
+    const expandAccordionAlgorithmSelect = await client.$(
+      `#${buildPanelAlgorithmPipelineAccordionId(algorithmIndex)}`,
+    );
+    await expandAccordionAlgorithmSelect.click();
+
+    const nameAlgorithmPipelineSelect = await client.$(
+      `#${buildPanelTypographyAlgorithmId(id, algorithmIndex)}`,
+    );
+
+    expect(await nameAlgorithmPipelineSelect.getText()).to.equal(name);
+  }
 };

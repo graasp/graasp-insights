@@ -36,6 +36,12 @@ const AddPipeline = (props) => {
     history: { push },
   } = props;
   const dispatch = useDispatch();
+
+  const handleSubmitPipelineForm = (metadata) => {
+    dispatch(addPipeline({ metadata }));
+    push(PIPELINES_PATH);
+  };
+
   return (
     <Main>
       <Container className={classes.content}>
@@ -43,10 +49,7 @@ const AddPipeline = (props) => {
         <PipelineForm
           confirmButtonStartIcon={<AddIcon />}
           confirmButtonText={t('Add')}
-          onSubmit={(metadata) => {
-            dispatch(addPipeline({ metadata }));
-            return push(PIPELINES_PATH);
-          }}
+          onSubmit={handleSubmitPipelineForm}
         />
       </Container>
       <BackButton

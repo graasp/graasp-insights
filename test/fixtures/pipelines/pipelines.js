@@ -14,6 +14,11 @@ export const SECONDARY_PIPELINE = {
   description: 'pipeline description 2',
 };
 
+export const AUXILIARY_PIPELINE = {
+  name: 'auxiliary pipeline',
+  description: 'pipeline auxiliary description ',
+};
+
 export const FIRST_ALGORITHM = {
   id: 'exec-fast-algo',
   name: 'algorithm 1',
