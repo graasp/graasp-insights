@@ -1,8 +1,8 @@
-''' Ensure that for every combination of 'country', 'region', and 'city',
-    there are at least k users containing that combination.
-    The corresponding fields are suppressed (from 'city' to 'country') when necessary '''
+"""Ensure that for every combination of 'country', 'region', and 'city',
+there are at least k users containing that combination"""
 
 from graasp_utils import load_dataset, parse_arguments, save_dataset
+from collections import Counter
 
 
 def main():
@@ -14,61 +14,91 @@ def main():
 
     actions = dataset['data']['actions']
 
-    # get first geolocation for each user
-    geolocations = {}
+    # get the geolocations for each user
+    geolocations_per_user = {}
     for action in actions:
-        user = action['user']
-        if user not in geolocations and 'geolocation' in action:
-            geolocations[user] = action['geolocation']
-            geolocations[user]['range'] = [0, 0]
-            geolocations[user]['timezone'] = ''
-            geolocations[user]['ll'] = [0, 0]
-            geolocations[user]['area'] = ''
-            geolocations[user]['metro'] = ''
+        if 'geolocation' in action:
+            user = action['user']
+            if user not in geolocations_per_user:
+                geolocations_per_user[user] = []
 
-    # group by country then region then city
+            geoloc = action['geolocation']
+            country = geoloc.get('country')
+            region = geoloc.get('region')
+            city = geoloc.get('city')
+            geolocations_per_user[user].append((country, region, city))
+
+    # get most represented geolocation for each user
+    geolocation_mapping = {}
+    for user, geolocations in geolocations_per_user.items():
+        most_common = Counter(geolocations).most_common(1)
+        if len(most_common) == 1:
+            [((country, region, city), _)] = most_common
+            geolocation_mapping[user] = {
+                'country': country,
+                'region': region,
+                'city': city,
+            }
+
+    # group users by country then region then city
     grouped = {}
-    for user, geo in geolocations.items():
+    for user, geo in geolocation_mapping.items():
         country = geo['country']
         region = geo['region']
         city = geo['city']
 
         if country not in grouped:
-            grouped[country] = {}
-
+            grouped[country] = {
+                'count': 0,
+                'regions': {}
+            }
         country_group = grouped[country]
+        country_group['count'] += 1
+        country_regions = country_group['regions']
 
-        if region not in country_group:
-            country_group[region] = {}
+        if region not in country_regions:
+            country_regions[region] = {
+                'count': 0,
+                'cities': {}
+            }
+        region_group = country_regions[region]
+        region_group['count'] += 1
+        region_cities = region_group['cities']
 
-        region_group = country_group[region]
+        if city not in region_cities:
+            region_cities[city] = {
+                'count': 0,
+                'users': []
+            }
+        city_group = region_cities[city]
+        city_group['count'] += 1
+        city_group['users'].append(user)
 
-        if city not in region_group:
-            region_group[city] = []
-
-        region_group[city].append(user)
-
-    # remove each value that is not represented twice
-    for country, regions in grouped.items():
-        alone_country = len(regions) < args.k
-        for region, cities in regions.items():
-            alone_region = len(cities) <= args.k
-            for city, users in cities.items():
-                alone_city = len(users) <= args.k
-                if alone_city:
-                    user = users[0]
-                    geolocations[user]['city'] = ''
-                    if alone_region:
-                        geolocations[user]['region'] = ''
-                        if alone_country:
-                            geolocations[user]['country'] = ''
-                            geolocations[user]['eu'] = ''
+    # remove each value that is not represented at least k times
+    for country, country_group in grouped.items():
+        country_user_count = country_group.get('count', 0)
+        regions = country_group.get('regions', {})
+        for region, region_group in regions.items():
+            region_user_count = region_group.get('count', 0)
+            cities = region_group.get('cities', {})
+            for city, city_group in cities.items():
+                city_user_count = city_group.get('count', 0)
+                users = city_group.get('users', [])
+                if city_user_count < args.k:
+                    for user in users:
+                        geolocation_mapping[user]['city'] = ''
+                if region_user_count < args.k:
+                    for user in users:
+                        geolocation_mapping[user]['region'] = ''
+                if country_user_count < args.k:
+                    for user in users:
+                        geolocation_mapping[user]['country'] = ''
 
     # update with new values
     for action in actions:
         if 'geolocation' in action:
             user = action['user']
-            action['geolocation'] = geolocations[user]
+            action['geolocation'] = geolocation_mapping[user]
 
     save_dataset(dataset, args.output_path)
 

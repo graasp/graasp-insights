@@ -29,7 +29,7 @@ import {
   EXECUTIONS_EXECUTE_BUTTON_ID,
   EXECUTION_FORM_NAME_INPUT_ID,
 } from '../../config/selectors';
-import { GRAASP_SCHEMA_ID } from '../../shared/constants';
+import { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import {
   buildPythonWrongVersionMessage,
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
@@ -377,7 +377,9 @@ const mapStateToProps = ({
 }) => ({
   datasets: dataset.get('datasets'),
   results: result.get('results'),
-  algorithms: algorithms.get('algorithms'),
+  algorithms: algorithms
+    .get('algorithms')
+    .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION),
   pythonVersion: settings.get('pythonVersion'),
   isLoading: Boolean(
     dataset.getIn(['activity']).size &&

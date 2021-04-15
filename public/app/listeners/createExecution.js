@@ -22,7 +22,7 @@ const createExecution = (mainWindow, db) => async (
       .get(DATASETS_COLLECTION)
       .find({ id: sourceId })
       .value();
-    const { name: algorithmName } = db
+    const { name: algorithmName, type } = db
       .get(ALGORITHMS_COLLECTION)
       .find({ id: algorithmId })
       .value();
@@ -39,6 +39,7 @@ const createExecution = (mainWindow, db) => async (
       },
       parameters,
       schemaId,
+      type,
     };
     db.get(EXECUTIONS_COLLECTION).push(execution).write();
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {

@@ -52,6 +52,7 @@ const cancelAllRunningExecutions = async (db) => {
     .get(EXECUTIONS_COLLECTION)
     .filter({ status: EXECUTION_STATUSES.RUNNING })
     .value();
+
   // eslint-disable-next-line no-restricted-syntax
   for (const { id } of runningExecutions) {
     // eslint-disable-next-line no-await-in-loop

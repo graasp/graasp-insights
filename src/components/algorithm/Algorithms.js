@@ -9,6 +9,11 @@ import { withTranslation } from 'react-i18next';
 import { withRouter } from 'react-router';
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -35,10 +40,13 @@ import {
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
   ALGORITHMS_EMPTY_ALERT_ID,
+  ALGORITHM_TYPE_SELECT_ID,
+  buildAlgorithmTypeOptionId,
 } from '../../config/selectors';
 import LocationPathAlert from '../common/LocationPathAlert';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import { formatFileSize } from '../../shared/formatting';
+import { ALGORITHM_TYPES } from '../../shared/constants';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -63,12 +71,17 @@ const styles = (theme) => ({
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
-  utilsButton: {
+  floatingItems: {
     float: 'right',
+    display: 'inline-block',
   },
 });
 
 class Algorithms extends Component {
+  state = {
+    type: ALGORITHM_TYPES.ANONYMIZATION,
+  };
+
   static propTypes = {
     algorithms: PropTypes.instanceOf(List).isRequired,
     t: PropTypes.func.isRequired,
@@ -80,7 +93,7 @@ class Algorithms extends Component {
       description: PropTypes.string.isRequired,
       addButton: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
-      utilsButton: PropTypes.string.isRequired,
+      floatingItems: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -102,6 +115,10 @@ class Algorithms extends Component {
       history: { push },
     } = this.props;
     push(ADD_ALGORITHM_PATH);
+  };
+
+  handleTypeOnChange = (event) => {
+    this.setState({ type: event.target.value });
   };
 
   handleDelete({ id, name }) {
@@ -139,6 +156,7 @@ class Algorithms extends Component {
 
   render() {
     const { algorithms, t, isLoading, classes, folder } = this.props;
+    const { type } = this.state;
 
     if (isLoading) {
       return (
@@ -214,79 +232,81 @@ class Algorithms extends Component {
       },
     ];
 
-    const rows = algorithms.map((algorithm) => {
-      const {
-        id,
-        name,
-        description,
-        author,
-        language,
-        createdAt,
-        lastModified,
-        size,
-      } = algorithm;
-      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
-      const createdAtString = createdAt
-        ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
-      const lastModifiedString = lastModified
-        ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
-      const quickActions = [
-        <Tooltip title={t('Edit Algorithm')} key="edit">
-          <IconButton
-            aria-label="edit"
-            onClick={() => this.handleEdit(id)}
-            className={ALGORITHM_EDIT_BUTTON_CLASS}
-          >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>,
-        <Tooltip title={t('Delete algorithm')} key="delete">
-          <IconButton
-            aria-label="delete"
-            onClick={() => this.handleDelete({ id, name })}
-            className={ALGORITHM_DELETE_BUTTON_CLASS}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>,
-      ];
-      return {
-        key: id,
-        className: buildAlgorithmRowClass(name),
-        name,
-        algorithm: [
-          <Typography
-            variant="subtitle1"
-            key="name"
-            className={ALGORITHM_NAME_CLASS}
-          >
-            {name}
-          </Typography>,
-          <Typography
-            variant="caption"
-            key="description"
-            className={clsx(classes.description, ALGORITHM_DESCRIPTION_CLASS)}
-          >
-            {description}
-          </Typography>,
-        ],
-        author: (
-          <Typography className={ALGORITHM_AUTHOR_CLASS}>{author}</Typography>
-        ),
-        language: (
-          <Typography className={ALGORITHM_LANGUAGE_CLASS}>
-            {language}
-          </Typography>
-        ),
-        quickActions,
-        size: sizeString,
-        sizeNumeric: size,
-        createdAt: createdAtString,
-        lastModified: lastModifiedString,
-      };
-    });
+    const rows = algorithms
+      .filter(({ type: algorithmType }) => algorithmType === type)
+      .map((algorithm) => {
+        const {
+          id,
+          name,
+          description,
+          author,
+          language,
+          createdAt,
+          lastModified,
+          size,
+        } = algorithm;
+        const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
+        const createdAtString = createdAt
+          ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown');
+        const lastModifiedString = lastModified
+          ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown');
+        const quickActions = [
+          <Tooltip title={t('Edit Algorithm')} key="edit">
+            <IconButton
+              aria-label="edit"
+              onClick={() => this.handleEdit(id)}
+              className={ALGORITHM_EDIT_BUTTON_CLASS}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>,
+          <Tooltip title={t('Delete algorithm')} key="delete">
+            <IconButton
+              aria-label="delete"
+              onClick={() => this.handleDelete({ id, name })}
+              className={ALGORITHM_DELETE_BUTTON_CLASS}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>,
+        ];
+        return {
+          key: id,
+          className: buildAlgorithmRowClass(name),
+          name,
+          algorithm: [
+            <Typography
+              variant="subtitle1"
+              key="name"
+              className={ALGORITHM_NAME_CLASS}
+            >
+              {name}
+            </Typography>,
+            <Typography
+              variant="caption"
+              key="description"
+              className={clsx(classes.description, ALGORITHM_DESCRIPTION_CLASS)}
+            >
+              {description}
+            </Typography>,
+          ],
+          author: (
+            <Typography className={ALGORITHM_AUTHOR_CLASS}>{author}</Typography>
+          ),
+          language: (
+            <Typography className={ALGORITHM_LANGUAGE_CLASS}>
+              {language}
+            </Typography>
+          ),
+          quickActions,
+          size: sizeString,
+          sizeNumeric: size,
+          createdAt: createdAtString,
+          lastModified: lastModifiedString,
+        };
+      });
 
     return (
       <Main>
@@ -297,20 +317,53 @@ class Algorithms extends Component {
               path={folder}
             />
           )}
-          <Tooltip
-            title={t(
-              "You can use the 'utils' file to write functions you want to use across your custom algorithms",
-            )}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.utilsButton}
-              onClick={() => this.handleUtilsEdit()}
-            >
-              {t('Edit utils')}
-            </Button>
-          </Tooltip>
+          <div className={classes.floatingItems}>
+            <Grid container alignItems="flex-end" spacing={2}>
+              <Grid item>
+                <FormControl>
+                  <InputLabel id="algorithm-type">{t('Type')}</InputLabel>
+                  <Select
+                    id={ALGORITHM_TYPE_SELECT_ID}
+                    labelId="algorithm-type"
+                    value={type}
+                    onChange={this.handleTypeOnChange}
+                  >
+                    <MenuItem
+                      value={ALGORITHM_TYPES.ANONYMIZATION}
+                      id={buildAlgorithmTypeOptionId(
+                        ALGORITHM_TYPES.ANONYMIZATION,
+                      )}
+                    >
+                      {t('Anonymization')}
+                    </MenuItem>
+                    <MenuItem
+                      value={ALGORITHM_TYPES.VALIDATION}
+                      id={buildAlgorithmTypeOptionId(
+                        ALGORITHM_TYPES.VALIDATION,
+                      )}
+                    >
+                      {t('Validation')}
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <Tooltip
+                  title={t(
+                    "You can use the 'utils' file to write functions you want to use across your custom algorithms",
+                  )}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => this.handleUtilsEdit()}
+                  >
+                    {t('Edit utils')}
+                  </Button>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          </div>
           <Typography variant="h4">{t('Algorithms')}</Typography>
           <Table
             columns={columns}

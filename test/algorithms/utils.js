@@ -34,6 +34,12 @@ import {
   PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
   buildParameterSchemaOption,
   buildFieldSelectorCheckbox,
+  ALGORITHM_TYPE_SELECT_ID,
+  ADD_ALGORITHM_TYPE_SELECT_ID,
+  buildAlgorithmTypeOptionId,
+  buildAddAlgorithmTypeOptionId,
+  EDIT_ALGORITHM_TYPE_SELECT_ID,
+  buildEditAlgorithmTypeOptionId,
 } from '../../src/config/selectors';
 import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
@@ -117,6 +123,13 @@ export const getNumberOfAlgorithms = async (client) => {
     .length;
 };
 
+export const filterAlgorithmTableByType = async (client, type) => {
+  const typeEl = await client.$(`#${ALGORITHM_TYPE_SELECT_ID}`);
+  await typeEl.click();
+  const typeOption = await client.$(`#${buildAlgorithmTypeOptionId(type)}`);
+  await typeOption.click();
+};
+
 export const addAlgorithmFromFileLocation = async (
   client,
   { name, description, fileLocation },
@@ -133,7 +146,10 @@ export const addAlgorithmFromFileLocation = async (
   await fileLocationEl.addValue(fileLocation);
 };
 
-export const addAlgorithmFromEditor = async (client, { name, description }) => {
+export const addAlgorithmFromEditor = async (
+  client,
+  { name, description, type },
+) => {
   const editorOption = await client.$(
     `#${ADD_ALGORITHM_FROM_EDITOR_OPTION_ID}`,
   );
@@ -141,19 +157,27 @@ export const addAlgorithmFromEditor = async (client, { name, description }) => {
 
   const nameEl = await client.$(`#${ADD_ALGORITHM_NAME_ID}`);
   const descriptionEl = await client.$(`#${ADD_ALGORITHM_DESCRIPTION_ID}`);
+  const typeEl = await client.$(`#${ADD_ALGORITHM_TYPE_SELECT_ID}`);
 
   await nameEl.addValue(name);
   await descriptionEl.addValue(description);
+  await typeEl.click();
+  const typeOption = await client.$(`#${buildAddAlgorithmTypeOptionId(type)}`);
+  await typeOption.click();
 };
 
-export const editAlgorithm = async (client, { name, description }) => {
+export const editAlgorithm = async (client, { name, description, type }) => {
   const nameEl = await client.$(`#${EDIT_ALGORITHM_NAME_ID}`);
   const descriptionEl = await client.$(`#${EDIT_ALGORITHM_DESCRIPTION_ID}`);
+  const typeEl = await client.$(`#${EDIT_ALGORITHM_TYPE_SELECT_ID}`);
 
   await clearInput(nameEl);
   await nameEl.setValue(name);
   await clearInput(descriptionEl);
   await descriptionEl.addValue(description);
+  await typeEl.click();
+  const typeOption = await client.$(`#${buildEditAlgorithmTypeOptionId(type)}`);
+  await typeOption.click();
 };
 
 export const addDefaultAlgorithm = async (client, { id }) => {

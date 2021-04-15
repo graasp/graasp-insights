@@ -11,6 +11,7 @@ const {
   DATASETS_COLLECTION,
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
+  PARAMETER_TYPES,
 } = require('../../shared/constants');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const {
@@ -26,7 +27,7 @@ const {
 const { cancelExecutionObject } = require('./cancelExecution');
 
 const createNewResultDataset = (
-  { name, filepath, algorithmId, description },
+  { name, filepath, algorithmId, description, original },
   db,
 ) => {
   const result = createNewDataset(
@@ -39,7 +40,7 @@ const createNewResultDataset = (
     db,
   );
   result.algorithmId = algorithmId;
-  return result;
+  return { ...result, original };
 };
 
 const executeAlgorithm = (mainWindow, db) => (
@@ -56,7 +57,7 @@ const executeAlgorithm = (mainWindow, db) => (
   const channel = buildExecuteAlgorithmChannel(executionId);
   try {
     // get corresponding dataset
-    const { filepath, name: datasetName, description } = db
+    const { filepath, name: datasetName, description, original } = db
       .get(DATASETS_COLLECTION)
       .find({ id: sourceId })
       .value();
@@ -90,6 +91,7 @@ const executeAlgorithm = (mainWindow, db) => (
           filepath: tmpPath,
           algorithmId,
           description,
+          original,
         },
         db,
       );
@@ -174,10 +176,28 @@ const executeAlgorithm = (mainWindow, db) => (
       );
     };
 
+    const datasetPathParameter = {
+      name: 'dataset_path',
+      type: PARAMETER_TYPES.STRING_INPUT,
+      value: filepath,
+    };
+
+    const outputPathParameter = {
+      name: 'output_path',
+      type: PARAMETER_TYPES.STRING_INPUT,
+      value: tmpPath,
+    };
+
+    const fullParameters = [
+      datasetPathParameter,
+      outputPathParameter,
+      ...parameters,
+    ];
+
     switch (language) {
       case PROGRAMMING_LANGUAGES.PYTHON:
         return executePythonAlgorithm(
-          { algorithmFilepath, filepath, tmpPath, parameters, schemaId },
+          { algorithmFilepath, parameters: fullParameters, schemaId },
           { onRun, onStop, onSuccess, onError, clean, onLog },
         );
 
@@ -207,4 +227,4 @@ const executeAlgorithm = (mainWindow, db) => (
   }
 };
 
-module.exports = { cancelExecutionObject, executeAlgorithm };
+module.exports = executeAlgorithm;

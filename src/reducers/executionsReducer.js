@@ -24,7 +24,7 @@ const INITIAL_STATE = Map({
 
 const updateExecution = ({ id, resultId }) => (executions) => {
   const idx = executions.findIndex(({ id: executionId }) => executionId === id);
-  if (idx > -1) {
+  if (idx < 0) {
     // eslint-disable-next-line no-console
     console.error('Execution not found, an error probably happened');
     return executions;

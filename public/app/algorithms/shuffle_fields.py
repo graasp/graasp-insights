@@ -1,52 +1,31 @@
+"""Given an array of objects, this algorithm randomly shuffles the
+values in selected keys between the array's objects
+"""
 
 import random
 import json
 
-from graasp_utils import load_dataset, save_dataset, parse_arguments
-
+from graasp_utils import (load_dataset, save_dataset, parse_arguments,
+                          find_selected_arrays)
 
 true_random = random.SystemRandom()
 
 
-def shuffle_attribute(array, attribute):
-    values = [elem.get(attribute, None) for elem in array]
-    true_random.shuffle(values)
-    for elem, new_value in zip(array, values):
-        elem[attribute] = new_value
+def shuffle_attributes(array, field_selection):
+    selected = field_selection.get('selected', False)
 
+    # if the array itself is selected, then shuffle its elements
+    if selected:
+        true_random.shuffle(array)
 
-def iterate_and_shuffle(dataset, field_selection):
+    # shuffle each selected property across the array
     properties = field_selection.get('properties', {})
-
-    # iterate through each property
-    for prop_name, prop_field_sel in properties.items():
-        prop = dataset.get(prop_name, {})
-
-        # if it is an object, iterate through its properties using recursion
-        if 'object' in prop_field_sel.get('type', '') and isinstance(prop, dict):
-            iterate_and_shuffle(prop, prop_field_sel)
-
-        # if it is an array, "items" specifies the array's content
-        elif 'array' in prop_field_sel.get('type', '') and isinstance(prop, list):
-            items = prop_field_sel.get('items', {})
-
-            # if "items" is a list
-            # => 1st element matches with 1st field selection, 2nd elem with 2nd field selection, etc
-            if isinstance(items, list):
-                for item, fs in zip(prop, items):
-                    iterate_and_shuffle(item, fs)
-
-            # if "items" is an object/dict => every element matches the unique field selection
-            elif isinstance(items, dict):
-                sub_properties = items.get('properties', {})
-                selected_attributes = [attribute for attribute, sub_value in sub_properties.items(
-                ) if sub_value.get('selected', False)]
-
-                for attribute in selected_attributes:
-                    shuffle_attribute(prop, attribute)
-
-                for item in prop:
-                    iterate_and_shuffle(item, items)
+    for name, value in properties.items():
+        if value.get('selected', False):
+            new_values = [elem.get(name, None) for elem in array]
+            true_random.shuffle(new_values)
+            for elem, new_value in zip(array, new_values):
+                elem[name] = new_value
 
 
 def main():
@@ -57,7 +36,10 @@ def main():
     dataset = load_dataset(args.dataset_path)
     fields = json.loads(args.fields)
 
-    iterate_and_shuffle(dataset, fields)
+    relevant_arrays = find_selected_arrays(dataset, fields)
+    for array in relevant_arrays:
+        shuffle_attributes(
+            array['array'], array['field_selection']),
 
     save_dataset(dataset, args.output_path)
 

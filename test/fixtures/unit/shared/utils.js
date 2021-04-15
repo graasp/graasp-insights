@@ -62,6 +62,8 @@ const setFieldSelectorAttributesData = {
       prop5: { type: 'number', selected: false, expanded: true },
       prop6: { selected: false, expanded: true },
     },
+    selected: false,
+    expanded: true,
   },
   outputAllUnselectedDepth2: {
     type: 'object',
@@ -97,6 +99,8 @@ const setFieldSelectorAttributesData = {
       prop5: { type: 'number', selected: false, expanded: true },
       prop6: { selected: false, expanded: true },
     },
+    selected: false,
+    expanded: true,
   },
   outputAllSelectedDepth2: {
     type: 'object',
@@ -132,6 +136,8 @@ const setFieldSelectorAttributesData = {
       prop5: { type: 'number', selected: true, expanded: true },
       prop6: { selected: true, expanded: true },
     },
+    selected: true,
+    expanded: true,
   },
 };
 

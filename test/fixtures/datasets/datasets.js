@@ -18,6 +18,7 @@ export const SIMPLE_DATASET = {
   lastModified: Date.now(),
   type: DATASET_TYPES.SOURCE,
   schemaIds: [GRAASP_SCHEMA_ID],
+  original: 'simple-dataset-name',
 };
 
 export const MISSING_FILE_DATASET = {

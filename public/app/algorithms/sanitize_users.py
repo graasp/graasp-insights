@@ -1,22 +1,24 @@
-''' Scan the dataset for occurrences of user names and user IDs, and replace such occurrences with a hash of the corresponding user ID '''
+"""Scan an entire dataset for occurrences of user names and user ids,
+and replace such occurrences with a SHA-256 hash of the corresponding
+user's userId
+"""
 
 import re
-from itertools import combinations
 
 from graasp_utils import (load_dataset, parse_arguments, save_dataset,
                           sha256_hash)
 
 
 def find_and_replace(dataset, substitution_map):
-    '''Traverses the whole a dataset, finds and replaces all occurrences
+    """Traverses the whole a dataset, finds and replaces all occurrences
     based on regular expressions.
 
     Args:
         dataset (dict): the dataset
         substitution_map (dict): Dictionary that contains information
         for finding and replacing values. Entries should respect the
-        format: value: { 'substitution', 'regex'}
-    '''
+        format: value: { 'substitution', 'regex' }
+    """
     def regex_replace(s):
         for _, sub in substitution_map.items():
             matches = re.findall(sub['regex'], s, re.IGNORECASE)
@@ -43,7 +45,7 @@ def find_and_replace(dataset, substitution_map):
 
 
 def get_regex(name):
-    ''' Creates a regex to match the name or any similar version '''
+    """Creates a regex to match the name or any similar version of it"""
     # accepts up to 3 characters between each word and ignores case
     return '(?i)' + '.{0,3}'.join(name.split())
 
@@ -61,11 +63,13 @@ def main():
         'substitution': sha256_hash(user['_id']),
         'regex': user['_id']
     } for user in users}
+
     name_substitutions = {user['name']: {
         # name substitution = id substitution
         'substitution': id_substitutions[user['_id']]['substitution'],
         'regex': get_regex(user['name'])
     } for user in users}
+
     substitutions = [v['substitution'] for v in id_substitutions.values()]
 
     # replace the user ids in actions

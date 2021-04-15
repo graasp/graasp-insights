@@ -4,7 +4,11 @@ import {
   GRAASP_SCHEMA_ID,
   PARAMETER_TYPES,
 } from '../../../public/shared/constants';
-import { AUTHORS, PROGRAMMING_LANGUAGES } from '../../../src/shared/constants';
+import {
+  ALGORITHM_TYPES,
+  AUTHORS,
+  PROGRAMMING_LANGUAGES,
+} from '../../../src/shared/constants';
 import {
   ALGORITHM_WITH_INTEGER_PARAMETER,
   ALGORITHM_WITH_FLOAT_PARAMETER,
@@ -29,6 +33,7 @@ export const EXECUTION_FAST = {
     filepath: path.join(__dirname, './executionFast_algorithm.py'),
     author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
 };
 
@@ -50,6 +55,7 @@ export const EXECUTION_SLOW = {
     filepath: path.join(__dirname, './executionSlow_algorithm.py'),
     author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
 };
 
@@ -71,6 +77,7 @@ export const EXECUTION_FAST_ERROR = {
     filepath: path.join(__dirname, './executionFastError_algorithm.py'),
     author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
 };
 
@@ -92,6 +99,7 @@ export const EXECUTION_SLOW_ERROR = {
     filepath: path.join(__dirname, './executionSlowError_algorithm.py'),
     author: AUTHORS.USER,
     language: PROGRAMMING_LANGUAGES.PYTHON,
+    type: ALGORITHM_TYPES.ANONYMIZATION,
   },
 };
 

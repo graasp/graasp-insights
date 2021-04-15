@@ -7,11 +7,12 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { anySelected } from '../../utils/parameter';
-import { fieldSelectorUnselectAll } from '../../shared/utils';
 import { buildFieldSelectorCheckbox } from '../../config/selectors';
+import { fieldSelectorUnselectAll } from '../../shared/utils';
+import { anySelected } from '../../utils/parameter';
 
 const useStyles = makeStyles((theme) => ({
   shifted: {
@@ -42,28 +43,18 @@ const FieldSelector = ({ schema, onChange, disabled, id }) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  if (!schema || !schema.properties) {
+  if (!schema) {
     return null;
   }
 
-  const { properties } = schema;
-
   return (
     <Paper elevation={2} id={id}>
-      {Object.entries(properties).map(([key, field]) => (
-        <FieldSelectorTree
-          key={key}
-          name={key}
-          field={field}
-          onChange={(updatedField) => {
-            onChange({
-              ...schema,
-              properties: { ...properties, [key]: updatedField },
-            });
-          }}
-          disabled={disabled}
-        />
-      ))}
+      <FieldSelectorTree
+        name="root"
+        field={schema}
+        onChange={onChange}
+        disabled={disabled}
+      />
       <Button
         className={classes.unselectButton}
         size="small"
@@ -94,9 +85,6 @@ FieldSelector.defaultProps = {
 
 const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
   const { type, selected, expanded } = field;
-  const properties = type?.includes('object')
-    ? field.properties
-    : field?.items?.properties;
   const classes = useStyles();
 
   const handleCheckboxOnChange = (event) => {
@@ -110,8 +98,69 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
     onChange({ ...field, expanded: !expanded });
   };
 
+  const children = [];
+  let childSelected = false;
+
+  if (type?.includes('object')) {
+    const { properties } = field;
+
+    const newChildren = Object.entries(properties).map(([key, childField]) => (
+      <FieldSelectorTree
+        key={key}
+        name={key}
+        field={childField}
+        disabled={disabled}
+        onChange={(updatedField) => {
+          // eslint-disable-next-line no-unused-expressions
+          onChange({
+            ...field,
+            properties: { ...properties, [key]: updatedField },
+          });
+        }}
+      />
+    ));
+
+    Array.prototype.push.apply(children, newChildren);
+    childSelected =
+      childSelected || anySelected({ type: 'object', properties });
+  }
+
+  if (type?.includes('array')) {
+    const { items } = field;
+    if (_.isPlainObject(items)) {
+      const { type: subType } = items;
+      if (subType?.includes('object')) {
+        const { properties } = items;
+
+        const newChildren = Object.entries(properties).map(
+          ([key, childField]) => (
+            <FieldSelectorTree
+              key={key}
+              name={key}
+              field={childField}
+              disabled={disabled}
+              onChange={(updatedField) => {
+                onChange({
+                  ...field,
+                  items: {
+                    ...items,
+                    properties: { ...properties, [key]: updatedField },
+                  },
+                });
+              }}
+            />
+          ),
+        );
+
+        Array.prototype.push.apply(children, newChildren);
+        childSelected =
+          childSelected || anySelected({ type: 'object', properties });
+      }
+    }
+  }
+
   // show expand button only if it has children
-  const expandVisibility = properties ? 'visible' : 'hidden';
+  const expandVisibility = children.length ? 'visible' : 'hidden';
 
   return (
     <div>
@@ -120,7 +169,7 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
         aria-label="expand"
         onClick={toggleExpanded}
         className={classes.expandButton}
-        disabled={!properties}
+        disabled={!children.length}
       >
         {expanded ? (
           <ArrowDropUpIcon visibility={expandVisibility} />
@@ -129,54 +178,26 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
         )}
       </IconButton>
       {/* checkbox */}
-      <FormControlLabel
-        control={
-          // eslint-disable-next-line react/jsx-wrap-multilines
-          <Checkbox
-            id={buildFieldSelectorCheckbox(name)}
-            checked={selected}
-            onChange={handleCheckboxOnChange}
-            color="primary"
-            className={classes.checkbox}
-            indeterminate={
-              !selected &&
-              properties &&
-              anySelected({ type: 'object', properties })
-            }
-            disabled={disabled}
-          />
-        }
-        label={name}
-      />
-      {/* recursively render children */}
-      {properties && expanded && (
-        <div className={classes.shifted}>
-          {Object.entries(properties).map(([key, childField]) => {
-            return (
-              <FieldSelectorTree
-                key={key}
-                name={key}
-                field={childField}
-                onChange={(updatedField) => {
-                  // eslint-disable-next-line no-unused-expressions
-                  type.includes('object')
-                    ? onChange({
-                        ...field,
-                        properties: { ...properties, [key]: updatedField },
-                      })
-                    : onChange({
-                        ...field,
-                        items: {
-                          ...field.items,
-                          properties: { ...properties, [key]: updatedField },
-                        },
-                      });
-                }}
-                disabled={disabled}
-              />
-            );
-          })}
-        </div>
+      {
+        <FormControlLabel
+          control={
+            // eslint-disable-next-line react/jsx-wrap-multilines
+            <Checkbox
+              id={buildFieldSelectorCheckbox(name)}
+              checked={selected}
+              onChange={handleCheckboxOnChange}
+              color="primary"
+              className={classes.checkbox}
+              indeterminate={!selected && childSelected}
+              disabled={disabled}
+            />
+          }
+          label={name}
+        />
+      }
+      {/* render children */}
+      {children && expanded && (
+        <div className={classes.shifted}>{children}</div>
       )}
     </div>
   );

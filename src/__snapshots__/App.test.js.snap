@@ -419,6 +419,16 @@ exports[`<App /> renders correctly 1`] = `
           exact={true}
           path="/schema/:id"
         />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/validation"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/add-validation"
+        />
       </Switch>
     </div>
   </HashRouter>

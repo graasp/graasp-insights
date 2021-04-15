@@ -1,4 +1,4 @@
-''' Hash the specified fields '''
+"""Perform a SHA-256 hash on selected fields from a dataset"""
 
 import json
 

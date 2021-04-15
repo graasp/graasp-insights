@@ -29,6 +29,7 @@ const setUpDatabase = async (database = {}, varFolderPath) => {
       algorithms: originalAlgorithms = [],
       schemas: originalSchemas = [],
       pipelines = [],
+      validations: originalValidations = [],
     } = database;
     const datasets = JSON.parse(JSON.stringify(originalDatasets || []));
     for (const dataset of datasets) {
@@ -49,11 +50,14 @@ const setUpDatabase = async (database = {}, varFolderPath) => {
       schemas[schema.id] = schema;
     }
 
+    const validations = JSON.parse(JSON.stringify(originalValidations || []));
+
     const newDatabase = {
       datasets,
       algorithms,
       pipelines,
       schemas,
+      validations,
     };
 
     fse.writeFileSync(`${varFolder}/db.json`, JSON.stringify(newDatabase));

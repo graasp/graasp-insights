@@ -10,6 +10,7 @@ import CloseIcon from '@material-ui/icons/ExitToApp';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import CodeIcon from '@material-ui/icons/Code';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import SuccessIcon from '@material-ui/icons/Done';
 import SettingsIcon from '@material-ui/icons/Settings';
 import TuneIcon from '@material-ui/icons/Tune';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -26,6 +27,7 @@ import {
   SETTINGS_PATH,
   SCHEMAS_PATH,
   PIPELINES_PATH,
+  VALIDATION_PATH,
 } from '../../config/paths';
 import {
   ALGORITHMS_MENU_ITEM_ID,
@@ -37,6 +39,7 @@ import {
   SETTINGS_MENU_ITEM_ID,
   SCHEMAS_MENU_ITEM_ID,
   PIPELINES_MENU_ITEM_ID,
+  VALIDATION_MENU_ITEM_ID,
 } from '../../config/selectors';
 
 export class MainMenu extends Component {
@@ -214,6 +217,17 @@ export class MainMenu extends Component {
             <AssessmentIcon />
           </ListItemIcon>
           <ListItemText primary={t('Results')} />
+        </MenuItem>
+        <MenuItem
+          selected={path === VALIDATION_PATH}
+          onClick={() => this.handleClick(VALIDATION_PATH)}
+          button
+          id={VALIDATION_MENU_ITEM_ID}
+        >
+          <ListItemIcon>
+            <SuccessIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Validation')} />
         </MenuItem>
         {this.renderVisualizations()}
         {this.renderDeveloperItem()}

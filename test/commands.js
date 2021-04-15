@@ -9,6 +9,7 @@ import {
   SCHEMAS_MENU_ITEM_ID,
   SETTINGS_MENU_ITEM_ID,
   PIPELINES_MENU_ITEM_ID,
+  VALIDATION_MENU_ITEM_ID,
 } from '../src/config/selectors';
 import { openDrawer } from './utils';
 
@@ -51,6 +52,10 @@ export const setUpClientCommands = ({ client }) => {
 
   client.addCommand('goToSchemas', async () => {
     await client.goTo(SCHEMAS_MENU_ITEM_ID);
+  });
+
+  client.addCommand('goToValidation', async () => {
+    await client.goTo(VALIDATION_MENU_ITEM_ID);
   });
 
   client.addCommand('expectElementToExist', async (elementSelector) => {

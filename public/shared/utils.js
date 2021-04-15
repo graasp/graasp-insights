@@ -9,7 +9,7 @@
  * @return {object} - schema with selected and expanded values for each property
  */
 const setFieldSelectorAttributes = (schema, selected, expandUntilDepth) => {
-  if (!schema || !schema.properties) {
+  if (!schema) {
     console.error('provided schema is undefined or corrupted');
     return {};
   }
@@ -66,14 +66,7 @@ const setFieldSelectorAttributes = (schema, selected, expandUntilDepth) => {
     return newField;
   };
 
-  return Object.assign({}, schema, {
-    properties: Object.fromEntries(
-      Object.entries(schema.properties).map((entry) => [
-        entry[0],
-        setField(entry[1], 1),
-      ]),
-    ),
-  });
+  return setField(schema, 0);
 };
 
 const fieldSelectorUnselectAll = (schema) =>

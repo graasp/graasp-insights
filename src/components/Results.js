@@ -32,6 +32,7 @@ import { RESULTS_MAIN_ID } from '../config/selectors';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
 import LocationPathAlert from './common/LocationPathAlert';
 import SchemaTag from './common/SchemaTag';
+import { ALGORITHM_TYPES } from '../shared/constants';
 
 const styles = (theme) => ({
   addButton: {
@@ -313,7 +314,9 @@ class Results extends Component {
 
 const mapStateToProps = ({ result, algorithms, schema }) => ({
   results: result.getIn(['results']),
-  algorithms: algorithms.getIn(['algorithms']),
+  algorithms: algorithms
+    .get('algorithms')
+    .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION),
   activity: Boolean(result.get('activity').size),
   folder: result.getIn(['folder']),
   schemas: schema.getIn(['schemas']),

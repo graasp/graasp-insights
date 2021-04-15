@@ -1,8 +1,9 @@
-''' Suppress the specified fields'''
+"""Completely remove selected fields from a dataset"""
 
 import json
 
-from graasp_utils import load_dataset, parse_arguments, save_dataset, iterate_and_suppress
+from graasp_utils import (load_dataset, parse_arguments, save_dataset,
+                          iterate_and_suppress)
 
 
 def main():

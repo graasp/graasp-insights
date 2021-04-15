@@ -1,11 +1,16 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
+import { ALGORITHM_TYPES } from '../../src/shared/constants';
 import GRAASP_ALGORITHMS from '../../src/shared/data/graaspAlgorithms';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   MISSING_FILE_ALGORITHM,
   SIMPLE_ALGORITHM,
+  SAMPLE_VALIDATION_ALGORITHM,
+  PREEXISTING_GRAASP_ALGORITHM,
+  PREEXISTING_USER_ALGORITHM,
+  PREEXISTING_VALIDATION_ALGORITHM,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
@@ -17,6 +22,7 @@ import {
   clickAddButton,
   getNumberOfAlgorithms,
   addDefaultAlgorithm,
+  filterAlgorithmTableByType,
 } from './utils';
 
 describe('Add Algorithm Scenarios', function () {
@@ -25,7 +31,15 @@ describe('Add Algorithm Scenarios', function () {
 
   beforeEach(
     mochaAsync(async () => {
-      app = await createApplication();
+      app = await createApplication({
+        database: {
+          algorithms: [
+            PREEXISTING_GRAASP_ALGORITHM,
+            PREEXISTING_USER_ALGORITHM,
+            PREEXISTING_VALIDATION_ALGORITHM,
+          ],
+        },
+      });
       const { client } = app;
       await client.goToAlgorithms();
     }),
@@ -84,6 +98,27 @@ describe('Add Algorithm Scenarios', function () {
 
       const nbAlgosAfter = await getNumberOfAlgorithms(client);
       expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
+
+      await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
+    }),
+  );
+
+  it(
+    'Correctly adds validation algorithm from editor',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
+      const nbValAlgosPrev = await getNumberOfAlgorithms(client);
+
+      // add algorithm
+      await clickAddButton(client);
+      await addAlgorithmFromEditor(client, SAMPLE_VALIDATION_ALGORITHM);
+      await clickAddAlgoSaveButton(client);
+
+      await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
+      const nbValAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbValAlgosAfter - nbValAlgosPrev).to.equal(1);
 
       await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
     }),
