@@ -7,13 +7,15 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import SaveIcon from '@material-ui/icons/Save';
 
 import Main from '../common/Main';
 import BackButton from '../common/BackButton';
 
 import { EDIT_PIPELINE_BACK_BUTTON_ID } from '../../config/selectors';
-import { clearPipeline, getPipeline } from '../../actions';
+import { clearPipeline, getPipeline, savePipeline } from '../../actions';
 import PipelineForm from './PipelineForm';
+import { PIPELINES_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
   backButton: {
@@ -35,6 +37,7 @@ const EditPipeline = (props) => {
     match: {
       params: { id },
     },
+    history: { push },
   } = props;
 
   const pipeline = useSelector((state) => state.pipeline.get('current'));
@@ -49,6 +52,15 @@ const EditPipeline = (props) => {
     };
   }, [dispatch, id]);
 
+  const handleSubmitPipelineForm = (data) => {
+    const metadata = {
+      ...data,
+      id: pipeline.get('id') || '',
+    };
+    dispatch(savePipeline({ metadata }));
+    push(PIPELINES_PATH);
+  };
+
   return (
     <Main>
       <Container className={classes.content}>
@@ -56,8 +68,10 @@ const EditPipeline = (props) => {
         <PipelineForm
           pipelineAlgorithms={pipeline.get('algorithms') || []}
           name={pipeline.get('name') || ''}
-          description={pipeline.get('description') || []}
-          handleSave={() => {}}
+          description={pipeline.get('description') || ''}
+          confirmButtonStartIcon={<SaveIcon />}
+          confirmButtonText={t('Save')}
+          onSubmit={handleSubmitPipelineForm}
         />
       </Container>
       <BackButton
@@ -78,6 +92,9 @@ EditPipeline.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
   }).isRequired,
 };
 

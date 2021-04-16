@@ -53,4 +53,7 @@ module.exports = {
   OPEN_URL_IN_BROWSER_CHANNEL: 'open:browser',
   GET_PIPELINES_CHANNEL: 'pipelines:get',
   GET_PIPELINE_CHANNEL: 'pipeline:get',
+  SAVE_PIPELINE_CHANNEL: 'pipeline:save',
+  ADD_PIPELINE_CHANNEL: 'pipeline:add',
+  DELETE_PIPELINE_CHANNEL: 'pipeline:delete',
 };

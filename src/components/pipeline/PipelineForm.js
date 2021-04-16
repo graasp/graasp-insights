@@ -1,29 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
-import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import {
-  EDIT_PIPELINE_SAVE_BUTTON_ID,
+  PIPELINE_FORM_SAVE_BUTTON_ID,
   EDIT_PIPELINE_NAME_ID,
   EDIT_PIPELINE_DESCRIPTION_ID,
 } from '../../config/selectors';
 import PipelineAccordion from './PipelineAccordion';
+import { getAlgorithms } from '../../actions';
 
-const PipelineForm = ({
-  pipelineAlgorithms,
-  name,
-  description,
-  handleSave,
-}) => {
+const PipelineForm = (props) => {
+  const {
+    name,
+    description,
+    confirmButtonStartIcon,
+    confirmButtonText,
+    onSubmit,
+    pipelineAlgorithms,
+  } = props;
   const { t } = useTranslation();
-
+  const dispatch = useDispatch();
+  const [pipelineAlgos, setPipelineAlgos] = useState(pipelineAlgorithms);
   const [pipelineName, setPipelineName] = useState(name);
   const [pipelineDescription, setPipelineDescription] = useState(description);
+
+  useEffect(() => {
+    dispatch(getAlgorithms());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setPipelineAlgos(pipelineAlgorithms);
+  }, [pipelineAlgorithms]);
 
   useEffect(() => {
     setPipelineName(name);
@@ -41,10 +54,22 @@ const PipelineForm = ({
     setPipelineDescription(event.target.value);
   };
 
+  const handleButtonOnClick = () => {
+    const metadata = {
+      name: pipelineName,
+      description: pipelineDescription,
+      algorithms: pipelineAlgos,
+    };
+    onSubmit(metadata);
+  };
+
   return (
     <Grid container spacing={2} justify="center">
       <Grid item xs={7}>
-        <PipelineAccordion pipelineAlgorithms={pipelineAlgorithms} />
+        <PipelineAccordion
+          pipelineAlgorithms={pipelineAlgos}
+          setPipelineAlgorithms={setPipelineAlgos}
+        />
       </Grid>
       <Grid item xs={5}>
         <TextField
@@ -71,17 +96,24 @@ const PipelineForm = ({
       </Grid>
       <Grid item>
         <Button
+          disabled={!(pipelineName.length > 0 && pipelineAlgos.length > 1)}
           variant="contained"
           color="primary"
-          startIcon={<SaveIcon />}
-          onClick={handleSave}
-          id={EDIT_PIPELINE_SAVE_BUTTON_ID}
+          startIcon={confirmButtonStartIcon}
+          onClick={handleButtonOnClick}
+          id={PIPELINE_FORM_SAVE_BUTTON_ID}
         >
-          {t('Save')}
+          {confirmButtonText}
         </Button>
       </Grid>
     </Grid>
   );
+};
+
+PipelineForm.defaultProps = {
+  name: '',
+  description: '',
+  pipelineAlgorithms: [],
 };
 
 PipelineForm.propTypes = {
@@ -90,9 +122,11 @@ PipelineForm.propTypes = {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }),
-  ).isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  handleSave: PropTypes.func.isRequired,
+  ),
+  name: PropTypes.string,
+  description: PropTypes.string,
+  confirmButtonStartIcon: PropTypes.func.isRequired,
+  confirmButtonText: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 export default PipelineForm;

@@ -17,8 +17,8 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import Main from '../common/Main';
 import Table from '../common/Table';
 import {
-  PIPELINE_DELETE_BUTTON_CLASS,
   PIPELINE_EDIT_BUTTON_CLASS,
+  PIPELINE_DELETE_BUTTON_CLASS,
   PIPELINE_EXECUTION_BUTTON_CLASS,
   PIPELINE_NAME_CLASS,
   PIPELINE_TABLE_ID,
@@ -26,7 +26,7 @@ import {
   buildPipelineRowClass,
 } from '../../config/selectors';
 
-import { clearPipeline, getPipelines } from '../../actions';
+import { clearPipeline, getPipelines, deletePipeline } from '../../actions';
 import {
   EXECUTIONS_PATH,
   buildEditPipelinePath,
@@ -72,7 +72,9 @@ const Pipelines = (props) => {
     push(ADD_PIPELINE_PATH);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = ({ id, name }) => {
+    dispatch(deletePipeline({ id, name }));
+  };
 
   const handleEdit = (id) => {
     push(buildEditPipelinePath(id));
@@ -112,7 +114,7 @@ const Pipelines = (props) => {
       </Tooltip>,
       <Tooltip title={t('Execute')} key="execute">
         <IconButton
-          aria-label="edit"
+          aria-label="execute"
           onClick={() => handleExecution()}
           className={PIPELINE_EXECUTION_BUTTON_CLASS}
         >
@@ -123,7 +125,7 @@ const Pipelines = (props) => {
         <span>
           <IconButton
             aria-label="delete"
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete({ id, name })}
             className={PIPELINE_DELETE_BUTTON_CLASS}
           >
             <DeleteIcon />

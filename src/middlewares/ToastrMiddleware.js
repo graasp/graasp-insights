@@ -54,6 +54,12 @@ import {
   GET_ALGORITHM_CODE_ERROR,
   SET_GRAASP_DATABASE_SUCCESS,
   SET_GRAASP_DATABASE_ERROR,
+  ADD_PIPELINE_ERROR,
+  SAVE_PIPELINE_ERROR,
+  DELETE_PIPELINE_ERROR,
+  ADD_PIPELINE_SUCCESS,
+  SAVE_PIPELINE_SUCCESS,
+  DELETE_PIPELINE_SUCCESS,
 } from '../shared/types';
 import {
   SUCCESS_LOADING_DATASET_MESSAGE,
@@ -110,6 +116,12 @@ import {
   ERROR_GETTING_ALGORITHM_CODE_MESSAGE,
   SET_GRAASP_DATABASE_CHANNEL,
   SUCCESS_SETTING_GRAASP_DATABASE_MESSAGE,
+  ERROR_ADDING_PIPELINE_MESSAGE,
+  ERROR_SAVING_PIPELINE_MESSAGE,
+  ERROR_DELETING_PIPELINE_MESSAGE,
+  SUCCESS_ADDING_PIPELINE_MESSAGE,
+  SUCCESS_SAVING_PIPELINE_MESSAGE,
+  SUCCESS_DELETING_PIPELINE_MESSAGE,
 } from '../shared/messages';
 import i18n from '../config/i18n';
 
@@ -272,6 +284,15 @@ const middleware = () => (next) => (action) => {
     case SET_GRAASP_DATABASE_ERROR:
       message = SET_GRAASP_DATABASE_CHANNEL;
       break;
+    case ADD_PIPELINE_ERROR:
+      message = ERROR_ADDING_PIPELINE_MESSAGE;
+      break;
+    case SAVE_PIPELINE_ERROR:
+      message = ERROR_SAVING_PIPELINE_MESSAGE;
+      break;
+    case DELETE_PIPELINE_ERROR:
+      message = ERROR_DELETING_PIPELINE_MESSAGE;
+      break;
 
     // success messages
     case LOAD_DATASET_SUCCESS:
@@ -321,6 +342,15 @@ const middleware = () => (next) => (action) => {
       break;
     case SET_GRAASP_DATABASE_SUCCESS:
       message = SUCCESS_SETTING_GRAASP_DATABASE_MESSAGE;
+      break;
+    case ADD_PIPELINE_SUCCESS:
+      message = SUCCESS_ADDING_PIPELINE_MESSAGE;
+      break;
+    case SAVE_PIPELINE_SUCCESS:
+      message = SUCCESS_SAVING_PIPELINE_MESSAGE;
+      break;
+    case DELETE_PIPELINE_SUCCESS:
+      message = SUCCESS_DELETING_PIPELINE_MESSAGE;
       break;
     default:
       break;
