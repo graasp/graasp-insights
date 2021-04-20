@@ -48,6 +48,7 @@ import Main from '../common/Main';
 import EditParametersForm from '../parameter/EditParametersForm';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
 import GRAASP_ALGORITHMS from '../../shared/data/graaspAlgorithms';
+import { SHOW_RESET_TEMPLATE_PROMPT_CHANNEL } from '../../shared/channels';
 
 const styles = (theme) => ({
   saveButton: {
@@ -116,8 +117,19 @@ class AddAlgorithm extends Component {
     this.setState({ description: event.target.value });
   };
 
-  handleTypeOnChange = (event) => {
-    this.setState({ type: event.target.value });
+  handleTypeOnChange = ({ target: { value: type } }) => {
+    this.setState({ type });
+
+    // ask user if the template code can be reset
+    window.ipcRenderer.send(SHOW_RESET_TEMPLATE_PROMPT_CHANNEL);
+    window.ipcRenderer.once(
+      SHOW_RESET_TEMPLATE_PROMPT_CHANNEL,
+      (event, response) => {
+        if (response) {
+          this.setState({ code: PYTHON_TEMPLATE_CODE[type], parameters: [] });
+        }
+      },
+    );
   };
 
   handleLocationInput = (event) => {
@@ -202,11 +214,6 @@ class AddAlgorithm extends Component {
     }
   };
 
-  setTemplateAlgorithm = () => {
-    const { type } = this.state;
-    this.setState({ code: PYTHON_TEMPLATE_CODE[type] });
-  };
-
   render() {
     const { t, classes, defaultAlgoCode } = this.props;
     const {
@@ -281,22 +288,12 @@ class AddAlgorithm extends Component {
                     </Grid>
                   </Grid>
                 ) : option === ADD_OPTIONS.EDITOR ? (
-                  <div>
-                    <Button
-                      color="primary"
-                      size="small"
-                      style={{ float: 'right' }}
-                      onClick={this.setTemplateAlgorithm}
-                    >
-                      {t('Set default template')}
-                    </Button>
-                    <PythonEditor
-                      parameters={parameters}
-                      code={code}
-                      onCodeChange={this.handleCodeOnChange}
-                      onSave={() => isValid && this.handleSave()}
-                    />
-                  </div>
+                  <PythonEditor
+                    parameters={parameters}
+                    code={code}
+                    onCodeChange={this.handleCodeOnChange}
+                    onSave={() => isValid && this.handleSave()}
+                  />
                 ) : (
                   <Grid container spacing={2}>
                     <Grid item xs={5}>

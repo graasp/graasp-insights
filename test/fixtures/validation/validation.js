@@ -2,6 +2,7 @@ import {
   EXECUTION_STATUSES,
   VALIDATION_STATUSES,
   GRAASP_SCHEMA_ID,
+  ALGORITHM_TYPES,
 } from '../../../src/shared/constants';
 import {
   PREEXISTING_VALIDATION_ALGORITHM,
@@ -11,99 +12,101 @@ import {
 } from '../algorithms/algorithms';
 import { SIMPLE_DATASET } from '../datasets/datasets';
 
-const PREEXISTING_VALIDATION_EXECUTION = {
+export const PREEXISTING_VALIDATION_EXECUTION = {
   id: 'preexesting-validation-execution',
-  algorithmId: PREEXISTING_VALIDATION_ALGORITHM.id,
-  algorithmName: PREEXISTING_VALIDATION_ALGORITHM.name,
+  algorithm: PREEXISTING_VALIDATION_ALGORITHM,
+  source: { id: SIMPLE_DATASET.id },
   parameters: [],
   status: EXECUTION_STATUSES.SUCCESS,
   result: {
     outcome: VALIDATION_STATUSES.SUCCESS,
     info: 'preexisting successful validation',
   },
+  schemaId: GRAASP_SCHEMA_ID,
+  type: ALGORITHM_TYPES.VALIDATION,
+  executedAt: Date.now(),
 };
 
-const VALIDATION_EXECUTION_SUCCESS = {
+export const VALIDATION_EXECUTION_SUCCESS = {
   id: 'validation-execution-success',
-  algorithmId: VALIDATION_ALGORITHM_SUCCESS.id,
-  algorithmName: VALIDATION_ALGORITHM_SUCCESS.name,
+  algorithm: VALIDATION_ALGORITHM_SUCCESS.id,
+  source: { id: SIMPLE_DATASET.id },
   parameters: [],
   status: EXECUTION_STATUSES.SUCCESS,
   result: {
     outcome: VALIDATION_STATUSES.SUCCESS,
     info: 'successful validation',
   },
+  schemaId: GRAASP_SCHEMA_ID,
+  type: ALGORITHM_TYPES.VALIDATION,
+  executedAt: Date.now(),
 };
 
-const VALIDATION_EXECUTION_WARNING = {
+export const VALIDATION_EXECUTION_WARNING = {
   id: 'validation-execution-success',
-  algorithmId: VALIDATION_ALGORITHM_WARNING.id,
-  algorithmName: VALIDATION_ALGORITHM_WARNING.name,
+  algorithm: VALIDATION_ALGORITHM_WARNING.id,
+  source: { id: SIMPLE_DATASET.id },
   parameters: [],
   status: EXECUTION_STATUSES.SUCCESS,
   result: {
     outcome: VALIDATION_STATUSES.WARNING,
     info: 'validation warning',
   },
+  schemaId: GRAASP_SCHEMA_ID,
+  type: ALGORITHM_TYPES.VALIDATION,
+  executedAt: Date.now(),
 };
 
-const VALIDATION_EXECUTION_FAILURE = {
+export const VALIDATION_EXECUTION_FAILURE = {
   id: 'validation-execution-success',
-  algorithmId: VALIDATION_ALGORITHM_FAILURE.id,
-  algorithmName: VALIDATION_ALGORITHM_FAILURE.name,
+  algorithm: VALIDATION_ALGORITHM_FAILURE.id,
+  source: { id: SIMPLE_DATASET.id },
   parameters: [],
   status: EXECUTION_STATUSES.SUCCESS,
   result: {
     outcome: VALIDATION_STATUSES.FAILURE,
     info: 'failing validation',
   },
+  schemaId: GRAASP_SCHEMA_ID,
+  type: ALGORITHM_TYPES.VALIDATION,
+  executedAt: Date.now(),
 };
 
 export const PREEXISTING_VALIDATION = {
   id: 'preexisting-validation',
-  executions: [PREEXISTING_VALIDATION_EXECUTION],
+  executions: [PREEXISTING_VALIDATION_EXECUTION.id],
   source: { id: SIMPLE_DATASET.id },
   verifiedAt: Date.now(),
-  schemaId: GRAASP_SCHEMA_ID,
-  datasetName: SIMPLE_DATASET.name,
 };
 
 export const VALIDATION_SUCCESS = {
   id: 'validation-success',
-  executions: [VALIDATION_EXECUTION_SUCCESS],
+  executions: [VALIDATION_EXECUTION_SUCCESS.id],
   source: { id: SIMPLE_DATASET.id },
   verifiedAt: Date.now(),
-  schemaId: GRAASP_SCHEMA_ID,
-  datasetName: SIMPLE_DATASET.name,
 };
 
 export const VALIDATION_WARNING = {
   id: 'validation-warning',
-  executions: [VALIDATION_EXECUTION_WARNING],
+  executions: [VALIDATION_EXECUTION_WARNING.id],
   source: { id: SIMPLE_DATASET.id },
   verifiedAt: Date.now(),
-  schemaId: GRAASP_SCHEMA_ID,
-  datasetName: SIMPLE_DATASET.name,
 };
 
 export const VALIDATION_FAILURE = {
   id: 'validation-failure',
-  executions: [VALIDATION_EXECUTION_FAILURE],
+  executions: [VALIDATION_EXECUTION_FAILURE.id],
   source: { id: SIMPLE_DATASET.id },
   verifiedAt: Date.now(),
-  schemaId: GRAASP_SCHEMA_ID,
-  datasetName: SIMPLE_DATASET.name,
 };
 
 export const VALIDATION_MULTIPLE_ALGORITHMS = {
   id: 'validation-multiple',
   executions: [
-    VALIDATION_EXECUTION_SUCCESS,
-    VALIDATION_EXECUTION_WARNING,
-    VALIDATION_EXECUTION_FAILURE,
+    VALIDATION_EXECUTION_SUCCESS.id,
+    VALIDATION_EXECUTION_WARNING.id,
+    VALIDATION_EXECUTION_FAILURE.id,
   ],
   source: { id: SIMPLE_DATASET.id },
   verifiedAt: Date.now(),
-  schemaId: GRAASP_SCHEMA_ID,
-  datasetName: SIMPLE_DATASET.name,
 };

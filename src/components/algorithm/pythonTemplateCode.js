@@ -20,7 +20,7 @@ if __name__ == '__main__':
     main()
 `;
 
-const validationTemplateCode = `from graasp_utils import (load_dataset, parse_arguments, ValidationOutcome
+const validationTemplateCode = `from graasp_utils import (load_dataset, parse_arguments, ValidationOutcome,
                           notify_validation_result)
 
 def main():

@@ -19,7 +19,7 @@ def shuffle_attributes(array, field_selection):
         true_random.shuffle(array)
 
     # shuffle each selected property across the array
-    properties = field_selection.get('properties', {})
+    properties = field_selection.get('items', {}).get('properties', {})
     for name, value in properties.items():
         if value.get('selected', False):
             new_values = [elem.get(name, None) for elem in array]

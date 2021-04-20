@@ -190,42 +190,6 @@ const SHUFFLE_FIELDS = {
   parameters: [SHUFFLE_FIELDS_PARAMETER_FIELDS],
 };
 
-// eslint-disable-next-line no-unused-vars
-const VALIDATION_SUCCESS = {
-  id: 'validate-success',
-  name: 'Validate with a success',
-  description: 'validate any dataset with a success',
-  filename: 'validate_success.py',
-  author: AUTHORS.GRAASP,
-  language: PROGRAMMING_LANGUAGES.PYTHON,
-  type: ALGORITHM_TYPES.VALIDATION,
-  parameters: [],
-};
-
-// eslint-disable-next-line no-unused-vars
-const VALIDATION_WARNING = {
-  id: 'validate-warning',
-  name: 'Validate with a warning',
-  description: 'validate any dataset with a warning',
-  filename: 'validate_warning.py',
-  author: AUTHORS.GRAASP,
-  language: PROGRAMMING_LANGUAGES.PYTHON,
-  type: ALGORITHM_TYPES.VALIDATION,
-  parameters: [],
-};
-
-// eslint-disable-next-line no-unused-vars
-const VALIDATION_FAILURE = {
-  id: 'validate-failure',
-  name: 'Validate with a failure',
-  description: 'validate any dataset with a failure',
-  filename: 'validate_failure.py',
-  author: AUTHORS.GRAASP,
-  language: PROGRAMMING_LANGUAGES.PYTHON,
-  type: ALGORITHM_TYPES.VALIDATION,
-  parameters: [],
-};
-
 const VERIFY_POTENTIALLY_DANGEROUS = {
   id: 'verify-dangerous',
   name: 'Verify potentially dangerous attributes',
@@ -343,9 +307,6 @@ const GRAASP_ALGORITHMS = [
   K_ANONYMIZE_GEOLOCATION,
   SUPPRESS_FIELDS,
   SHUFFLE_FIELDS,
-  // VALIDATION_SUCCESS,
-  // VALIDATION_WARNING,
-  // VALIDATION_FAILURE,
   VERIFY_POTENTIALLY_DANGEROUS,
   DETECT_USERS,
   VERIFY_KANONYMITY,

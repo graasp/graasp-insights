@@ -1,41 +1,41 @@
 const ObjectId = require('bson-objectid');
 const { CREATE_VALIDATION_CHANNEL } = require('../../shared/channels');
-const {
-  EXECUTION_STATUSES,
-  VALIDATIONS_COLLECTION,
-} = require('../../shared/constants');
+const { VALIDATIONS_COLLECTION } = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
 const {
   CREATE_VALIDATION_SUCCESS,
   CREATE_VALIDATION_ERROR,
 } = require('../../shared/types');
 const logger = require('../logger');
+const { createExecutionObject } = require('./createExecution');
 
 const createValidation = (mainWindow, db) => async (
   event,
   { sourceId, algorithms, schemaId },
 ) => {
   try {
+    const executions = algorithms.map(({ id: algorithmId, parameters, type }) =>
+      createExecutionObject(db, {
+        algorithm: { id: algorithmId },
+        source: { id: sourceId },
+        result: {},
+        parameters,
+        schemaId,
+        type,
+      }),
+    );
+
+    const verifiedAt = Date.now();
     const validation = {
       id: ObjectId().str,
-      executions: algorithms.map(({ id, name: algorithmName, parameters }) => {
-        return {
-          id: ObjectId().str,
-          algorithmId: id,
-          algorithmName,
-          parameters,
-          status: EXECUTION_STATUSES.PENDING,
-          result: {},
-        };
-      }),
+      executions: executions.map(({ id }) => id),
       source: { id: sourceId },
-      verifiedAt: Date.now(),
-      schemaId,
+      verifiedAt,
     };
     db.get(VALIDATIONS_COLLECTION).push(validation).write();
     mainWindow.webContents.send(CREATE_VALIDATION_CHANNEL, {
       type: CREATE_VALIDATION_SUCCESS,
-      payload: validation,
+      payload: { validation, executions },
     });
   } catch (e) {
     logger.error(e);

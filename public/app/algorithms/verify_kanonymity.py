@@ -11,7 +11,8 @@ from graasp_utils import (load_dataset, parse_arguments, ValidationOutcome,
 
 def compute_kanonymity(array, quasi_identifiers):
     # retrieve the quasi-identifiers for each array element
-    qis = [get_selected_values(elem, quasi_identifiers) for elem in array]
+    qis = [get_selected_values(
+        elem, quasi_identifiers.get('items', {})) for elem in array]
 
     # get the group of users for each distinct set of quasi-identifier
     # values

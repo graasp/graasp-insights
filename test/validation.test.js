@@ -24,6 +24,10 @@ import {
 } from './fixtures/algorithms/algorithms';
 import { SIMPLE_DATASET } from './fixtures/datasets/datasets';
 import {
+  PREEXISTING_VALIDATION_EXECUTION,
+  VALIDATION_EXECUTION_SUCCESS,
+  VALIDATION_EXECUTION_WARNING,
+  VALIDATION_EXECUTION_FAILURE,
   PREEXISTING_VALIDATION,
   VALIDATION_SUCCESS,
   VALIDATION_WARNING,
@@ -133,7 +137,7 @@ const deleteValidation = async (client, validation) => {
   await deleteButton.click();
 };
 
-describe.only('Validation Scenarios', function () {
+describe('Validation Scenarios', function () {
   this.timeout(DEFAULT_GLOBAL_TIMEOUT);
   let app = null;
 
@@ -147,6 +151,12 @@ describe.only('Validation Scenarios', function () {
             VALIDATION_ALGORITHM_SUCCESS,
             VALIDATION_ALGORITHM_WARNING,
             VALIDATION_ALGORITHM_FAILURE,
+          ],
+          executions: [
+            PREEXISTING_VALIDATION_EXECUTION,
+            VALIDATION_EXECUTION_SUCCESS,
+            VALIDATION_EXECUTION_WARNING,
+            VALIDATION_EXECUTION_FAILURE,
           ],
           validations: [PREEXISTING_VALIDATION],
         },

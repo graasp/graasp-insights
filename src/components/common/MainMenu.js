@@ -197,6 +197,17 @@ export class MainMenu extends Component {
           <ListItemText primary={t('Executions')} />
         </MenuItem>
         <MenuItem
+          selected={path === VALIDATION_PATH}
+          onClick={() => this.handleClick(VALIDATION_PATH)}
+          button
+          id={VALIDATION_MENU_ITEM_ID}
+        >
+          <ListItemIcon>
+            <SuccessIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('Validation')} />
+        </MenuItem>
+        <MenuItem
           id={PIPELINES_MENU_ITEM_ID}
           selected={path === PIPELINES_PATH}
           onClick={() => this.handleClick(PIPELINES_PATH)}
@@ -217,17 +228,6 @@ export class MainMenu extends Component {
             <AssessmentIcon />
           </ListItemIcon>
           <ListItemText primary={t('Results')} />
-        </MenuItem>
-        <MenuItem
-          selected={path === VALIDATION_PATH}
-          onClick={() => this.handleClick(VALIDATION_PATH)}
-          button
-          id={VALIDATION_MENU_ITEM_ID}
-        >
-          <ListItemIcon>
-            <SuccessIcon />
-          </ListItemIcon>
-          <ListItemText primary={t('Validation')} />
         </MenuItem>
         {this.renderVisualizations()}
         {this.renderDeveloperItem()}

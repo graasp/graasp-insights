@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
@@ -16,15 +17,16 @@ import Alert from '@material-ui/lab/Alert';
 import clsx from 'clsx';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import Loader from '../common/Loader';
 import {
-  cancelValidationExecution,
+  cancelExecution,
   deleteValidation,
   getAlgorithms,
   getDatasets,
+  getExecutions,
   getResults,
   getValidations,
 } from '../../actions';
@@ -38,21 +40,23 @@ import {
   buildResultPath,
 } from '../../config/paths';
 import {
-  VALIDATION_TABLE_ID,
+  ALGORITHM_NAME_CLASS,
   buildValidationRowClass,
   DATASET_NAME_CLASS,
-  ALGORITHM_NAME_CLASS,
-  VALIDATION_EXECUTION_RESULT_CLASS,
-  VALIDATION_DELETE_BUTTON_CLASS,
   VALIDATION_ADD_BUTTON_ID,
+  VALIDATION_DELETE_BUTTON_CLASS,
+  VALIDATION_EXECUTION_RESULT_CLASS,
+  VALIDATION_TABLE_ID,
 } from '../../config/selectors';
 import {
+  ALGORITHM_TYPES,
   EXECUTION_STATUSES,
   VALIDATION_STATUSES,
 } from '../../shared/constants';
 import Main from '../common/Main';
 import Table from '../common/Table';
 import LoadDatasetButton from '../LoadDatasetButton';
+import { FLAG_GETTING_VALIDATIONS } from '../../shared/types';
 
 const styles = (theme) => ({
   link: {
@@ -109,10 +113,14 @@ class Validation extends Component {
     dispatchDeleteValidation: PropTypes.func.isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
-    dispatchCancelValidationExecution: PropTypes.func.isRequired,
+    dispatchGetExecutions: PropTypes.func.isRequired,
+    dispatchCancelExecution: PropTypes.func.isRequired,
     validations: PropTypes.instanceOf(List).isRequired,
     results: PropTypes.instanceOf(List).isRequired,
     datasets: PropTypes.instanceOf(List).isRequired,
+    algorithms: PropTypes.instanceOf(List).isRequired,
+    executions: PropTypes.instanceOf(List).isRequired,
+    isLoading: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
@@ -121,11 +129,13 @@ class Validation extends Component {
       dispatchGetDatasets,
       dispatchGetResults,
       dispatchGetAlgorithms,
+      dispatchGetExecutions,
     } = this.props;
     dispatchGetValidations();
     dispatchGetDatasets();
     dispatchGetResults();
     dispatchGetAlgorithms();
+    dispatchGetExecutions();
   }
 
   handleAdd = () => {
@@ -154,9 +164,9 @@ class Validation extends Component {
     push(buildDatasetPath(sourceId));
   };
 
-  handleCancel = (validationId, executionId) => {
-    const { dispatchCancelValidationExecution } = this.props;
-    dispatchCancelValidationExecution({ validationId, executionId });
+  handleCancel = (id) => {
+    const { dispatchCancelExecution } = this.props;
+    dispatchCancelExecution({ id });
   };
 
   renderAddButon() {
@@ -174,7 +184,15 @@ class Validation extends Component {
   }
 
   renderTable() {
-    const { t, classes, validations, datasets, results } = this.props;
+    const {
+      t,
+      classes,
+      validations,
+      datasets,
+      results,
+      algorithms,
+      executions,
+    } = this.props;
 
     const columns = [
       {
@@ -189,6 +207,11 @@ class Validation extends Component {
         field: 'verifications',
         alignColumn: 'left',
         alignField: 'center',
+        fieldColSpan: 2,
+      },
+      {
+        columnName: 'Status',
+        alignColumn: 'center',
       },
       {
         columnName: 'Verified',
@@ -207,10 +230,10 @@ class Validation extends Component {
 
     const rows = validations.map((validation) => {
       const {
-        id,
+        id: validationId,
         verifiedAt,
         source: { id: sourceId },
-        executions,
+        executions: validationExecutions,
       } = validation;
 
       const verifiedAtString = verifiedAt
@@ -241,93 +264,107 @@ class Validation extends Component {
 
       const verificationsGrid = (
         <Grid container direction="column">
-          {executions.map(
-            ({
-              id: executionId,
-              algorithmName,
+          {validationExecutions.map((executionId) => {
+            const execution = executions.find(({ id }) => id === executionId);
+            if (!execution) {
+              return null;
+            }
+
+            const {
               status,
               result: { outcome, info },
-            }) => {
-              let statusIcon;
-              switch (status) {
-                case EXECUTION_STATUSES.SUCCESS:
-                  statusIcon =
-                    // eslint-disable-next-line no-nested-ternary
-                    outcome === VALIDATION_STATUSES.SUCCESS ? (
-                      <LightTooltip title={<pre>{info}</pre>}>
-                        <SuccessIcon
-                          className={outcome}
-                          style={{ color: 'green' }}
-                        />
-                      </LightTooltip>
-                    ) : outcome === VALIDATION_STATUSES.WARNING ? (
-                      <LightTooltip title={<pre>{info}</pre>}>
-                        <WarningIcon
-                          className={outcome}
-                          style={{ color: 'orange' }}
-                        />
-                      </LightTooltip>
-                    ) : (
-                      <LightTooltip title={<pre>{info}</pre>}>
-                        <FailIcon
-                          className={outcome}
-                          style={{ color: 'red' }}
-                        />
-                      </LightTooltip>
-                    );
-                  break;
-                case EXECUTION_STATUSES.ERROR:
-                  statusIcon = (
-                    <LightTooltip
-                      title={t('An error occurred during execution')}
-                    >
-                      <ErrorIcon className={status} style={{ color: 'red' }} />
-                    </LightTooltip>
-                  );
-                  break;
-                case EXECUTION_STATUSES.RUNNING:
-                  statusIcon = (
-                    <LightTooltip title={t('Execution running...')}>
-                      <CircularProgress
-                        className={status}
-                        size={CIRCLE_PROGRESS_SIZE}
+            } = execution;
+
+            const algorithmName =
+              algorithms.find(({ id }) => id === execution?.algorithm?.id)
+                ?.name || t('Unknown');
+
+            let statusIcon;
+            switch (status) {
+              case EXECUTION_STATUSES.SUCCESS:
+                statusIcon =
+                  // eslint-disable-next-line no-nested-ternary
+                  outcome === VALIDATION_STATUSES.SUCCESS ? (
+                    <LightTooltip title={<pre>{info}</pre>}>
+                      <SuccessIcon
+                        className={outcome}
+                        style={{ color: 'green' }}
                       />
                     </LightTooltip>
+                  ) : outcome === VALIDATION_STATUSES.WARNING ? (
+                    <LightTooltip title={<pre>{info}</pre>}>
+                      <WarningIcon
+                        className={outcome}
+                        style={{ color: 'orange' }}
+                      />
+                    </LightTooltip>
+                  ) : (
+                    <LightTooltip title={<pre>{info}</pre>}>
+                      <FailIcon className={outcome} style={{ color: 'red' }} />
+                    </LightTooltip>
                   );
-                  break;
-                default:
-                  break;
-              }
+                break;
+              case EXECUTION_STATUSES.ERROR:
+                statusIcon = (
+                  <LightTooltip title={t('An error occurred during execution')}>
+                    <ErrorIcon className={status} style={{ color: 'red' }} />
+                  </LightTooltip>
+                );
+                break;
+              case EXECUTION_STATUSES.RUNNING:
+                statusIcon = (
+                  <LightTooltip title={t('Execution running...')}>
+                    <CircularProgress
+                      className={status}
+                      size={CIRCLE_PROGRESS_SIZE}
+                    />
+                  </LightTooltip>
+                );
+                break;
+              default:
+                break;
+            }
 
-              return (
+            return (
+              <Grid
+                container
+                item
+                alignItems="center"
+                spacing={2}
+                justify="space-between"
+                key={executionId}
+                className={VALIDATION_EXECUTION_RESULT_CLASS}
+              >
                 <Grid
-                  container
                   item
-                  alignItems="center"
-                  spacing={2}
-                  key={executionId}
-                  className={VALIDATION_EXECUTION_RESULT_CLASS}
+                  xs={9}
+                  className={ALGORITHM_NAME_CLASS}
+                  style={{ textAlign: 'start' }}
                 >
-                  <Grid item>{statusIcon}</Grid>
-                  <Grid item className={ALGORITHM_NAME_CLASS}>
-                    {algorithmName}
+                  {algorithmName}
+                </Grid>
+                <Grid container item xs={3} alignItems="center">
+                  <Grid item xs={6}>
+                    {statusIcon}
                   </Grid>
-                  {status === EXECUTION_STATUSES.RUNNING && (
-                    <Grid item>
+                  <Grid item xs={6}>
+                    {status === EXECUTION_STATUSES.RUNNING && (
                       <Tooltip title={t('Cancel execution')}>
                         <IconButton
                           aria-label="cancel"
-                          onClick={() => this.handleCancel(id, executionId)}
+                          onClick={() => {
+                            this.handleCancel(executionId);
+                          }}
                         >
                           <CancelIcon />
                         </IconButton>
                       </Tooltip>
-                    </Grid>
-                  )}
+                    )}
+                  </Grid>
                 </Grid>
-              );
-            },
-          )}
+              </Grid>
+            );
+          })}
         </Grid>
       );
 
@@ -336,7 +373,7 @@ class Validation extends Component {
           sName,
           executions.map(({ algorithmName }) => algorithmName),
         ),
-        key: id,
+        key: validationId,
         name: sourceNameButton,
         verifiedAt: verifiedAtString,
         verifications: verificationsGrid,
@@ -345,7 +382,7 @@ class Validation extends Component {
             <IconButton
               className={VALIDATION_DELETE_BUTTON_CLASS}
               aria-label="delete"
-              onClick={() => this.handleDelete({ id })}
+              onClick={() => this.handleDelete({ id: validationId })}
             >
               <DeleteIcon />
             </IconButton>
@@ -358,7 +395,47 @@ class Validation extends Component {
   }
 
   render() {
-    const { t, classes, validations } = this.props;
+    const {
+      t,
+      classes,
+      validations,
+      datasets,
+      results,
+      algorithms,
+      isLoading,
+    } = this.props;
+
+    if (isLoading) {
+      return (
+        <Main>
+          <Loader />
+        </Main>
+      );
+    }
+
+    if (datasets.isEmpty() && results.isEmpty()) {
+      return (
+        <Main>
+          <Alert severity="info" className={classes.infoAlert}>
+            {t('Load a dataset first')}
+          </Alert>
+        </Main>
+      );
+    }
+
+    if (algorithms.isEmpty()) {
+      return (
+        <Main>
+          <Alert
+            severity="info"
+            className={classes.infoAlert}
+            key="no-algorithm"
+          >
+            {t('No validation algorithms available')}
+          </Alert>
+        </Main>
+      );
+    }
 
     if (!validations.size) {
       return (
@@ -384,10 +461,25 @@ class Validation extends Component {
   }
 }
 
-const mapStateToProps = ({ validation, dataset, result }) => ({
+const mapStateToProps = ({
+  validation,
+  dataset,
+  result,
+  algorithms,
+  executions,
+}) => ({
   validations: validation.get('validations'),
   datasets: dataset.getIn(['datasets']),
   results: result.getIn(['results']),
+  algorithms: algorithms
+    .get('algorithms')
+    .filter(({ type }) => type === ALGORITHM_TYPES.VALIDATION),
+  executions: executions.getIn(['executions']),
+  isLoading:
+    Boolean(validation.getIn(['activity', FLAG_GETTING_VALIDATIONS]).size) &&
+    Boolean(dataset.getIn(['activity']).size) &&
+    Boolean(algorithms.getIn(['activity']).size) &&
+    Boolean(executions.get('activity').size),
 });
 
 const mapDispatchToProps = {
@@ -396,7 +488,8 @@ const mapDispatchToProps = {
   dispatchGetResults: getResults,
   dispatchDeleteValidation: deleteValidation,
   dispatchGetAlgorithms: getAlgorithms,
-  dispatchCancelValidationExecution: cancelValidationExecution,
+  dispatchGetExecutions: getExecutions,
+  dispatchCancelExecution: cancelExecution,
 };
 
 const ConnectedComponent = connect(

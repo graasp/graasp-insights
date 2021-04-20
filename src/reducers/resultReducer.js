@@ -40,9 +40,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.setIn(['current', 'content'], Map());
     case EXECUTE_ALGORITHM_SUCCESS:
       // add result to list when execution is successful
-      return state.updateIn(['results'], (results) =>
-        results.push(payload.result),
-      );
+      return payload.result
+        ? state.updateIn(['results'], (results) => results.push(payload.result))
+        : state;
     case DELETE_RESULT_SUCCESS:
       return state.updateIn(['results'], (results) =>
         results.filter((result) => result.id !== payload),

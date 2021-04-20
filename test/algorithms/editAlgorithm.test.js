@@ -1,5 +1,3 @@
-/* eslint-disable func-names */
-import { expect } from 'chai';
 import { ALGORITHM_TYPES } from '../../src/shared/constants';
 import {
   ALGORITHM_TABLE_ID,
@@ -19,8 +17,6 @@ import {
   clickEditAlgoBackButton,
   clickEditAlgoSaveButton,
   editAlgorithm,
-  filterAlgorithmTableByType,
-  getNumberOfAlgorithms,
 } from './utils';
 
 describe('Edit Algorithm Scenarios', function () {
@@ -78,12 +74,6 @@ describe('Edit Algorithm Scenarios', function () {
       mochaAsync(async () => {
         const { client } = app;
 
-        await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
-        const nbValAlgosPrev = await getNumberOfAlgorithms(client);
-
-        await filterAlgorithmTableByType(client, ALGORITHM_TYPES.ANONYMIZATION);
-        const nbAnonAlgosPrev = await getNumberOfAlgorithms(client);
-
         await clickAlgoEditButton(client, PREEXISTING_USER_ALGORITHM);
         const algorithmAsValidation = {
           ...PREEXISTING_USER_ALGORITHM,
@@ -93,24 +83,12 @@ describe('Edit Algorithm Scenarios', function () {
         await clickEditAlgoSaveButton(client);
         await clickEditAlgoBackButton(client);
 
-        await filterAlgorithmTableByType(client, ALGORITHM_TYPES.ANONYMIZATION);
-        const nbAnonAlgosAfter = await getNumberOfAlgorithms(client);
         await client.expectElementToNotExist(
           `#${ALGORITHM_TABLE_ID}`,
           `.${buildAlgorithmRowClass(PREEXISTING_USER_ALGORITHM.name)}`,
         );
 
-        await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
-        const nbValAlgosAfter = await getNumberOfAlgorithms(client);
-
-        // 1 less anonymization algorithms
-        expect(nbAnonAlgosAfter - nbAnonAlgosPrev).to.equal(-1);
-        // 1 more validation algorithms
-        expect(nbValAlgosAfter - nbValAlgosPrev).to.equal(1);
-
         await checkAlgorithmRowLayout(client, algorithmAsValidation);
-
-        await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
       }),
     );
   });

@@ -10,10 +10,10 @@ const PIPELINES_COLLECTION = 'pipelines';
 const VALIDATIONS_COLLECTION = 'validations';
 
 const ALGORITHM_TYPES = {
-  ANONYMIZATION: 'anonymization',
-  UTILS: 'utils',
-  VISUALIZATION: 'visualization',
-  VALIDATION: 'validation',
+  ANONYMIZATION: 'Anonymization',
+  UTILS: 'Utils',
+  VISUALIZATION: 'Visualization',
+  VALIDATION: 'Validation',
 };
 
 const APP_BACKGROUND_COLOR = '#F7F7F7';

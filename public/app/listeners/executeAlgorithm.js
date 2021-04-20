@@ -12,6 +12,7 @@ const {
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
   PARAMETER_TYPES,
+  ALGORITHM_TYPES,
 } = require('../../shared/constants');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const {
@@ -43,19 +44,19 @@ const createNewResultDataset = (
   return { ...result, original };
 };
 
-const executeAlgorithm = (mainWindow, db) => (
-  event,
-  {
-    id: executionId,
-    source: { id: sourceId },
-    algorithm: { id: algorithmId },
-    result: { name },
-    parameters,
-    schemaId,
-  },
-) => {
+const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
   const channel = buildExecuteAlgorithmChannel(executionId);
   try {
+    // get the execution
+    const {
+      source: { id: sourceId },
+      algorithm: { id: algorithmId },
+      result: { name },
+      parameters,
+      schemaId,
+      type,
+    } = db.get(EXECUTIONS_COLLECTION).find({ id: executionId }).value();
+
     // get corresponding dataset
     const { filepath, name: datasetName, description, original } = db
       .get(DATASETS_COLLECTION)
@@ -68,6 +69,12 @@ const executeAlgorithm = (mainWindow, db) => (
       name: algorithmName,
       language,
     } = db.get(ALGORITHMS_COLLECTION).find({ id: algorithmId }).value();
+
+    // get original dataset
+    const { filepath: originalfilepath } = db
+      .get(DATASETS_COLLECTION)
+      .find({ id: original })
+      .value();
 
     const tmpPath = path.join(DATASETS_FOLDER, `tmp_${executionId}.json`);
 
@@ -84,30 +91,49 @@ const executeAlgorithm = (mainWindow, db) => (
     // copy tmp as new result dataset
     // update execution and return it
     const onSuccess = ({ log }) => {
-      // save result in db
-      const newResult = createNewResultDataset(
-        {
-          name: name?.length ? name : `${datasetName}_${algorithmName}`,
-          filepath: tmpPath,
-          algorithmId,
-          description,
-          original,
-        },
-        db,
-      );
-      db.get(DATASETS_COLLECTION).push(newResult).write();
+      let result;
+      let newResult;
+      switch (type) {
+        case ALGORITHM_TYPES.ANONYMIZATION: {
+          // save result in db
+          newResult = createNewResultDataset(
+            {
+              name: name?.length ? name : `${datasetName}_${algorithmName}`,
+              filepath: tmpPath,
+              algorithmId,
+              description,
+              original,
+            },
+            db,
+          );
+          db.get(DATASETS_COLLECTION).push(newResult).write();
+          result = { id: newResult.id };
 
+          logger.debug(`save resulting dataset at ${newResult.filepath}`);
+
+          break;
+        }
+        case ALGORITHM_TYPES.VALIDATION: {
+          const resultString = log.match(
+            /{.*"outcome":\s*"(success|warning|failure)".*}/m,
+          )?.[0];
+          result = resultString ? JSON.parse(resultString) : {};
+          break;
+        }
+        default:
+          result = {};
+      }
+
+      // save execution result
       db.get(EXECUTIONS_COLLECTION)
         .find({ id: executionId })
         .assign({
           status: EXECUTION_STATUSES.SUCCESS,
-          result: { id: newResult.id },
+          result,
           log,
         })
         .unset('pid')
         .write();
-
-      logger.debug(`save resulting dataset at ${newResult.filepath}`);
 
       // check whether mainWindow still exist in case of
       // the app quits before the process get killed
@@ -188,9 +214,16 @@ const executeAlgorithm = (mainWindow, db) => (
       value: tmpPath,
     };
 
+    const originalPathParameter = {
+      name: 'original_path',
+      type: PARAMETER_TYPES.STRING_INPUT,
+      value: originalfilepath,
+    };
+
     const fullParameters = [
       datasetPathParameter,
       outputPathParameter,
+      originalPathParameter,
       ...parameters,
     ];
 

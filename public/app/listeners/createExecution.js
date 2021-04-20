@@ -13,6 +13,31 @@ const {
 } = require('../../shared/types');
 const logger = require('../logger');
 
+const createExecutionObject = (
+  db,
+  { algorithm, source, result, parameters, schemaId, type },
+) => {
+  const id = ObjectId().str;
+  const status = EXECUTION_STATUSES.PENDING;
+  const executedAt = Date.now();
+
+  const execution = {
+    id,
+    algorithm,
+    source,
+    result,
+    parameters,
+    schemaId,
+    type,
+    status,
+    executedAt,
+  };
+
+  db.get(EXECUTIONS_COLLECTION).push(execution).write();
+
+  return execution;
+};
+
 const createExecution = (mainWindow, db) => async (
   event,
   { algorithmId, sourceId, userProvidedFilename, parameters, schemaId },
@@ -28,20 +53,17 @@ const createExecution = (mainWindow, db) => async (
       .value();
 
     // add execution
-    const execution = {
-      id: ObjectId().str,
+    const execution = createExecutionObject(db, {
       algorithm: { id: algorithmId },
       source: { id: sourceId },
-      executedAt: Date.now(),
-      status: EXECUTION_STATUSES.PENDING,
       result: {
         name: userProvidedFilename || `${datasetName}_${algorithmName}`,
       },
       parameters,
       schemaId,
       type,
-    };
-    db.get(EXECUTIONS_COLLECTION).push(execution).write();
+    });
+
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {
       type: CREATE_EXECUTION_SUCCESS,
       payload: execution,
@@ -55,4 +77,4 @@ const createExecution = (mainWindow, db) => async (
   }
 };
 
-module.exports = createExecution;
+module.exports = { createExecutionObject, createExecution };

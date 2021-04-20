@@ -176,8 +176,11 @@ def find_selected_arrays(dataset, field_selection):
     elif 'array' in type_ and isinstance(dataset, list):
         items = field_selection.get('items', {})
 
-        if isinstance(items, dict) and any_selected(items):
-            arrays.append({'array': dataset, 'field_selection': items})
+        selected = field_selection.get(
+            'selected', False) or any_selected(items)
+
+        if isinstance(items, dict) and selected:
+            arrays.append({'array': dataset, 'field_selection': field_selection})
 
     return arrays
 

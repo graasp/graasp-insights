@@ -13,6 +13,7 @@ import {
   GET_EXECUTION_SUCCESS,
   CLEAR_EXECUTION_SUCCESS,
   FLAG_CLEARING_EXECUTION,
+  CREATE_VALIDATION_SUCCESS,
 } from '../shared/types';
 import { EXECUTION_STATUSES } from '../shared/constants';
 
@@ -22,14 +23,15 @@ const INITIAL_STATE = Map({
   executions: List(),
 });
 
-const updateExecution = ({ id, resultId }) => (executions) => {
+const updateExecution = (execution) => (executions) => {
+  const { id } = execution;
   const idx = executions.findIndex(({ id: executionId }) => executionId === id);
   if (idx < 0) {
     // eslint-disable-next-line no-console
     console.error('Execution not found, an error probably happened');
     return executions;
   }
-  return executions.setIn([idx, 'resultId'], resultId);
+  return executions.setIn([idx], execution);
 };
 
 const addExecutionToList = (execution) => (executions) => {
@@ -75,6 +77,14 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.update('executions', (executions) =>
         executions.delete(
           executions.findIndex(({ id: exId }) => exId === payload),
+        ),
+      );
+    case CREATE_VALIDATION_SUCCESS:
+      return state.update('executions', (executions) =>
+        payload.executions.reduce(
+          (executionsList, execution) =>
+            addExecutionToList(execution)(executionsList),
+          executions,
         ),
       );
 

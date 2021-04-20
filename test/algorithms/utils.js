@@ -34,12 +34,11 @@ import {
   PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
   buildParameterSchemaOption,
   buildFieldSelectorCheckbox,
-  ALGORITHM_TYPE_SELECT_ID,
   ADD_ALGORITHM_TYPE_SELECT_ID,
-  buildAlgorithmTypeOptionId,
   buildAddAlgorithmTypeOptionId,
   EDIT_ALGORITHM_TYPE_SELECT_ID,
   buildEditAlgorithmTypeOptionId,
+  ALGORITHM_TYPE_CLASS,
 } from '../../src/config/selectors';
 import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
@@ -96,7 +95,7 @@ export const clickEditAlgoBackButton = async (client) => {
 };
 
 export const checkAlgorithmRowLayout = async (client, algorithm) => {
-  const { name, description, author, language } = algorithm;
+  const { name, description, type, author, language } = algorithm;
 
   const matchedAlgorithm = await client.$(
     `#${ALGORITHM_TABLE_ID} .${buildAlgorithmRowClass(name)}`,
@@ -111,6 +110,9 @@ export const checkAlgorithmRowLayout = async (client, algorithm) => {
     ).getText(),
   ).to.equal(description.replace(/\s+/g, ' '));
   expect(
+    await (await matchedAlgorithm.$(`.${ALGORITHM_TYPE_CLASS}`)).getText(),
+  ).to.equal(type);
+  expect(
     await (await matchedAlgorithm.$(`.${ALGORITHM_AUTHOR_CLASS}`)).getText(),
   ).to.equal(author);
   expect(
@@ -121,13 +123,6 @@ export const checkAlgorithmRowLayout = async (client, algorithm) => {
 export const getNumberOfAlgorithms = async (client) => {
   return (await client.$$(`#${ALGORITHM_TABLE_ID} .${ALGORITHM_NAME_CLASS}`))
     .length;
-};
-
-export const filterAlgorithmTableByType = async (client, type) => {
-  const typeEl = await client.$(`#${ALGORITHM_TYPE_SELECT_ID}`);
-  await typeEl.click();
-  const typeOption = await client.$(`#${buildAlgorithmTypeOptionId(type)}`);
-  await typeOption.click();
 };
 
 export const addAlgorithmFromFileLocation = async (

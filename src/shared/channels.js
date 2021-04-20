@@ -2,11 +2,8 @@
 // the original file is located in src/shared and is duplicated in public/shared
 
 const EXECUTE_ALGORITHM_CHANNEL = 'execution:execute';
-const EXECUTE_VALIDATION_ALGORITHM_CHANNEL = 'validation:execution:execute';
 const buildExecuteAlgorithmChannel = (id) =>
   `${EXECUTE_ALGORITHM_CHANNEL}_${id}`;
-const buildExecuteValidationAlgorithmChannel = (validationId, executionId) =>
-  `${EXECUTE_VALIDATION_ALGORITHM_CHANNEL}_${validationId}_${executionId}`;
 
 module.exports = {
   LOAD_DATASET_CHANNEL: 'dataset:load',
@@ -61,10 +58,7 @@ module.exports = {
   DELETE_PIPELINE_CHANNEL: 'pipeline:delete',
   GET_EXECUTION_CHANNEL: 'execution:get',
   CREATE_VALIDATION_CHANNEL: 'validation:create',
-  EXECUTE_VALIDATION_ALGORITHM_CHANNEL,
   GET_VALIDATIONS_CHANNEL: 'validations:get',
   DELETE_VALIDATION_CHANNEL: 'validation:delete',
-  STOP_VALIDATION_CHANNEL: 'validation:stop',
-  buildExecuteValidationAlgorithmChannel,
-  STOP_VALIDATION_EXECUTION_CHANNEL: 'validation:execution:cancel',
+  SHOW_RESET_TEMPLATE_PROMPT_CHANNEL: 'prompt:reset-template:confirm',
 };

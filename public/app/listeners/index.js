@@ -27,7 +27,7 @@ const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
 const getExecutions = require('./getExecutions');
 const deleteExecution = require('./deleteExecution');
-const createExecution = require('./createExecution');
+const { createExecution, createExecutionObject } = require('./createExecution');
 const {
   cancelExecution,
   cancelExecutionObject,
@@ -58,12 +58,8 @@ const deletePipeline = require('./deletePipeline');
 const getExecution = require('./getExecution');
 const createValidation = require('./createValidation');
 const deleteValidation = require('./deleteValidation');
-const executeValidationAlgorithm = require('./executeValidationAlgorithm');
 const getValidations = require('./getValidations');
-const {
-  cancelValidationExecution,
-  cancelValidationExecutionObject,
-} = require('./cancelValidationExecution');
+const showResetTemplatePrompt = require('./showResetTemplatePrompt');
 
 module.exports = {
   getDataset,
@@ -96,6 +92,7 @@ module.exports = {
   getExecutions,
   deleteExecution,
   createExecution,
+  createExecutionObject,
   cancelExecutionObject,
   cancelAllRunningExecutions,
   cancelExecution,
@@ -125,8 +122,6 @@ module.exports = {
   getExecution,
   createValidation,
   deleteValidation,
-  executeValidationAlgorithm,
   getValidations,
-  cancelValidationExecution,
-  cancelValidationExecutionObject,
+  showResetTemplatePrompt,
 };

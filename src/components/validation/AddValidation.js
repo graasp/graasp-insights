@@ -56,11 +56,6 @@ const styles = (theme) => ({
     width: '100%',
   },
   addAlgorithmButton: {
-    color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.primary.main,
-    '&:hover, &.Mui-focusVisible': {
-      backgroundColor: theme.palette.primary.main,
-    },
     margin: theme.spacing(0, 2),
   },
   executeButton: {
@@ -183,7 +178,11 @@ class AddValidation extends Component {
     if (selectedAlgo) {
       const newSelectedAlgos = selectedValidationAlgorithms.slice();
       newSelectedAlgos.push(selectedAlgo);
-      this.setState({ selectedValidationAlgorithms: newSelectedAlgos });
+      this.setState({
+        selectedValidationAlgorithms: newSelectedAlgos,
+        expandedIdx: newSelectedAlgos.length - 1,
+        algorithmId: '',
+      });
     }
   };
 
@@ -288,6 +287,7 @@ class AddValidation extends Component {
 
   renderAddValidationAlgorithmButton = () => {
     const { classes } = this.props;
+    const { algorithmId } = this.state;
     return (
       <Button
         id={ADD_VALIDATION_ADD_ALGORITHM_BUTTON_ID}
@@ -296,6 +296,8 @@ class AddValidation extends Component {
         color="primary"
         aria-label="add-algorithm"
         onClick={this.handleAddAlgorithm}
+        disabled={!algorithmId}
+        variant="contained"
       >
         <AddIcon />
       </Button>

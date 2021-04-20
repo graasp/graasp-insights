@@ -11,8 +11,10 @@ from graasp_utils import (load_dataset, parse_arguments, ValidationOutcome,
 def compute_ldiversity(array, quasi_identifiers, sensitive_attributes):
     # retrieve the quasi-identifiers and sensitive values for each array
     # element
-    qis = [get_selected_values(elem, quasi_identifiers) for elem in array]
-    sas = [get_selected_values(elem, sensitive_attributes) for elem in array]
+    qis = [get_selected_values(
+        elem, quasi_identifiers.get('items', {})) for elem in array]
+    sas = [get_selected_values(
+        elem, sensitive_attributes.get('items', {})) for elem in array]
 
     # get the group of users for each distinct set of quasi-identifier
     # values

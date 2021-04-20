@@ -1,6 +1,5 @@
 /* eslint-disable func-names */
 import { expect } from 'chai';
-import { ALGORITHM_TYPES } from '../../src/shared/constants';
 import GRAASP_ALGORITHMS from '../../src/shared/data/graaspAlgorithms';
 import { closeApplication, createApplication } from '../application';
 import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
@@ -22,7 +21,6 @@ import {
   clickAddButton,
   getNumberOfAlgorithms,
   addDefaultAlgorithm,
-  filterAlgorithmTableByType,
 } from './utils';
 
 describe('Add Algorithm Scenarios', function () {
@@ -108,7 +106,6 @@ describe('Add Algorithm Scenarios', function () {
     mochaAsync(async () => {
       const { client } = app;
 
-      await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
       const nbValAlgosPrev = await getNumberOfAlgorithms(client);
 
       // add algorithm
@@ -116,7 +113,6 @@ describe('Add Algorithm Scenarios', function () {
       await addAlgorithmFromEditor(client, SAMPLE_VALIDATION_ALGORITHM);
       await clickAddAlgoSaveButton(client);
 
-      await filterAlgorithmTableByType(client, ALGORITHM_TYPES.VALIDATION);
       const nbValAlgosAfter = await getNumberOfAlgorithms(client);
       expect(nbValAlgosAfter - nbValAlgosPrev).to.equal(1);
 
