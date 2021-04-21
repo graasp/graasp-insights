@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FieldSelector = ({ schema, onChange, disabled }) => {
+const FieldSelector = ({ schema, onChange, disabled, id }) => {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -49,7 +49,7 @@ const FieldSelector = ({ schema, onChange, disabled }) => {
   const { properties } = schema;
 
   return (
-    <Paper elevation={2}>
+    <Paper elevation={2} id={id}>
       {Object.entries(properties).map(([key, field]) => (
         <FieldSelectorTree
           key={key}
@@ -78,6 +78,7 @@ const FieldSelector = ({ schema, onChange, disabled }) => {
 };
 
 FieldSelector.propTypes = {
+  id: PropTypes.string,
   schema: PropTypes.shape({
     properties: PropTypes.shape({}).isRequired,
   }).isRequired,
@@ -88,6 +89,7 @@ FieldSelector.propTypes = {
 FieldSelector.defaultProps = {
   onChange: () => {},
   disabled: false,
+  id: null,
 };
 
 const FieldSelectorTree = ({ name, field, onChange, disabled }) => {

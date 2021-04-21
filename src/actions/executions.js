@@ -8,6 +8,7 @@ import {
   STOP_EXECUTION_CHANNEL,
   buildExecuteAlgorithmChannel,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+  GET_EXECUTION_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_EXECUTING_ALGORITHM,
@@ -15,6 +16,9 @@ import {
   FLAG_GETTING_EXECUTIONS,
   FLAG_DELETING_EXECUTION,
   FLAG_STOPPING_EXECUTION,
+  FLAG_GETTING_EXECUTION,
+  CLEAR_EXECUTION_SUCCESS,
+  FLAG_CLEARING_EXECUTION,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -23,6 +27,8 @@ import {
   ERROR_DELETING_EXECUTION_MESSAGE,
   ERROR_CANCELING_EXECUTION_MESSAGE,
   ERROR_CREATING_EXECUTION_MESSAGE,
+  ERROR_GETTING_EXECUTION_MESSAGE,
+  ERROR_CLEARING_EXECUTION_MESSAGE,
 } from '../shared/messages';
 
 export const getExecutions = () => (dispatch) => {
@@ -38,6 +44,21 @@ export const getExecutions = () => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_EXECUTIONS_MESSAGE);
     dispatch(flagGettingExecutions(false));
+  }
+};
+
+export const getExecution = (id) => (dispatch) => {
+  const flagGettingExecution = createFlag(FLAG_GETTING_EXECUTION);
+  try {
+    dispatch(flagGettingExecution(true));
+    window.ipcRenderer.send(GET_EXECUTION_CHANNEL, { id });
+    window.ipcRenderer.once(GET_EXECUTION_CHANNEL, async (event, payload) => {
+      dispatch(payload);
+      return dispatch(flagGettingExecution(false));
+    });
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_EXECUTION_MESSAGE);
+    dispatch(flagGettingExecution(false));
   }
 };
 
@@ -139,5 +160,18 @@ export const cancelExecution = ({ id }) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_CANCELING_EXECUTION_MESSAGE);
     dispatch(flagStoppingExecution(false));
+  }
+};
+
+export const clearExecution = () => (dispatch) => {
+  const flagClearingExecution = createFlag(FLAG_CLEARING_EXECUTION);
+  try {
+    dispatch(flagClearingExecution(true));
+    dispatch({ type: CLEAR_EXECUTION_SUCCESS });
+    dispatch(flagClearingExecution(false));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(ERROR_CLEARING_EXECUTION_MESSAGE);
+    dispatch(flagClearingExecution(false));
   }
 };

@@ -2,9 +2,17 @@ const { spawn } = require('child_process');
 const { PARAMETER_TYPES } = require('../../shared/constants');
 const logger = require('../logger');
 
+const buildCurrentTime = () => {
+  return new Date().toLocaleString('en-US');
+};
+
+const buildLogLine = (text) => {
+  return `${buildCurrentTime()}: ${text}\n`;
+};
+
 const executePythonAlgorithm = (
   { algorithmFilepath, filepath, tmpPath, parameters, schemaId },
-  { onRun, onStop, onSuccess, onError, clean },
+  { onRun, onStop, onSuccess, onError, clean, onLog },
 ) => {
   // for each parameter, prepares a pair [--parameter_name, parameter_value] for the command line
   const preparedParameters =
@@ -27,7 +35,9 @@ const executePythonAlgorithm = (
       .flat() || [];
 
   const args = [algorithmFilepath, filepath, tmpPath, ...preparedParameters];
-  let log = `python ${args}`;
+  let log = buildLogLine(`python ${args.join(' ')}`);
+  // eslint-disable-next-line no-unused-expressions
+  onLog?.({ log });
 
   const process = spawn('python', args);
 
@@ -36,14 +46,22 @@ const executePythonAlgorithm = (
   process.stdout.on('data', (chunk) => {
     const textChunk = chunk.toString('utf8'); // buffer to string
     logger.debug(textChunk);
+    log += buildLogLine(chunk);
+    // eslint-disable-next-line no-unused-expressions
+    onLog?.({ log });
   });
 
   process.stderr.on('data', (data) => {
     logger.error(data);
-    log += data;
+    log += buildLogLine(data);
+    // eslint-disable-next-line no-unused-expressions
+    onLog?.({ log });
   });
 
   process.on('close', (code) => {
+    logger.error(`python process exited with code ${code}`);
+    log += buildLogLine(`python process exited with code ${code}`);
+
     switch (code) {
       case 0:
         onSuccess({ log });
@@ -53,7 +71,6 @@ const executePythonAlgorithm = (
         onStop();
         break;
       default:
-        logger.error(`python process exited with code ${code}`);
         onError({ code, log });
     }
     clean();

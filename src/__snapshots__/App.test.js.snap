@@ -382,6 +382,11 @@ exports[`<App /> renders correctly 1`] = `
         <Route
           component={[Function]}
           exact={true}
+          path="/execution/:id"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
           path="/settings"
         />
         <Route

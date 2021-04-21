@@ -116,7 +116,10 @@ const ensureExecutionsStatus = (db) => {
     .value();
   // eslint-disable-next-line no-restricted-syntax
   for (const { id } of executions) {
-    collection.find({ id }).assign({ status: EXECUTIONS_COLLECTION.ERROR });
+    collection
+      .find({ id })
+      .assign({ status: EXECUTION_STATUSES.ERROR })
+      .write();
   }
 };
 

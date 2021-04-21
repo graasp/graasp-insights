@@ -64,6 +64,7 @@ const {
   SAVE_PIPELINE_CHANNEL,
   ADD_PIPELINE_CHANNEL,
   DELETE_PIPELINE_CHANNEL,
+  GET_EXECUTION_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -117,6 +118,7 @@ const {
   savePipeline,
   addPipeline,
   deletePipeline,
+  getExecution,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { bootstrapDatabase } = require('./app/db');
@@ -400,6 +402,8 @@ app.on('ready', async () => {
   ipcMain.on(CREATE_EXECUTION_CHANNEL, createExecution(mainWindow, db));
 
   ipcMain.on(GET_EXECUTIONS_CHANNEL, getExecutions(mainWindow, db));
+
+  ipcMain.on(GET_EXECUTION_CHANNEL, getExecution(mainWindow, db));
 
   ipcMain.on(DELETE_EXECUTION_CHANNEL, deleteExecution(mainWindow, db));
 

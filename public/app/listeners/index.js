@@ -57,6 +57,7 @@ const getPipeline = require('./getPipeline');
 const savePipeline = require('./savePipeline');
 const addPipeline = require('./addPipeline');
 const deletePipeline = require('./deletePipeline');
+const getExecution = require('./getExecution');
 
 module.exports = {
   getDataset,
@@ -115,4 +116,5 @@ module.exports = {
   savePipeline,
   addPipeline,
   deletePipeline,
+  getExecution,
 };

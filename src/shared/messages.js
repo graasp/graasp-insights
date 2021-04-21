@@ -133,6 +133,10 @@ const SUCCESS_ADDING_PIPELINE_MESSAGE = 'The pipeline was added successfully';
 const SUCCESS_DELETING_PIPELINE_MESSAGE =
   'The pipeline was deleted successfully';
 const ERROR_GETTING_ALGORITHM_PIPELINE_MESSAGE = 'No algorithm found';
+const ERROR_GET_EXECUTION_MESSAGE =
+  'There was an error retrieving the execution';
+const ERROR_CLEARING_EXECUTION_MESSAGE =
+  'There was an error clearing the execution';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -209,4 +213,6 @@ module.exports = {
   SUCCESS_ADDING_PIPELINE_MESSAGE,
   SUCCESS_DELETING_PIPELINE_MESSAGE,
   ERROR_GETTING_ALGORITHM_PIPELINE_MESSAGE,
+  ERROR_GET_EXECUTION_MESSAGE,
+  ERROR_CLEARING_EXECUTION_MESSAGE,
 };
