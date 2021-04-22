@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,11 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/Cancel';
-import FailIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
-import SuccessIcon from '@material-ui/icons/Done';
-import ErrorIcon from '@material-ui/icons/Error';
-import WarningIcon from '@material-ui/icons/Warning';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Alert from '@material-ui/lab/Alert';
 import clsx from 'clsx';
 import { List } from 'immutable';
@@ -30,17 +26,17 @@ import {
   getResults,
   getValidations,
 } from '../../actions';
-import {
-  CIRCLE_PROGRESS_SIZE,
-  DEFAULT_LOCALE_DATE,
-} from '../../config/constants';
+import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import {
   ADD_VALIDATION_PATH,
   buildDatasetPath,
+  buildExecutionPath,
   buildResultPath,
 } from '../../config/paths';
 import {
   ALGORITHM_NAME_CLASS,
+  buildExecutionAlgorithmButtonId,
+  buildExecutionViewButtonId,
   buildValidationRowClass,
   DATASET_NAME_CLASS,
   VALIDATION_ADD_BUTTON_ID,
@@ -48,15 +44,14 @@ import {
   VALIDATION_EXECUTION_RESULT_CLASS,
   VALIDATION_TABLE_ID,
 } from '../../config/selectors';
-import {
-  ALGORITHM_TYPES,
-  EXECUTION_STATUSES,
-  VALIDATION_STATUSES,
-} from '../../shared/constants';
+import { ALGORITHM_TYPES, EXECUTION_STATUSES } from '../../shared/constants';
 import Main from '../common/Main';
 import Table from '../common/Table';
 import LoadDatasetButton from '../LoadDatasetButton';
 import { FLAG_GETTING_VALIDATIONS } from '../../shared/types';
+import ValidationStatusIcon from './ValidationStatusIcon';
+import ExecutionStatusIcon from '../execution/ExecutionStatusIcon';
+import AlgorithmViewButton from '../execution/AlgorithmViewButton';
 
 const styles = (theme) => ({
   link: {
@@ -85,15 +80,6 @@ const styles = (theme) => ({
     marginBottom: theme.spacing(10),
   },
 });
-
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-  },
-}))(Tooltip);
 
 class Validation extends Component {
   static propTypes = {
@@ -169,6 +155,13 @@ class Validation extends Component {
     dispatchCancelExecution({ id });
   };
 
+  handleView = (executionId) => {
+    const {
+      history: { push },
+    } = this.props;
+    push(buildExecutionPath(executionId));
+  };
+
   renderAddButon() {
     const { classes } = this.props;
     return (
@@ -190,7 +183,6 @@ class Validation extends Component {
       validations,
       datasets,
       results,
-      algorithms,
       executions,
     } = this.props;
 
@@ -211,7 +203,7 @@ class Validation extends Component {
       },
       {
         columnName: 'Status',
-        alignColumn: 'center',
+        alignColumn: 'right',
       },
       {
         columnName: 'Verified',
@@ -273,57 +265,23 @@ class Validation extends Component {
             const {
               status,
               result: { outcome, info },
+              algorithm,
             } = execution;
 
-            const algorithmName =
-              algorithms.find(({ id }) => id === execution?.algorithm?.id)
-                ?.name || t('Unknown');
+            const algorithmButton = (
+              <AlgorithmViewButton
+                linkId={buildExecutionAlgorithmButtonId(algorithm?.id)}
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...algorithm}
+              />
+            );
 
-            let statusIcon;
-            switch (status) {
-              case EXECUTION_STATUSES.SUCCESS:
-                statusIcon =
-                  // eslint-disable-next-line no-nested-ternary
-                  outcome === VALIDATION_STATUSES.SUCCESS ? (
-                    <LightTooltip title={<pre>{info}</pre>}>
-                      <SuccessIcon
-                        className={outcome}
-                        style={{ color: 'green' }}
-                      />
-                    </LightTooltip>
-                  ) : outcome === VALIDATION_STATUSES.WARNING ? (
-                    <LightTooltip title={<pre>{info}</pre>}>
-                      <WarningIcon
-                        className={outcome}
-                        style={{ color: 'orange' }}
-                      />
-                    </LightTooltip>
-                  ) : (
-                    <LightTooltip title={<pre>{info}</pre>}>
-                      <FailIcon className={outcome} style={{ color: 'red' }} />
-                    </LightTooltip>
-                  );
-                break;
-              case EXECUTION_STATUSES.ERROR:
-                statusIcon = (
-                  <LightTooltip title={t('An error occurred during execution')}>
-                    <ErrorIcon className={status} style={{ color: 'red' }} />
-                  </LightTooltip>
-                );
-                break;
-              case EXECUTION_STATUSES.RUNNING:
-                statusIcon = (
-                  <LightTooltip title={t('Execution running...')}>
-                    <CircularProgress
-                      className={status}
-                      size={CIRCLE_PROGRESS_SIZE}
-                    />
-                  </LightTooltip>
-                );
-                break;
-              default:
-                break;
-            }
+            const statusIcon =
+              status === EXECUTION_STATUSES.SUCCESS ? (
+                <ValidationStatusIcon outcome={outcome} info={info} />
+              ) : (
+                <ExecutionStatusIcon status={status} />
+              );
 
             return (
               <Grid
@@ -337,17 +295,20 @@ class Validation extends Component {
               >
                 <Grid
                   item
-                  xs={9}
+                  xs={8}
                   className={ALGORITHM_NAME_CLASS}
                   style={{ textAlign: 'start' }}
                 >
-                  {algorithmName}
+                  {algorithmButton}
                 </Grid>
-                <Grid container item xs={3} alignItems="center">
-                  <Grid item xs={6}>
-                    {statusIcon}
-                  </Grid>
-                  <Grid item xs={6}>
+                <Grid
+                  container
+                  item
+                  xs={4}
+                  alignItems="center"
+                  justify="flex-end"
+                >
+                  <Grid item>
                     {status === EXECUTION_STATUSES.RUNNING && (
                       <Tooltip title={t('Cancel execution')}>
                         <IconButton
@@ -360,6 +321,19 @@ class Validation extends Component {
                         </IconButton>
                       </Tooltip>
                     )}
+                  </Grid>
+                  <Grid item>{statusIcon}</Grid>
+                  <Grid item>
+                    <Tooltip title={t('View execution')} key="view">
+                      <IconButton
+                        id={buildExecutionViewButtonId(sourceId, algorithm?.id)}
+                        aria-label="view"
+                        onClick={() => this.handleView(executionId)}
+                        size="small"
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </Grid>

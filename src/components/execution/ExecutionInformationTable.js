@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles, Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -19,10 +20,21 @@ import {
   buildExecutionSourceButtonId,
   EXECUTION_VIEW_TABLE_ID,
 } from '../../config/selectors';
+import { ALGORITHM_TYPES } from '../../shared/constants';
+import ValidationStatusIcon from '../validation/ValidationStatusIcon';
 
 const useStyles = makeStyles((theme) => ({
   parameters: {
     marginTop: theme.spacing(2),
+  },
+  outcomeText: {
+    textTransform: 'capitalize',
+    margin: theme.spacing(0.5),
+  },
+  resultInfo: {
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    margin: 0,
   },
 }));
 
@@ -50,13 +62,35 @@ function ExecutionInformationTable() {
   );
 
   const result = execution.get('result') || {};
-  const resultButton = (
-    <ResultViewButton
-      linkId={buildExecutionResultButtonId(result.id)}
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...result}
-    />
-  );
+  const type = execution.get('type') || '';
+  let resultView;
+  switch (type) {
+    case ALGORITHM_TYPES.ANONYMIZATION:
+      resultView = (
+        <ResultViewButton
+          linkId={buildExecutionResultButtonId(result.id)}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...result}
+        />
+      );
+      break;
+    case ALGORITHM_TYPES.VALIDATION:
+      resultView = (
+        <>
+          <Grid container textAlign="center">
+            <Grid item>
+              <ValidationStatusIcon outcome={result.outcome} />
+            </Grid>
+            <Grid item className={classes.outcomeText}>
+              {result.outcome}
+            </Grid>
+          </Grid>
+          <pre className={classes.resultInfo}>{result.info}</pre>
+        </>
+      );
+      break;
+    default:
+  }
 
   const params = execution.get('parameters');
   const parameters = params?.length ? (
@@ -89,7 +123,7 @@ function ExecutionInformationTable() {
               <TableCell component="th" scope="row">
                 {t('Result')}
               </TableCell>
-              <TableCell>{resultButton}</TableCell>
+              <TableCell>{resultView}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row">
