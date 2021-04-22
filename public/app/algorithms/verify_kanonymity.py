@@ -57,10 +57,12 @@ def main():
 
         if k >= args.k:
             notify_validation_result(
-                ValidationOutcome.SUCCESS, f'{k}-anonymous (>= {args.k})')
+                ValidationOutcome.SUCCESS,
+                '%d-anonymous (>= %d)' % (k, args.k))
         else:
             notify_validation_result(
-                ValidationOutcome.FAILURE, f'{k}-anonymous (< {args.k})')
+                ValidationOutcome.FAILURE,
+                '%d-anonymous (< %d)' % (k, args.k))
 
 
 if __name__ == '__main__':

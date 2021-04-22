@@ -4,6 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FailIcon from '@material-ui/icons/Close';
 import SuccessIcon from '@material-ui/icons/Done';
 import WarningIcon from '@material-ui/icons/Warning';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { VALIDATION_STATUSES } from '../../shared/constants';
 
@@ -21,16 +22,27 @@ const ValidationStatusIcon = ({ outcome, info, className }) => {
   switch (outcome) {
     case VALIDATION_STATUSES.SUCCESS:
       statusIcon = (
-        <SuccessIcon className={className} style={{ color: 'green' }} />
+        <SuccessIcon
+          className={clsx(outcome, className)}
+          style={{ color: 'green' }}
+        />
       );
       break;
     case VALIDATION_STATUSES.WARNING:
       statusIcon = (
-        <WarningIcon className={className} style={{ color: 'orange' }} />
+        <WarningIcon
+          className={clsx(outcome, className)}
+          style={{ color: 'orange' }}
+        />
       );
       break;
     case VALIDATION_STATUSES.FAILURE:
-      statusIcon = <FailIcon className={className} style={{ color: 'red' }} />;
+      statusIcon = (
+        <FailIcon
+          className={clsx(outcome, className)}
+          style={{ color: 'red' }}
+        />
+      );
       break;
     default:
       statusIcon = null;

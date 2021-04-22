@@ -42,9 +42,9 @@ const getNumberOfValidations = async (client) => {
 };
 
 const checkValidationRowLayout = async (client, validation) => {
-  const { executions, datasetName } = validation;
+  const { executionsData, datasetName, algorithms } = validation;
 
-  const algorithmNames = executions.map(({ algorithmName }) => algorithmName);
+  const algorithmNames = algorithms.map(({ name }) => name);
 
   const matchedValidation = await client.$(
     `#${VALIDATION_TABLE_ID} .${buildValidationRowClass(
@@ -60,11 +60,12 @@ const checkValidationRowLayout = async (client, validation) => {
   const validationExecutionResults = await matchedValidation.$$(
     `.${VALIDATION_EXECUTION_RESULT_CLASS}`,
   );
-  expect(validationExecutionResults.length).to.equal(executions.length);
+  expect(validationExecutionResults.length).to.equal(executionsData.length);
 
   await Promise.all(
-    executions.map(async ({ result: { outcome }, algorithmName }, idx) => {
+    executionsData.map(async ({ result: { outcome } }, idx) => {
       const executionResult = validationExecutionResults[idx];
+      const { name: algorithmName } = algorithms[idx];
 
       expect(
         await (await executionResult.$(`.${ALGORITHM_NAME_CLASS}`)).getText(),
@@ -83,7 +84,7 @@ const addValidation = async (client, validation) => {
 
   const {
     source: { id: datasetId },
-    executions,
+    algorithms,
   } = validation;
 
   const datasetSelect = await client.$(`#${ADD_VALIDATION_DATASETS_SELECT_ID}`);
@@ -101,7 +102,7 @@ const addValidation = async (client, validation) => {
   );
 
   // add validation algorithms sequentially
-  await executions.reduce((p, { algorithmId }) => {
+  await algorithms.reduce((p, { id: algorithmId }) => {
     return p.then(async () => {
       await algorithmSelect.click();
       const algorithmOptionId = buildAddValidationAlgorithmOptionId(
@@ -120,9 +121,9 @@ const addValidation = async (client, validation) => {
 };
 
 const deleteValidation = async (client, validation) => {
-  const { executions, datasetName } = validation;
+  const { algorithms, datasetName } = validation;
 
-  const algorithmNames = executions.map(({ algorithmName }) => algorithmName);
+  const algorithmNames = algorithms.map(({ name }) => name);
 
   const matchedValidation = await client.$(
     `#${VALIDATION_TABLE_ID} .${buildValidationRowClass(

@@ -2,7 +2,6 @@ import json
 import hashlib
 import argparse
 import platform
-from enum import Enum
 
 
 def open_file(file, permission='r'):
@@ -106,7 +105,7 @@ def iterate_and_suppress(dataset, field_selection):
                     iterate_and_suppress(dataset[idx], elem_field_selection)
 
 
-class ValidationOutcome(Enum):
+class ValidationOutcome:
     SUCCESS = 'success'
     WARNING = 'warning'
     FAILURE = 'failure'
@@ -126,7 +125,7 @@ def notify_validation_result(outcome, info):
         info (str): additional information giving more context relative
         to the outcome
     """
-    print(json.dumps({"outcome": outcome.value, "info": info}))
+    print(json.dumps({"outcome": outcome, "info": info}))
 
 
 def any_selected(field_selection):

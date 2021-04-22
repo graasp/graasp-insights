@@ -4,9 +4,19 @@ presence
 
 import re
 import json
+import platform
 
 from graasp_utils import (load_dataset, parse_arguments, iterate_and_apply,
                           ValidationOutcome, notify_validation_result)
+
+
+version = platform.python_version()[0]
+if version == "3":
+    def isstr(s):
+        return isinstance(s, str)
+else:
+    def isstr(s):
+        return isinstance(s, basestring)
 
 
 def get_regex(name):
@@ -35,14 +45,14 @@ def find_names(dataset, names, matches):
             for v in current_data:
                 if isinstance(v, dict) or isinstance(v, list):
                     traverse(v)
-                elif isinstance(v, str):
+                elif isstr(v):
                     get_regex_matches(v)
 
         elif isinstance(current_data, dict):
             for v in current_data.values():
                 if isinstance(v, dict) or isinstance(v, list):
                     traverse(v)
-                elif isinstance(v, str):
+                elif isstr(v):
                     get_regex_matches(v)
 
     traverse(dataset)
@@ -68,7 +78,7 @@ def main():
     # notify the detected user names
     if len(matches) > 0:
         messages = ["Detected user names: "] + \
-            [f'  - {m}' for m in matches[:10]]
+            ['  - %s' % m for m in matches[:10]]
         if len(matches) > 10:
             messages.append('  - ...')
 

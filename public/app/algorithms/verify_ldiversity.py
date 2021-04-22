@@ -81,14 +81,16 @@ def find_selected_arrays(dataset, quasi_identifiers, sensitive_attributes):
 
     # if array, then add it to the found arrays if any subfield is selected
     elif 'array' in type_ and isinstance(dataset, list):
-        qi_items = quasi_identifiers.get('items', {})
         sa_items = sensitive_attributes.get('items', {})
 
-        if isinstance(sa_items, dict) and any_selected(sa_items):
+        selected = sensitive_attributes.get(
+            'selected', False) or any_selected(sa_items)
+
+        if isinstance(sa_items, dict) and selected:
             arrays.append({
                 'array': dataset,
-                'quasi_identifiers': qi_items,
-                'sensitive_attributes': sa_items
+                'quasi_identifiers': quasi_identifiers,
+                'sensitive_attributes': sensitive_attributes
             })
 
     return arrays
@@ -121,10 +123,12 @@ def main():
 
         if l >= args.l:
             notify_validation_result(
-                ValidationOutcome.SUCCESS, f'{l}-diversified (>= {args.l})')
+                ValidationOutcome.SUCCESS,
+                '%d-diversified (>= %d)' % (l, args.l))
         else:
             notify_validation_result(
-                ValidationOutcome.FAILURE, f'{l}-diversified (< {args.l})')
+                ValidationOutcome.FAILURE,
+                '%d-diversified (< %d)' % (l, args.l))
 
 
 if __name__ == '__main__':

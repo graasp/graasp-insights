@@ -37,6 +37,7 @@ describe('Add Algorithm Scenarios', function () {
             PREEXISTING_VALIDATION_ALGORITHM,
           ],
         },
+        responses: { showMessageDialogResponse: 1 },
       });
       const { client } = app;
       await client.goToAlgorithms();
@@ -116,7 +117,7 @@ describe('Add Algorithm Scenarios', function () {
       const nbValAlgosAfter = await getNumberOfAlgorithms(client);
       expect(nbValAlgosAfter - nbValAlgosPrev).to.equal(1);
 
-      await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
+      await checkAlgorithmRowLayout(client, SAMPLE_VALIDATION_ALGORITHM);
     }),
   );
 

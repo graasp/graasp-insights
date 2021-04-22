@@ -75,28 +75,40 @@ export const VALIDATION_EXECUTION_FAILURE = {
 export const PREEXISTING_VALIDATION = {
   id: 'preexisting-validation',
   executions: [PREEXISTING_VALIDATION_EXECUTION.id],
+  executionsData: [PREEXISTING_VALIDATION_EXECUTION],
+  algorithms: [PREEXISTING_VALIDATION_ALGORITHM],
   source: { id: SIMPLE_DATASET.id },
+  datasetName: SIMPLE_DATASET.name,
   verifiedAt: Date.now(),
 };
 
 export const VALIDATION_SUCCESS = {
   id: 'validation-success',
   executions: [VALIDATION_EXECUTION_SUCCESS.id],
+  executionsData: [VALIDATION_EXECUTION_SUCCESS],
+  algorithms: [VALIDATION_ALGORITHM_SUCCESS],
   source: { id: SIMPLE_DATASET.id },
+  datasetName: SIMPLE_DATASET.name,
   verifiedAt: Date.now(),
 };
 
 export const VALIDATION_WARNING = {
   id: 'validation-warning',
   executions: [VALIDATION_EXECUTION_WARNING.id],
+  executionsData: [VALIDATION_EXECUTION_WARNING],
+  algorithms: [VALIDATION_ALGORITHM_WARNING],
   source: { id: SIMPLE_DATASET.id },
+  datasetName: SIMPLE_DATASET.name,
   verifiedAt: Date.now(),
 };
 
 export const VALIDATION_FAILURE = {
   id: 'validation-failure',
   executions: [VALIDATION_EXECUTION_FAILURE.id],
+  executionsData: [VALIDATION_EXECUTION_FAILURE],
+  algorithms: [VALIDATION_ALGORITHM_FAILURE],
   source: { id: SIMPLE_DATASET.id },
+  datasetName: SIMPLE_DATASET.name,
   verifiedAt: Date.now(),
 };
 
@@ -107,6 +119,17 @@ export const VALIDATION_MULTIPLE_ALGORITHMS = {
     VALIDATION_EXECUTION_WARNING.id,
     VALIDATION_EXECUTION_FAILURE.id,
   ],
+  executionsData: [
+    VALIDATION_EXECUTION_SUCCESS,
+    VALIDATION_EXECUTION_WARNING,
+    VALIDATION_EXECUTION_FAILURE,
+  ],
+  algorithms: [
+    VALIDATION_ALGORITHM_SUCCESS,
+    VALIDATION_ALGORITHM_WARNING,
+    VALIDATION_ALGORITHM_FAILURE,
+  ],
   source: { id: SIMPLE_DATASET.id },
+  datasetName: SIMPLE_DATASET.name,
   verifiedAt: Date.now(),
 };

@@ -4,9 +4,19 @@ user's userId
 """
 
 import re
+import platform
 
 from graasp_utils import (load_dataset, parse_arguments, save_dataset,
                           sha256_hash)
+
+
+version = platform.python_version()[0]
+if version == "3":
+    def isstr(s):
+        return isinstance(s, str)
+else:
+    def isstr(s):
+        return isinstance(s, basestring)
 
 
 def find_and_replace(dataset, substitution_map):
@@ -31,14 +41,14 @@ def find_and_replace(dataset, substitution_map):
             for idx, v in enumerate(current_data):
                 if isinstance(v, dict) or isinstance(v, list):
                     traverse(v)
-                elif isinstance(v, str):
+                elif isstr(v):
                     current_data[idx] = regex_replace(v)
 
         elif isinstance(current_data, dict):
             for key, v in current_data.items():
                 if isinstance(v, dict) or isinstance(v, list):
                     traverse(v)
-                elif isinstance(v, str):
+                elif isstr(v):
                     current_data[key] = regex_replace(v)
 
     traverse(dataset)

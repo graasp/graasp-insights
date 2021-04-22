@@ -74,7 +74,7 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     const { filepath: originalfilepath } = db
       .get(DATASETS_COLLECTION)
       .find({ id: original })
-      .value();
+      .value() || { filepath };
 
     const tmpPath = path.join(DATASETS_FOLDER, `tmp_${executionId}.json`);
 

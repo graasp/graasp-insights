@@ -184,6 +184,7 @@ class Validation extends Component {
       datasets,
       results,
       executions,
+      algorithms,
     } = this.props;
 
     const columns = [
@@ -342,11 +343,14 @@ class Validation extends Component {
         </Grid>
       );
 
+      const algorithmNames = validationExecutions.map((executionId) => {
+        const algorithmId = executions.find(({ id }) => id === executionId)
+          ?.algorithm?.id;
+        return algorithms.find(({ id }) => id === algorithmId)?.name;
+      });
+
       return {
-        className: buildValidationRowClass(
-          sName,
-          executions.map(({ algorithmName }) => algorithmName),
-        ),
+        className: buildValidationRowClass(sName, algorithmNames),
         key: validationId,
         name: sourceNameButton,
         verifiedAt: verifiedAtString,
