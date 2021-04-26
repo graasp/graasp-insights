@@ -6,6 +6,7 @@ import {
   SAVE_PIPELINE_CHANNEL,
   DELETE_PIPELINE_CHANNEL,
   SHOW_CONFIRM_DELETE_PROMPT_CHANNEL,
+  EXECUTE_PIPELINE_CHANNEL,
 } from '../shared/channels';
 import {
   FLAG_GETTING_PIPELINES,
@@ -15,6 +16,7 @@ import {
   FLAG_SAVING_PIPELINE,
   FLAG_ADDING_PIPELINE,
   FLAG_DELETING_PIPELINE,
+  FLAG_EXECUTING_PIPELINE,
 } from '../shared/types';
 import { createFlag } from './common';
 import {
@@ -25,7 +27,10 @@ import {
   ERROR_SAVING_PIPELINE_MESSAGE,
   ERROR_ADDING_PIPELINE_MESSAGE,
   ERROR_DELETING_PIPELINE_MESSAGE,
+  ERROR_EXECUTING_PIPELINE_MESSAGE,
 } from '../shared/messages';
+import { getExecutions } from './executions';
+import { getDatasets } from './dataset';
 
 export const getPipelines = () => (dispatch) => {
   const flagGettingPipelines = createFlag(FLAG_GETTING_PIPELINES);
@@ -123,5 +128,37 @@ export const deletePipeline = ({ id, name }) => (dispatch) => {
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_DELETING_PIPELINE_MESSAGE);
     dispatch(flagDeletingPipeline(false));
+  }
+};
+
+export const executePipeline = ({
+  pipeline,
+  sourceId,
+  userProvidedFilename,
+  parameters,
+  schemaId,
+}) => (dispatch) => {
+  const flagExecutingPipeline = createFlag(FLAG_EXECUTING_PIPELINE);
+  try {
+    dispatch(flagExecutingPipeline(true));
+    window.ipcRenderer.send(EXECUTE_PIPELINE_CHANNEL, {
+      pipeline,
+      sourceId,
+      userProvidedFilename,
+      parameters,
+      schemaId,
+    });
+    window.ipcRenderer.once(
+      EXECUTE_PIPELINE_CHANNEL,
+      async (event, response) => {
+        dispatch(response);
+        getDatasets()(dispatch);
+        getExecutions()(dispatch);
+        return dispatch(flagExecutingPipeline(false));
+      },
+    );
+  } catch (err) {
+    toastr.error(ERROR_MESSAGE_HEADER, ERROR_EXECUTING_PIPELINE_MESSAGE);
+    dispatch(flagExecutingPipeline(false));
   }
 };

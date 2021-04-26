@@ -1,5 +1,6 @@
 import {
   buildExecutionAlgorithmOptionId,
+  buildExecutionPipelineOptionId,
   buildExecutionDatasetOptionId,
   buildParameterValueInputId,
   EXECUTIONS_ALGORITHMS_SELECT_ID,
@@ -9,6 +10,7 @@ import {
   SET_PARAMETERS_BUTTON_ID,
   SET_PARAMETERS_SAVE_BUTTON_ID,
 } from '../../src/config/selectors';
+
 import { clearInput } from '../utils';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -25,6 +27,42 @@ export const createExecution = async (
   await algorithmSelect.click();
   await (
     await client.$(`#${buildExecutionAlgorithmOptionId(algorithm.id)}`)
+  ).click();
+
+  await (await client.$(`#${EXECUTION_FORM_NAME_INPUT_ID}`)).addValue(name);
+
+  if (parameters) {
+    const setParametersButton = await client.$(`#${SET_PARAMETERS_BUTTON_ID}`);
+    await setParametersButton.click();
+    for (const { name: parameterName, value } of parameters) {
+      const parameterTextField = await client.$(
+        `#${buildParameterValueInputId(parameterName)}`,
+      );
+      await clearInput(parameterTextField);
+      parameterTextField.addValue(value);
+    }
+
+    await (await client.$(`#${SET_PARAMETERS_SAVE_BUTTON_ID}`)).click();
+  }
+
+  await client.pause(1000);
+
+  await (await client.$(`#${EXECUTIONS_EXECUTE_BUTTON_ID}`)).click();
+};
+
+export const createExecutionPipeline = async (
+  client,
+  { dataset, pipeline, name, parameters },
+) => {
+  const datasetSelect = await client.$(`#${EXECUTIONS_DATASETS_SELECT_ID}`);
+  await datasetSelect.click();
+  await (
+    await client.$(`#${buildExecutionDatasetOptionId(dataset.id)}`)
+  ).click();
+  const pipelineSelect = await client.$(`#${EXECUTIONS_ALGORITHMS_SELECT_ID}`);
+  await pipelineSelect.click();
+  await (
+    await client.$(`#${buildExecutionPipelineOptionId(pipeline.id)}`)
   ).click();
 
   await (await client.$(`#${EXECUTION_FORM_NAME_INPUT_ID}`)).addValue(name);

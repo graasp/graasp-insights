@@ -143,6 +143,8 @@ const ERROR_DELETING_VALIDATION_MESSAGE =
   'There was an error deleting the validation';
 const ERROR_CREATING_VALIDATION_MESSAGE =
   'There was an error creating the validation';
+const ERROR_EXECUTING_PIPELINE_MESSAGE =
+  'There was an error executing the pipeline';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -224,4 +226,5 @@ module.exports = {
   ERROR_GETTING_VALIDATIONS_MESSAGE,
   ERROR_DELETING_VALIDATION_MESSAGE,
   ERROR_CREATING_VALIDATION_MESSAGE,
+  ERROR_EXECUTING_PIPELINE_MESSAGE,
 };

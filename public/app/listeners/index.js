@@ -60,6 +60,7 @@ const createValidation = require('./createValidation');
 const deleteValidation = require('./deleteValidation');
 const getValidations = require('./getValidations');
 const showResetTemplatePrompt = require('./showResetTemplatePrompt');
+const executePipeline = require('./executePipeline');
 
 module.exports = {
   getDataset,
@@ -124,4 +125,5 @@ module.exports = {
   deleteValidation,
   getValidations,
   showResetTemplatePrompt,
+  executePipeline,
 };
