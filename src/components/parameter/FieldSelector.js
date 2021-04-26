@@ -84,7 +84,7 @@ FieldSelector.defaultProps = {
 };
 
 const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
-  const { type, selected, expanded } = field;
+  const { type, selected, expanded, properties, items } = field;
   const classes = useStyles();
 
   const handleCheckboxOnChange = (event) => {
@@ -101,9 +101,16 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
   const children = [];
   let childSelected = false;
 
-  if (type?.includes('object')) {
-    const { properties } = field;
-
+  // if type is 'object', then 'properties' defines the content for each of its properties
+  // {
+  //   type: "object",
+  //   properties: {
+  //     prop1: {...},
+  //     prop2: {...},
+  //     ...
+  //   }
+  // }
+  if (type?.includes('object') && properties) {
     const newChildren = Object.entries(properties).map(([key, childField]) => (
       <FieldSelectorTree
         key={key}
@@ -111,7 +118,6 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
         field={childField}
         disabled={disabled}
         onChange={(updatedField) => {
-          // eslint-disable-next-line no-unused-expressions
           onChange({
             ...field,
             properties: { ...properties, [key]: updatedField },
@@ -120,42 +126,54 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
       />
     ));
 
+    // append the new children elements to the children we will render
+    // (concatenate two arrays)
     Array.prototype.push.apply(children, newChildren);
+
+    // check if any of the properties is selected
     childSelected =
       childSelected || anySelected({ type: 'object', properties });
   }
 
-  if (type?.includes('array')) {
-    const { items } = field;
-    if (_.isPlainObject(items)) {
-      const { type: subType } = items;
-      if (subType?.includes('object')) {
-        const { properties } = items;
+  // if type is 'array', then 'items' defines the content of the array's elements
+  // {
+  //   type: "array",
+  //   items: {
+  //     type: "object",
+  //     properties: {...}
+  //   }
+  // }
+  if (type?.includes('array') && items && _.isPlainObject(items)) {
+    const { type: subType, properties: arrayProperties } = items;
+    if (subType?.includes('object') && arrayProperties) {
+      const newChildren = Object.entries(arrayProperties).map(
+        ([key, childField]) => (
+          <FieldSelectorTree
+            key={key}
+            name={key}
+            field={childField}
+            disabled={disabled}
+            onChange={(updatedField) => {
+              onChange({
+                ...field,
+                items: {
+                  ...items,
+                  properties: { ...arrayProperties, [key]: updatedField },
+                },
+              });
+            }}
+          />
+        ),
+      );
 
-        const newChildren = Object.entries(properties).map(
-          ([key, childField]) => (
-            <FieldSelectorTree
-              key={key}
-              name={key}
-              field={childField}
-              disabled={disabled}
-              onChange={(updatedField) => {
-                onChange({
-                  ...field,
-                  items: {
-                    ...items,
-                    properties: { ...properties, [key]: updatedField },
-                  },
-                });
-              }}
-            />
-          ),
-        );
+      // append the new children elements to the children we will render
+      // (concatenate two arrays)
+      Array.prototype.push.apply(children, newChildren);
 
-        Array.prototype.push.apply(children, newChildren);
-        childSelected =
-          childSelected || anySelected({ type: 'object', properties });
-      }
+      // check if any of the array sub-elements is selected
+      childSelected =
+        childSelected ||
+        anySelected({ type: 'object', properties: arrayProperties });
     }
   }
 
@@ -195,7 +213,7 @@ const FieldSelectorTree = ({ name, field, onChange, disabled }) => {
           label={name}
         />
       }
-      {/* render children */}
+      {/* render children (if expanded) */}
       {children && expanded && (
         <div className={classes.shifted}>{children}</div>
       )}

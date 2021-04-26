@@ -24,11 +24,18 @@ const {
   EXECUTE_ALGORITHM_SUCCESS,
   EXECUTE_ALGORITHM_ERROR,
   EXECUTE_ALGORITHM_STOP,
+  EXECUTE_ALGORITHM_UPDATE,
 } = require('../../shared/types');
+const { parseValidationResult } = require('../utils/validation');
 const { cancelExecutionObject } = require('./cancelExecution');
+const {
+  ALGORITHM_DATASET_PATH_NAME,
+  ALGORITHM_OUTPUT_PATH_NAME,
+  ALGORITHM_ORIGIN_PATH_NAME,
+} = require('../config/config');
 
 const createNewResultDataset = (
-  { name, filepath, algorithmId, description, original },
+  { name, filepath, algorithmId, description, originId },
   db,
 ) => {
   const result = createNewDataset(
@@ -40,8 +47,8 @@ const createNewResultDataset = (
     },
     db,
   );
-  result.algorithmId = algorithmId;
-  return { ...result, original };
+
+  return { ...result, algorithmId, originId };
 };
 
 const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
@@ -50,15 +57,14 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     // get the execution
     const {
       source: { id: sourceId },
-      algorithm: { id: algorithmId },
+      algorithm: { id: algorithmId, type },
       result: { name },
       parameters,
       schemaId,
-      type,
     } = db.get(EXECUTIONS_COLLECTION).find({ id: executionId }).value();
 
     // get corresponding dataset
-    const { filepath, name: datasetName, description, original } = db
+    const { filepath, name: datasetName, description, originId } = db
       .get(DATASETS_COLLECTION)
       .find({ id: sourceId })
       .value();
@@ -71,9 +77,9 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     } = db.get(ALGORITHMS_COLLECTION).find({ id: algorithmId }).value();
 
     // get original dataset
-    const { filepath: originalfilepath } = db
+    const { filepath: originfilepath } = db
       .get(DATASETS_COLLECTION)
-      .find({ id: original })
+      .find({ id: originId })
       .value() || { filepath };
 
     const tmpPath = path.join(DATASETS_FOLDER, `tmp_${executionId}.json`);
@@ -81,10 +87,23 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     // prepare onRun callback function
     // set execution as running and pid
     const onRun = ({ pid }) => {
-      db.get(EXECUTIONS_COLLECTION)
+      const execution = db
+        .get(EXECUTIONS_COLLECTION)
         .find({ id: executionId })
         .assign({ status: EXECUTION_STATUSES.RUNNING, pid })
         .write();
+
+      // check whether mainWindow still exist in case of
+      // the app quits before the process get killed
+      return (
+        !mainWindow.isDestroyed() &&
+        mainWindow?.webContents?.send(channel, {
+          type: EXECUTE_ALGORITHM_UPDATE,
+          payload: {
+            execution,
+          },
+        })
+      );
     };
 
     // prepare success callback function
@@ -102,7 +121,7 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
               filepath: tmpPath,
               algorithmId,
               description,
-              original,
+              originId,
             },
             db,
           );
@@ -114,9 +133,7 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
           break;
         }
         case ALGORITHM_TYPES.VALIDATION: {
-          const resultString = log.match(
-            /{.*"outcome":\s*"(success|warning|failure)".*}/m,
-          )?.[0];
+          const resultString = parseValidationResult(log);
           result = resultString ? JSON.parse(resultString) : {};
           break;
         }
@@ -173,10 +190,23 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     };
 
     const onLog = ({ log }) => {
-      db.get(EXECUTIONS_COLLECTION)
+      const execution = db
+        .get(EXECUTIONS_COLLECTION)
         .find({ id: executionId })
         .assign({ log })
         .write();
+
+      // check whether mainWindow still exist in case of
+      // the app quits before the process get killed
+      return (
+        !mainWindow.isDestroyed() &&
+        mainWindow?.webContents?.send(channel, {
+          type: EXECUTE_ALGORITHM_UPDATE,
+          payload: {
+            execution,
+          },
+        })
+      );
     };
 
     // error handling when executing
@@ -197,33 +227,44 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
         mainWindow?.webContents?.send(channel, {
           type: EXECUTE_ALGORITHM_ERROR,
           error: ERROR_EXECUTION_PROCESS,
-          log,
+          payload: {
+            execution: db
+              .get(EXECUTIONS_COLLECTION)
+              .find({ id: executionId })
+              .value(),
+          },
         })
       );
     };
 
+    // path to the dataset
     const datasetPathParameter = {
-      name: 'dataset_path',
+      name: ALGORITHM_DATASET_PATH_NAME,
       type: PARAMETER_TYPES.STRING_INPUT,
       value: filepath,
     };
 
+    // destination path
+    // indicates where the algorithm should save the resulting dataset
     const outputPathParameter = {
-      name: 'output_path',
+      name: ALGORITHM_OUTPUT_PATH_NAME,
       type: PARAMETER_TYPES.STRING_INPUT,
       value: tmpPath,
     };
 
-    const originalPathParameter = {
-      name: 'original_path',
+    // path to the original dataset prior to any execution
+    // useful when data from the original dataset is necessary
+    // (detect names algorithm for example)
+    const originPathParameter = {
+      name: ALGORITHM_ORIGIN_PATH_NAME,
       type: PARAMETER_TYPES.STRING_INPUT,
-      value: originalfilepath,
+      value: originfilepath,
     };
 
     const fullParameters = [
       datasetPathParameter,
       outputPathParameter,
-      originalPathParameter,
+      originPathParameter,
       ...parameters,
     ];
 

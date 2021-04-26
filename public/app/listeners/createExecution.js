@@ -15,7 +15,7 @@ const logger = require('../logger');
 
 const createExecutionObject = (
   db,
-  { algorithm, source, result, parameters, schemaId, type },
+  { algorithm, source, result, parameters, schemaId },
 ) => {
   const id = ObjectId().str;
   const status = EXECUTION_STATUSES.PENDING;
@@ -28,7 +28,6 @@ const createExecutionObject = (
     result,
     parameters,
     schemaId,
-    type,
     status,
     executedAt,
   };
@@ -54,14 +53,13 @@ const createExecution = (mainWindow, db) => async (
 
     // add execution
     const execution = createExecutionObject(db, {
-      algorithm: { id: algorithmId },
+      algorithm: { id: algorithmId, type },
       source: { id: sourceId },
       result: {
         name: userProvidedFilename || `${datasetName}_${algorithmName}`,
       },
       parameters,
       schemaId,
-      type,
     });
 
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {

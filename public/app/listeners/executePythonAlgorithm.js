@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 const { spawn } = require('child_process');
 const { PARAMETER_TYPES } = require('../../shared/constants');
 const logger = require('../logger');
@@ -37,7 +36,7 @@ const executePythonAlgorithm = (
 
   const args = [algorithmFilepath, ...preparedParameters];
   let log = buildLogLine(`python ${args.join(' ')}`);
-  onLog?.({ log });
+  onLog({ log });
 
   const process = spawn('python', args);
 
@@ -47,13 +46,13 @@ const executePythonAlgorithm = (
     const textChunk = chunk.toString('utf8'); // buffer to string
     logger.debug(textChunk);
     log += buildLogLine(chunk);
-    onLog?.({ log });
+    onLog({ log });
   });
 
   process.stderr.on('data', (data) => {
     logger.error(data);
     log += buildLogLine(data);
-    onLog?.({ log });
+    onLog({ log });
   });
 
   process.on('close', (code) => {
@@ -66,7 +65,7 @@ const executePythonAlgorithm = (
         break;
       // null = kill with tree kill
       case null:
-        onStop?.();
+        onStop();
         break;
       default:
         onError({ code, log });

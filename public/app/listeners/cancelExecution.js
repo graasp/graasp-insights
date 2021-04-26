@@ -36,6 +36,7 @@ const cancelExecution = (mainWindow, db) => async (e, { id }) => {
 
     mainWindow.webContents.send(STOP_EXECUTION_CHANNEL, {
       type: STOP_EXECUTION_SUCCESS,
+      payload: { id },
     });
   } catch (err) {
     logger.error(err);

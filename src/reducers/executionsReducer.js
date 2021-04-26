@@ -14,6 +14,9 @@ import {
   CLEAR_EXECUTION_SUCCESS,
   FLAG_CLEARING_EXECUTION,
   CREATE_VALIDATION_SUCCESS,
+  EXECUTE_ALGORITHM_UPDATE,
+  STOP_EXECUTION_SUCCESS,
+  EXECUTE_ALGORITHM_ERROR,
 } from '../shared/types';
 import { EXECUTION_STATUSES } from '../shared/constants';
 
@@ -40,7 +43,10 @@ const addExecutionToList = (execution) => (executions) => {
 
 const setExecutionStatus = ({ id }, status) => (executions) => {
   const idx = executions.findIndex(({ id: executionId }) => executionId === id);
-  return executions.setIn([idx, 'status'], status);
+  if (idx >= 0) {
+    return executions.setIn([idx, 'status'], status);
+  }
+  return executions;
 };
 
 export default (state = INITIAL_STATE, { type, payload }) => {
@@ -49,20 +55,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case FLAG_DELETING_EXECUTION:
     case FLAG_GETTING_EXECUTIONS:
     case FLAG_GETTING_EXECUTION:
+    case FLAG_EXECUTING_ALGORITHM:
     case FLAG_CLEARING_EXECUTION:
       return state.update('activity', updateActivityList(payload));
-    case FLAG_EXECUTING_ALGORITHM: {
-      let tmp = state;
-      if (payload) {
-        // manually update the status of execution
-        // this avoids a call to electron to fetch the running status
-        tmp = state.update(
-          'executions',
-          setExecutionStatus(payload, EXECUTION_STATUSES.RUNNING),
-        );
-      }
-      return tmp;
-    }
     case GET_EXECUTIONS_SUCCESS:
       return state.set('executions', List(payload));
     case GET_EXECUTION_SUCCESS:
@@ -72,20 +67,31 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case CREATE_EXECUTION_SUCCESS:
       return state.update('executions', addExecutionToList(payload));
     case EXECUTE_ALGORITHM_SUCCESS:
-      return state.update('executions', updateExecution(payload.execution));
+    case EXECUTE_ALGORITHM_ERROR:
+    case EXECUTE_ALGORITHM_UPDATE: {
+      let tmp = state;
+
+      // if 'current' execution = modified execution => update it
+      if (state.getIn(['current', 'id']) === payload.execution.id) {
+        tmp = state.set('current', Map(payload.execution));
+      }
+
+      return tmp.update('executions', updateExecution(payload.execution));
+    }
     case DELETE_EXECUTION_SUCCESS:
       return state.update('executions', (executions) =>
         executions.delete(
           executions.findIndex(({ id: exId }) => exId === payload),
         ),
       );
+    case STOP_EXECUTION_SUCCESS:
+      return state.update(
+        'executions',
+        setExecutionStatus(payload, EXECUTION_STATUSES.ERROR),
+      );
     case CREATE_VALIDATION_SUCCESS:
       return state.update('executions', (executions) =>
-        payload.executions.reduce(
-          (executionsList, execution) =>
-            addExecutionToList(execution)(executionsList),
-          executions,
-        ),
+        executions.concat(payload.executions),
       );
 
     default:

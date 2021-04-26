@@ -221,7 +221,7 @@ class Validation extends Component {
       },
     ];
 
-    const rows = validations.map((validation) => {
+    const rows = validations.reverse().map((validation) => {
       const {
         id: validationId,
         verifiedAt,

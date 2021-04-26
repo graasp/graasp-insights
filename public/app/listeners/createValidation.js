@@ -16,12 +16,11 @@ const createValidation = (mainWindow, db) => async (
   try {
     const executions = algorithms.map(({ id: algorithmId, parameters, type }) =>
       createExecutionObject(db, {
-        algorithm: { id: algorithmId },
+        algorithm: { id: algorithmId, type },
         source: { id: sourceId },
         result: {},
         parameters,
         schemaId,
-        type,
       }),
     );
 

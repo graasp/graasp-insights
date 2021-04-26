@@ -15,14 +15,14 @@ const deleteAlgorithm = (mainWindow, db) => async (event, { id }) => {
   try {
     // get algorithm from local db
     const algorithm = db.get(ALGORITHMS_COLLECTION).find({ id }).value();
-    const { filepath, name } = algorithm;
+    const { filepath, name, type } = algorithm;
 
     // update related executions
     db.get(EXECUTIONS_COLLECTION)
       .filter(({ algorithm: { id: algorithmId } }) => algorithmId === id)
       .each((exec) => {
         // eslint-disable-next-line no-param-reassign
-        exec.algorithm = { name };
+        exec.algorithm = { name, type };
       })
       .write();
 

@@ -240,7 +240,7 @@ const DETECT_USERS = {
   parameters: [DETECT_USERS_PARAMETERS_FIELDS],
 };
 
-const VERIFY_KANONYMITY_PARAMETERS = [
+const VERIFY_K_ANONYMITY_PARAMETERS = [
   {
     name: 'quasi_identifiers',
     type: PARAMETER_TYPES.FIELD_SELECTOR,
@@ -255,7 +255,7 @@ const VERIFY_KANONYMITY_PARAMETERS = [
   },
 ];
 
-const VERIFY_KANONYMITY = {
+const VERIFY_K_ANONYMITY = {
   id: 'verify-kanonymity',
   name: 'Verifiy k-anonymity',
   description:
@@ -264,10 +264,10 @@ const VERIFY_KANONYMITY = {
   author: AUTHORS.GRAASP,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   type: ALGORITHM_TYPES.VALIDATION,
-  parameters: VERIFY_KANONYMITY_PARAMETERS,
+  parameters: VERIFY_K_ANONYMITY_PARAMETERS,
 };
 
-const VERIFY_LDIVERSITY_PARAMETERS = [
+const VERIFY_L_DIVERSITY_PARAMETERS = [
   {
     name: 'quasi_identifiers',
     type: PARAMETER_TYPES.FIELD_SELECTOR,
@@ -288,7 +288,7 @@ const VERIFY_LDIVERSITY_PARAMETERS = [
   },
 ];
 
-const VERIFY_LDIVERSITY = {
+const VERIFY_L_DIVERSITY = {
   id: 'verify-ldiversity',
   name: 'Verifiy l-diversity',
   description:
@@ -297,7 +297,7 @@ const VERIFY_LDIVERSITY = {
   author: AUTHORS.GRAASP,
   language: PROGRAMMING_LANGUAGES.PYTHON,
   type: ALGORITHM_TYPES.VALIDATION,
-  parameters: VERIFY_LDIVERSITY_PARAMETERS,
+  parameters: VERIFY_L_DIVERSITY_PARAMETERS,
 };
 
 const GRAASP_ALGORITHMS = [
@@ -309,8 +309,8 @@ const GRAASP_ALGORITHMS = [
   SHUFFLE_FIELDS,
   VERIFY_POTENTIALLY_DANGEROUS,
   DETECT_USERS,
-  VERIFY_KANONYMITY,
-  VERIFY_LDIVERSITY,
+  VERIFY_K_ANONYMITY,
+  VERIFY_L_DIVERSITY,
 ];
 
 module.exports = GRAASP_ALGORITHMS;

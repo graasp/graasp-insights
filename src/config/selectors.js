@@ -68,9 +68,6 @@ export const ALGORITHM_DELETE_BUTTON_CLASS = 'algorithmDeleteButton';
 export const buildAlgorithmRowClass = (name) =>
   `algorithmRow-${parseName(name)}`;
 export const ALGORITHM_DESCRIPTION_CLASS = 'algorithmDescription';
-export const ALGORITHM_TYPE_CLASS = 'algorithmType';
-export const ALGORITHM_AUTHOR_CLASS = 'algorithmAuthor';
-export const ALGORITHM_LANGUAGE_CLASS = 'algorithmLanguage';
 export const ALGORITHM_ADD_BUTTON_ID = 'algorithmAddButton';
 export const ALGORITHM_EDIT_BUTTON_CLASS = 'algorithmEditButton';
 export const ALGORITHM_TYPE_SELECT_ID = 'algorithmTypeSelect';

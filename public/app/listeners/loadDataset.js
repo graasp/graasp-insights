@@ -45,7 +45,7 @@ const createNewDataset = ({ name, filepath, description, type }, db) => {
     lastModified,
     schemaIds,
     type,
-    original: fileId,
+    originId: fileId,
   };
 };
 

@@ -31,7 +31,7 @@ def parse_arguments(additional_arguments=[]):
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_path', type=str)
     parser.add_argument('--output_path', type=str)
-    parser.add_argument('--original_path', type=str)
+    parser.add_argument('--origin_path', type=str)
 
     for arg in additional_arguments:
         if 'name' in arg and 'type' in arg:
@@ -179,7 +179,8 @@ def find_selected_arrays(dataset, field_selection):
             'selected', False) or any_selected(items)
 
         if isinstance(items, dict) and selected:
-            arrays.append({'array': dataset, 'field_selection': field_selection})
+            arrays.append(
+                {'array': dataset, 'field_selection': field_selection})
 
     return arrays
 
@@ -216,3 +217,17 @@ def get_selected_values(elem, field_selection):
                         elem, a_field_selection))
 
     return values
+
+
+version = platform.python_version()[0]
+if version == "3":
+    def isstr(s):
+        # in python 2.* unicode strings are not an instance of str
+        # in python 3.*, they are
+        return isinstance(s, str)
+else:
+    def isstr(s):
+        # in python 2.*, basestring matches both natural strings and
+        # unicode strings
+        # in python 3.*, basestring doesn't exist
+        return isinstance(s, basestring)

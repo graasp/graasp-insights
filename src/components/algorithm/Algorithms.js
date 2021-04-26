@@ -30,9 +30,6 @@ import {
   buildAlgorithmRowClass,
   ALGORITHM_NAME_CLASS,
   ALGORITHM_DESCRIPTION_CLASS,
-  ALGORITHM_TYPE_CLASS,
-  ALGORITHM_AUTHOR_CLASS,
-  ALGORITHM_LANGUAGE_CLASS,
   ALGORITHM_DELETE_BUTTON_CLASS,
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
@@ -40,7 +37,6 @@ import {
 } from '../../config/selectors';
 import LocationPathAlert from '../common/LocationPathAlert';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
-import { formatFileSize } from '../../shared/formatting';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -177,30 +173,23 @@ class Algorithms extends Component {
       {
         columnName: t('Author'),
         sortBy: 'author',
-        field: 'authorField',
+        field: 'author',
         alignColumn: 'left',
         alignField: 'left',
       },
       {
         columnName: t('Type'),
         sortBy: 'type',
-        field: 'typeField',
+        field: 'type',
         alignColumn: 'left',
         alignField: 'left',
       },
       {
         columnName: t('Language'),
         sortBy: 'language',
-        field: 'languageField',
+        field: 'language',
         alignColumn: 'left',
         alignField: 'left',
-      },
-      {
-        columnName: t('Size'),
-        sortBy: 'sizeNumeric',
-        field: 'size',
-        alignColumn: 'right',
-        alignField: 'right',
       },
       {
         columnName: t('Created'),
@@ -233,10 +222,8 @@ class Algorithms extends Component {
         language,
         createdAt,
         lastModified,
-        size,
         type,
       } = algorithm;
-      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
@@ -284,22 +271,9 @@ class Algorithms extends Component {
           </Typography>,
         ],
         type,
-        typeField: (
-          <Typography className={ALGORITHM_TYPE_CLASS}>{type}</Typography>
-        ),
         author,
-        authorField: (
-          <Typography className={ALGORITHM_AUTHOR_CLASS}>{author}</Typography>
-        ),
         language,
-        languageField: (
-          <Typography className={ALGORITHM_LANGUAGE_CLASS}>
-            {language}
-          </Typography>
-        ),
         quickActions,
-        size: sizeString,
-        sizeNumeric: size,
         createdAt: createdAtString,
         lastModified: lastModifiedString,
       };

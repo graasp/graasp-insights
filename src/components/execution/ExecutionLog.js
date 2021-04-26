@@ -4,9 +4,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getExecution } from '../../actions';
-import { GET_EXECUTION_INTERVAL_TIME } from '../../config/constants';
 import { EXECUTION_VIEW_LOG_ID } from '../../config/selectors';
-import { EXECUTION_STATUSES } from '../../shared/constants';
 import ExecutionStatusIcon from './ExecutionStatusIcon';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,18 +28,8 @@ const ExecutionLog = ({ id }) => {
 
   // fetch execution to update log every set interval
   useEffect(() => {
-    let interval = null;
-    if (execution.get('status') === EXECUTION_STATUSES.RUNNING) {
-      interval = setInterval(() => {
-        dispatch(getExecution(id));
-      }, GET_EXECUTION_INTERVAL_TIME);
-    } else {
-      clearInterval(interval);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [execution, id, dispatch]);
+    dispatch(getExecution(id));
+  }, [dispatch, id]);
 
   return (
     <>

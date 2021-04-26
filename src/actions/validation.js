@@ -27,7 +27,7 @@ export const getValidations = () => (dispatch) => {
     window.ipcRenderer.send(GET_VALIDATIONS_CHANNEL);
     window.ipcRenderer.once(GET_VALIDATIONS_CHANNEL, async (event, payload) => {
       dispatch(payload);
-      return dispatch(flagGettingValidations(false));
+      dispatch(flagGettingValidations(false));
     });
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_GETTING_VALIDATIONS_MESSAGE);

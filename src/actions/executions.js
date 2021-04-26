@@ -19,6 +19,8 @@ import {
   FLAG_GETTING_EXECUTION,
   CLEAR_EXECUTION_SUCCESS,
   FLAG_CLEARING_EXECUTION,
+  EXECUTE_ALGORITHM_SUCCESS,
+  EXECUTE_ALGORITHM_ERROR,
 } from '../shared/types';
 import {
   ERROR_MESSAGE_HEADER,
@@ -67,15 +69,22 @@ export const executeAlgorithm = (execution) => (dispatch) => {
 
   try {
     dispatch(flagExecutingAlgorithm(true));
+
+    const channel = buildExecuteAlgorithmChannel(execution.id);
+
+    const listener = async (event, payload) => {
+      dispatch(payload);
+      switch (payload.type) {
+        case EXECUTE_ALGORITHM_SUCCESS:
+        case EXECUTE_ALGORITHM_ERROR:
+          window.ipcRenderer.removeListener(channel, listener);
+          dispatch(flagExecutingAlgorithm(false));
+          break;
+        default:
+      }
+    };
     window.ipcRenderer.send(EXECUTE_ALGORITHM_CHANNEL, execution);
-    window.ipcRenderer.once(
-      buildExecuteAlgorithmChannel(execution.id),
-      async (event, payload) => {
-        dispatch(payload);
-        dispatch(flagExecutingAlgorithm(false));
-        return getExecutions()(dispatch);
-      },
-    );
+    window.ipcRenderer.on(channel, listener);
   } catch (err) {
     toastr.error(ERROR_MESSAGE_HEADER, ERROR_EXECUTING_ALGORITHM_MESSAGE);
     dispatch(flagExecutingAlgorithm(false));

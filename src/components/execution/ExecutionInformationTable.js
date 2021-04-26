@@ -62,9 +62,8 @@ function ExecutionInformationTable() {
   );
 
   const result = execution.get('result') || {};
-  const type = execution.get('type') || '';
   let resultView;
-  switch (type) {
+  switch (algorithm.type) {
     case ALGORITHM_TYPES.ANONYMIZATION:
       resultView = (
         <ResultViewButton
@@ -77,7 +76,7 @@ function ExecutionInformationTable() {
     case ALGORITHM_TYPES.VALIDATION:
       resultView = (
         <>
-          <Grid container textAlign="center">
+          <Grid container alignItems="center">
             <Grid item>
               <ValidationStatusIcon outcome={result.outcome} />
             </Grid>

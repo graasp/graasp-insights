@@ -4,7 +4,7 @@ const { SHOW_RESET_TEMPLATE_PROMPT_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
 
 const showResetTemplatePrompt = (mainWindow) => () => {
-  logger.debug('showing confirm open dataset prompt');
+  logger.debug('showing confirm reset template prompt');
 
   const options = {
     type: 'warning',

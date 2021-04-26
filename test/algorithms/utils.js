@@ -9,11 +9,9 @@ import {
   ADD_ALGORITHM_SAVE_BUTTON_ID,
   ALGORITHMS_MENU_ITEM_ID,
   ALGORITHM_ADD_BUTTON_ID,
-  ALGORITHM_AUTHOR_CLASS,
   ALGORITHM_DELETE_BUTTON_CLASS,
   ALGORITHM_DESCRIPTION_CLASS,
   ALGORITHM_EDIT_BUTTON_CLASS,
-  ALGORITHM_LANGUAGE_CLASS,
   ALGORITHM_NAME_CLASS,
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -38,7 +36,6 @@ import {
   buildAddAlgorithmTypeOptionId,
   EDIT_ALGORITHM_TYPE_SELECT_ID,
   buildEditAlgorithmTypeOptionId,
-  ALGORITHM_TYPE_CLASS,
 } from '../../src/config/selectors';
 import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
@@ -109,15 +106,9 @@ export const checkAlgorithmRowLayout = async (client, algorithm) => {
       await matchedAlgorithm.$(`.${ALGORITHM_DESCRIPTION_CLASS}`)
     ).getText(),
   ).to.equal(description.replace(/\s+/g, ' '));
-  expect(
-    await (await matchedAlgorithm.$(`.${ALGORITHM_TYPE_CLASS}`)).getText(),
-  ).to.equal(type);
-  expect(
-    await (await matchedAlgorithm.$(`.${ALGORITHM_AUTHOR_CLASS}`)).getText(),
-  ).to.equal(author);
-  expect(
-    await (await matchedAlgorithm.$(`.${ALGORITHM_LANGUAGE_CLASS}`)).getText(),
-  ).to.equal(language);
+  expect(await matchedAlgorithm.getText()).to.contain(type);
+  expect(await matchedAlgorithm.getText()).to.contain(author);
+  expect(await matchedAlgorithm.getText()).to.contain(language);
 };
 
 export const getNumberOfAlgorithms = async (client) => {

@@ -251,7 +251,9 @@ const mapStateToProps = ({ dataset, algorithms, executions, result }) => ({
     Boolean(executions.get('activity').size),
   executions: executions
     .getIn(['executions'])
-    .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION),
+    .filter(
+      ({ algorithm: { type } }) => type === ALGORITHM_TYPES.ANONYMIZATION,
+    ),
   results: result.getIn(['results']),
 });
 

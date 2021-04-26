@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -36,8 +36,9 @@ import {
 import { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import BackButton from '../common/BackButton';
 import Main from '../common/Main';
-import SchemaTag from '../common/SchemaTag';
+import SchemaTags from '../common/SchemaTags';
 import SetParametersFormButton from '../parameter/SetParametersFormButton';
+import { VALIDATION_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
   backButton: {
@@ -67,7 +68,7 @@ const styles = (theme) => ({
 class AddValidation extends Component {
   static propTypes = {
     history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
+      push: PropTypes.func.isRequired,
     }).isRequired,
     dispatchGetDatasets: PropTypes.func.isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
@@ -75,7 +76,6 @@ class AddValidation extends Component {
     dispatchCreateValidation: PropTypes.func.isRequired,
     datasets: PropTypes.instanceOf(List).isRequired,
     results: PropTypes.instanceOf(List).isRequired,
-    schemas: PropTypes.instanceOf(Map).isRequired,
     validationAlgorithms: PropTypes.instanceOf(List).isRequired,
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
@@ -157,7 +157,7 @@ class AddValidation extends Component {
 
   handleExecute = () => {
     const {
-      history: { goBack },
+      history: { push },
       dispatchCreateValidation,
     } = this.props;
     const { sourceId, selectedValidationAlgorithms, schemaId } = this.state;
@@ -166,7 +166,7 @@ class AddValidation extends Component {
       algorithms: selectedValidationAlgorithms,
       schemaId,
     });
-    goBack();
+    push(VALIDATION_PATH);
   };
 
   handleAddAlgorithm = () => {
@@ -195,7 +195,7 @@ class AddValidation extends Component {
 
   renderDatasetsAndResultsSelect = () => {
     const { sourceId } = this.state;
-    const { classes, t, datasets, results, schemas } = this.props;
+    const { classes, t, datasets, results } = this.props;
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
@@ -208,11 +208,7 @@ class AddValidation extends Component {
         >
           <Grid container alignItems="center" spacing={1}>
             <Grid item>{name}</Grid>
-            {schemaIds?.map((schemaId) => (
-              <Grid item key={schemaId}>
-                <SchemaTag schema={schemas.get(schemaId)} />
-              </Grid>
-            ))}
+            <SchemaTags schemaIds={schemaIds} showTooltip={false} />
           </Grid>
         </MenuItem>
       ));
@@ -266,7 +262,6 @@ class AddValidation extends Component {
         <InputLabel>{algorithmLabel}</InputLabel>
         <Select
           id={ADD_VALIDATION_ALGORITHMS_SELECT_ID}
-          labelId="algorithm-select"
           value={algorithmId}
           onChange={this.handleAlgorithmSelectOnChange}
           label={algorithmLabel}
@@ -410,13 +405,12 @@ class AddValidation extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset, algorithms, result, schema }) => ({
+const mapStateToProps = ({ dataset, algorithms, result }) => ({
   datasets: dataset.get('datasets'),
   results: result.get('results'),
   validationAlgorithms: algorithms
     .get('algorithms')
     .filter(({ type }) => type === ALGORITHM_TYPES.VALIDATION),
-  schemas: schema.getIn(['schemas']),
 });
 
 const mapDispatchToProps = {

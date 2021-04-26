@@ -57,13 +57,14 @@ const ValidationStatusIcon = ({ outcome, info, className }) => {
 
 ValidationStatusIcon.propTypes = {
   className: PropTypes.string,
-  outcome: PropTypes.oneOf(Object.values(VALIDATION_STATUSES)).isRequired,
+  outcome: PropTypes.oneOf(Object.values(VALIDATION_STATUSES)),
   info: PropTypes.string,
 };
 
 ValidationStatusIcon.defaultProps = {
   className: '',
   info: '',
+  outcome: null,
 };
 
 export default ValidationStatusIcon;

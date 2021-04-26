@@ -7,16 +7,7 @@ import re
 import platform
 
 from graasp_utils import (load_dataset, parse_arguments, save_dataset,
-                          sha256_hash)
-
-
-version = platform.python_version()[0]
-if version == "3":
-    def isstr(s):
-        return isinstance(s, str)
-else:
-    def isstr(s):
-        return isinstance(s, basestring)
+                          sha256_hash, isstr)
 
 
 def find_and_replace(dataset, substitution_map):

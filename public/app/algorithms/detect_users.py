@@ -4,19 +4,9 @@ presence
 
 import re
 import json
-import platform
 
 from graasp_utils import (load_dataset, parse_arguments, iterate_and_apply,
-                          ValidationOutcome, notify_validation_result)
-
-
-version = platform.python_version()[0]
-if version == "3":
-    def isstr(s):
-        return isinstance(s, str)
-else:
-    def isstr(s):
-        return isinstance(s, basestring)
+                          ValidationOutcome, notify_validation_result, isstr)
 
 
 def get_regex(name):
@@ -65,7 +55,7 @@ def main():
 
     # extract arguments
     dataset = load_dataset(args.dataset_path)
-    original_dataset = load_dataset(args.original_path)
+    original_dataset = load_dataset(args.origin_path)
     fields = json.loads(args.fields)
 
     usernames = []

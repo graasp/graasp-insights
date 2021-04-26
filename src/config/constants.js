@@ -127,5 +127,3 @@ export const MAX_SHOWN_SCHEMA_TAGS = 3;
 
 export const JSON_SCHEMA_GETTING_STARTED_URL =
   'https://json-schema.org/learn/getting-started-step-by-step.html';
-
-export const GET_EXECUTION_INTERVAL_TIME = 2000;
