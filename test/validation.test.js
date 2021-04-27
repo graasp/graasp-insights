@@ -8,7 +8,6 @@ import {
   buildAddValidationAlgorithmOptionId,
   buildAddValidationDatasetOptionId,
   buildValidationRowClass,
-  DATASET_NAME_CLASS,
   VALIDATION_ADD_BUTTON_ID,
   VALIDATION_DELETE_BUTTON_CLASS,
   VALIDATION_EXECUTION_RESULT_CLASS,
@@ -37,8 +36,7 @@ import {
 import { mochaAsync } from './utils';
 
 const getNumberOfValidations = async (client) => {
-  return (await client.$$(`#${VALIDATION_TABLE_ID} .${DATASET_NAME_CLASS}`))
-    .length;
+  return (await client.$$(`#${VALIDATION_TABLE_ID} tbody tr`)).length;
 };
 
 const checkValidationRowLayout = async (client, validation) => {
@@ -53,9 +51,7 @@ const checkValidationRowLayout = async (client, validation) => {
     )}`,
   );
 
-  expect(
-    await (await matchedValidation.$(`.${DATASET_NAME_CLASS}`)).getText(),
-  ).to.equal(datasetName);
+  expect(await matchedValidation.getText()).to.contain(datasetName);
 
   const validationExecutionResults = await matchedValidation.$$(
     `.${VALIDATION_EXECUTION_RESULT_CLASS}`,

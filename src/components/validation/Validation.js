@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,7 +9,6 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Alert from '@material-ui/lab/Alert';
-import clsx from 'clsx';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
@@ -36,9 +34,9 @@ import {
 import {
   ALGORITHM_NAME_CLASS,
   buildExecutionAlgorithmButtonId,
+  buildExecutionSourceButtonId,
   buildExecutionViewButtonId,
   buildValidationRowClass,
-  DATASET_NAME_CLASS,
   VALIDATION_ADD_BUTTON_ID,
   VALIDATION_DELETE_BUTTON_CLASS,
   VALIDATION_EXECUTION_RESULT_CLASS,
@@ -50,14 +48,10 @@ import Table from '../common/Table';
 import LoadDatasetButton from '../LoadDatasetButton';
 import { FLAG_GETTING_VALIDATIONS } from '../../shared/types';
 import ValidationStatusIcon from './ValidationStatusIcon';
-import ExecutionStatusIcon from '../execution/ExecutionStatusIcon';
 import AlgorithmViewButton from '../execution/AlgorithmViewButton';
+import DatasetViewButton from '../execution/DatasetViewButton';
 
 const styles = (theme) => ({
-  link: {
-    textTransform: 'none',
-    textAlign: 'left',
-  },
   addButton: {
     color: theme.palette.secondary.main,
     backgroundColor: theme.palette.primary.main,
@@ -85,7 +79,6 @@ class Validation extends Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.shape({
-      link: PropTypes.string.isRequired,
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
       statusInfoTooltip: PropTypes.string.isRequired,
@@ -163,23 +156,24 @@ class Validation extends Component {
   };
 
   renderAddButon() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     return (
-      <IconButton
-        id={VALIDATION_ADD_BUTTON_ID}
-        variant="contained"
-        className={classes.addButton}
-        onClick={this.handleAdd}
-      >
-        <AddIcon />
-      </IconButton>
+      <Tooltip placement="left" title={t('Add a validation')} arrow>
+        <IconButton
+          id={VALIDATION_ADD_BUTTON_ID}
+          variant="contained"
+          className={classes.addButton}
+          onClick={this.handleAdd}
+        >
+          <AddIcon />
+        </IconButton>
+      </Tooltip>
     );
   }
 
   renderTable() {
     const {
       t,
-      classes,
       validations,
       datasets,
       results,
@@ -190,13 +184,13 @@ class Validation extends Component {
     const columns = [
       {
         columnName: 'Name',
-        sortBy: 'name',
-        field: 'name',
+        sortBy: 'datasetName',
+        field: 'datasetButton',
         alignColumn: 'left',
         alignField: 'left',
       },
       {
-        columnName: 'Validation result',
+        columnName: 'Executed Validation',
         field: 'verifications',
         alignColumn: 'left',
         alignField: 'center',
@@ -225,7 +219,7 @@ class Validation extends Component {
       const {
         id: validationId,
         verifiedAt,
-        source: { id: sourceId },
+        source,
         executions: validationExecutions,
       } = validation;
 
@@ -233,26 +227,17 @@ class Validation extends Component {
         ? new Date(verifiedAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
 
-      const sName =
+      const datasetName =
         [...(datasets || []), ...(results || [])].find(
-          ({ id: thisSourceId }) => thisSourceId === sourceId,
+          ({ id: thisSourceId }) => thisSourceId === source?.id,
         )?.name || t('Unknown');
 
-      const sourceProps = sourceId
-        ? {
-            onClick: () => this.handleSourceView(sourceId),
-          }
-        : {
-            disabled: true,
-          };
       const sourceNameButton = (
-        <Button
-          className={clsx(DATASET_NAME_CLASS, classes.link)}
+        <DatasetViewButton
+          linkId={buildExecutionSourceButtonId(source?.id)}
           // eslint-disable-next-line react/jsx-props-no-spreading
-          {...sourceProps}
-        >
-          {sName}
-        </Button>
+          {...source}
+        />
       );
 
       const verificationsGrid = (
@@ -276,13 +261,6 @@ class Validation extends Component {
                 {...algorithm}
               />
             );
-
-            const statusIcon =
-              status === EXECUTION_STATUSES.SUCCESS ? (
-                <ValidationStatusIcon outcome={outcome} info={info} />
-              ) : (
-                <ExecutionStatusIcon status={status} />
-              );
 
             return (
               <Grid
@@ -323,11 +301,20 @@ class Validation extends Component {
                       </Tooltip>
                     )}
                   </Grid>
-                  <Grid item>{statusIcon}</Grid>
+                  <Grid item>
+                    <ValidationStatusIcon
+                      status={status}
+                      outcome={outcome}
+                      info={info}
+                    />
+                  </Grid>
                   <Grid item>
                     <Tooltip title={t('View execution')} key="view">
                       <IconButton
-                        id={buildExecutionViewButtonId(sourceId, algorithm?.id)}
+                        id={buildExecutionViewButtonId(
+                          source?.id,
+                          algorithm?.id,
+                        )}
                         aria-label="view"
                         onClick={() => this.handleView(executionId)}
                         size="small"
@@ -350,9 +337,10 @@ class Validation extends Component {
       });
 
       return {
-        className: buildValidationRowClass(sName, algorithmNames),
+        className: buildValidationRowClass(datasetName, algorithmNames),
         key: validationId,
-        name: sourceNameButton,
+        datasetName,
+        datasetButton: sourceNameButton,
         verifiedAt: verifiedAtString,
         verifications: verificationsGrid,
         quickActions: (
@@ -429,7 +417,7 @@ class Validation extends Component {
     return (
       <Main>
         <Container className={classes.content}>
-          <h1>{t('Validation')}</h1>
+          <h1>{t('Validations')}</h1>
           {this.renderTable()}
           <LoadDatasetButton />
         </Container>

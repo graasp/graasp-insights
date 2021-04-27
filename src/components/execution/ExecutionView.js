@@ -19,6 +19,7 @@ import {
 } from '../../actions';
 import ExecutionLog from './ExecutionLog';
 import ExecutionInformationTable from './ExecutionInformationTable';
+import { ALGORITHM_TYPES } from '../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -41,6 +42,10 @@ const ExecutionView = () => {
   );
   const classes = useStyles();
   const { t } = useTranslation();
+  const algorithmType =
+    useSelector(({ executions }) =>
+      executions.getIn(['current', 'algorithm', 'type']),
+    ) || ALGORITHM_TYPES.ANONYMIZATION;
 
   const {
     params: { id },
@@ -84,7 +89,11 @@ const ExecutionView = () => {
           <Grid item xs={12}>
             <BackButton />
             <Typography variant="h4" align="center">
-              {t('Execution')}
+              {t(
+                algorithmType === ALGORITHM_TYPES.VALIDATION
+                  ? 'Validation'
+                  : 'Execution',
+              )}
             </Typography>
           </Grid>
           <Grid item xs={5}>

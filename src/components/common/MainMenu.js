@@ -205,7 +205,7 @@ export class MainMenu extends Component {
           <ListItemIcon>
             <SuccessIcon />
           </ListItemIcon>
-          <ListItemText primary={t('Validation')} />
+          <ListItemText primary={t('Validations')} />
         </MenuItem>
         <MenuItem
           id={PIPELINES_MENU_ITEM_ID}

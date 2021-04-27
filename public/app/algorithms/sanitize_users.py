@@ -47,8 +47,17 @@ def find_and_replace(dataset, substitution_map):
 
 def get_regex(name):
     """Creates a regex to match the name or any similar version of it"""
-    # accepts up to 3 characters between each word and ignores case
-    return '(?i)' + '.{0,3}'.join(name.split())
+    # accepts up to 3 characters between each word
+    # accepts individual parts of the name if length > 2
+    # ignores case
+    split_name = [re.escape(part) for part in name.split()]
+    regex = '(?i)'
+    regex += '.{0,3}'.join(name.split())
+    if len(split_name) > 1:
+        for part in split_name:
+            if len(part) > 2:
+                regex += '|' + part
+    return regex
 
 
 def main():

@@ -5,12 +5,14 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
+import InfoIcon from '@material-ui/icons/Info';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -59,9 +61,13 @@ const styles = (theme) => ({
   addAlgorithmButton: {
     margin: theme.spacing(0, 2),
   },
-  executeButton: {
+  validateButton: {
     textAlign: 'center',
     marginTop: theme.spacing(2),
+  },
+  infoTooltip: {
+    float: 'right',
+    margin: theme.spacing(1),
   },
 });
 
@@ -84,7 +90,8 @@ class AddValidation extends Component {
       formControl: PropTypes.string.isRequired,
       addAlgorithmButton: PropTypes.string.isRequired,
       backButton: PropTypes.string.isRequired,
-      executeButton: PropTypes.string.isRequired,
+      validateButton: PropTypes.string.isRequired,
+      infoTooltip: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -155,7 +162,7 @@ class AddValidation extends Component {
     });
   };
 
-  handleExecute = () => {
+  handleValidate = () => {
     const {
       history: { push },
       dispatchCreateValidation,
@@ -281,9 +288,10 @@ class AddValidation extends Component {
   };
 
   renderAddValidationAlgorithmButton = () => {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     const { algorithmId } = this.state;
-    return (
+    const disabled = !algorithmId;
+    const button = (
       <Button
         id={ADD_VALIDATION_ADD_ALGORITHM_BUTTON_ID}
         className={classes.addAlgorithmButton}
@@ -291,12 +299,18 @@ class AddValidation extends Component {
         color="primary"
         aria-label="add-algorithm"
         onClick={this.handleAddAlgorithm}
-        disabled={!algorithmId}
+        disabled={disabled}
         variant="contained"
       >
         <AddIcon />
       </Button>
     );
+
+    if (disabled) {
+      return button;
+    }
+
+    return <Tooltip title={t('Add algorithm to queue')}>{button}</Tooltip>;
   };
 
   render() {
@@ -311,7 +325,18 @@ class AddValidation extends Component {
     return (
       <Main>
         <Container>
-          <h1>{t('Validate dataset')}</h1>
+          <Tooltip
+            className={classes.infoTooltip}
+            title={t(
+              'Use this feature to test whether datasets have been anonymized as expected.',
+            )}
+            color="primary"
+            placement="left"
+            arrow
+          >
+            <InfoIcon fontSize="large" />
+          </Tooltip>
+          <h1>{t('Validate Dataset')}</h1>
           <Grid container spacing={4}>
             <Grid item xs={6}>
               <Grid container alignItems="center">
@@ -375,7 +400,7 @@ class AddValidation extends Component {
                                 size="small"
                                 onClick={() => this.handleRemove(idx)}
                               >
-                                {t('Remove')}
+                                {t('Remove algorithm')}
                               </Button>
                             </Grid>
                           </Grid>
@@ -387,15 +412,15 @@ class AddValidation extends Component {
               )}
             </Grid>
           </Grid>
-          <div className={classes.executeButton}>
+          <div className={classes.validateButton}>
             <Button
               id={ADD_VALIDATION_EXECUTE_BUTTON_ID}
               variant="contained"
               color="primary"
               disabled={!sourceId || selectedValidationAlgorithms.length === 0}
-              onClick={this.handleExecute}
+              onClick={this.handleValidate}
             >
-              {t('Execute')}
+              {t('Validate')}
             </Button>
           </div>
           <BackButton className={classes.backButton} />
