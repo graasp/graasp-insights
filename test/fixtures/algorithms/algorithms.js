@@ -54,6 +54,16 @@ export const PREEXISTING_GRAASP_ALGORITHM = {
   type: ALGORITHM_TYPES.ANONYMIZATION,
 };
 
+export const PREEXISTING_VALIDATION_ALGORITHM = {
+  id: 'pre-existing-validation-algorithm',
+  name: 'Pre-existing validation algorithm',
+  description: 'some description for a validation algorithm',
+  author: AUTHORS.GRAASP,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  filepath: path.resolve(__dirname, './sample_validation_algorithm.py'),
+  type: ALGORITHM_TYPES.VALIDATION,
+};
+
 export const ALGORITHM_WITH_PARAMETERS = {
   id: 'algorithm-with-parameters',
   name: 'Algorithm with parameters',
@@ -195,4 +205,47 @@ export const ALGORITHM_WITH_STRING_PARAMETER = {
       value: 'guess',
     },
   ],
+};
+
+export const SAMPLE_VALIDATION_ALGORITHM = {
+  name: 'Algorithm name',
+  description: 'Algorithm description',
+  fileLocation: path.resolve(__dirname, './sample_validation_algorithm.py'),
+  author: AUTHORS.USER,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.VALIDATION,
+  parameters: [],
+};
+
+export const VALIDATION_ALGORITHM_SUCCESS = {
+  id: 'validation-algorithm-success',
+  name: 'Validation algorithm success',
+  description: 'Algorithm that validates with a success',
+  filepath: path.join(__dirname, './validate_success.py'),
+  author: AUTHORS.GRAASP,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.VALIDATION,
+  parameters: [],
+};
+
+export const VALIDATION_ALGORITHM_WARNING = {
+  id: 'validation-algorithm-warning',
+  name: 'Validation algorithm warning',
+  description: 'Algorithm that validates with a warning',
+  filepath: path.resolve(__dirname, './validate_warning.py'),
+  author: AUTHORS.GRAASP,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.VALIDATION,
+  parameters: [],
+};
+
+export const VALIDATION_ALGORITHM_FAILURE = {
+  id: 'validation-algorithm-failure',
+  name: 'Validation algorithm failure',
+  description: 'Algorithm that validates with a failure',
+  filepath: path.resolve(__dirname, './validate_failure.py'),
+  author: AUTHORS.GRAASP,
+  language: PROGRAMMING_LANGUAGES.PYTHON,
+  type: ALGORITHM_TYPES.VALIDATION,
+  parameters: [],
 };

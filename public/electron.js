@@ -65,6 +65,10 @@ const {
   ADD_PIPELINE_CHANNEL,
   DELETE_PIPELINE_CHANNEL,
   GET_EXECUTION_CHANNEL,
+  CREATE_VALIDATION_CHANNEL,
+  DELETE_VALIDATION_CHANNEL,
+  GET_VALIDATIONS_CHANNEL,
+  SHOW_RESET_TEMPLATE_PROMPT_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -119,6 +123,10 @@ const {
   addPipeline,
   deletePipeline,
   getExecution,
+  createValidation,
+  deleteValidation,
+  getValidations,
+  showResetTemplatePrompt,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { bootstrapDatabase } = require('./app/db');
@@ -369,6 +377,11 @@ app.on('ready', async () => {
     showConfirmOpenDatasetPrompt(mainWindow),
   );
 
+  ipcMain.on(
+    SHOW_RESET_TEMPLATE_PROMPT_CHANNEL,
+    showResetTemplatePrompt(mainWindow),
+  );
+
   // called when getting datasets
   ipcMain.on(GET_DATASETS_CHANNEL, getDatasets(mainWindow, db));
 
@@ -495,6 +508,14 @@ app.on('ready', async () => {
   ipcMain.on(ADD_PIPELINE_CHANNEL, addPipeline(mainWindow, db));
 
   ipcMain.on(DELETE_PIPELINE_CHANNEL, deletePipeline(mainWindow, db));
+  // called when creating a validation
+  ipcMain.on(CREATE_VALIDATION_CHANNEL, createValidation(mainWindow, db));
+
+  // called when deleting a validation
+  ipcMain.on(DELETE_VALIDATION_CHANNEL, deleteValidation(mainWindow, db));
+
+  // called when retrieving the validations
+  ipcMain.on(GET_VALIDATIONS_CHANNEL, getValidations(mainWindow, db));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

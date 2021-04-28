@@ -7,11 +7,13 @@ const EXECUTIONS_COLLECTION = 'executions';
 const SETTINGS_COLLECTION = 'settings';
 const SCHEMAS_COLLECTION = 'schemas';
 const PIPELINES_COLLECTION = 'pipelines';
+const VALIDATIONS_COLLECTION = 'validations';
 
 const ALGORITHM_TYPES = {
-  ANONYMIZATION: 'anonymization',
-  UTILS: 'utils',
-  VISUALIZATION: 'visualization',
+  ANONYMIZATION: 'Anonymization',
+  UTILS: 'Utils',
+  VISUALIZATION: 'Visualization',
+  VALIDATION: 'Validation',
 };
 
 const APP_BACKGROUND_COLOR = '#F7F7F7';
@@ -41,6 +43,12 @@ const EXECUTION_STATUSES = {
   SUCCESS: 'success',
 };
 
+const VALIDATION_STATUSES = {
+  SUCCESS: 'success',
+  WARNING: 'warning',
+  FAILURE: 'failure',
+};
+
 const DATASET_TYPES = {
   SOURCE: 'source',
   RESULT: 'result',
@@ -58,6 +66,7 @@ module.exports = {
   SETTINGS_COLLECTION,
   SCHEMAS_COLLECTION,
   PIPELINES_COLLECTION,
+  VALIDATIONS_COLLECTION,
   ALGORITHM_TYPES,
   APP_BACKGROUND_COLOR,
   AUTHORS,
@@ -65,6 +74,7 @@ module.exports = {
   GRAASP_SCHEMA_ID,
   PROGRAMMING_LANGUAGES,
   EXECUTION_STATUSES,
+  VALIDATION_STATUSES,
   DATASET_TYPES,
   EXECUTION_NAME_MAX_LENGTH,
   FILE_SIZE_LIMIT_OPTIONS,

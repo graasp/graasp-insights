@@ -9,6 +9,7 @@ export const QUIT_MENU_ITEM_ID = 'quitMenuItem';
 export const EXECUTIONS_MENU_ITEM_ID = 'executionsMenuItem';
 export const PIPELINES_MENU_ITEM_ID = 'pipelinesMenuItem';
 export const SCHEMAS_MENU_ITEM_ID = 'schemasMenuItem';
+export const VALIDATION_MENU_ITEM_ID = 'validationMenuItem';
 export const DATASETS_EMPTY_ALERT_ID = 'datasetsEmptyAlert';
 export const LOAD_DATASET_BUTTON_ID = 'loadDatasetButton';
 export const LOAD_DATASET_NAME_ID = 'loadDatasetName';
@@ -67,12 +68,16 @@ export const ALGORITHM_DELETE_BUTTON_CLASS = 'algorithmDeleteButton';
 export const buildAlgorithmRowClass = (name) =>
   `algorithmRow-${parseName(name)}`;
 export const ALGORITHM_DESCRIPTION_CLASS = 'algorithmDescription';
-export const ALGORITHM_AUTHOR_CLASS = 'algorithmAuthor';
-export const ALGORITHM_LANGUAGE_CLASS = 'algorithmLanguage';
 export const ALGORITHM_ADD_BUTTON_ID = 'algorithmAddButton';
 export const ALGORITHM_EDIT_BUTTON_CLASS = 'algorithmEditButton';
+export const ALGORITHM_TYPE_SELECT_ID = 'algorithmTypeSelect';
+export const buildAlgorithmTypeOptionId = (type) =>
+  `algorithmTypeOption-${parseName(type)}`;
 export const ADD_ALGORITHM_NAME_ID = 'addAlgorithmName';
 export const ADD_ALGORITHM_DESCRIPTION_ID = 'addAlgorithmDescription';
+export const ADD_ALGORITHM_TYPE_SELECT_ID = 'addAlgorithmTypeSelect';
+export const buildAddAlgorithmTypeOptionId = (type) =>
+  `addAlgorithmTypeOption-${parseName(type)}`;
 export const ADD_ALGORITHM_FILE_LOCATION_ID = 'addAlgorithmFileLocation';
 export const ADD_ALGORITHM_SAVE_BUTTON_ID = 'addAlgorithmSaveButton';
 export const ADD_ALGORITHM_BACK_BUTTON_ID = 'addAlgorithmBackButton';
@@ -82,6 +87,9 @@ export const ADD_ALGORITHM_FROM_EDITOR_OPTION_ID =
 export const ADD_ALGORITHM_DEFAULT_OPTION_ID = 'addAlgorithmDefaultOption';
 export const EDIT_ALGORITHM_NAME_ID = 'editAlgorithmName';
 export const EDIT_ALGORITHM_DESCRIPTION_ID = 'editAlgorithmDescription';
+export const EDIT_ALGORITHM_TYPE_SELECT_ID = 'editAlgorithmTypeSelect';
+export const buildEditAlgorithmTypeOptionId = (type) =>
+  `editAlgorithmTypeOption-${parseName(type)}`;
 export const EDIT_ALGORITHM_SAVE_BUTTON_ID = 'editAlgorithmSaveButton';
 export const EDIT_ALGORITHM_BACK_BUTTON_ID = 'editAlgorithmBackButton';
 export const SETTINGS_BUTTON_ID = 'settingsButton';
@@ -169,3 +177,20 @@ export const buildExecutionViewButtonId = (sourceId, algoId) =>
 export const EXECUTION_VIEW_LOG_ID = `executionViewLog`;
 export const EXECUTION_VIEW_TABLE_ID = 'executionViewTable';
 export const buildParameterId = (name) => `parameter-${parseName(name)}`;
+export const VALIDATION_TABLE_ID = 'validationTable';
+export const buildValidationRowClass = (datasetName, algorithmNames) =>
+  `validationRow-${datasetName}-${algorithmNames.map(parseName).join('-')}`;
+export const DATASET_NAME_CLASS = 'datasetName';
+export const VALIDATION_EXECUTION_RESULT_CLASS = 'validationExecutionResult';
+export const VALIDATION_DELETE_BUTTON_CLASS = 'validationDeleteButton';
+export const VALIDATION_ADD_BUTTON_ID = 'validationAddButton';
+export const ADD_VALIDATION_DATASETS_SELECT_ID = 'addValidationDatasetSelect';
+export const ADD_VALIDATION_ALGORITHMS_SELECT_ID =
+  'addValidationAlgorithmsSelect';
+export const ADD_VALIDATION_ADD_ALGORITHM_BUTTON_ID =
+  'addValidationAddAlgorithmButton';
+export const buildAddValidationDatasetOptionId = (id) =>
+  `addValidationDatasetOption-${id}`;
+export const buildAddValidationAlgorithmOptionId = (id) =>
+  `addValidationAlgorithmOption-${id}`;
+export const ADD_VALIDATION_EXECUTE_BUTTON_ID = 'addValidationExecuteButton';

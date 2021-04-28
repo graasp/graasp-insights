@@ -16,13 +16,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Main from './common/Main';
 import Loader from './common/Loader';
-import {
-  DEFAULT_LOCALE_DATE,
-  DEFAULT_TAG_STYLE,
-  MAX_SHOWN_SCHEMA_TAGS,
-} from '../config/constants';
+import { DEFAULT_LOCALE_DATE } from '../config/constants';
 import { getResults, deleteResult, getAlgorithms } from '../actions';
-import { buildResultPath, buildSchemaPath } from '../config/paths';
+import { buildResultPath } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../shared/formatting';
 import ExportButton from './common/ExportButton';
@@ -31,7 +27,8 @@ import { FLAG_EXPORTING_RESULT } from '../shared/types';
 import { RESULTS_MAIN_ID } from '../config/selectors';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
 import LocationPathAlert from './common/LocationPathAlert';
-import SchemaTag from './common/SchemaTag';
+import SchemaTags from './common/SchemaTags';
+import { ALGORITHM_TYPES } from '../shared/constants';
 
 const styles = (theme) => ({
   addButton: {
@@ -66,7 +63,6 @@ class Results extends Component {
     algorithms: PropTypes.instanceOf(List),
     activity: PropTypes.bool.isRequired,
     folder: PropTypes.string,
-    schemas: PropTypes.instanceOf(Map).isRequired,
   };
 
   static defaultProps = {
@@ -101,23 +97,8 @@ class Results extends Component {
     dispatchDeleteResult({ id, name });
   };
 
-  handleSchemaOnClick = (id) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildSchemaPath(id));
-  };
-
   render() {
-    const {
-      activity,
-      classes,
-      t,
-      results,
-      algorithms,
-      folder,
-      schemas,
-    } = this.props;
+    const { activity, classes, t, results, algorithms, folder } = this.props;
 
     if (activity || !results) {
       return (
@@ -216,31 +197,7 @@ class Results extends Component {
                   {name}
                 </Typography>
               </Grid>
-              {schemaIds?.slice(0, MAX_SHOWN_SCHEMA_TAGS).map((schemaId) => (
-                <Grid item key={schemaId}>
-                  <SchemaTag
-                    schema={schemas.get(schemaId)}
-                    tooltip={`${t('Detected schema')}: ${
-                      schemas.get(schemaId)?.label
-                    }`}
-                    onClick={() => this.handleSchemaOnClick(schemaId)}
-                  />
-                </Grid>
-              ))}
-              {schemaIds?.length > MAX_SHOWN_SCHEMA_TAGS && (
-                <Grid item>
-                  <SchemaTag
-                    schema={{
-                      label: '...',
-                      tagStyle: DEFAULT_TAG_STYLE,
-                    }}
-                    tooltip={schemaIds
-                      ?.slice(MAX_SHOWN_SCHEMA_TAGS)
-                      .map((schemaId) => schemas.get(schemaId)?.label)
-                      .join(', ')}
-                  />
-                </Grid>
-              )}
+              <SchemaTags schemaIds={schemaIds} />
             </Grid>
             <Typography variant="caption" key="description">
               {description}
@@ -311,12 +268,13 @@ class Results extends Component {
   }
 }
 
-const mapStateToProps = ({ result, algorithms, schema }) => ({
+const mapStateToProps = ({ result, algorithms }) => ({
   results: result.getIn(['results']),
-  algorithms: algorithms.getIn(['algorithms']),
+  algorithms: algorithms
+    .get('algorithms')
+    .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION),
   activity: Boolean(result.get('activity').size),
   folder: result.getIn(['folder']),
-  schemas: schema.getIn(['schemas']),
 });
 
 const mapDispatchToProps = {

@@ -137,6 +137,12 @@ const ERROR_GET_EXECUTION_MESSAGE =
   'There was an error retrieving the execution';
 const ERROR_CLEARING_EXECUTION_MESSAGE =
   'There was an error clearing the execution';
+const ERROR_GETTING_VALIDATIONS_MESSAGE =
+  'There was an error retrieving the validations';
+const ERROR_DELETING_VALIDATION_MESSAGE =
+  'There was an error deleting the validation';
+const ERROR_CREATING_VALIDATION_MESSAGE =
+  'There was an error creating the validation';
 
 module.exports = {
   ERROR_MESSAGE_HEADER,
@@ -215,4 +221,7 @@ module.exports = {
   ERROR_GETTING_ALGORITHM_PIPELINE_MESSAGE,
   ERROR_GET_EXECUTION_MESSAGE,
   ERROR_CLEARING_EXECUTION_MESSAGE,
+  ERROR_GETTING_VALIDATIONS_MESSAGE,
+  ERROR_DELETING_VALIDATION_MESSAGE,
+  ERROR_CREATING_VALIDATION_MESSAGE,
 };

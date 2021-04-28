@@ -11,7 +11,7 @@ const buildLogLine = (text) => {
 };
 
 const executePythonAlgorithm = (
-  { algorithmFilepath, filepath, tmpPath, parameters, schemaId },
+  { algorithmFilepath, parameters, schemaId },
   { onRun, onStop, onSuccess, onError, clean, onLog },
 ) => {
   // for each parameter, prepares a pair [--parameter_name, parameter_value] for the command line
@@ -34,10 +34,9 @@ const executePythonAlgorithm = (
       })
       .flat() || [];
 
-  const args = [algorithmFilepath, filepath, tmpPath, ...preparedParameters];
+  const args = [algorithmFilepath, ...preparedParameters];
   let log = buildLogLine(`python ${args.join(' ')}`);
-  // eslint-disable-next-line no-unused-expressions
-  onLog?.({ log });
+  onLog({ log });
 
   const process = spawn('python', args);
 
@@ -47,15 +46,13 @@ const executePythonAlgorithm = (
     const textChunk = chunk.toString('utf8'); // buffer to string
     logger.debug(textChunk);
     log += buildLogLine(chunk);
-    // eslint-disable-next-line no-unused-expressions
-    onLog?.({ log });
+    onLog({ log });
   });
 
   process.stderr.on('data', (data) => {
     logger.error(data);
     log += buildLogLine(data);
-    // eslint-disable-next-line no-unused-expressions
-    onLog?.({ log });
+    onLog({ log });
   });
 
   process.on('close', (code) => {
@@ -73,7 +70,7 @@ const executePythonAlgorithm = (
       default:
         onError({ code, log });
     }
-    clean();
+    return clean?.();
   });
 };
 

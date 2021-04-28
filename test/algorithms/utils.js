@@ -9,11 +9,9 @@ import {
   ADD_ALGORITHM_SAVE_BUTTON_ID,
   ALGORITHMS_MENU_ITEM_ID,
   ALGORITHM_ADD_BUTTON_ID,
-  ALGORITHM_AUTHOR_CLASS,
   ALGORITHM_DELETE_BUTTON_CLASS,
   ALGORITHM_DESCRIPTION_CLASS,
   ALGORITHM_EDIT_BUTTON_CLASS,
-  ALGORITHM_LANGUAGE_CLASS,
   ALGORITHM_NAME_CLASS,
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -34,6 +32,10 @@ import {
   PARAMETERS_FIELD_SELECTOR_SELECT_SCHEMAS_ID,
   buildParameterSchemaOption,
   buildFieldSelectorCheckbox,
+  ADD_ALGORITHM_TYPE_SELECT_ID,
+  buildAddAlgorithmTypeOptionId,
+  EDIT_ALGORITHM_TYPE_SELECT_ID,
+  buildEditAlgorithmTypeOptionId,
 } from '../../src/config/selectors';
 import { PARAMETER_TYPES } from '../../src/shared/constants';
 import { clearInput, menuGoTo } from '../utils';
@@ -90,7 +92,7 @@ export const clickEditAlgoBackButton = async (client) => {
 };
 
 export const checkAlgorithmRowLayout = async (client, algorithm) => {
-  const { name, description, author, language } = algorithm;
+  const { name, description, type, author, language } = algorithm;
 
   const matchedAlgorithm = await client.$(
     `#${ALGORITHM_TABLE_ID} .${buildAlgorithmRowClass(name)}`,
@@ -104,12 +106,9 @@ export const checkAlgorithmRowLayout = async (client, algorithm) => {
       await matchedAlgorithm.$(`.${ALGORITHM_DESCRIPTION_CLASS}`)
     ).getText(),
   ).to.equal(description.replace(/\s+/g, ' '));
-  expect(
-    await (await matchedAlgorithm.$(`.${ALGORITHM_AUTHOR_CLASS}`)).getText(),
-  ).to.equal(author);
-  expect(
-    await (await matchedAlgorithm.$(`.${ALGORITHM_LANGUAGE_CLASS}`)).getText(),
-  ).to.equal(language);
+  expect(await matchedAlgorithm.getText()).to.contain(type);
+  expect(await matchedAlgorithm.getText()).to.contain(author);
+  expect(await matchedAlgorithm.getText()).to.contain(language);
 };
 
 export const getNumberOfAlgorithms = async (client) => {
@@ -133,7 +132,10 @@ export const addAlgorithmFromFileLocation = async (
   await fileLocationEl.addValue(fileLocation);
 };
 
-export const addAlgorithmFromEditor = async (client, { name, description }) => {
+export const addAlgorithmFromEditor = async (
+  client,
+  { name, description, type },
+) => {
   const editorOption = await client.$(
     `#${ADD_ALGORITHM_FROM_EDITOR_OPTION_ID}`,
   );
@@ -141,19 +143,27 @@ export const addAlgorithmFromEditor = async (client, { name, description }) => {
 
   const nameEl = await client.$(`#${ADD_ALGORITHM_NAME_ID}`);
   const descriptionEl = await client.$(`#${ADD_ALGORITHM_DESCRIPTION_ID}`);
+  const typeEl = await client.$(`#${ADD_ALGORITHM_TYPE_SELECT_ID}`);
 
   await nameEl.addValue(name);
   await descriptionEl.addValue(description);
+  await typeEl.click();
+  const typeOption = await client.$(`#${buildAddAlgorithmTypeOptionId(type)}`);
+  await typeOption.click();
 };
 
-export const editAlgorithm = async (client, { name, description }) => {
+export const editAlgorithm = async (client, { name, description, type }) => {
   const nameEl = await client.$(`#${EDIT_ALGORITHM_NAME_ID}`);
   const descriptionEl = await client.$(`#${EDIT_ALGORITHM_DESCRIPTION_ID}`);
+  const typeEl = await client.$(`#${EDIT_ALGORITHM_TYPE_SELECT_ID}`);
 
   await clearInput(nameEl);
   await nameEl.setValue(name);
   await clearInput(descriptionEl);
   await descriptionEl.addValue(description);
+  await typeEl.click();
+  const typeOption = await client.$(`#${buildEditAlgorithmTypeOptionId(type)}`);
+  await typeOption.click();
 };
 
 export const addDefaultAlgorithm = async (client, { id }) => {

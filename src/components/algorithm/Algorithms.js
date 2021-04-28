@@ -9,6 +9,7 @@ import { withTranslation } from 'react-i18next';
 import { withRouter } from 'react-router';
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -29,8 +30,6 @@ import {
   buildAlgorithmRowClass,
   ALGORITHM_NAME_CLASS,
   ALGORITHM_DESCRIPTION_CLASS,
-  ALGORITHM_AUTHOR_CLASS,
-  ALGORITHM_LANGUAGE_CLASS,
   ALGORITHM_DELETE_BUTTON_CLASS,
   ALGORITHM_ADD_BUTTON_ID,
   ALGORITHM_EDIT_BUTTON_CLASS,
@@ -38,7 +37,6 @@ import {
 } from '../../config/selectors';
 import LocationPathAlert from '../common/LocationPathAlert';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
-import { formatFileSize } from '../../shared/formatting';
 
 const styles = (theme) => ({
   infoAlert: {
@@ -63,8 +61,9 @@ const styles = (theme) => ({
     // adds bottom space so that button doesn't stay above table when fully scrolled
     marginBottom: theme.spacing(10),
   },
-  utilsButton: {
+  floatingItems: {
     float: 'right',
+    display: 'inline-block',
   },
 });
 
@@ -80,7 +79,7 @@ class Algorithms extends Component {
       description: PropTypes.string.isRequired,
       addButton: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
-      utilsButton: PropTypes.string.isRequired,
+      floatingItems: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -179,18 +178,18 @@ class Algorithms extends Component {
         alignField: 'left',
       },
       {
+        columnName: t('Type'),
+        sortBy: 'type',
+        field: 'type',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
+      {
         columnName: t('Language'),
         sortBy: 'language',
         field: 'language',
         alignColumn: 'left',
         alignField: 'left',
-      },
-      {
-        columnName: t('Size'),
-        sortBy: 'sizeNumeric',
-        field: 'size',
-        alignColumn: 'right',
-        alignField: 'right',
       },
       {
         columnName: t('Created'),
@@ -223,9 +222,8 @@ class Algorithms extends Component {
         language,
         createdAt,
         lastModified,
-        size,
+        type,
       } = algorithm;
-      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
         ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
         : t('Unknown');
@@ -272,17 +270,10 @@ class Algorithms extends Component {
             {description}
           </Typography>,
         ],
-        author: (
-          <Typography className={ALGORITHM_AUTHOR_CLASS}>{author}</Typography>
-        ),
-        language: (
-          <Typography className={ALGORITHM_LANGUAGE_CLASS}>
-            {language}
-          </Typography>
-        ),
+        type,
+        author,
+        language,
         quickActions,
-        size: sizeString,
-        sizeNumeric: size,
         createdAt: createdAtString,
         lastModified: lastModifiedString,
       };
@@ -297,20 +288,25 @@ class Algorithms extends Component {
               path={folder}
             />
           )}
-          <Tooltip
-            title={t(
-              "You can use the 'utils' file to write functions you want to use across your custom algorithms",
-            )}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.utilsButton}
-              onClick={() => this.handleUtilsEdit()}
-            >
-              {t('Edit utils')}
-            </Button>
-          </Tooltip>
+          <div className={classes.floatingItems}>
+            <Grid container alignItems="flex-end" spacing={2}>
+              <Grid item>
+                <Tooltip
+                  title={t(
+                    "You can use the 'utils' file to write functions you want to use across your custom algorithms",
+                  )}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => this.handleUtilsEdit()}
+                  >
+                    {t('Edit utils')}
+                  </Button>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          </div>
           <Typography variant="h4">{t('Algorithms')}</Typography>
           <Table
             columns={columns}

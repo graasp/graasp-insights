@@ -57,4 +57,8 @@ module.exports = {
   ADD_PIPELINE_CHANNEL: 'pipeline:add',
   DELETE_PIPELINE_CHANNEL: 'pipeline:delete',
   GET_EXECUTION_CHANNEL: 'execution:get',
+  CREATE_VALIDATION_CHANNEL: 'validation:create',
+  GET_VALIDATIONS_CHANNEL: 'validations:get',
+  DELETE_VALIDATION_CHANNEL: 'validation:delete',
+  SHOW_RESET_TEMPLATE_PROMPT_CHANNEL: 'prompt:reset-template:confirm',
 };

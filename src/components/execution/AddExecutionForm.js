@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Alert from '@material-ui/lab/Alert';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -29,14 +29,14 @@ import {
   EXECUTIONS_EXECUTE_BUTTON_ID,
   EXECUTION_FORM_NAME_INPUT_ID,
 } from '../../config/selectors';
-import { GRAASP_SCHEMA_ID } from '../../shared/constants';
+import { ALGORITHM_TYPES, GRAASP_SCHEMA_ID } from '../../shared/constants';
 import {
   buildPythonWrongVersionMessage,
   ERROR_PYTHON_NOT_INSTALLED_MESSAGE,
 } from '../../shared/messages';
 import { areParametersValid } from '../../utils/parameter';
 import Loader from '../common/Loader';
-import SchemaTag from '../common/SchemaTag';
+import SchemaTags from '../common/SchemaTags';
 import SetParametersFormButton from '../parameter/SetParametersFormButton';
 
 const styles = (theme) => ({
@@ -95,7 +95,6 @@ class AddExecutionForm extends Component {
       valid: PropTypes.bool,
       version: PropTypes.string,
     }).isRequired,
-    schemas: PropTypes.instanceOf(Map).isRequired,
   };
 
   static defaultProps = {
@@ -177,7 +176,7 @@ class AddExecutionForm extends Component {
 
   renderDatasetsAndResultsSelect = () => {
     const { sourceId } = this.state;
-    const { classes, t, datasets, results, schemas } = this.props;
+    const { classes, t, datasets, results } = this.props;
 
     const datasetMenuItems = datasets
       .sortBy(({ name }) => name)
@@ -190,11 +189,7 @@ class AddExecutionForm extends Component {
         >
           <Grid container alignItems="center" spacing={1}>
             <Grid item>{name}</Grid>
-            {schemaIds?.map((schemaId) => (
-              <Grid item key={schemaId}>
-                <SchemaTag schema={schemas.get(schemaId)} />
-              </Grid>
-            ))}
+            <SchemaTags schemaIds={schemaIds} showTooltip={false} />
           </Grid>
         </MenuItem>
       ));
@@ -368,23 +363,18 @@ class AddExecutionForm extends Component {
   }
 }
 
-const mapStateToProps = ({
-  dataset,
-  algorithms,
-  settings,
-  result,
-  schema,
-}) => ({
+const mapStateToProps = ({ dataset, algorithms, settings, result }) => ({
   datasets: dataset.get('datasets'),
   results: result.get('results'),
-  algorithms: algorithms.get('algorithms'),
+  algorithms: algorithms
+    .get('algorithms')
+    .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION),
   pythonVersion: settings.get('pythonVersion'),
   isLoading: Boolean(
     dataset.getIn(['activity']).size &&
       algorithms.getIn(['activity']).size &&
       result.getIn(['activity']).size,
   ),
-  schemas: schema.getIn(['schemas']),
 });
 
 const mapDispatchToProps = {

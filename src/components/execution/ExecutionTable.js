@@ -32,7 +32,7 @@ import {
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
 } from '../../config/selectors';
-import { EXECUTION_STATUSES } from '../../shared/constants';
+import { ALGORITHM_TYPES, EXECUTION_STATUSES } from '../../shared/constants';
 import ExecutionStatusIcon from './ExecutionStatusIcon';
 import ResultViewButton from './ResultViewButton';
 import AlgorithmViewButton from './AlgorithmViewButton';
@@ -249,7 +249,11 @@ const mapStateToProps = ({ dataset, algorithms, executions, result }) => ({
     Boolean(dataset.getIn(['activity']).size) &&
     Boolean(algorithms.getIn(['activity']).size) &&
     Boolean(executions.get('activity').size),
-  executions: executions.getIn(['executions']),
+  executions: executions
+    .getIn(['executions'])
+    .filter(
+      ({ algorithm: { type } }) => type === ALGORITHM_TYPES.ANONYMIZATION,
+    ),
   results: result.getIn(['results']),
 });
 

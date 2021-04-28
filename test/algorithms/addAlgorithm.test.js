@@ -6,6 +6,10 @@ import { DEFAULT_GLOBAL_TIMEOUT } from '../constants';
 import {
   MISSING_FILE_ALGORITHM,
   SIMPLE_ALGORITHM,
+  SAMPLE_VALIDATION_ALGORITHM,
+  PREEXISTING_GRAASP_ALGORITHM,
+  PREEXISTING_USER_ALGORITHM,
+  PREEXISTING_VALIDATION_ALGORITHM,
 } from '../fixtures/algorithms/algorithms';
 import { mochaAsync } from '../utils';
 import {
@@ -25,7 +29,16 @@ describe('Add Algorithm Scenarios', function () {
 
   beforeEach(
     mochaAsync(async () => {
-      app = await createApplication();
+      app = await createApplication({
+        database: {
+          algorithms: [
+            PREEXISTING_GRAASP_ALGORITHM,
+            PREEXISTING_USER_ALGORITHM,
+            PREEXISTING_VALIDATION_ALGORITHM,
+          ],
+        },
+        responses: { showMessageDialogResponse: 1 },
+      });
       const { client } = app;
       await client.goToAlgorithms();
     }),
@@ -86,6 +99,25 @@ describe('Add Algorithm Scenarios', function () {
       expect(nbAlgosAfter - nbAlgosPrev).to.equal(1);
 
       await checkAlgorithmRowLayout(client, SIMPLE_ALGORITHM);
+    }),
+  );
+
+  it(
+    'Correctly adds validation algorithm from editor',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      const nbValAlgosPrev = await getNumberOfAlgorithms(client);
+
+      // add algorithm
+      await clickAddButton(client);
+      await addAlgorithmFromEditor(client, SAMPLE_VALIDATION_ALGORITHM);
+      await clickAddAlgoSaveButton(client);
+
+      const nbValAlgosAfter = await getNumberOfAlgorithms(client);
+      expect(nbValAlgosAfter - nbValAlgosPrev).to.equal(1);
+
+      await checkAlgorithmRowLayout(client, SAMPLE_VALIDATION_ALGORITHM);
     }),
   );
 

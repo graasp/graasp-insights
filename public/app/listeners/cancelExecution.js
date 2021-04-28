@@ -36,6 +36,7 @@ const cancelExecution = (mainWindow, db) => async (e, { id }) => {
 
     mainWindow.webContents.send(STOP_EXECUTION_CHANNEL, {
       type: STOP_EXECUTION_SUCCESS,
+      payload: { id },
     });
   } catch (err) {
     logger.error(err);
@@ -52,6 +53,7 @@ const cancelAllRunningExecutions = async (db) => {
     .get(EXECUTIONS_COLLECTION)
     .filter({ status: EXECUTION_STATUSES.RUNNING })
     .value();
+
   // eslint-disable-next-line no-restricted-syntax
   for (const { id } of runningExecutions) {
     // eslint-disable-next-line no-await-in-loop

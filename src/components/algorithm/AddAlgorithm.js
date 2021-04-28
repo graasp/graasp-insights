@@ -36,8 +36,10 @@ import {
   ADD_ALGORITHM_DEFAULT_OPTION_ID,
   DEFAULT_ALGORITHM_SELECT_ID,
   buildDefaultAlgorithmOptionId,
+  ADD_ALGORITHM_TYPE_SELECT_ID,
+  buildAddAlgorithmTypeOptionId,
 } from '../../config/selectors';
-import { AUTHORS } from '../../shared/constants';
+import { ALGORITHM_TYPES, AUTHORS } from '../../shared/constants';
 import { areParametersValid } from '../../utils/parameter';
 import BackButton from '../common/BackButton';
 import BrowseFileButton from '../common/BrowseFileButton';
@@ -46,6 +48,7 @@ import Main from '../common/Main';
 import EditParametersForm from '../parameter/EditParametersForm';
 import PYTHON_TEMPLATE_CODE from './pythonTemplateCode';
 import GRAASP_ALGORITHMS from '../../shared/data/graaspAlgorithms';
+import { SHOW_RESET_TEMPLATE_PROMPT_CHANNEL } from '../../shared/channels';
 
 const styles = (theme) => ({
   saveButton: {
@@ -60,14 +63,18 @@ const styles = (theme) => ({
   disabledCodeAlert: {
     width: '100%',
   },
+  setTemplateButton: {
+    float: 'right',
+  },
 });
 
 class AddAlgorithm extends Component {
   state = {
     name: '',
     description: '',
+    type: ALGORITHM_TYPES.ANONYMIZATION,
     fileLocation: '',
-    code: PYTHON_TEMPLATE_CODE,
+    code: PYTHON_TEMPLATE_CODE[ALGORITHM_TYPES.ANONYMIZATION],
     option: ADD_OPTIONS.FILE,
     parameters: [],
     defaultAlgoId: '',
@@ -84,6 +91,7 @@ class AddAlgorithm extends Component {
       saveButton: PropTypes.string.isRequired,
       backButton: PropTypes.string.isRequired,
       disabledCodeAlert: PropTypes.string.isRequired,
+      setTemplateButton: PropTypes.string.isRequired,
     }).isRequired,
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
@@ -109,6 +117,21 @@ class AddAlgorithm extends Component {
     this.setState({ description: event.target.value });
   };
 
+  handleTypeOnChange = ({ target: { value: type } }) => {
+    this.setState({ type });
+
+    // ask user if the template code can be reset
+    window.ipcRenderer.send(SHOW_RESET_TEMPLATE_PROMPT_CHANNEL);
+    window.ipcRenderer.once(
+      SHOW_RESET_TEMPLATE_PROMPT_CHANNEL,
+      (event, response) => {
+        if (response) {
+          this.setState({ code: PYTHON_TEMPLATE_CODE[type], parameters: [] });
+        }
+      },
+    );
+  };
+
   handleLocationInput = (event) => {
     this.setState({ fileLocation: event.target.value });
   };
@@ -124,8 +147,14 @@ class AddAlgorithm extends Component {
   handleDefaultAlgoOnChange = ({ target: { value } }) => {
     const algorithm = GRAASP_ALGORITHMS.find(({ id }) => id === value);
     if (algorithm) {
-      const { name, description, parameters, filename } = algorithm;
-      this.setState({ name, description, defaultAlgoId: value, parameters });
+      const { name, description, type, parameters, filename } = algorithm;
+      this.setState({
+        name,
+        description,
+        type,
+        defaultAlgoId: value,
+        parameters,
+      });
       const { dispatchGetAlgorithmCode } = this.props;
       dispatchGetAlgorithmCode({ filename, isGraasp: true });
     }
@@ -152,6 +181,7 @@ class AddAlgorithm extends Component {
     const {
       name,
       description,
+      type,
       fileLocation,
       code,
       option,
@@ -169,7 +199,14 @@ class AddAlgorithm extends Component {
 
       dispatchAddAlgorithm(
         {
-          algorithm: { name, description, author, parameters, code },
+          algorithm: {
+            name,
+            description,
+            type,
+            author,
+            parameters,
+            code,
+          },
           fileLocation,
         },
         onSuccess,
@@ -187,6 +224,7 @@ class AddAlgorithm extends Component {
       code,
       parameters,
       defaultAlgoId,
+      type,
     } = this.state;
 
     const isValid =
@@ -328,6 +366,32 @@ class AddAlgorithm extends Component {
                 id={ADD_ALGORITHM_DESCRIPTION_ID}
                 disabled={option === ADD_OPTIONS.DEFAULT}
               />
+              <FormControl fullWidth disabled={option === ADD_OPTIONS.DEFAULT}>
+                <InputLabel id="algorithm-type">{t('Type')}</InputLabel>
+                <Select
+                  id={ADD_ALGORITHM_TYPE_SELECT_ID}
+                  labelId="algorithm-type"
+                  value={type}
+                  onChange={this.handleTypeOnChange}
+                >
+                  <MenuItem
+                    value={ALGORITHM_TYPES.ANONYMIZATION}
+                    id={buildAddAlgorithmTypeOptionId(
+                      ALGORITHM_TYPES.ANONYMIZATION,
+                    )}
+                  >
+                    {t('Anonymization')}
+                  </MenuItem>
+                  <MenuItem
+                    value={ALGORITHM_TYPES.VALIDATION}
+                    id={buildAddAlgorithmTypeOptionId(
+                      ALGORITHM_TYPES.VALIDATION,
+                    )}
+                  >
+                    {t('Validation')}
+                  </MenuItem>
+                </Select>
+              </FormControl>
               {/* hide parameters when adding from file */}
               {option !== ADD_OPTIONS.FILE && (
                 <EditParametersForm

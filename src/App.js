@@ -25,6 +25,8 @@ import {
   ADD_PIPELINE_PATH,
   buildEditPipelinePath,
   buildExecutionPath,
+  VALIDATION_PATH,
+  ADD_VALIDATION_PATH,
 } from './config/paths';
 import theme from './theme';
 import LoadDatasetModal from './components/LoadDatasetModal';
@@ -46,6 +48,8 @@ import Pipelines from './components/pipeline/Pipelines';
 import EditPipeline from './components/pipeline/EditPipeline';
 import AddPipeline from './components/pipeline/AddPipeline';
 import ExecutionView from './components/execution/ExecutionView';
+import Validation from './components/validation/Validation';
+import AddValidation from './components/validation/AddValidation';
 
 export class App extends Component {
   state = { height: 0 };
@@ -141,6 +145,12 @@ export class App extends Component {
               />
               <Route exact path={SCHEMAS_PATH} component={Schemas} />
               <Route exact path={SCHEMA_PATH} component={SchemaView} />
+              <Route exact path={VALIDATION_PATH} component={Validation} />
+              <Route
+                exact
+                path={ADD_VALIDATION_PATH}
+                component={AddValidation}
+              />
             </Switch>
           </div>
         </Router>

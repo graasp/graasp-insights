@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
@@ -24,6 +28,8 @@ import {
   EDIT_ALGORITHM_MAIN_ID,
   EDIT_ALGORITHM_NAME_ID,
   EDIT_ALGORITHM_SAVE_BUTTON_ID,
+  EDIT_ALGORITHM_TYPE_SELECT_ID,
+  buildEditAlgorithmTypeOptionId,
 } from '../../config/selectors';
 import { areParametersValid } from '../../utils/parameter';
 import BackButton from '../common/BackButton';
@@ -31,7 +37,7 @@ import PythonEditor from '../common/editor/PythonEditor';
 import Loader from '../common/Loader';
 import Main from '../common/Main';
 import EditParametersForm from '../parameter/EditParametersForm';
-import { AUTHORS } from '../../shared/constants';
+import { ALGORITHM_TYPES, AUTHORS } from '../../shared/constants';
 import { ALGORITHMS_PATH } from '../../config/paths';
 
 const styles = (theme) => ({
@@ -53,6 +59,7 @@ class EditAlgorithm extends Component {
   state = {
     name: '',
     description: '',
+    type: ALGORITHM_TYPES.ANONYMIZATION,
     code: '',
     parameters: [],
   };
@@ -101,6 +108,7 @@ class EditAlgorithm extends Component {
       this.setState({
         name: algorithm.get('name', ''),
         description: algorithm.get('description', ''),
+        type: algorithm.get('type', ALGORITHM_TYPES.ANONYMIZATION),
         code: algorithm.get('code', ''),
         parameters: algorithm.get('parameters', []),
       });
@@ -120,6 +128,10 @@ class EditAlgorithm extends Component {
     this.setState({ description: event.target.value });
   };
 
+  handleTypeOnChange = (event) => {
+    this.setState({ type: event.target.value });
+  };
+
   handleCodeOnChange = (code) => {
     this.setState({ code });
   };
@@ -135,7 +147,7 @@ class EditAlgorithm extends Component {
       algorithm,
       history: { push },
     } = this.props;
-    const { name, description, code, parameters } = this.state;
+    const { name, description, type, code, parameters } = this.state;
 
     if (algorithm && name) {
       const id = algorithm.get('id');
@@ -150,6 +162,7 @@ class EditAlgorithm extends Component {
             code,
             name,
             description,
+            type,
             parameters,
             author: AUTHORS.USER,
           },
@@ -162,6 +175,7 @@ class EditAlgorithm extends Component {
         filepath,
         name,
         description,
+        type,
         parameters,
       };
       return dispatchSaveAlgorithm({ metadata, code });
@@ -171,7 +185,7 @@ class EditAlgorithm extends Component {
 
   render() {
     const { t, classes, algorithm, activity } = this.props;
-    const { name, description, code, parameters } = this.state;
+    const { name, description, type, code, parameters } = this.state;
     const isValid = name && areParametersValid(parameters);
     const author = algorithm.get('author');
 
@@ -236,6 +250,32 @@ class EditAlgorithm extends Component {
                 fullWidth
                 id={EDIT_ALGORITHM_DESCRIPTION_ID}
               />
+              <FormControl fullWidth>
+                <InputLabel id="algorithm-type">{t('Type')}</InputLabel>
+                <Select
+                  id={EDIT_ALGORITHM_TYPE_SELECT_ID}
+                  labelId="algorithm-type"
+                  value={type}
+                  onChange={this.handleTypeOnChange}
+                >
+                  <MenuItem
+                    value={ALGORITHM_TYPES.ANONYMIZATION}
+                    id={buildEditAlgorithmTypeOptionId(
+                      ALGORITHM_TYPES.ANONYMIZATION,
+                    )}
+                  >
+                    {t('Anonymization')}
+                  </MenuItem>
+                  <MenuItem
+                    value={ALGORITHM_TYPES.VALIDATION}
+                    id={buildEditAlgorithmTypeOptionId(
+                      ALGORITHM_TYPES.VALIDATION,
+                    )}
+                  >
+                    {t('Validation')}
+                  </MenuItem>
+                </Select>
+              </FormControl>
               <EditParametersForm
                 parameters={parameters}
                 onChange={this.handleParamsOnChange}

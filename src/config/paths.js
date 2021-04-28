@@ -16,6 +16,8 @@ export const SCHEMAS_PATH = '/schemas';
 export const SCHEMA_PATH = '/schema/:id';
 export const PIPELINES_PATH = '/pipelines';
 export const ADD_PIPELINE_PATH = '/add-pipeline';
+export const VALIDATION_PATH = '/validation';
+export const ADD_VALIDATION_PATH = '/add-validation';
 
 export const buildDatasetPath = (id = ':id') => {
   return `/dataset/${id}`;

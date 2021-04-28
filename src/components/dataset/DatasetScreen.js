@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Map } from 'immutable';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
@@ -20,9 +19,8 @@ import {
   DATASET_SCREEN_MAIN_ID,
 } from '../../config/selectors';
 import BackButton from '../common/BackButton';
-import SchemaTag from '../common/SchemaTag';
+import SchemaTags from '../common/SchemaTags';
 import { GRAASP_SCHEMA_ID } from '../../shared/constants';
-import { buildSchemaPath } from '../../config/paths';
 
 const styles = (theme) => ({
   wrapper: {
@@ -67,7 +65,6 @@ class DatasetScreen extends Component {
     datasetContent: PropTypes.string,
     datasetSize: PropTypes.number,
     datasetSchemaIds: PropTypes.arrayOf(PropTypes.string),
-    schemas: PropTypes.instanceOf(Map).isRequired,
     activity: PropTypes.bool.isRequired,
   };
 
@@ -95,13 +92,6 @@ class DatasetScreen extends Component {
     dispatchClearDataset();
   }
 
-  handleSchemaOnClick = (id) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildSchemaPath(id));
-  };
-
   render() {
     const {
       t,
@@ -111,7 +101,6 @@ class DatasetScreen extends Component {
       datasetId,
       datasetContent,
       datasetSchemaIds,
-      schemas,
       activity,
     } = this.props;
 
@@ -159,17 +148,7 @@ class DatasetScreen extends Component {
                 <Grid item>
                   <Typography variant="h5">{t('Content')}</Typography>
                 </Grid>
-                {datasetSchemaIds.map((schemaId) => (
-                  <Grid item key={schemaId}>
-                    <SchemaTag
-                      schema={schemas.get(schemaId)}
-                      tooltip={`${t('Detected schema')}: ${
-                        schemas.get(schemaId)?.label
-                      }`}
-                      onClick={() => this.handleSchemaOnClick(schemaId)}
-                    />
-                  </Grid>
-                ))}
+                <SchemaTags schemaIds={datasetSchemaIds} />
               </Grid>
               <Paper className={classes.content}>
                 <JSONFileEditor
@@ -197,13 +176,12 @@ class DatasetScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ dataset, schema }) => ({
+const mapStateToProps = ({ dataset }) => ({
   datasetName: dataset.getIn(['current', 'content', 'name']),
   datasetId: dataset.getIn(['current', 'content', 'id']),
   datasetContent: dataset.getIn(['current', 'content', 'content']),
   datasetSize: dataset.getIn(['current', 'content', 'size']),
   datasetSchemaIds: dataset.getIn(['current', 'content', 'schemaIds']),
-  schemas: schema.getIn(['schemas']),
   activity: Boolean(dataset.getIn(['activity']).size),
 });
 

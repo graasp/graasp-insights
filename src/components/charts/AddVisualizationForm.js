@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import { List } from 'immutable';
-import SchemaTag from '../common/SchemaTag';
+import SchemaTags from '../common/SchemaTags';
 import { GRAASP_SCHEMA_ID } from '../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,7 +45,6 @@ const AddVisualizationForm = ({
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  const schemas = useSelector((state) => state.schema.getIn(['schemas']));
 
   const selectedSchemaIds = datasets.find(({ id }) => id === selectedDatasetId)
     ?.schemaIds;
@@ -82,11 +80,7 @@ const AddVisualizationForm = ({
               <MenuItem value={id} key={id}>
                 <Grid container alignItems="center" spacing={1}>
                   <Grid item>{name}</Grid>
-                  {schemaIds?.map((schemaId) => (
-                    <Grid item key={schemaId}>
-                      <SchemaTag schema={schemas.get(schemaId)} />
-                    </Grid>
-                  ))}
+                  <SchemaTags schemaIds={schemaIds} showTooltip={false} />
                 </Grid>
               </MenuItem>
             ))}

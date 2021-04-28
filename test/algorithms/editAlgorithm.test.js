@@ -1,4 +1,4 @@
-/* eslint-disable func-names */
+import { ALGORITHM_TYPES } from '../../src/shared/constants';
 import {
   ALGORITHM_TABLE_ID,
   buildAlgorithmRowClass,
@@ -66,6 +66,29 @@ describe('Edit Algorithm Scenarios', function () {
         await clickEditAlgoBackButton(client);
 
         await checkAlgorithmRowLayout(client, PREEXISTING_USER_ALGORITHM);
+      }),
+    );
+
+    it(
+      'Correctly changes the type of an algorithm',
+      mochaAsync(async () => {
+        const { client } = app;
+
+        await clickAlgoEditButton(client, PREEXISTING_USER_ALGORITHM);
+        const algorithmAsValidation = {
+          ...PREEXISTING_USER_ALGORITHM,
+          type: ALGORITHM_TYPES.VALIDATION,
+        };
+        await editAlgorithm(client, algorithmAsValidation);
+        await clickEditAlgoSaveButton(client);
+        await clickEditAlgoBackButton(client);
+
+        await client.expectElementToNotExist(
+          `#${ALGORITHM_TABLE_ID}`,
+          `.${buildAlgorithmRowClass(PREEXISTING_USER_ALGORITHM.name)}`,
+        );
+
+        await checkAlgorithmRowLayout(client, algorithmAsValidation);
       }),
     );
   });

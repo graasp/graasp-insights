@@ -45,9 +45,9 @@ const Table = (props) => {
     <MaterialTable aria-label="table" id={id}>
       <TableHead>
         <TableRow>
-          {columns.map(({ columnName, alignColumn, sortBy }) => {
+          {columns.map(({ columnName, alignColumn, sortBy, colSpan }) => {
             return (
-              <TableCell align={alignColumn} key={columnName}>
+              <TableCell align={alignColumn} key={columnName} colSpan={colSpan}>
                 {sortBy ? (
                   <TableSortLabel
                     active={orderBy === sortBy}
@@ -77,13 +77,19 @@ const Table = (props) => {
           const { key, className } = row;
           return (
             <TableRow key={key} className={className}>
-              {columns.map(({ field, alignField }) => {
-                return (
-                  <TableCell align={alignField} key={field}>
-                    {row[field]}
-                  </TableCell>
-                );
-              })}
+              {columns
+                .filter(({ field }) => field)
+                .map(({ field, alignField, fieldColSpan }) => {
+                  return (
+                    <TableCell
+                      align={alignField}
+                      key={field}
+                      colSpan={fieldColSpan}
+                    >
+                      {row[field]}
+                    </TableCell>
+                  );
+                })}
             </TableRow>
           );
         })}
