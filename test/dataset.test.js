@@ -29,13 +29,14 @@ import {
 import {
   SIMPLE_DATASET,
   MISSING_FILE_DATASET,
+  CSV_DATASET,
 } from './fixtures/datasets/datasets';
 import { ADD_DATASET_PAUSE } from './time';
 import { GRAASP_SCHEMA_ID } from '../src/shared/constants';
 import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
 
 const fillAddDatasetForm = async (client, { name, description, filepath }) => {
-  const basename = path.basename(filepath, '.json');
+  const basename = path.basename(filepath);
 
   const addButton = await client.$(`#${LOAD_DATASET_BUTTON_ID}`);
   await addButton.click();
@@ -48,7 +49,7 @@ const fillAddDatasetForm = async (client, { name, description, filepath }) => {
   await filepathEl.addValue(filepath);
   await client.pause(2000);
   // check placeholder
-  expect(await nameEl.getAttribute('placeholder')).to.contain(basename);
+  expect(basename).to.contain(await nameEl.getAttribute('placeholder'));
 
   await nameEl.addValue(name);
   await descriptionEl.addValue(description);
@@ -189,6 +190,29 @@ describe('Datasets Scenarios', function () {
       await viewDataset(client, dataset);
       const backButton = await client.$(`#${DATASET_BACK_BUTTON_ID}`);
       await backButton.click();
+      await deleteDataset(client, dataset);
+      await client.pause(1000);
+
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListNameClass(dataset.name),
+      );
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListDescriptionClass(dataset.name),
+      );
+    }),
+  );
+
+  it(
+    'Add, delete CSV dataset',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
+
+      const dataset = CSV_DATASET;
+      await addDataset(client, dataset);
       await deleteDataset(client, dataset);
       await client.pause(1000);
 

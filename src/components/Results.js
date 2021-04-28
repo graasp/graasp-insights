@@ -172,6 +172,7 @@ class Results extends Component {
         algorithmId,
         description = '',
         schemaIds,
+        isTabular,
       } = result;
 
       const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
@@ -216,9 +217,10 @@ class Results extends Component {
           />,
           <ExportButton
             id={id}
-            name={`${name}.json`}
+            name={name}
             flagType={FLAG_EXPORTING_RESULT}
             channel={EXPORT_RESULT_CHANNEL}
+            isTabular={isTabular}
             tooltipText={t('Export result')}
           />,
           <Tooltip title={t('Remove result')} key="delete">

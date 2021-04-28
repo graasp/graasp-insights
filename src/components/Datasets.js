@@ -174,6 +174,7 @@ class Datasets extends Component {
         createdAt,
         description = '',
         schemaIds,
+        isTabular,
       } = dataset;
       const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
       const createdAtString = createdAt
@@ -222,9 +223,10 @@ class Datasets extends Component {
           <ExportButton
             key="export"
             id={id}
-            name={`${name}.json`}
+            name={name}
             flagType={FLAG_EXPORTING_DATASET}
             channel={EXPORT_DATASET_CHANNEL}
+            isTabular={isTabular}
             tooltipText={t('Export dataset')}
           />,
           <Tooltip title={t('Remove dataset')} key="delete">

@@ -7,7 +7,9 @@ const {
 } = require('../../shared/types');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
 const { DATASETS_COLLECTION } = require('../../shared/constants');
-const { detectSchemas } = require('../schema/detectSchemas');
+const { ARRAY_OF_JSON_SCHEMA } = require('../schema/config');
+const { detectSchemas, validateSchema } = require('../schema/detectSchemas');
+const { getFileStats } = require('../utils/file');
 
 const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
   try {
@@ -24,7 +26,15 @@ const setDatasetFile = (mainWindow, db) => async (e, { id, content }) => {
 
     // check schemas
     const schemaIds = detectSchemas(content, db);
-    db.get(DATASETS_COLLECTION).find({ id }).assign({ schemaIds }).write();
+    const isTabular = validateSchema(content, ARRAY_OF_JSON_SCHEMA);
+
+    // size and modification date
+    const { lastModified, sizeInKiloBytes } = getFileStats(filepath);
+
+    db.get(DATASETS_COLLECTION)
+      .find({ id })
+      .assign({ schemaIds, isTabular, lastModified, size: sizeInKiloBytes })
+      .write();
 
     return mainWindow.webContents.send(SET_DATASET_FILE_CHANNEL, {
       type: SET_DATASET_FILE_SUCCESS,

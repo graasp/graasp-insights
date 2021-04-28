@@ -7,8 +7,12 @@ const {
   EXPORT_RESULT_ERROR,
 } = require('../../shared/types');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
+const { saveDatasetToFile } = require('./exportDataset');
 
-const exportResult = (mainWindow, db) => async (event, { id, path }) => {
+const exportResult = (mainWindow, db) => async (
+  event,
+  { id, path: destPath },
+) => {
   try {
     // get dataset from local db
     const { filepath } = db.get(DATASETS_COLLECTION).find({ id }).value();
@@ -20,7 +24,7 @@ const exportResult = (mainWindow, db) => async (event, { id, path }) => {
       });
     }
 
-    fs.copyFileSync(filepath, path);
+    saveDatasetToFile({ filepath, destPath });
 
     return mainWindow.webContents.send(EXPORT_RESULT_CHANNEL, {
       type: EXPORT_RESULT_SUCCESS,

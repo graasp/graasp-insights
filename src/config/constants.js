@@ -1,5 +1,5 @@
 import hexRgb from 'hex-rgb';
-import { PARAMETER_TYPES } from '../shared/constants';
+import { PARAMETER_TYPES, FILE_FORMATS } from '../shared/constants';
 import theme from '../theme';
 import { generateTextColorFromBackground } from '../utils/color';
 
@@ -20,7 +20,13 @@ export const DEFAULT_NUMBER_FORMAT = 'en';
 
 export const FILE_FILTERS = {
   PYTHON: { name: 'Python', extensions: ['py', 'pyx'] },
-  JSON: { name: 'JSON', extensions: ['json'] },
+  JSON: { name: 'JSON', extensions: [FILE_FORMATS.JSON] },
+  CSV: { name: 'CSV', extensions: [FILE_FORMATS.CSV] },
+  XLSX: { name: 'XLSX', extensions: [FILE_FORMATS.XLSX] },
+  DATASET: {
+    name: 'Supported datasets (*.json;*.csv;*.xlsx)',
+    extensions: [FILE_FORMATS.JSON, FILE_FORMATS.CSV, FILE_FORMATS.XLSX],
+  },
   ALL: { name: 'All files', extensions: ['*'] },
 };
 

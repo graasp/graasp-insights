@@ -48,3 +48,15 @@ export const DATASET_FOR_SCHEMA = {
   type: DATASET_TYPES.SOURCE,
   schemaIds: [],
 };
+
+export const CSV_DATASET = {
+  id: 'csv-dataset',
+  name: 'csv-dataset',
+  description: 'description',
+  filepath: path.join(__dirname, './csvDataset.csv'),
+  size: 100,
+  createdAt: Date.now(),
+  lastModified: Date.now(),
+  type: DATASET_TYPES.SOURCE,
+  schemaIds: [],
+};
