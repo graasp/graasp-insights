@@ -13,7 +13,7 @@ const {
 } = require('../../shared/types');
 const logger = require('../logger');
 
-const createExecutionObject = (
+const createExecutionInDb = (
   db,
   { algorithm, source, result, parameters, schemaId },
 ) => {
@@ -52,7 +52,7 @@ const createExecution = (mainWindow, db) => async (
       .value();
 
     // add execution
-    const execution = createExecutionObject(db, {
+    const execution = createExecutionInDb(db, {
       algorithm: { id: algorithmId, type },
       source: { id: sourceId },
       result: {
@@ -75,4 +75,4 @@ const createExecution = (mainWindow, db) => async (
   }
 };
 
-module.exports = { createExecutionObject, createExecution };
+module.exports = { createExecutionInDb, createExecution };

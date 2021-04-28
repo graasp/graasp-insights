@@ -26,7 +26,6 @@ const ExecutionLog = ({ id }) => {
   const dispatch = useDispatch();
   const execution = useSelector(({ executions }) => executions.get('current'));
 
-  // fetch execution to update log every set interval
   useEffect(() => {
     dispatch(getExecution(id));
   }, [dispatch, id]);

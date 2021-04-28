@@ -7,7 +7,7 @@ const {
   CREATE_VALIDATION_ERROR,
 } = require('../../shared/types');
 const logger = require('../logger');
-const { createExecutionObject } = require('./createExecution');
+const { createExecutionInDb } = require('./createExecution');
 
 const createValidation = (mainWindow, db) => async (
   event,
@@ -15,7 +15,7 @@ const createValidation = (mainWindow, db) => async (
 ) => {
   try {
     const executions = algorithms.map(({ id: algorithmId, parameters, type }) =>
-      createExecutionObject(db, {
+      createExecutionInDb(db, {
         algorithm: { id: algorithmId, type },
         source: { id: sourceId },
         result: {},

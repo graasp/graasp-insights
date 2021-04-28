@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Loader from '../common/Loader';
 import {
   cancelExecution,
   deleteValidation,
@@ -25,12 +24,7 @@ import {
   getValidations,
 } from '../../actions';
 import { DEFAULT_LOCALE_DATE } from '../../config/constants';
-import {
-  ADD_VALIDATION_PATH,
-  buildDatasetPath,
-  buildExecutionPath,
-  buildResultPath,
-} from '../../config/paths';
+import { ADD_VALIDATION_PATH, buildExecutionPath } from '../../config/paths';
 import {
   ALGORITHM_NAME_CLASS,
   buildExecutionAlgorithmButtonId,
@@ -43,13 +37,14 @@ import {
   VALIDATION_TABLE_ID,
 } from '../../config/selectors';
 import { ALGORITHM_TYPES, EXECUTION_STATUSES } from '../../shared/constants';
+import { FLAG_GETTING_VALIDATIONS } from '../../shared/types';
+import Loader from '../common/Loader';
 import Main from '../common/Main';
 import Table from '../common/Table';
-import LoadDatasetButton from '../LoadDatasetButton';
-import { FLAG_GETTING_VALIDATIONS } from '../../shared/types';
-import ValidationStatusIcon from './ValidationStatusIcon';
 import AlgorithmViewButton from '../execution/AlgorithmViewButton';
 import DatasetViewButton from '../execution/DatasetViewButton';
+import LoadDatasetButton from '../LoadDatasetButton';
+import ValidationStatusIcon from './ValidationStatusIcon';
 
 const styles = (theme) => ({
   addButton: {
@@ -127,20 +122,6 @@ class Validation extends Component {
   handleDelete = ({ id }) => {
     const { dispatchDeleteValidation, t } = this.props;
     dispatchDeleteValidation({ id, name: t('this validation') });
-  };
-
-  handleResultView = (resultId) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildResultPath(resultId));
-  };
-
-  handleSourceView = (sourceId) => {
-    const {
-      history: { push },
-    } = this.props;
-    push(buildDatasetPath(sourceId));
   };
 
   handleCancel = (id) => {

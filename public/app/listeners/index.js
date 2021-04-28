@@ -27,7 +27,7 @@ const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
 const getExecutions = require('./getExecutions');
 const deleteExecution = require('./deleteExecution');
-const { createExecution, createExecutionObject } = require('./createExecution');
+const { createExecution, createExecutionInDb } = require('./createExecution');
 const {
   cancelExecution,
   cancelExecutionObject,
@@ -92,7 +92,7 @@ module.exports = {
   getExecutions,
   deleteExecution,
   createExecution,
-  createExecutionObject,
+  createExecutionInDb,
   cancelExecutionObject,
   cancelAllRunningExecutions,
   cancelExecution,
