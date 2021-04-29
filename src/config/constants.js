@@ -23,11 +23,11 @@ export const FILE_FILTERS = {
   JSON: { name: 'JSON', extensions: [FILE_FORMATS.JSON] },
   CSV: { name: 'CSV', extensions: [FILE_FORMATS.CSV] },
   XLSX: { name: 'XLSX', extensions: [FILE_FORMATS.XLSX] },
-  DATASET: {
+  ALL_SUPPORTED_FORMATS: {
     name: 'Supported datasets (*.json;*.csv;*.xlsx)',
     extensions: [FILE_FORMATS.JSON, FILE_FORMATS.CSV, FILE_FORMATS.XLSX],
   },
-  ALL: { name: 'All files', extensions: ['*'] },
+  ALL_FILES: { name: 'All files', extensions: ['*'] },
 };
 
 export const EDITOR_PROGRAMMING_LANGUAGES = {
@@ -133,3 +133,14 @@ export const MAX_SHOWN_SCHEMA_TAGS = 3;
 
 export const JSON_SCHEMA_GETTING_STARTED_URL =
   'https://json-schema.org/learn/getting-started-step-by-step.html';
+
+export const RADIX_DECIMAL = 10;
+
+export const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
+
+export const DEFAULT_ROWS_PER_PAGE = ROWS_PER_PAGE_OPTIONS[1];
+
+export const DATASET_CONTENT_VIEW_TYPES = {
+  RAW: 'raw',
+  TABLE: 'table',
+};

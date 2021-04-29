@@ -7,6 +7,7 @@ const { SET_SCHEMA_SUCCESS, SET_SCHEMA_ERROR } = require('../../shared/types');
 const {
   DATASETS_COLLECTION,
   SCHEMAS_COLLECTION,
+  FILE_ENCODINGS,
 } = require('../../shared/constants');
 const generateSchemaFromJSON = require('../schema/generateSchemaFromJSON');
 const { validateSchema } = require('../schema/detectSchemas');
@@ -52,7 +53,7 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
         .find({ id: fromDataset })
         .value();
       const { filepath } = dataset;
-      const content = fs.readFileSync(filepath, 'utf8');
+      const content = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
       const json = JSON.parse(content);
       schemaDef = generateSchemaFromJSON(json);
     } else if (!schemaDef) {
@@ -62,7 +63,7 @@ const setSchema = (mainWindow, db) => async (event, schema) => {
     // check for all datasets if they satisfy the schema
     const datasets = db.get(DATASETS_COLLECTION).value();
     datasets.forEach(({ filepath, schemaIds: schemaIdsPrev }, idx) => {
-      const content = fs.readFileSync(filepath, 'utf8');
+      const content = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
       const json = JSON.parse(content);
       const satisfiesSchema = validateSchema(json, schemaDef);
       let schemaIds = schemaIdsPrev || [];

@@ -30,6 +30,7 @@ const {
   EXECUTION_STATUSES,
   PIPELINES_COLLECTION,
   DEFAULT_FILE_SIZE_LIMIT,
+  FILE_ENCODINGS,
 } = require('../shared/constants');
 const { saveDefaultAlgorithmInDb } = require('./listeners/addDefaultAlgorithm');
 
@@ -51,7 +52,7 @@ const sampleDatabase = {
 // bootstrap database
 const ensureDatabaseExists = async (dbPath = DATABASE_PATH) => {
   try {
-    await fsPromises.readFile(dbPath, { encoding: 'utf8' });
+    await fsPromises.readFile(dbPath, { encoding: FILE_ENCODINGS.UTF8 });
   } catch (readErr) {
     logger.error(readErr);
     try {

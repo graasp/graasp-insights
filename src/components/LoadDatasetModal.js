@@ -149,11 +149,11 @@ class LoadDatasetModal extends Component {
             />
             <BrowseFileButton
               filters={[
-                FILE_FILTERS.DATASET,
+                FILE_FILTERS.ALL_SUPPORTED_FORMATS,
                 FILE_FILTERS.JSON,
                 FILE_FILTERS.CSV,
                 FILE_FILTERS.XLSX,
-                FILE_FILTERS.ALL,
+                FILE_FILTERS.ALL_FILES,
               ]}
               onBrowseFileCallback={this.handleBrowseFileCallback}
             />
@@ -206,7 +206,7 @@ class LoadDatasetModal extends Component {
             }}
             color="primary"
             disabled={
-              !FILE_FILTERS.DATASET.extensions.some((ext) =>
+              !FILE_FILTERS.ALL_SUPPORTED_FORMATS.extensions.some((ext) =>
                 fileLocation.endsWith(`.${ext}`),
               )
             }

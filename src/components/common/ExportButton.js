@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import SaveIcon from '@material-ui/icons/Save';
 import { SHOW_SAVE_AS_PROMPT_CHANNEL } from '../../shared/channels';
 import { createFlag } from '../../actions/common';
-import { FILE_FORMATS } from '../../shared/constants';
+import { EXPORT_FILE_FORMATS, FILE_FORMATS } from '../../shared/constants';
 
 const exportFile = ({ name, flagType, channel, id }) => (dispatch) => {
   window.ipcRenderer.send(SHOW_SAVE_AS_PROMPT_CHANNEL, name);
@@ -93,12 +93,11 @@ class ExportButton extends Component {
             open={Boolean(anchorEl)}
             onClose={this.handleClose}
           >
-            <MenuItem onClick={() => this.handleExport(FILE_FORMATS.JSON)}>
-              {`${t('Export as')} JSON`}
-            </MenuItem>
-            <MenuItem onClick={() => this.handleExport(FILE_FORMATS.CSV)}>
-              {`${t('Export as')} CSV`}
-            </MenuItem>
+            {EXPORT_FILE_FORMATS.map(({ name, format }) => (
+              <MenuItem onClick={() => this.handleExport(format)}>
+                {`${t('Export as')} ${name}`}
+              </MenuItem>
+            ))}
           </Menu>
         )}
       </>

@@ -1,7 +1,10 @@
 const fs = require('fs');
 const { GET_ALGORITHM_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { ALGORITHMS_COLLECTION } = require('../../shared/constants');
+const {
+  ALGORITHMS_COLLECTION,
+  FILE_ENCODINGS,
+} = require('../../shared/constants');
 const {
   GET_ALGORITHM_ERROR,
   GET_ALGORITHM_SUCCESS,
@@ -14,7 +17,7 @@ const getAlgorithm = (mainWindow, db) => async (event, { id }) => {
     const algorithm = db.get(ALGORITHMS_COLLECTION).find({ id }).value();
 
     const { filepath } = algorithm;
-    const code = fs.readFileSync(filepath, 'utf8');
+    const code = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
     const payload = { ...algorithm, code };
 
     return mainWindow.webContents.send(GET_ALGORITHM_CHANNEL, {

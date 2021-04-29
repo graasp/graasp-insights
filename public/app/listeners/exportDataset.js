@@ -2,7 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const { EXPORT_DATASET_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION, FILE_FORMATS } = require('../../shared/constants');
+const {
+  DATASETS_COLLECTION,
+  FILE_FORMATS,
+  FILE_ENCODINGS,
+} = require('../../shared/constants');
 const {
   EXPORT_DATASET_SUCCESS,
   EXPORT_DATASET_ERROR,
@@ -15,10 +19,10 @@ const saveDatasetToFile = ({ filepath, destPath }) => {
 
   switch (extension) {
     case `.${FILE_FORMATS.CSV}`: {
-      const content = fs.readFileSync(filepath, 'utf8');
+      const content = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
       const json = JSON.parse(content);
       const converted = convertJSONToCSV(json);
-      fs.writeFileSync(destPath, converted, 'utf8');
+      fs.writeFileSync(destPath, converted, FILE_ENCODINGS.UTF8);
       break;
     }
     case `.${FILE_FORMATS.JSON}`:

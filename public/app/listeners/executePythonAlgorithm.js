@@ -1,5 +1,5 @@
 const { spawn } = require('child_process');
-const { PARAMETER_TYPES } = require('../../shared/constants');
+const { PARAMETER_TYPES, FILE_ENCODINGS } = require('../../shared/constants');
 const logger = require('../logger');
 
 const buildCurrentTime = () => {
@@ -43,7 +43,7 @@ const executePythonAlgorithm = (
   onRun({ pid: process.pid });
 
   process.stdout.on('data', (chunk) => {
-    const textChunk = chunk.toString('utf8'); // buffer to string
+    const textChunk = chunk.toString(FILE_ENCODINGS.UTF8); // buffer to string
     logger.debug(textChunk);
     log += buildLogLine(chunk);
     onLog({ log });

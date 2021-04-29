@@ -11,7 +11,12 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
-import { ORDER_BY } from '../../config/constants';
+import {
+  DEFAULT_ROWS_PER_PAGE,
+  ORDER_BY,
+  RADIX_DECIMAL,
+  ROWS_PER_PAGE_OPTIONS,
+} from '../../config/constants';
 import { sortByKey } from '../../utils/sorting';
 
 const styles = () => ({
@@ -49,7 +54,7 @@ const Table = (props) => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, RADIX_DECIMAL));
     setPage(0);
   };
 
@@ -123,7 +128,7 @@ const Table = (props) => {
         </MaterialTable>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
         component="div"
         count={rows.size}
         rowsPerPage={rowsPerPage}
@@ -151,7 +156,7 @@ Table.defaultProps = {
   id: '',
   orderBy: null,
   isAsc: true,
-  rowsPerPage: 10,
+  rowsPerPage: DEFAULT_ROWS_PER_PAGE,
 };
 
 const StyledComponent = withStyles(styles, { withTheme: false })(Table);

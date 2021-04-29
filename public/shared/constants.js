@@ -66,6 +66,21 @@ const FILE_FORMATS = {
   XLSX: 'xlsx',
 };
 
+const EXPORT_FILE_FORMATS = [
+  {
+    name: 'JSON',
+    format: FILE_FORMATS.JSON,
+  },
+  {
+    name: 'CSV',
+    format: FILE_FORMATS.CSV,
+  },
+];
+
+const FILE_ENCODINGS = {
+  UTF8: 'utf8',
+};
+
 module.exports = {
   DATASETS_COLLECTION,
   ALGORITHMS_COLLECTION,
@@ -87,4 +102,6 @@ module.exports = {
   FILE_SIZE_LIMIT_OPTIONS,
   DEFAULT_FILE_SIZE_LIMIT,
   FILE_FORMATS,
+  FILE_ENCODINGS,
+  EXPORT_FILE_FORMATS,
 };

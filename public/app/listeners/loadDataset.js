@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const ObjectId = require('bson-objectid');
-const XLSX = require('xlsx');
+const Xlsx = require('xlsx');
 const logger = require('../logger');
 const { DATASETS_FOLDER } = require('../config/paths');
 const { ERROR_GENERAL } = require('../../shared/errors');
@@ -14,6 +14,7 @@ const {
   DATASET_TYPES,
   DATASETS_COLLECTION,
   FILE_FORMATS,
+  FILE_ENCODINGS,
 } = require('../../shared/constants');
 const { ARRAY_OF_JSON_SCHEMA } = require('../schema/config');
 const { detectSchemas, validateSchema } = require('../schema/detectSchemas');
@@ -36,23 +37,24 @@ const createNewDataset = ({ name, filepath, description, type }, db) => {
       const {
         Sheets,
         SheetNames: [sheetname],
-      } = XLSX.readFile(filepath);
-      const converted = XLSX.utils.sheet_to_json(Sheets[sheetname]);
+      } = Xlsx.readFile(filepath);
+      const converted = Xlsx.utils.sheet_to_json(Sheets[sheetname]);
       const stringified = JSON.stringify(converted);
       fs.writeFileSync(destPath, stringified);
       break;
     }
     case `.${FILE_FORMATS.JSON}`:
-    default:
       // copy file
       fs.copyFileSync(filepath, destPath);
       break;
+    default:
+      throw Error('The file format is not supported');
   }
 
   let schemaIds;
   let isTabular;
   try {
-    const content = fs.readFileSync(destPath, 'utf8');
+    const content = fs.readFileSync(destPath, FILE_ENCODINGS.UTF8);
     const jsonContent = JSON.parse(content);
     schemaIds = detectSchemas(jsonContent, db) || [];
 

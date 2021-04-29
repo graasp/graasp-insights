@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List } from 'immutable';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
@@ -13,7 +12,6 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import JSONFileEditor from '../common/JSONFileEditor';
 import Main from '../common/Main';
-import Table from '../common/Table';
 import { getDataset, clearDataset } from '../../actions';
 import DatasetInformationTable from './DatasetInformationTable';
 import Loader from '../common/Loader';
@@ -21,10 +19,13 @@ import {
   DATASET_BACK_BUTTON_ID,
   DATASET_NAME_ID,
   DATASET_SCREEN_MAIN_ID,
+  DATASET_SCREEN_TABLE_VIEW_ID,
 } from '../../config/selectors';
 import BackButton from '../common/BackButton';
 import SchemaTags from '../common/SchemaTags';
-import { GRAASP_SCHEMA_ID, FILE_FORMATS } from '../../shared/constants';
+import { GRAASP_SCHEMA_ID } from '../../shared/constants';
+import { DATASET_CONTENT_VIEW_TYPES } from '../../config/constants';
+import DatasetTableView from './DatasetTableView';
 
 const styles = (theme) => ({
   wrapper: {
@@ -45,7 +46,7 @@ const styles = (theme) => ({
   content: {
     padding: theme.spacing(1),
   },
-  formatButtons: {
+  viewTypeButtons: {
     float: 'right',
     marginBottom: theme.spacing(1),
   },
@@ -53,7 +54,7 @@ const styles = (theme) => ({
 
 class DatasetScreen extends Component {
   state = {
-    format: FILE_FORMATS.JSON,
+    viewType: DATASET_CONTENT_VIEW_TYPES.RAW,
   };
 
   static propTypes = {
@@ -72,7 +73,7 @@ class DatasetScreen extends Component {
       backButton: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
-      formatButtons: PropTypes.string.isRequired,
+      viewTypeButtons: PropTypes.string.isRequired,
     }).isRequired,
     datasetName: PropTypes.string,
     datasetId: PropTypes.string,
@@ -109,7 +110,9 @@ class DatasetScreen extends Component {
     if (isTabular !== prevIsTabular) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        format: isTabular ? FILE_FORMATS.CSV : FILE_FORMATS.JSON,
+        viewType: isTabular
+          ? DATASET_CONTENT_VIEW_TYPES.TABLE
+          : DATASET_CONTENT_VIEW_TYPES.RAW,
       });
     }
   }
@@ -119,69 +122,41 @@ class DatasetScreen extends Component {
     dispatchClearDataset();
   }
 
-  renderFormatButtons = () => {
-    const { format } = this.state;
+  renderViewTypeButtons = () => {
+    const { viewType } = this.state;
+    const { isTabular } = this.props;
+
     return (
       <ButtonGroup size="small">
         <Button
-          variant={format === FILE_FORMATS.JSON ? 'outlined' : 'contained'}
+          variant={
+            viewType === DATASET_CONTENT_VIEW_TYPES.RAW
+              ? 'outlined'
+              : 'contained'
+          }
           color="primary"
           onClick={() => {
-            this.setState({ format: FILE_FORMATS.JSON });
+            this.setState({ viewType: DATASET_CONTENT_VIEW_TYPES.RAW });
           }}
         >
-          JSON
+          {DATASET_CONTENT_VIEW_TYPES.RAW}
         </Button>
         <Button
-          variant={format === FILE_FORMATS.CSV ? 'outlined' : 'contained'}
+          variant={
+            viewType === DATASET_CONTENT_VIEW_TYPES.TABLE
+              ? 'outlined'
+              : 'contained'
+          }
           color="primary"
           onClick={() => {
-            this.setState({ format: FILE_FORMATS.CSV });
+            this.setState({ viewType: DATASET_CONTENT_VIEW_TYPES.TABLE });
           }}
+          disabled={!isTabular}
         >
-          CSV
+          {DATASET_CONTENT_VIEW_TYPES.TABLE}
         </Button>
       </ButtonGroup>
     );
-  };
-
-  renderTabularView = () => {
-    const { datasetContent, t, isTabular } = this.props;
-
-    if (!isTabular) {
-      return (
-        <Alert severity="error">
-          {t("The dataset can't be displayed as a csv.")}
-        </Alert>
-      );
-    }
-
-    const json = JSON.parse(datasetContent);
-    const uniqueKeys = json
-      .map(Object.keys)
-      .reduce((left, right) => [...new Set([...left, ...right])], []);
-
-    const columns = uniqueKeys.map((key) => {
-      return {
-        columnName: key,
-        sortBy: key,
-        field: key,
-      };
-    });
-
-    const rows = List(
-      json.map((row) => {
-        return Object.fromEntries(
-          Object.entries(row).map(([key, value]) => {
-            const formattedValue =
-              typeof value === 'object' ? JSON.stringify(value) : value;
-            return [key, formattedValue];
-          }),
-        );
-      }),
-    );
-
-    return <Table rows={rows} columns={columns} />;
   };
 
   render() {
@@ -196,7 +171,7 @@ class DatasetScreen extends Component {
       activity,
     } = this.props;
 
-    const { format } = this.state;
+    const { viewType } = this.state;
 
     if (activity) {
       return (
@@ -220,7 +195,7 @@ class DatasetScreen extends Component {
     }
 
     const isGraasp = datasetSchemaIds.includes(GRAASP_SCHEMA_ID);
-    const showTabular = format === FILE_FORMATS.CSV;
+    const showTabular = viewType === DATASET_CONTENT_VIEW_TYPES.TABLE;
 
     return (
       <Main id={DATASET_SCREEN_MAIN_ID}>
@@ -245,16 +220,21 @@ class DatasetScreen extends Component {
                 </Grid>
                 <SchemaTags schemaIds={datasetSchemaIds} />
                 <Grid item xs>
-                  <div className={classes.formatButtons}>
-                    {this.renderFormatButtons()}
+                  <div className={classes.viewTypeButtons}>
+                    {this.renderViewTypeButtons()}
                   </div>
                 </Grid>
               </Grid>
               <Paper
-                className={format === FILE_FORMATS.JSON && classes.content}
+                className={
+                  viewType === DATASET_CONTENT_VIEW_TYPES.RAW && classes.content
+                }
               >
                 {showTabular ? (
-                  this.renderTabularView()
+                  <DatasetTableView
+                    id={DATASET_SCREEN_TABLE_VIEW_ID}
+                    content={datasetContent}
+                  />
                 ) : (
                   <JSONFileEditor
                     size={datasetSize}
