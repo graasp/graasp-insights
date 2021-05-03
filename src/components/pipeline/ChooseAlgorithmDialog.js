@@ -63,11 +63,13 @@ const ChooseAlgorithmDialog = ({
               value={selectedAlgorithmId}
               onChange={handleAlgorithmChange}
             >
-              {applicationAlgorithms.map(({ id, name }) => (
-                <MenuItem value={id} id={id}>
-                  {name}
-                </MenuItem>
-              ))}
+              {applicationAlgorithms
+                .filter(({ type }) => type !== 'utils')
+                .map(({ id, name }) => (
+                  <MenuItem value={id} id={id}>
+                    {name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </DialogContentText>
