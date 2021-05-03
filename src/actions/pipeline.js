@@ -135,7 +135,6 @@ export const executePipeline = ({
   pipeline,
   sourceId,
   userProvidedFilename,
-  parameters,
   schemaId,
 }) => (dispatch) => {
   const flagExecutingPipeline = createFlag(FLAG_EXECUTING_PIPELINE);
@@ -145,7 +144,6 @@ export const executePipeline = ({
       pipeline,
       sourceId,
       userProvidedFilename,
-      parameters,
       schemaId,
     });
     window.ipcRenderer.once(

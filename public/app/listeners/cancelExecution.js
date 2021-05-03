@@ -11,7 +11,7 @@ const {
   STOP_EXECUTION_ERROR,
 } = require('../../shared/types');
 
-const cancelExecutionObject = (db, id) => {
+const cancelExecutionInDb = (db, id) => {
   db.get(EXECUTIONS_COLLECTION)
     .find({ id })
     .assign({ status: EXECUTION_STATUSES.ERROR })
@@ -25,7 +25,7 @@ const cancelExecutionById = (db, id) => {
 
   // kill correponding process
   kill(pid);
-  cancelExecutionObject(db, id);
+  cancelExecutionInDb(db, id);
 
   logger.debug('stop execution with id ', id);
 };
@@ -65,5 +65,5 @@ module.exports = {
   cancelExecution,
   cancelAllRunningExecutions,
   cancelExecutionById,
-  cancelExecutionObject,
+  cancelExecutionInDb,
 };

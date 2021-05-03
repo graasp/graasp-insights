@@ -85,6 +85,13 @@ class ExecutionTable extends Component {
     dispatchGetExecutions();
   }
 
+  componentDidUpdate({ executions: prevExecutions }) {
+    const { executions, dispatchGetResults } = this.props;
+    if (!prevExecutions.equals(executions)) {
+      dispatchGetResults();
+    }
+  }
+
   handleDelete = (execution) => {
     const { dispatchDeleteExecution, t } = this.props;
     dispatchDeleteExecution({ id: execution.id, name: t('this execution') });

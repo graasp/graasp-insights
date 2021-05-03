@@ -195,20 +195,12 @@ class AddExecutionForm extends Component {
 
   executePipeline = () => {
     const { pipelines, dispatchExecutePipeline } = this.props;
-    const {
-      sourceId,
-      userProvidedFilename,
-      parameters,
-      schemaId,
-      pipelineId,
-    } = this.state;
+    const { sourceId, userProvidedFilename, schemaId, pipelineId } = this.state;
 
-    const pipeline = pipelines.find((pipe) => pipe.id === pipelineId);
     dispatchExecutePipeline({
-      pipeline,
+      pipeline: pipelines.find(({ id }) => id === pipelineId),
       sourceId,
       userProvidedFilename,
-      parameters,
       schemaId,
     });
 
@@ -326,22 +318,21 @@ class AddExecutionForm extends Component {
     const { sourceId, algorithmId, parameters, pipelineId } = this.state;
     const { t, pythonVersion, classes, pipelines } = this.props;
 
-    const valid =
+    const validAlgorithm =
       sourceId &&
       algorithmId &&
       pythonVersion?.valid &&
       (!parameters || areParametersValid(parameters));
-    const validPipeline = sourceId && pipelines;
+
+    const validPipeline = sourceId && pipelines && pipelineId;
     const button = (
       <div className={classes.buttonWrapper}>
         <Button
           id={EXECUTIONS_EXECUTE_BUTTON_ID}
           variant="contained"
           color="primary"
-          onClick={
-            pipelineId !== '' ? this.executePipeline : this.executeAlgorithm
-          }
-          disabled={!(pipelineId !== '' ? validPipeline : valid)}
+          onClick={pipelineId ? this.executePipeline : this.executeAlgorithm}
+          disabled={!(validPipeline || validAlgorithm)}
         >
           {t('Execute')}
         </Button>

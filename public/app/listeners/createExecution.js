@@ -15,11 +15,35 @@ const logger = require('../logger');
 
 const createExecutionInDb = (
   db,
-  { algorithm, source, result, parameters, schemaId },
+  { algorithmId, sourceId, parameters, schemaId, userProvidedFilename },
 ) => {
   const id = ObjectId().str;
   const status = EXECUTION_STATUSES.PENDING;
   const executedAt = Date.now();
+
+  // source
+  const source = { id: sourceId };
+
+  // algorithm
+  const { name: algorithmName, type } = db
+    .get(ALGORITHMS_COLLECTION)
+    .find({ id: algorithmId })
+    .value();
+  const algorithm = { id: algorithmId, name: algorithmName, type };
+
+  // result
+  const result = {
+    name: userProvidedFilename,
+  };
+  // build automatic name if no name is provided
+  if (!userProvidedFilename) {
+    const { name: datasetName } = db
+      .get(DATASETS_COLLECTION)
+      .find({ id: sourceId })
+      .value();
+
+    result.name = `${datasetName}_${algorithmName}`;
+  }
 
   const execution = {
     id,
@@ -42,24 +66,13 @@ const createExecution = (mainWindow, db) => async (
   { algorithmId, sourceId, userProvidedFilename, parameters, schemaId },
 ) => {
   try {
-    const { name: datasetName } = db
-      .get(DATASETS_COLLECTION)
-      .find({ id: sourceId })
-      .value();
-    const { name: algorithmName, type } = db
-      .get(ALGORITHMS_COLLECTION)
-      .find({ id: algorithmId })
-      .value();
-
     // add execution
     const execution = createExecutionInDb(db, {
-      algorithm: { id: algorithmId, type },
-      source: { id: sourceId },
-      result: {
-        name: userProvidedFilename || `${datasetName}_${algorithmName}`,
-      },
+      algorithmId,
+      sourceId,
       parameters,
       schemaId,
+      userProvidedFilename,
     });
 
     mainWindow.webContents.send(CREATE_EXECUTION_CHANNEL, {
@@ -75,4 +88,4 @@ const createExecution = (mainWindow, db) => async (
   }
 };
 
-module.exports = { createExecutionInDb, createExecution };
+module.exports = { createExecution, createExecutionInDb };
