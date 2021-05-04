@@ -17,6 +17,8 @@ import {
   EXECUTE_ALGORITHM_UPDATE,
   STOP_EXECUTION_SUCCESS,
   EXECUTE_ALGORITHM_ERROR,
+  EXECUTE_PIPELINE_SUCCESS,
+  EXECUTE_PIPELINE_ERROR,
 } from '../shared/types';
 import { EXECUTION_STATUSES } from '../shared/constants';
 
@@ -68,7 +70,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return state.update('executions', addExecutionToList(payload));
     case EXECUTE_ALGORITHM_SUCCESS:
     case EXECUTE_ALGORITHM_ERROR:
-    case EXECUTE_ALGORITHM_UPDATE: {
+    case EXECUTE_ALGORITHM_UPDATE:
+    case EXECUTE_PIPELINE_SUCCESS:
+    case EXECUTE_PIPELINE_ERROR: {
       let tmp = state;
 
       // if 'current' execution = modified execution => update it

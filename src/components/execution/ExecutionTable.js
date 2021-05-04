@@ -85,6 +85,13 @@ class ExecutionTable extends Component {
     dispatchGetExecutions();
   }
 
+  componentDidUpdate({ executions: prevExecutions }) {
+    const { executions, dispatchGetResults } = this.props;
+    if (!prevExecutions.equals(executions)) {
+      dispatchGetResults();
+    }
+  }
+
   handleDelete = (execution) => {
     const { dispatchDeleteExecution, t } = this.props;
     dispatchDeleteExecution({ id: execution.id, name: t('this execution') });
@@ -251,8 +258,8 @@ const mapStateToProps = ({ dataset, algorithms, executions, result }) => ({
     Boolean(executions.get('activity').size),
   executions: executions
     .getIn(['executions'])
-    .filter(
-      ({ algorithm: { type } }) => type === ALGORITHM_TYPES.ANONYMIZATION,
+    .filter(({ algorithm: { type } }) =>
+      [ALGORITHM_TYPES.ANONYMIZATION, ALGORITHM_TYPES.PIPELINE].includes(type),
     ),
   results: result.getIn(['results']),
 });

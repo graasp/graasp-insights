@@ -9,6 +9,7 @@ import {
   CLEAR_PIPELINE_SUCCESS,
   FLAG_DELETING_PIPELINE,
   ADD_PIPELINE_SUCCESS,
+  FLAG_EXECUTING_PIPELINE,
 } from '../shared/types';
 
 const INITIAL_STATE = Map({
@@ -19,6 +20,7 @@ const INITIAL_STATE = Map({
 
 export default (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
+    case FLAG_EXECUTING_PIPELINE:
     case FLAG_GETTING_PIPELINES:
     case FLAG_GETTING_PIPELINE:
     case FLAG_DELETING_PIPELINE:

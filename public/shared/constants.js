@@ -14,6 +14,7 @@ const ALGORITHM_TYPES = {
   UTILS: 'Utils',
   VISUALIZATION: 'Visualization',
   VALIDATION: 'Validation',
+  PIPELINE: 'Pipeline',
 };
 
 const APP_BACKGROUND_COLOR = '#F7F7F7';

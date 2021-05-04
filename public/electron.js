@@ -69,6 +69,7 @@ const {
   DELETE_VALIDATION_CHANNEL,
   GET_VALIDATIONS_CHANNEL,
   SHOW_RESET_TEMPLATE_PROMPT_CHANNEL,
+  EXECUTE_PIPELINE_CHANNEL,
 } = require('./shared/channels');
 const { APP_BACKGROUND_COLOR } = require('./shared/constants');
 const {
@@ -127,6 +128,7 @@ const {
   deleteValidation,
   getValidations,
   showResetTemplatePrompt,
+  executePipeline,
 } = require('./app/listeners');
 const env = require('./env.json');
 const { bootstrapDatabase } = require('./app/db');
@@ -516,6 +518,8 @@ app.on('ready', async () => {
 
   // called when retrieving the validations
   ipcMain.on(GET_VALIDATIONS_CHANNEL, getValidations(mainWindow, db));
+
+  ipcMain.on(EXECUTE_PIPELINE_CHANNEL, executePipeline(mainWindow, db));
 
   app.on('window-all-closed', async () => {
     // kill all running executions

@@ -1,5 +1,5 @@
 const { loadDataset } = require('./loadDataset');
-const executeAlgorithm = require('./executeAlgorithm');
+const { cancelExecutionById, executeAlgorithm } = require('./executeAlgorithm');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
 const getDataset = require('./getDataset');
 const getDatasets = require('./getDatasets');
@@ -27,7 +27,7 @@ const getUtils = require('./getUtils');
 const saveUtils = require('./saveUtils');
 const getExecutions = require('./getExecutions');
 const deleteExecution = require('./deleteExecution');
-const { createExecution, createExecutionInDb } = require('./createExecution');
+const { createExecution, addExecutionObject } = require('./createExecution');
 const {
   cancelExecution,
   cancelExecutionObject,
@@ -60,6 +60,7 @@ const createValidation = require('./createValidation');
 const deleteValidation = require('./deleteValidation');
 const getValidations = require('./getValidations');
 const showResetTemplatePrompt = require('./showResetTemplatePrompt');
+const executePipeline = require('./executePipeline');
 
 module.exports = {
   getDataset,
@@ -92,8 +93,9 @@ module.exports = {
   getExecutions,
   deleteExecution,
   createExecution,
-  createExecutionInDb,
   cancelExecutionObject,
+  addExecutionObject,
+  cancelExecutionById,
   cancelAllRunningExecutions,
   cancelExecution,
   showConfirmDeletePrompt,
@@ -124,4 +126,5 @@ module.exports = {
   deleteValidation,
   getValidations,
   showResetTemplatePrompt,
+  executePipeline,
 };

@@ -41,7 +41,12 @@ import {
 import { EXECUTION_STATUSES } from '../../src/shared/constants';
 import { deleteDataset } from '../dataset.test';
 import { clickAlgoDeleteButton } from '../algorithms/utils';
-import { createExecution } from './utils';
+import { createExecution, createExecutionPipeline } from './utils';
+import {
+  ALGORITHMS_PIPELINES,
+  PRIMARY_PIPELINE,
+  SECONDARY_PIPELINE,
+} from '../fixtures/pipelines/pipelines';
 
 const checkExecutionRowLayout = async (
   client,
@@ -63,6 +68,21 @@ const checkExecutionRowLayout = async (
   if (status === EXECUTION_STATUSES.SUCCESS) {
     expect(await tr.getHTML()).to.contain(resultName);
   }
+
+  await client.expectElementToExist(`.${status}`);
+};
+
+const checkExecutionRowLayoutPipeline = async (
+  client,
+  { algorithm, status, rowIdx },
+) => {
+  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
+  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
+
+  const algoName = await tr.$(
+    `#${buildExecutionAlgorithmButtonId(algorithm.id)}`,
+  );
+  expect(await algoName.getText()).to.contain(algorithm.name);
 
   await client.expectElementToExist(`.${status}`);
 };
@@ -642,6 +662,49 @@ describe('Executions Scenarios', function () {
           }),
         );
       });
+    });
+
+    describe('Pipelines Scenarios', function () {
+      beforeEach(
+        mochaAsync(async () => {
+          app = await createApplication({
+            database: {
+              datasets: [EXECUTION_FAST.dataset],
+              pipelines: [PRIMARY_PIPELINE, SECONDARY_PIPELINE],
+              algorithms: ALGORITHMS_PIPELINES,
+            },
+            responses: { showMessageDialogResponse: 1 },
+          });
+          const { client } = app;
+          await client.goToExecutions();
+        }),
+      );
+
+      it(
+        'Executing pipeline',
+        mochaAsync(async () => {
+          const { client } = app;
+
+          await createExecutionPipeline(client, {
+            dataset: EXECUTION_FAST.dataset,
+            pipeline: PRIMARY_PIPELINE,
+            name: 'primary_pipeline',
+          });
+
+          await client.pause(3000);
+
+          await checkExecutionRowLayoutPipeline(client, {
+            algorithm: PRIMARY_PIPELINE.algorithms[0],
+            status: EXECUTION_STATUSES.SUCCESS,
+            rowIdx: 1,
+          });
+          await checkExecutionRowLayoutPipeline(client, {
+            algorithm: PRIMARY_PIPELINE.algorithms[1],
+            status: EXECUTION_STATUSES.SUCCESS,
+            rowIdx: 2,
+          });
+        }),
+      );
     });
   });
 });
