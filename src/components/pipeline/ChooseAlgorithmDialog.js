@@ -21,6 +21,7 @@ import {
   CANCEL_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
   CONFIRM_ADD_ALGORITHM_PIPELINE_ACCORDION_ID,
 } from '../../config/selectors';
+import { ALGORITHM_TYPES } from '../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -64,7 +65,7 @@ const ChooseAlgorithmDialog = ({
               onChange={handleAlgorithmChange}
             >
               {applicationAlgorithms
-                .filter(({ type }) => type !== 'utils')
+                .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION)
                 .map(({ id, name }) => (
                   <MenuItem value={id} id={id}>
                     {name}

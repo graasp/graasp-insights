@@ -3,6 +3,7 @@ const logger = require('../logger');
 const {
   EXECUTIONS_COLLECTION,
   EXECUTION_STATUSES,
+  PARAMETER_TYPES,
 } = require('../../shared/constants');
 const {
   EXECUTE_ALGORITHM_STOP,
@@ -16,8 +17,7 @@ const { cancelExecutionInDb } = require('../listeners/cancelExecution');
 const buildOnRunCallback = (mainWindow, db, channel, { executionId }) => {
   // set execution as running and pid
   return ({ pid }) => {
-    const execution = db
-      .get(EXECUTIONS_COLLECTION)
+    db.get(EXECUTIONS_COLLECTION)
       .find({ id: executionId })
       .assign({ status: EXECUTION_STATUSES.RUNNING, pid })
       .write();
@@ -25,7 +25,10 @@ const buildOnRunCallback = (mainWindow, db, channel, { executionId }) => {
     return mainWindow?.webContents?.send(channel, {
       type: EXECUTE_ALGORITHM_UPDATE,
       payload: {
-        execution,
+        execution: db
+          .get(EXECUTIONS_COLLECTION)
+          .find({ id: executionId })
+          .value(),
       },
     });
   };
@@ -65,7 +68,7 @@ const buildOnErrorCallback = (mainWindow, db, channel, { executionId }) => {
       .find({ id: executionId })
       .assign({ status: EXECUTION_STATUSES.ERROR, log })
       .unset('pid')
-      .value();
+      .write();
 
     // check whether mainWindow still exist in case of
     // the app quits before the process get killed
@@ -88,8 +91,7 @@ const buildOnErrorCallback = (mainWindow, db, channel, { executionId }) => {
 const buildOnLogCallback = (mainWindow, db, channel, { executionId }) => ({
   log,
 }) => {
-  const execution = db
-    .get(EXECUTIONS_COLLECTION)
+  db.get(EXECUTIONS_COLLECTION)
     .find({ id: executionId })
     .assign({ log })
     .write();
@@ -101,11 +103,20 @@ const buildOnLogCallback = (mainWindow, db, channel, { executionId }) => ({
     mainWindow?.webContents?.send(channel, {
       type: EXECUTE_ALGORITHM_UPDATE,
       payload: {
-        execution,
+        execution: db
+          .get(EXECUTIONS_COLLECTION)
+          .find({ id: executionId })
+          .value(),
       },
     })
   );
 };
+
+const buildFilepathParameter = (name, value) => ({
+  name,
+  type: PARAMETER_TYPES.STRING_INPUT,
+  value,
+});
 
 module.exports = {
   buildOnRunCallback,
@@ -113,4 +124,5 @@ module.exports = {
   buildOnErrorCallback,
   buildCleanCallback,
   buildOnLogCallback,
+  buildFilepathParameter,
 };

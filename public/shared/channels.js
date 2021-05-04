@@ -4,6 +4,8 @@
 const EXECUTE_ALGORITHM_CHANNEL = 'execution:execute';
 const buildExecuteAlgorithmChannel = (id) =>
   `${EXECUTE_ALGORITHM_CHANNEL}_${id}`;
+const EXECUTE_PIPELINE_CHANNEL = 'pipeline:execute';
+const buildExecutePipelineChannel = (id) => `${EXECUTE_PIPELINE_CHANNEL}_${id}`;
 
 module.exports = {
   LOAD_DATASET_CHANNEL: 'dataset:load',
@@ -61,5 +63,6 @@ module.exports = {
   GET_VALIDATIONS_CHANNEL: 'validations:get',
   DELETE_VALIDATION_CHANNEL: 'validation:delete',
   SHOW_RESET_TEMPLATE_PROMPT_CHANNEL: 'prompt:reset-template:confirm',
-  EXECUTE_PIPELINE_CHANNEL: 'pipeline:execute',
+  EXECUTE_PIPELINE_CHANNEL,
+  buildExecutePipelineChannel,
 };

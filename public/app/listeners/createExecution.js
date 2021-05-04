@@ -3,7 +3,6 @@ const { CREATE_EXECUTION_CHANNEL } = require('../../shared/channels');
 const {
   EXECUTION_STATUSES,
   EXECUTIONS_COLLECTION,
-  ALGORITHMS_COLLECTION,
   DATASETS_COLLECTION,
 } = require('../../shared/constants');
 const { ERROR_GENERAL } = require('../../shared/errors');
@@ -12,10 +11,19 @@ const {
   CREATE_EXECUTION_ERROR,
 } = require('../../shared/types');
 const logger = require('../logger');
+const { getAlgorithmOrPipelineById } = require('../utils/algorithm');
 
 const createExecutionInDb = (
   db,
-  { algorithmId, sourceId, parameters, schemaId, userProvidedFilename },
+  {
+    algorithmId,
+    sourceId,
+    parameters,
+    schemaId,
+    userProvidedFilename,
+    // linked original execution
+    pipelineExecutionId,
+  },
 ) => {
   const id = ObjectId().str;
   const status = EXECUTION_STATUSES.PENDING;
@@ -24,12 +32,12 @@ const createExecutionInDb = (
   // source
   const source = { id: sourceId };
 
-  // algorithm
-  const { name: algorithmName, type } = db
-    .get(ALGORITHMS_COLLECTION)
-    .find({ id: algorithmId })
-    .value();
-  const algorithm = { id: algorithmId, name: algorithmName, type };
+  // algorithm or pipeline
+  const { name: algorithmName, type } = getAlgorithmOrPipelineById(
+    algorithmId,
+    db,
+  );
+  const algorithm = { id: algorithmId, type };
 
   // result
   const result = {
@@ -54,6 +62,7 @@ const createExecutionInDb = (
     schemaId,
     status,
     executedAt,
+    pipelineExecutionId,
   };
 
   db.get(EXECUTIONS_COLLECTION).push(execution).write();

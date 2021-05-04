@@ -32,6 +32,8 @@ import {
   ERROR_GETTING_EXECUTION_MESSAGE,
   ERROR_CLEARING_EXECUTION_MESSAGE,
 } from '../shared/messages';
+import { ALGORITHM_TYPES } from '../shared/constants';
+import { executePipeline } from './pipeline';
 
 export const getExecutions = () => (dispatch) => {
   const flagGettingExecutions = createFlag(FLAG_GETTING_EXECUTIONS);
@@ -119,8 +121,12 @@ export const createExecution = ({
         // automatically start the execution if no error
         const { payload: execution } = payload;
         if (!payload.error && execution && autoStart) {
-          executeAlgorithm(execution)(dispatch);
+          return execution?.algorithm?.type === ALGORITHM_TYPES.PIPELINE
+            ? executePipeline(execution)(dispatch)
+            : executeAlgorithm(execution)(dispatch);
         }
+
+        return false;
       },
     );
   } catch (err) {

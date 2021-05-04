@@ -20,7 +20,6 @@ import {
   getDatasets,
   getResults,
   getPipelines,
-  executePipeline,
 } from '../../actions';
 import {
   buildExecutionAlgorithmOptionId,
@@ -85,7 +84,6 @@ class AddExecutionForm extends Component {
     dispatchCreateExecution: PropTypes.func.isRequired,
     dispatchGetResults: PropTypes.func.isRequired,
     dispatchGetPipelines: PropTypes.func.isRequired,
-    dispatchExecutePipeline: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       wrapper: PropTypes.string.isRequired,
       formControl: PropTypes.string.isRequired,
@@ -113,7 +111,6 @@ class AddExecutionForm extends Component {
   state = {
     sourceId: '',
     algorithmId: '',
-    pipelineId: '',
     userProvidedFilename: '',
     parameters: [],
     schemaId: GRAASP_SCHEMA_ID,
@@ -156,14 +153,12 @@ class AddExecutionForm extends Component {
     const targetId = e.target.value;
     if (pipelines.find(({ id }) => id === targetId)) {
       this.setState({
-        pipelineId: targetId,
-        algorithmId: '',
+        algorithmId: targetId,
         parameters: [],
       });
     } else {
       this.setState({
         algorithmId: targetId,
-        pipelineId: '',
         parameters:
           algorithms.find(({ id }) => id === targetId)?.parameters || [],
       });
@@ -174,7 +169,7 @@ class AddExecutionForm extends Component {
     this.setState({ userProvidedFilename: e.target.value });
   };
 
-  executeAlgorithm = () => {
+  execute = () => {
     const { dispatchCreateExecution } = this.props;
     const {
       sourceId,
@@ -190,20 +185,6 @@ class AddExecutionForm extends Component {
       parameters,
       schemaId,
     });
-    this.setState({ userProvidedFilename: '' });
-  };
-
-  executePipeline = () => {
-    const { pipelines, dispatchExecutePipeline } = this.props;
-    const { sourceId, userProvidedFilename, schemaId, pipelineId } = this.state;
-
-    dispatchExecutePipeline({
-      pipeline: pipelines.find(({ id }) => id === pipelineId),
-      sourceId,
-      userProvidedFilename,
-      schemaId,
-    });
-
     this.setState({ userProvidedFilename: '' });
   };
 
@@ -265,7 +246,7 @@ class AddExecutionForm extends Component {
   };
 
   renderAlgorithmsAndPipelinesSelect = () => {
-    const { algorithmId, pipelineId } = this.state;
+    const { algorithmId } = this.state;
     const { classes, t, algorithms, pipelines } = this.props;
     const algorithmMenuItems = algorithms.map(({ id, name }) => (
       <MenuItem
@@ -296,7 +277,7 @@ class AddExecutionForm extends Component {
         <InputLabel id="algorithm-select">{algorithmLabel}</InputLabel>
         <Select
           labelId="algorithm-select"
-          value={pipelineId !== '' ? pipelineId : algorithmId}
+          value={algorithmId}
           onChange={this.handleAlgorithmSelectOnChange}
           label={algorithmLabel}
           id={EXECUTIONS_ALGORITHMS_SELECT_ID}
@@ -315,24 +296,23 @@ class AddExecutionForm extends Component {
   };
 
   renderExecuteButton = () => {
-    const { sourceId, algorithmId, parameters, pipelineId } = this.state;
+    const { sourceId, algorithmId, parameters } = this.state;
     const { t, pythonVersion, classes, pipelines } = this.props;
 
     const validAlgorithm =
       sourceId &&
-      algorithmId &&
       pythonVersion?.valid &&
       (!parameters || areParametersValid(parameters));
 
-    const validPipeline = sourceId && pipelines && pipelineId;
+    const validPipeline = sourceId && pipelines;
     const button = (
       <div className={classes.buttonWrapper}>
         <Button
           id={EXECUTIONS_EXECUTE_BUTTON_ID}
           variant="contained"
           color="primary"
-          onClick={pipelineId ? this.executePipeline : this.executeAlgorithm}
-          disabled={!(validPipeline || validAlgorithm)}
+          onClick={this.execute}
+          disabled={!((validPipeline || validAlgorithm) && algorithmId)}
         >
           {t('Execute')}
         </Button>
@@ -426,7 +406,6 @@ const mapStateToProps = ({
   algorithms,
   settings,
   result,
-  schema,
   pipeline,
 }) => ({
   datasets: dataset.get('datasets'),
@@ -447,7 +426,6 @@ const mapDispatchToProps = {
   dispatchGetDatasets: getDatasets,
   dispatchGetAlgorithms: getAlgorithms,
   dispatchCreateExecution: createExecution,
-  dispatchExecutePipeline: executePipeline,
   dispatchGetResults: getResults,
   dispatchGetPipelines: getPipelines,
 };

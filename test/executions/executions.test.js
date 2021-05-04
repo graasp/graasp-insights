@@ -696,12 +696,12 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayoutPipeline(client, {
             algorithm: PRIMARY_PIPELINE.algorithms[0],
             status: EXECUTION_STATUSES.SUCCESS,
-            rowIdx: 0,
+            rowIdx: 1,
           });
           await checkExecutionRowLayoutPipeline(client, {
             algorithm: PRIMARY_PIPELINE.algorithms[1],
             status: EXECUTION_STATUSES.SUCCESS,
-            rowIdx: 1,
+            rowIdx: 2,
           });
         }),
       );

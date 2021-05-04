@@ -8,7 +8,6 @@ const {
   DATASETS_COLLECTION,
   ALGORITHMS_COLLECTION,
   EXECUTIONS_COLLECTION,
-  PARAMETER_TYPES,
   ALGORITHM_TYPES,
 } = require('../../shared/constants');
 const executePythonAlgorithm = require('./executePythonAlgorithm');
@@ -26,6 +25,7 @@ const {
   buildOnErrorCallback,
   buildCleanCallback,
   buildOnLogCallback,
+  buildFilepathParameter,
 } = require('../utils/execution');
 const { cancelExecutionById } = require('./cancelExecution');
 const createNewResultDataset = require('../utils/result');
@@ -49,17 +49,16 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     } = db.get(EXECUTIONS_COLLECTION).find({ id: executionId }).value();
 
     // get corresponding dataset
-    const { filepath, name: datasetName, description, originId } = db
+    const { filepath, description, originId } = db
       .get(DATASETS_COLLECTION)
       .find({ id: sourceId })
       .value();
 
     // get the corresponding algorithm
-    const {
-      filepath: algorithmFilepath,
-      name: algorithmName,
-      language,
-    } = db.get(ALGORITHMS_COLLECTION).find({ id: algorithmId }).value();
+    const { filepath: algorithmFilepath, language } = db
+      .get(ALGORITHMS_COLLECTION)
+      .find({ id: algorithmId })
+      .value();
 
     // get original dataset
     const { filepath: originfilepath } = db
@@ -82,17 +81,13 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
       switch (type) {
         case ALGORITHM_TYPES.ANONYMIZATION: {
           // save result in db
-          newResult = createNewResultDataset(
-            {
-              name: name?.length ? name : `${datasetName}_${algorithmName}`,
-              filepath: tmpPath,
-              algorithmId,
-              description,
-              originId,
-            },
-            db,
-          );
-          db.get(DATASETS_COLLECTION).push(newResult).write();
+          newResult = createNewResultDataset(db, {
+            name,
+            filepath: tmpPath,
+            algorithmId,
+            description,
+            originId,
+          });
           result = { id: newResult.id };
 
           logger.debug(`save resulting dataset at ${newResult.filepath}`);
@@ -146,28 +141,25 @@ const executeAlgorithm = (mainWindow, db) => (event, { id: executionId }) => {
     const onLog = buildOnLogCallback(mainWindow, db, channel, { executionId });
 
     // path to the dataset
-    const datasetPathParameter = {
-      name: ALGORITHM_DATASET_PATH_NAME,
-      type: PARAMETER_TYPES.STRING_INPUT,
-      value: filepath,
-    };
+    const datasetPathParameter = buildFilepathParameter(
+      ALGORITHM_DATASET_PATH_NAME,
+      filepath,
+    );
 
     // destination path
     // indicates where the algorithm should save the resulting dataset
-    const outputPathParameter = {
-      name: ALGORITHM_OUTPUT_PATH_NAME,
-      type: PARAMETER_TYPES.STRING_INPUT,
-      value: tmpPath,
-    };
+    const outputPathParameter = buildFilepathParameter(
+      ALGORITHM_OUTPUT_PATH_NAME,
+      tmpPath,
+    );
 
     // path to the original dataset prior to any execution
     // useful when data from the original dataset is necessary
     // (detect names algorithm for example)
-    const originPathParameter = {
-      name: ALGORITHM_ORIGIN_PATH_NAME,
-      type: PARAMETER_TYPES.STRING_INPUT,
-      value: originfilepath,
-    };
+    const originPathParameter = buildFilepathParameter(
+      ALGORITHM_ORIGIN_PATH_NAME,
+      originfilepath,
+    );
 
     const fullParameters = [
       datasetPathParameter,
