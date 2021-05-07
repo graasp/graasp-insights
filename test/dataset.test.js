@@ -25,17 +25,20 @@ import {
   buildDatasetsListDeleteButtonClass,
   LOAD_DATASET_CANCEL_BUTTON_ID,
   DATASETS_MAIN_ID,
+  DATASET_SCREEN_TABLE_VIEW_ID,
 } from '../src/config/selectors';
 import {
   SIMPLE_DATASET,
   MISSING_FILE_DATASET,
+  CSV_DATASET,
+  XLSX_DATASET,
 } from './fixtures/datasets/datasets';
 import { ADD_DATASET_PAUSE } from './time';
 import { GRAASP_SCHEMA_ID } from '../src/shared/constants';
 import { DEFAULT_SCHEMAS } from '../public/app/schema/config';
 
 const fillAddDatasetForm = async (client, { name, description, filepath }) => {
-  const basename = path.basename(filepath, '.json');
+  const basename = path.basename(filepath);
 
   const addButton = await client.$(`#${LOAD_DATASET_BUTTON_ID}`);
   await addButton.click();
@@ -48,7 +51,7 @@ const fillAddDatasetForm = async (client, { name, description, filepath }) => {
   await filepathEl.addValue(filepath);
   await client.pause(2000);
   // check placeholder
-  expect(await nameEl.getAttribute('placeholder')).to.contain(basename);
+  expect(basename).to.contain(await nameEl.getAttribute('placeholder'));
 
   await nameEl.addValue(name);
   await descriptionEl.addValue(description);
@@ -119,6 +122,31 @@ const viewDataset = async (client, dataset) => {
   ).to.equal(userCount);
 };
 
+const viewTabularDataset = async (client, dataset) => {
+  const { name, content } = dataset;
+
+  const viewButton = await client.$(
+    `.${buildDatasetsListViewButtonClass(name)}`,
+  );
+  await viewButton.click();
+
+  const rows = await client.$$(`#${DATASET_SCREEN_TABLE_VIEW_ID} tbody tr`);
+
+  expect(rows.length).to.equal(content.length);
+
+  await Promise.all(
+    rows.map(async (row, idx) => {
+      const rowText = await row.getText();
+      const expectedRow = content[idx];
+      Promise.all(
+        expectedRow.map((value) => {
+          return expect(rowText).to.contain(value);
+        }),
+      );
+    }),
+  );
+};
+
 // eslint-disable-next-line import/prefer-default-export
 export const deleteDataset = async (client, { name }) => {
   const deleteButton = await client.$(
@@ -187,6 +215,58 @@ describe('Datasets Scenarios', function () {
       const dataset = SIMPLE_DATASET;
       await addDataset(client, dataset);
       await viewDataset(client, dataset);
+      const backButton = await client.$(`#${DATASET_BACK_BUTTON_ID}`);
+      await backButton.click();
+      await deleteDataset(client, dataset);
+      await client.pause(1000);
+
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListNameClass(dataset.name),
+      );
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListDescriptionClass(dataset.name),
+      );
+    }),
+  );
+
+  it(
+    'Add, view, delete CSV dataset',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
+
+      const dataset = CSV_DATASET;
+      await addDataset(client, dataset);
+      await viewTabularDataset(client, dataset);
+      const backButton = await client.$(`#${DATASET_BACK_BUTTON_ID}`);
+      await backButton.click();
+      await deleteDataset(client, dataset);
+      await client.pause(1000);
+
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListNameClass(dataset.name),
+      );
+      await client.expectElementToNotExist(
+        `#${DATASETS_MAIN_ID}`,
+        buildDatasetsListDescriptionClass(dataset.name),
+      );
+    }),
+  );
+
+  it(
+    'Add, view, delete XLSX dataset',
+    mochaAsync(async () => {
+      const { client } = app;
+
+      await client.expectElementToExist(`#${DATASETS_EMPTY_ALERT_ID}`);
+
+      const dataset = XLSX_DATASET;
+      await addDataset(client, dataset);
+      await viewTabularDataset(client, dataset);
       const backButton = await client.$(`#${DATASET_BACK_BUTTON_ID}`);
       await backButton.click();
       await deleteDataset(client, dataset);

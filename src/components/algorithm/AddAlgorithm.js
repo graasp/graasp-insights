@@ -282,7 +282,7 @@ class AddAlgorithm extends Component {
                     </Grid>
                     <Grid item xs={1}>
                       <BrowseFileButton
-                        filters={[FILE_FILTERS.PYTHON, FILE_FILTERS.ALL]}
+                        filters={[FILE_FILTERS.PYTHON, FILE_FILTERS.ALL_FILES]}
                         onBrowseFileCallback={this.handleBrowseFileCallback}
                       />
                     </Grid>

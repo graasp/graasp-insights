@@ -60,6 +60,7 @@ export const buildExecutionResultButtonId = (id) =>
   `executionRowAResultButton-${id}`;
 export const EDIT_ALGORITHM_MAIN_ID = 'editAlgorithmMain';
 export const DATASET_SCREEN_MAIN_ID = 'datasetScreenMain';
+export const DATASET_SCREEN_TABLE_VIEW_ID = 'datasetScreenTableView';
 export const EXECUTION_TABLE_ROW_BUTTON_CLASS = 'executionTableRowButton';
 export const EXECUTION_FORM_NAME_INPUT_ID = 'executionFormNameInput';
 export const ALGORITHM_TABLE_ID = 'algorithmTable';

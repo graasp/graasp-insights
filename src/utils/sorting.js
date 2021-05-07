@@ -7,6 +7,9 @@
  * @return {int} 1 if a < b, 0 if a = b and -1 if a > b
  */
 const descendingComparator = (a, b, key) => {
+  if (!a[key]) return 1;
+  if (!b[key]) return -1;
+
   if (b[key] < a[key]) {
     return -1;
   }
@@ -38,6 +41,7 @@ const getComparator = (isAsc, key) => {
  * @return {array} the sorted array
  */
 const sortByKey = (array, key, isAsc = true) => {
+  if (!key) return array;
   // copy the array so that the original doesn't get modified
   const arrayCopy = array.slice();
   const comparator = getComparator(isAsc, key);

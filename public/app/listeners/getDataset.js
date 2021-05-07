@@ -1,7 +1,10 @@
 const fs = require('fs');
 const { GET_DATASET_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION } = require('../../shared/constants');
+const {
+  DATASETS_COLLECTION,
+  FILE_ENCODINGS,
+} = require('../../shared/constants');
 const {
   GET_DATASET_SUCCESS,
   GET_DATASET_ERROR,
@@ -15,7 +18,7 @@ const getDataset = (mainWindow, db) => async (event, { id }) => {
 
     let content = null;
     const { filepath } = dataset;
-    content = fs.readFileSync(filepath, 'utf8');
+    content = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
 
     return mainWindow.webContents.send(GET_DATASET_CHANNEL, {
       type: GET_DATASET_SUCCESS,

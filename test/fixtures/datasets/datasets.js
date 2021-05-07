@@ -48,3 +48,41 @@ export const DATASET_FOR_SCHEMA = {
   type: DATASET_TYPES.SOURCE,
   schemaIds: [],
 };
+
+const tabularDatasetContent = [
+  ['Justin', 18, 'Lausanne', 6, 'None'],
+  ['Daniel', 19, 'Neuchâtel', 5.5, 'None'],
+  ['Christopher', 18, 'Genève', 5.5, 'Dysgraphia'],
+  ['Christine', 22, 'Lausanne', 6, 'None'],
+  ['Nicole', 21, 'Lausanne', 3, 'None'],
+  ['Katherine', 25, 'Genève', 3.5, 'Dyslexia'],
+  ['Andrea', 21, 'Paris', 4.5, 'None'],
+  ['Antonio', 23, 'Lyon', 5, 'None'],
+  ['Gabriella', 22, 'Nantes', 5, 'None'],
+];
+
+export const CSV_DATASET = {
+  id: 'csv-dataset',
+  name: 'csv-dataset',
+  description: 'description',
+  filepath: path.join(__dirname, './csvDataset.csv'),
+  size: 100,
+  createdAt: Date.now(),
+  lastModified: Date.now(),
+  type: DATASET_TYPES.SOURCE,
+  schemaIds: [],
+  content: tabularDatasetContent,
+};
+
+export const XLSX_DATASET = {
+  id: 'xlsx-dataset',
+  name: 'xlsx-dataset',
+  description: 'description',
+  filepath: path.join(__dirname, './xlsxDataset.xlsx'),
+  size: 100,
+  createdAt: Date.now(),
+  lastModified: Date.now(),
+  type: DATASET_TYPES.SOURCE,
+  schemaIds: [],
+  content: tabularDatasetContent,
+};

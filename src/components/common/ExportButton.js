@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withTranslation } from 'react-i18next';
 import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import SaveIcon from '@material-ui/icons/Save';
 import { SHOW_SAVE_AS_PROMPT_CHANNEL } from '../../shared/channels';
 import { createFlag } from '../../actions/common';
+import { EXPORT_FILE_FORMATS, FILE_FORMATS } from '../../shared/constants';
 
 const exportFile = ({ name, flagType, channel, id }) => (dispatch) => {
   window.ipcRenderer.send(SHOW_SAVE_AS_PROMPT_CHANNEL, name);
@@ -38,26 +41,66 @@ class ExportButton extends Component {
     id: PropTypes.string.isRequired,
     tooltipText: PropTypes.string,
     t: PropTypes.func.isRequired,
+    isTabular: PropTypes.bool,
   };
 
   static defaultProps = {
     name: '',
     tooltipText: null,
+    isTabular: false,
   };
 
-  handleExport = () => {
+  state = {
+    anchorEl: null,
+  };
+
+  handleExport = (format = FILE_FORMATS.JSON) => {
     const { dispatchExportFile, name, flagType, channel, id } = this.props;
-    dispatchExportFile({ name, flagType, channel, id });
+    dispatchExportFile({ name: `${name}.${format}`, flagType, channel, id });
+    this.handleClose();
+  };
+
+  handleSelectFormat = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
   };
 
   render() {
-    const { tooltipText, t } = this.props;
+    const { tooltipText, t, isTabular } = this.props;
+    const { anchorEl } = this.state;
+
     return (
-      <Tooltip title={tooltipText}>
-        <IconButton aria-label={t('export')} onClick={this.handleExport}>
-          <SaveIcon />
-        </IconButton>
-      </Tooltip>
+      <>
+        <Tooltip title={tooltipText}>
+          <IconButton
+            aria-label={t('export')}
+            onClick={(event) => {
+              return isTabular
+                ? this.handleSelectFormat(event)
+                : this.handleExport();
+            }}
+          >
+            <SaveIcon />
+          </IconButton>
+        </Tooltip>
+        {isTabular && (
+          <Menu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={this.handleClose}
+          >
+            {EXPORT_FILE_FORMATS.map(({ name, format }) => (
+              <MenuItem onClick={() => this.handleExport(format)}>
+                {`${t('Export as')} ${name}`}
+              </MenuItem>
+            ))}
+          </Menu>
+        )}
+      </>
     );
   }
 }

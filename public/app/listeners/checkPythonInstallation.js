@@ -11,6 +11,7 @@ const {
   ERROR_GENERAL,
 } = require('../../shared/errors');
 const { ACCEPTED_PYTHON_VERSIONS } = require('../config/config');
+const { FILE_ENCODINGS } = require('../../shared/constants');
 
 const isPythonVersionValid = (version) => {
   return ACCEPTED_PYTHON_VERSIONS.some((acceptedVersion) =>
@@ -25,7 +26,7 @@ const checkPythonInstallation = (mainWindow) => () => {
     );
 
     process.stdout.on('data', (chunk) => {
-      const version = chunk.toString('utf8').replace(/\n$/, ''); // buffer to string without trailing new line
+      const version = chunk.toString(FILE_ENCODINGS.UTF8).replace(/\n$/, ''); // buffer to string without trailing new line
       const valid = isPythonVersionValid(version);
       const payload = { version, valid };
 

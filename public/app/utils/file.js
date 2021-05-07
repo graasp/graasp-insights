@@ -1,4 +1,6 @@
 const fs = require('fs');
+const parse = require('csv-parse/lib/sync');
+const stringify = require('csv-stringify/lib/sync');
 
 const getFileStats = (filepath) => {
   // get file data
@@ -11,4 +13,20 @@ const getFileStats = (filepath) => {
   return { createdAt, lastModified, sizeInKiloBytes };
 };
 
-module.exports = { getFileStats };
+const convertCSVToJSON = (csv) => {
+  const records = parse(csv, {
+    columns: true,
+    skip_empty_lines: true,
+  });
+  return records;
+};
+
+const convertJSONToCSV = (json) => {
+  const converted = stringify(json, {
+    header: true,
+  });
+
+  return converted;
+};
+
+module.exports = { getFileStats, convertCSVToJSON, convertJSONToCSV };

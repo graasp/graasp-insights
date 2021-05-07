@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { FILE_ENCODINGS } = require('../public/shared/constants');
 
 const DEFAULT_PATH = './public/';
 const NAME = 'env.json';
@@ -18,4 +19,6 @@ const env = JSON.stringify({
   LOGGING_LEVEL,
 });
 
-fs.writeFileSync(path.join(DEFAULT_PATH, NAME), env, { encoding: 'utf8' });
+fs.writeFileSync(path.join(DEFAULT_PATH, NAME), env, {
+  encoding: FILE_ENCODINGS.UTF8,
+});

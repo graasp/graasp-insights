@@ -6,6 +6,7 @@ const {
   GET_ALGORITHM_CODE_ERROR,
   GET_ALGORITHM_CODE_SUCCESS,
 } = require('../../shared/types');
+const { FILE_ENCODINGS } = require('../../shared/constants');
 const { ERROR_MISSING_FILE, ERROR_GENERAL } = require('../../shared/errors');
 const { ALGORITHMS_FOLDER_NAME } = require('../config/config');
 
@@ -18,10 +19,10 @@ const getAlgorithmCode = (mainWindow) => async (
     if (isGraasp) {
       code = fs.readFileSync(
         path.join(__dirname, '../', ALGORITHMS_FOLDER_NAME, filename),
-        'utf8',
+        FILE_ENCODINGS.UTF8,
       );
     } else {
-      code = fs.readFileSync(filepath, 'utf8');
+      code = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
     }
 
     return mainWindow.webContents.send(GET_ALGORITHM_CODE_CHANNEL, {

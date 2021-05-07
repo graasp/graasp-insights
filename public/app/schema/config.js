@@ -15,4 +15,11 @@ const DEFAULT_SCHEMAS = {
   },
 };
 
-module.exports = { DEFAULT_SCHEMAS };
+const ARRAY_OF_JSON_SCHEMA = {
+  type: 'array',
+  items: {
+    type: 'object',
+  },
+};
+
+module.exports = { DEFAULT_SCHEMAS, ARRAY_OF_JSON_SCHEMA };

@@ -1,7 +1,10 @@
 const fs = require('fs');
 const { GET_RESULT_CHANNEL } = require('../../shared/channels');
 const logger = require('../logger');
-const { DATASETS_COLLECTION } = require('../../shared/constants');
+const {
+  DATASETS_COLLECTION,
+  FILE_ENCODINGS,
+} = require('../../shared/constants');
 const { GET_RESULT_SUCCESS, GET_RESULT_ERROR } = require('../../shared/types');
 const { ERROR_GENERAL, ERROR_MISSING_FILE } = require('../../shared/errors');
 
@@ -12,7 +15,7 @@ const getResult = (mainWindow, db) => async (event, { id }) => {
 
     let content = null;
     const { filepath } = result;
-    content = fs.readFileSync(filepath, 'utf8');
+    content = fs.readFileSync(filepath, FILE_ENCODINGS.UTF8);
 
     return mainWindow.webContents.send(GET_RESULT_CHANNEL, {
       type: GET_RESULT_SUCCESS,
