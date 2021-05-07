@@ -155,7 +155,7 @@ export const deleteDataset = async (client, { name }) => {
   await deleteButton.click();
 };
 
-describe.only('Datasets Scenarios', function () {
+describe('Datasets Scenarios', function () {
   this.timeout(DEFAULT_GLOBAL_TIMEOUT);
   let app = null;
 

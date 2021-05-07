@@ -140,7 +140,7 @@ export const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 export const DEFAULT_ROWS_PER_PAGE = ROWS_PER_PAGE_OPTIONS[1];
 
-export const DATASET_CONTENT_VIEW_TYPES = {
+export const DATASET_CONTENT_VIEW_MODES = {
   RAW: 'raw',
   TABLE: 'table',
 };

@@ -24,7 +24,7 @@ import {
 import BackButton from '../common/BackButton';
 import SchemaTags from '../common/SchemaTags';
 import { GRAASP_SCHEMA_ID } from '../../shared/constants';
-import { DATASET_CONTENT_VIEW_TYPES } from '../../config/constants';
+import { DATASET_CONTENT_VIEW_MODES } from '../../config/constants';
 import DatasetTableView from './DatasetTableView';
 
 const styles = (theme) => ({
@@ -54,7 +54,7 @@ const styles = (theme) => ({
 
 class DatasetScreen extends Component {
   state = {
-    viewType: DATASET_CONTENT_VIEW_TYPES.RAW,
+    viewType: DATASET_CONTENT_VIEW_MODES.RAW,
   };
 
   static propTypes = {
@@ -111,8 +111,8 @@ class DatasetScreen extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         viewType: isTabular
-          ? DATASET_CONTENT_VIEW_TYPES.TABLE
-          : DATASET_CONTENT_VIEW_TYPES.RAW,
+          ? DATASET_CONTENT_VIEW_MODES.TABLE
+          : DATASET_CONTENT_VIEW_MODES.RAW,
       });
     }
   }
@@ -130,30 +130,30 @@ class DatasetScreen extends Component {
       <ButtonGroup size="small">
         <Button
           variant={
-            viewType === DATASET_CONTENT_VIEW_TYPES.RAW
+            viewType === DATASET_CONTENT_VIEW_MODES.RAW
               ? 'outlined'
               : 'contained'
           }
           color="primary"
           onClick={() => {
-            this.setState({ viewType: DATASET_CONTENT_VIEW_TYPES.RAW });
+            this.setState({ viewType: DATASET_CONTENT_VIEW_MODES.RAW });
           }}
         >
-          {DATASET_CONTENT_VIEW_TYPES.RAW}
+          {DATASET_CONTENT_VIEW_MODES.RAW}
         </Button>
         <Button
           variant={
-            viewType === DATASET_CONTENT_VIEW_TYPES.TABLE
+            viewType === DATASET_CONTENT_VIEW_MODES.TABLE
               ? 'outlined'
               : 'contained'
           }
           color="primary"
           onClick={() => {
-            this.setState({ viewType: DATASET_CONTENT_VIEW_TYPES.TABLE });
+            this.setState({ viewType: DATASET_CONTENT_VIEW_MODES.TABLE });
           }}
           disabled={!isTabular}
         >
-          {DATASET_CONTENT_VIEW_TYPES.TABLE}
+          {DATASET_CONTENT_VIEW_MODES.TABLE}
         </Button>
       </ButtonGroup>
     );
@@ -195,7 +195,7 @@ class DatasetScreen extends Component {
     }
 
     const isGraasp = datasetSchemaIds.includes(GRAASP_SCHEMA_ID);
-    const showTabular = viewType === DATASET_CONTENT_VIEW_TYPES.TABLE;
+    const showTabular = viewType === DATASET_CONTENT_VIEW_MODES.TABLE;
 
     return (
       <Main id={DATASET_SCREEN_MAIN_ID}>
@@ -227,7 +227,7 @@ class DatasetScreen extends Component {
               </Grid>
               <Paper
                 className={
-                  viewType === DATASET_CONTENT_VIEW_TYPES.RAW && classes.content
+                  viewType === DATASET_CONTENT_VIEW_MODES.RAW && classes.content
                 }
               >
                 {showTabular ? (
