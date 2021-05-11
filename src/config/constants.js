@@ -3,6 +3,13 @@ import { PARAMETER_TYPES, FILE_FORMATS } from '../shared/constants';
 import theme from '../theme';
 import { generateTextColorFromBackground } from '../utils/color';
 
+export const NOTIFICATIONS_TYPES = {
+  TOASTR: 'toastr',
+};
+
+export const SHOW_NOTIFICATIONS =
+  process?.env?.REACT_APP_SHOW_NOTIFICATIONS || false;
+
 export const DEFAULT_LANGUAGE = 'en';
 export const DEFAULT_PROTOCOL = 'https';
 
