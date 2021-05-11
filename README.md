@@ -5,11 +5,15 @@
 </p>
 
 <p align="center">
-  <a href="https://app.codeship.com/projects/315997">
     <img
-      alt="CodeShip"
-      src="https://app.codeship.com/projects/9044aa80-c503-0138-36a4-4e33c7c5a318/status?branch=master"
+      alt="coverage"
+      src="https://github.com/graasp/graasp-insights/actions/workflows/coverage.yml/badge.svg?branch=master"
     />
+  <a href='https://coveralls.io/github/graasp/graasp-insights?branch=97/spectronCoverage'>
+    <img
+      src='https://coveralls.io/repos/github/graasp/graasp-insights/badge.svg?branch=97/spectronCoverage'
+      alt='Coverage Status'
+      />
   </a>
   <a href="https://conventionalcommits.org">
     <img
