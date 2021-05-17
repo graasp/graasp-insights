@@ -393,7 +393,7 @@ const middleware = () => (next) => (action) => {
     );
   }
 
-  // send to reduce
+  // send to reducer
   const result = next(action);
   return result;
 };

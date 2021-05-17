@@ -35,6 +35,7 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         env:
           REACT_APP_GOOGLE_KEY: ${{secrets.REACT_APP_GOOGLE_KEY}}
+          REACT_APP_SHOW_NOTIFICATIONS: toastr
         with:
           build_script_name: build:github
           # GitHub token, automatically provided to the action

@@ -14,6 +14,7 @@ export const mochaAsync = (fn) => {
 export const openDrawer = async (client) => {
   const drawerButton = await client.$(`#${DRAWER_BUTTON_ID}`);
   if (await drawerButton.isDisplayed()) {
+    await drawerButton.waitForClickable({ timeout: 5000 });
     await drawerButton.click();
   }
   await client.pause(OPEN_DRAWER_PAUSE);

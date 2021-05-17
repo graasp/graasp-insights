@@ -8,17 +8,20 @@ import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import i18nConfig from './config/i18n';
 import App from './App';
 import configureStore from './store/configure';
+import { NOTIFICATIONS_TYPES, SHOW_NOTIFICATIONS } from './config/constants';
 
 const { store } = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
     <I18nextProvider i18n={i18nConfig}>
-      <ReduxToastr
-        transitionIn="fadeIn"
-        preventDuplicates
-        transitionOut="fadeOut"
-      />
+      {[NOTIFICATIONS_TYPES.TOASTR].includes(SHOW_NOTIFICATIONS) && (
+        <ReduxToastr
+          transitionIn="fadeIn"
+          preventDuplicates
+          transitionOut="fadeOut"
+        />
+      )}
       <App />
     </I18nextProvider>
   </Provider>,

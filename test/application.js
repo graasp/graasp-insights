@@ -102,6 +102,12 @@ const createApplication = async ({
   // set up database
   const tmpDatabasePath = await setUpDatabase(database, varFolder);
 
+  // locally use the public electron application
+  // for CI use the build application
+  const applicationPath = process.env.CI
+    ? path.join(__dirname, '../build/electron.js')
+    : path.join(__dirname, '../public/electron.js');
+
   const app = new Application({
     // Your electron path can be any binary
     // i.e for OSX an example path could be '/Applications/MyApp.app/Contents/MacOS/MyApp'
@@ -121,7 +127,7 @@ const createApplication = async ({
 
     // The following line tells spectron to look and use the main.js file
     // and the package.json located 1 level above.
-    args: [path.join(__dirname, '../public/electron.js')],
+    args: [applicationPath],
     chromeDriverArgs: [`--user-data-dir=${tmpDatabasePath}`],
     env,
   });
