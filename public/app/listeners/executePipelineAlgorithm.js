@@ -102,6 +102,7 @@ const executePipelineAlgorithm = (
   db,
   {
     pipelineExecutionId,
+    pipelineId,
     algorithms,
     sourceId,
     userProvidedFilename,
@@ -160,6 +161,8 @@ const executePipelineAlgorithm = (
       filepath: tmpPath,
       algorithmId: algorithm.id,
       description,
+      pipelineExecutionId,
+      pipelineId,
     });
 
     db.get(EXECUTIONS_COLLECTION)
@@ -190,6 +193,7 @@ const executePipelineAlgorithm = (
     if (algorithmIndex + 1 < algorithms.length) {
       return executePipelineAlgorithm(mainWindow, db, {
         pipelineExecutionId,
+        pipelineId,
         algorithms,
         sourceId: newResult.id,
         userProvidedFilename,

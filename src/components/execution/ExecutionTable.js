@@ -10,6 +10,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Table from '../common/Table';
 import {
   getDatasets,
@@ -25,9 +27,11 @@ import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import { buildExecutionPath } from '../../config/paths';
 import {
   buildExecutionAlgorithmButtonId,
+  buildExecutionPipelineButtonId,
   buildExecutionResultButtonId,
   buildExecutionSourceButtonId,
   buildExecutionViewButtonId,
+  buildExecutionCollapsePipelineButtonId,
   EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
@@ -37,6 +41,7 @@ import ExecutionStatusIcon from './ExecutionStatusIcon';
 import ResultViewButton from './ResultViewButton';
 import AlgorithmViewButton from './AlgorithmViewButton';
 import DatasetViewButton from './DatasetViewButton';
+import PipelineViewButton from './PipelineViewButton';
 
 const styles = () => ({
   link: {
@@ -46,6 +51,11 @@ const styles = () => ({
 });
 
 class ExecutionTable extends Component {
+  state = {
+    collapsePipeline: [],
+    structuredExecutions: [],
+  };
+
   static propTypes = {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -89,8 +99,31 @@ class ExecutionTable extends Component {
     const { executions, dispatchGetResults } = this.props;
     if (!prevExecutions.equals(executions)) {
       dispatchGetResults();
+
+      const mainPipelineExecutions = executions.filter(
+        (item) => !item.pipelineExecutionId,
+      );
+
+      const structuredExecutions = [...mainPipelineExecutions.toArray()];
+      structuredExecutions.forEach((v) => {
+        const element = v;
+        element.resultPipeline = executions
+          .filter((item) => item.pipelineExecutionId === v.id)
+          .toArray();
+        return element;
+      });
+
+      this.updateExecutionState(structuredExecutions);
     }
   }
+
+  updateExecutionState = (structuredExecutions) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      collapsePipeline: new Array(structuredExecutions.length).fill(false),
+      structuredExecutions,
+    }));
+  };
 
   handleDelete = (execution) => {
     const { dispatchDeleteExecution, t } = this.props;
@@ -111,6 +144,7 @@ class ExecutionTable extends Component {
 
   render() {
     const { t, executions, isLoading } = this.props;
+    const { structuredExecutions, collapsePipeline } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -121,6 +155,13 @@ class ExecutionTable extends Component {
     }
 
     const columns = [
+      {
+        columnName: t(''),
+        sortBy: 'collapse',
+        field: 'collapse',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
       {
         columnName: t('Dataset'),
         sortBy: 'sourceName',
@@ -164,85 +205,218 @@ class ExecutionTable extends Component {
       },
     ];
 
-    const rows = executions.reverse().map((execution) => {
-      const { id, executedAt, algorithm, source, result, status } = execution;
+    const buildTableColumns = ({
+      executedAt,
+      source,
+      algorithm,
+      resultPipeline,
+      result,
+      status,
+      execution,
+      handleCancel,
+      handleDelete,
+    }) => {
+      return {
+        executedAtString: executedAt
+          ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown'),
+        sourceNameButton: (
+          <DatasetViewButton
+            linkId={buildExecutionSourceButtonId(source.id)}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...source}
+          />
+        ),
+        algorithmButton:
+          algorithm.type === ALGORITHM_TYPES.PIPELINE ? (
+            <PipelineViewButton
+              linkId={buildExecutionPipelineButtonId(algorithm.id)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...algorithm}
+            />
+          ) : (
+            <AlgorithmViewButton
+              linkId={buildExecutionAlgorithmButtonId(algorithm.id)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...algorithm}
+            />
+          ),
+        resultButton:
+          algorithm.type === ALGORITHM_TYPES.PIPELINE &&
+          resultPipeline.length ? (
+            <ResultViewButton
+              linkId={buildExecutionResultButtonId(
+                resultPipeline[resultPipeline.length - 1].result.id,
+              )}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...resultPipeline[resultPipeline.length - 1].result}
+            />
+          ) : (
+            <ResultViewButton
+              linkId={buildExecutionResultButtonId(result.id)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...result}
+            />
+          ),
+        statusIcon: <ExecutionStatusIcon status={status} />,
+        cancelOrRemoveButton:
+          status === EXECUTION_STATUSES.RUNNING ? (
+            <Tooltip title={t('Cancel execution')} key="cancel">
+              <IconButton
+                className={EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS}
+                aria-label="cancel"
+                onClick={() => handleCancel(execution)}
+              >
+                <CancelIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title={t('Remove execution')} key="delete">
+              <IconButton
+                className={EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}
+                aria-label="delete"
+                onClick={() => handleDelete(execution)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ),
+      };
+    };
 
-      const executedAtString = executedAt
-        ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
+    const rows = structuredExecutions.map((execution, executionIdx) => {
+      const {
+        id,
+        executedAt,
+        algorithm,
+        source,
+        status,
+        result,
+        resultPipeline,
+      } = execution;
 
-      const sourceNameButton = (
-        <DatasetViewButton
-          linkId={buildExecutionSourceButtonId(source.id)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...source}
-        />
-      );
+      const {
+        executedAtString,
+        sourceNameButton,
+        algorithmButton,
+        resultButton,
+        statusIcon,
+        cancelOrRemoveButton,
+      } = buildTableColumns({
+        executedAt,
+        source,
+        algorithm,
+        resultPipeline,
+        result,
+        status: resultPipeline.length
+          ? resultPipeline[resultPipeline.length - 1].status
+          : status,
+        execution,
+        handleDelete: this.handleDelete,
+        handleCancel: this.handleCancel,
+      });
 
-      const algorithmButton = (
-        <AlgorithmViewButton
-          linkId={buildExecutionAlgorithmButtonId(algorithm.id)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...algorithm}
-        />
-      );
-
-      const resultButton = (
-        <ResultViewButton
-          linkId={buildExecutionResultButtonId(result.id)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...result}
-        />
-      );
-
-      const statusIcon = <ExecutionStatusIcon status={status} />;
-
-      const cancelOrRemoveButton =
-        status === EXECUTION_STATUSES.RUNNING ? (
-          <Tooltip title={t('Cancel execution')} key="cancel">
-            <IconButton
-              className={EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS}
-              aria-label="cancel"
-              onClick={() => this.handleCancel(execution)}
-            >
-              <CancelIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title={t('Remove execution')} key="delete">
-            <IconButton
-              className={EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}
-              aria-label="delete"
-              onClick={() => this.handleDelete(execution)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        );
+      const quickActionsSourceId = !execution.resultPipeline.length
+        ? source.id
+        : resultPipeline[resultPipeline.length - 1].source.id;
+      const quickActionsAlgorithmId = !execution.resultPipeline.length
+        ? algorithm.id
+        : resultPipeline[resultPipeline.length - 1].algorithm.id;
+      const quickActionsId = !execution.resultPipeline.length
+        ? id
+        : resultPipeline[resultPipeline.length - 1].id;
 
       const quickActions = (
         <>
           <Tooltip title={t('View execution')} key="view">
             <IconButton
-              id={buildExecutionViewButtonId(source.id, algorithm.id)}
+              id={buildExecutionViewButtonId(
+                quickActionsSourceId,
+                quickActionsAlgorithmId,
+              )}
               aria-label="view"
-              onClick={() => this.handleView(id)}
+              onClick={() => this.handleView(quickActionsId)}
             >
               <VisibilityIcon />
             </IconButton>
           </Tooltip>
-          {cancelOrRemoveButton}
+          {!execution.resultPipeline.length ? cancelOrRemoveButton : <></>}
         </>
       );
 
+      const resultPipelineTable = resultPipeline.map((exec) => {
+        const columnExecution = buildTableColumns({
+          executedAt: exec.executedAt,
+          source: exec.source,
+          algorithm: exec.algorithm,
+          resultPipeline,
+          result: exec.result,
+          status: exec.status,
+          execution: exec,
+          handleDelete: this.handleDelete,
+          handleCancel: this.handleCancel,
+        });
+
+        const quickActionsExecution = (
+          <>
+            <Tooltip title={t('View execution')} key="view">
+              <IconButton
+                id={buildExecutionViewButtonId(source.id, exec.algorithm.id)}
+                aria-label="view"
+                onClick={() => this.handleView(exec.id)}
+              >
+                <VisibilityIcon />
+              </IconButton>
+            </Tooltip>
+            {columnExecution.cancelOrRemoveButton}
+          </>
+        );
+
+        return {
+          key: exec.id,
+          sourceName: columnExecution.sourceNameButton,
+          algorithmName: columnExecution.algorithmButton,
+          resultId: columnExecution.resultButton,
+          status: columnExecution.statusIcon,
+          executedAt: columnExecution.executedAtString,
+          quickActions: quickActionsExecution,
+        };
+      });
+
       return {
         key: id,
+        collapse: execution.resultPipeline.length ? (
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            id={buildExecutionCollapsePipelineButtonId(executionIdx)}
+            onClick={() => {
+              const switchCollapsePipeline = [...collapsePipeline];
+              switchCollapsePipeline[executionIdx] = !switchCollapsePipeline[
+                executionIdx
+              ];
+              this.setState(() => {
+                return { collapsePipeline: switchCollapsePipeline };
+              });
+            }}
+          >
+            {collapsePipeline[executionIdx] ? (
+              <KeyboardArrowUpIcon />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
+          </IconButton>
+        ) : (
+          <></>
+        ),
         sourceName: sourceNameButton,
         algorithmName: algorithmButton,
         resultId: resultButton,
         status: statusIcon,
         executedAt: executedAtString,
         quickActions,
+        resultPipeline: resultPipelineTable,
+        open: collapsePipeline[executionIdx],
       };
     });
 

@@ -12,6 +12,7 @@ import {
 import {
   buildExecutionAlgorithmButtonId,
   buildExecutionSourceButtonId,
+  buildExecutionCollapsePipelineButtonId,
   DATASET_BACK_BUTTON_ID,
   DATASET_SCREEN_MAIN_ID,
   EDIT_ALGORITHM_MAIN_ID,
@@ -52,8 +53,7 @@ const checkExecutionRowLayout = async (
   client,
   { dataset, algorithm, name, status, rowIdx },
 ) => {
-  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
-  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
 
   const resultName = name || `${dataset.name}_${algorithm.name}`;
 
@@ -76,15 +76,20 @@ const checkExecutionRowLayoutPipeline = async (
   client,
   { algorithm, status, rowIdx },
 ) => {
-  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
-  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
-
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
   const algoName = await tr.$(
     `#${buildExecutionAlgorithmButtonId(algorithm.id)}`,
   );
   expect(await algoName.getText()).to.contain(algorithm.name);
 
   await client.expectElementToExist(`.${status}`);
+};
+
+const clickExecutionCollapsePipelineButton = async (client, { idx }) => {
+  const collapsePipelineButton = await client.$(
+    `#${buildExecutionCollapsePipelineButtonId(idx)}`,
+  );
+  await collapsePipelineButton.click();
 };
 
 const checkExecutionTableLayout = async (client, executions) => {
@@ -110,10 +115,14 @@ const checkResultRowLayout = async (
   expect(html).to.contain(algorithm.name);
 };
 
-const deleteExecution = async (client, { rowIdx }) => {
-  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
-  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
+const checkResultRowLayoutPipeline = async (client, { algorithm, rowIdx }) => {
+  const tr = (await client.$$(`#${RESULTS_MAIN_ID} tr`))[rowIdx + 1]; // +1 to skip header
+  const html = await tr.getHTML();
+  expect(html).to.contain(algorithm.name);
+};
 
+const deleteExecution = async (client, { rowIdx }) => {
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
   await (await tr.$(`.${EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}`)).click();
 };
 
@@ -681,7 +690,7 @@ describe('Executions Scenarios', function () {
       );
 
       it(
-        'Executing pipeline',
+        'Execute a pipeline and check its results',
         mochaAsync(async () => {
           const { client } = app;
 
@@ -691,7 +700,9 @@ describe('Executions Scenarios', function () {
             name: 'primary_pipeline',
           });
 
-          await client.pause(3000);
+          await client.pause(2000);
+
+          await clickExecutionCollapsePipelineButton(client, { idx: 0 });
 
           await checkExecutionRowLayoutPipeline(client, {
             algorithm: PRIMARY_PIPELINE.algorithms[0],
@@ -701,6 +712,22 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayoutPipeline(client, {
             algorithm: PRIMARY_PIPELINE.algorithms[1],
             status: EXECUTION_STATUSES.SUCCESS,
+            rowIdx: 2,
+          });
+
+          await client.goToResults();
+
+          await client.pause(2000);
+
+          await clickExecutionCollapsePipelineButton(client, { idx: 0 });
+
+          await checkResultRowLayoutPipeline(client, {
+            algorithm: PRIMARY_PIPELINE.algorithms[0],
+            rowIdx: 1,
+          });
+
+          await checkResultRowLayoutPipeline(client, {
+            algorithm: PRIMARY_PIPELINE.algorithms[1],
             rowIdx: 2,
           });
         }),
