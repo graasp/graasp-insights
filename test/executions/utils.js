@@ -63,6 +63,7 @@ export const createExecutionPipeline = async (
   const pipelineSelect = await client.$(`#${EXECUTIONS_ALGORITHMS_SELECT_ID}`);
   await client.pause(500);
   await pipelineSelect.click();
+  await client.pause(500);
   await (
     await client.$(`#${buildExecutionPipelineOptionId(pipeline.id)}`)
   ).click();

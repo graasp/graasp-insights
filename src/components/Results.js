@@ -15,7 +15,7 @@ import PublishIcon from '@material-ui/icons/Publish';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import { DEFAULT_LOCALE_DATE } from '../config/constants';
@@ -128,8 +128,11 @@ class Results extends Component {
   updateResultState = (newResults) => {
     this.setState((prevState) => ({
       ...prevState,
+      collapsePipeline:
+        newResults.length !== prevState.collapsePipeline.length
+          ? new Array(newResults.length).fill(false)
+          : prevState.collapsePipeline,
       newResults,
-      collapsePipeline: new Array(newResults.length).fill(false),
     }));
   };
 
@@ -397,9 +400,9 @@ class Results extends Component {
               }}
             >
               {collapsePipeline[resultIdx] ? (
-                <KeyboardArrowUpIcon />
-              ) : (
                 <KeyboardArrowDownIcon />
+              ) : (
+                <ChevronRightIcon />
               )}
             </IconButton>
           ) : (

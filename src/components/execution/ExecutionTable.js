@@ -11,7 +11,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Table from '../common/Table';
 import {
   getDatasets,
@@ -36,6 +36,7 @@ import {
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
 } from '../../config/selectors';
+
 import { ALGORITHM_TYPES, EXECUTION_STATUSES } from '../../shared/constants';
 import ExecutionStatusIcon from './ExecutionStatusIcon';
 import ResultViewButton from './ResultViewButton';
@@ -120,7 +121,10 @@ class ExecutionTable extends Component {
   updateExecutionState = (structuredExecutions) => {
     this.setState((prevState) => ({
       ...prevState,
-      collapsePipeline: new Array(structuredExecutions.length).fill(false),
+      collapsePipeline:
+        structuredExecutions.length !== prevState.collapsePipeline.length
+          ? new Array(structuredExecutions.length).fill(false)
+          : prevState.collapsePipeline,
       structuredExecutions,
     }));
   };
@@ -401,9 +405,9 @@ class ExecutionTable extends Component {
             }}
           >
             {collapsePipeline[executionIdx] ? (
-              <KeyboardArrowUpIcon />
-            ) : (
               <KeyboardArrowDownIcon />
+            ) : (
+              <ChevronRightIcon />
             )}
           </IconButton>
         ) : (
