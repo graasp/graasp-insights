@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, TableCell, TableRow } from '@material-ui/core/';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
@@ -106,6 +106,7 @@ class Results extends Component {
       const pipelineResults = results
         .filter((result) => result.pipelineExecutionId)
         .toArray();
+
       const uniquePipelineExecutionIds = [
         ...new Set(pipelineResults.map((res) => res.pipelineExecutionId)),
       ];
@@ -188,7 +189,7 @@ class Results extends Component {
 
     const columns = [
       {
-        columnName: t(''),
+        columnName: null,
         sortBy: 'collapse',
         field: 'collapse',
         alignColumn: 'left',
@@ -260,6 +261,11 @@ class Results extends Component {
     };
 
     const rows = newResults.map((result, resultIdx) => {
+      const lastResult = result[result.length - 1];
+      const isSimpleResult = result.length === 1;
+
+      // take the last result from a pipeline
+      // or either the result of an algorithm
       const {
         id,
         name,
@@ -271,7 +277,7 @@ class Results extends Component {
         pipelineId,
         schemaIds,
         isTabular,
-      } = result[result.length - 1];
+      } = lastResult;
 
       const {
         sizeString,
@@ -286,128 +292,149 @@ class Results extends Component {
         pipelineId,
       });
 
-      const resultPipelineTable =
-        result.length > 1
-          ? result.map((res) => {
-              const {
-                id: idResult,
-                name: nameResult,
-                size: sizeResult,
-                lastModified: lastModifiedResult,
-                createdAt: createdAtResult,
-                algorithmId: algorithmResultId,
-                description: descriptionResult = '',
-                schemaIds: schemaResultIds,
-              } = res;
+      const resultPipelineTable = result.map((res) => {
+        const {
+          id: idResult,
+          name: nameResult,
+          size: sizeResult,
+          lastModified: lastModifiedResult,
+          createdAt: createdAtResult,
+          algorithmId: algorithmResultId,
+          description: descriptionResult = '',
+          schemaIds: schemaResultIds,
+        } = res;
 
-              const {
-                sizeString: sizeStringResult,
-                createdAtString: createdAtStringResult,
-                lastModifiedString: lastModifiedStringResult,
-                algorithmName: algorithmNameResult,
-              } = buildTableColumns({
-                size: sizeResult,
-                createdAt: createdAtResult,
-                lastModified: lastModifiedResult,
-                algorithmId: algorithmResultId,
+        const {
+          sizeString: sizeStringResult,
+          createdAtString: createdAtStringResult,
+          lastModifiedString: lastModifiedStringResult,
+          algorithmName: algorithmNameResult,
+        } = buildTableColumns({
+          size: sizeResult,
+          createdAt: createdAtResult,
+          lastModified: lastModifiedResult,
+          algorithmId: algorithmResultId,
+        });
+
+        return {
+          key: idResult,
+          name: nameResult,
+          algorithmName: algorithmNameResult,
+          result: (
+            <>
+              <Grid container alignItems="center" spacing={1}>
+                <Grid item>
+                  <Typography variant="subtitle1" key="name">
+                    {nameResult}
+                  </Typography>
+                </Grid>
+                <SchemaTags schemaIds={schemaResultIds} />
+              </Grid>
+              <Typography variant="caption" key="description">
+                {descriptionResult}
+              </Typography>
+            </>
+          ),
+          size: sizeStringResult,
+          sizeNumeric: sizeResult,
+          createdAt: createdAtStringResult,
+          lastModified: lastModifiedStringResult,
+          quickActions: [
+            <ViewDatasetButton
+              tooltip={t('View result')}
+              key="view"
+              dataset={res}
+            />,
+            <ExportButton
+              id={id}
+              name={`${name}.json`}
+              flagType={FLAG_EXPORTING_RESULT}
+              channel={EXPORT_RESULT_CHANNEL}
+              tooltipText={t('Export result')}
+            />,
+            <Tooltip title={t('Remove result')} key="delete">
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.handleDelete(res)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>,
+            <Tooltip title={t('Edit result')} key="edit">
+              <IconButton
+                disabled
+                aria-label="edit"
+                onClick={() => this.handleEdit(res)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>,
+            <Tooltip title={t('Publish result')} key="publish">
+              <IconButton
+                disabled
+                aria-label="publish"
+                onClick={() => this.handlePublish(res)}
+              >
+                <PublishIcon />
+              </IconButton>
+            </Tooltip>,
+          ],
+        };
+      });
+
+      const collapse =
+        result.length > 1 ? (
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            id={buildExecutionCollapsePipelineButtonId(resultIdx)}
+            onClick={() => {
+              const switchCollapsePipeline = [...collapsePipeline];
+              switchCollapsePipeline[resultIdx] = !switchCollapsePipeline[
+                resultIdx
+              ];
+              this.setState(() => {
+                return { collapsePipeline: switchCollapsePipeline };
               });
+            }}
+          >
+            {collapsePipeline[resultIdx] ? (
+              <KeyboardArrowDownIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        ) : null;
 
-              return {
-                key: idResult,
-                name: nameResult,
-                algorithmName: algorithmNameResult,
-                result: (
-                  <>
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid item>
-                        <Typography variant="subtitle1" key="name">
-                          {nameResult}
-                        </Typography>
-                      </Grid>
-                      <SchemaTags schemaIds={schemaResultIds} />
-                    </Grid>
-                    <Typography variant="caption" key="description">
-                      {descriptionResult}
-                    </Typography>
-                  </>
-                ),
-                size: sizeStringResult,
-                sizeNumeric: sizeResult,
-                createdAt: createdAtStringResult,
-                lastModified: lastModifiedStringResult,
-                quickActions: [
-                  <ViewDatasetButton
-                    tooltip={t('View result')}
-                    key="view"
-                    dataset={res}
-                  />,
-                  <ExportButton
-                    id={id}
-                    name={`${name}.json`}
-                    flagType={FLAG_EXPORTING_RESULT}
-                    channel={EXPORT_RESULT_CHANNEL}
-                    tooltipText={t('Export result')}
-                  />,
-                  <Tooltip title={t('Remove result')} key="delete">
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => this.handleDelete(res)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>,
-                  <Tooltip title={t('Edit result')} key="edit">
-                    <IconButton
-                      disabled
-                      aria-label="edit"
-                      onClick={() => this.handleEdit(res)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>,
-                  <Tooltip title={t('Publish result')} key="publish">
-                    <IconButton
-                      disabled
-                      aria-label="publish"
-                      onClick={() => this.handlePublish(res)}
-                    >
-                      <PublishIcon />
-                    </IconButton>
-                  </Tooltip>,
-                ],
-              };
+      const subContent =
+        collapsePipeline[resultIdx] && result.length > 1
+          ? resultPipelineTable.map((row) => {
+              const { key, className } = row;
+              return (
+                <TableRow key={key} className={className}>
+                  {columns
+                    .filter(({ field }) => field)
+                    .map(({ field, alignField, fieldColSpan }) => {
+                      return (
+                        <TableCell
+                          align={alignField}
+                          key={field}
+                          colSpan={fieldColSpan}
+                        >
+                          {row[field]}
+                        </TableCell>
+                      );
+                    })}
+                </TableRow>
+              );
             })
-          : undefined;
+          : null;
 
       return {
         key: id,
         name,
         algorithmName,
-        collapse:
-          result.length > 1 ? (
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              id={buildExecutionCollapsePipelineButtonId(resultIdx)}
-              onClick={() => {
-                const switchCollapsePipeline = [...collapsePipeline];
-                switchCollapsePipeline[resultIdx] = !switchCollapsePipeline[
-                  resultIdx
-                ];
-                this.setState(() => {
-                  return { collapsePipeline: switchCollapsePipeline };
-                });
-              }}
-            >
-              {collapsePipeline[resultIdx] ? (
-                <KeyboardArrowDownIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          ) : (
-            <></>
-          ),
+        collapse,
         result: (
           <>
             <Grid container alignItems="center" spacing={1}>
@@ -427,14 +454,11 @@ class Results extends Component {
         sizeNumeric: size,
         createdAt: createdAtString,
         lastModified: lastModifiedString,
-        resultPipeline: resultPipelineTable,
         quickActions: [
           <ViewDatasetButton
             tooltip={t('View result')}
             key="view"
-            dataset={
-              result.length === 1 ? result[0] : result[result.length - 1]
-            }
+            dataset={lastResult}
           />,
           <ExportButton
             id={id}
@@ -444,26 +468,22 @@ class Results extends Component {
             isTabular={isTabular}
             tooltipText={t('Export result')}
           />,
-          result.length === 1 ? (
+          isSimpleResult ? (
             <Tooltip title={t('Remove result')} key="delete">
               <IconButton
                 aria-label="delete"
-                onClick={() => this.handleDelete(result[0])}
+                onClick={() => this.handleDelete(lastResult)}
               >
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
-          ) : (
-            <></>
-          ),
+          ) : null,
           <Tooltip title={t('Edit result')} key="edit">
             <IconButton
               disabled
               aria-label="edit"
               onClick={() => {
-                this.handleEdit(
-                  result.length === 1 ? result[0] : result[result.length - 1],
-                );
+                this.handleEdit(lastResult);
               }}
             >
               <EditIcon />
@@ -474,16 +494,14 @@ class Results extends Component {
               disabled
               aria-label="publish"
               onClick={() => {
-                this.handlePublish(
-                  result.length === 1 ? result[0] : result[result.length - 1],
-                );
+                this.handlePublish(lastResult);
               }}
             >
               <PublishIcon />
             </IconButton>
           </Tooltip>,
         ],
-        open: collapsePipeline[resultIdx],
+        subContent,
       };
     });
 

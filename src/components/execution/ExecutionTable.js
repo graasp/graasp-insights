@@ -4,7 +4,7 @@ import { List } from 'immutable';
 import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core';
+import { TableCell, TableRow, withStyles } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 import CancelIcon from '@material-ui/icons/Cancel';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -160,7 +160,7 @@ class ExecutionTable extends Component {
 
     const columns = [
       {
-        columnName: t(''),
+        columnName: null,
         sortBy: 'collapse',
         field: 'collapse',
         alignColumn: 'left',
@@ -220,6 +220,7 @@ class ExecutionTable extends Component {
       handleCancel,
       handleDelete,
     }) => {
+      const lastPipelineExecution = resultPipeline[resultPipeline.length - 1];
       return {
         executedAtString: executedAt
           ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
@@ -250,10 +251,10 @@ class ExecutionTable extends Component {
           resultPipeline.length ? (
             <ResultViewButton
               linkId={buildExecutionResultButtonId(
-                resultPipeline[resultPipeline.length - 1].result.id,
+                lastPipelineExecution.result.id,
               )}
               // eslint-disable-next-line react/jsx-props-no-spreading
-              {...resultPipeline[resultPipeline.length - 1].result}
+              {...lastPipelineExecution.result}
             />
           ) : (
             <ResultViewButton
@@ -299,6 +300,9 @@ class ExecutionTable extends Component {
         resultPipeline,
       } = execution;
 
+      const lastPipelineExecution = resultPipeline[resultPipeline.length - 1];
+      const hasPipelineResult = resultPipeline.length;
+
       const {
         executedAtString,
         sourceNameButton,
@@ -312,23 +316,19 @@ class ExecutionTable extends Component {
         algorithm,
         resultPipeline,
         result,
-        status: resultPipeline.length
-          ? resultPipeline[resultPipeline.length - 1].status
-          : status,
+        status: hasPipelineResult ? lastPipelineExecution.status : status,
         execution,
         handleDelete: this.handleDelete,
         handleCancel: this.handleCancel,
       });
 
-      const quickActionsSourceId = !execution.resultPipeline.length
+      const quickActionsSourceId = !hasPipelineResult
         ? source.id
-        : resultPipeline[resultPipeline.length - 1].source.id;
-      const quickActionsAlgorithmId = !execution.resultPipeline.length
+        : lastPipelineExecution.source.id;
+      const quickActionsAlgorithmId = !hasPipelineResult
         ? algorithm.id
-        : resultPipeline[resultPipeline.length - 1].algorithm.id;
-      const quickActionsId = !execution.resultPipeline.length
-        ? id
-        : resultPipeline[resultPipeline.length - 1].id;
+        : lastPipelineExecution.algorithm.id;
+      const quickActionsId = !hasPipelineResult ? id : lastPipelineExecution.id;
 
       const quickActions = (
         <>
@@ -344,7 +344,7 @@ class ExecutionTable extends Component {
               <VisibilityIcon />
             </IconButton>
           </Tooltip>
-          {!execution.resultPipeline.length ? cancelOrRemoveButton : <></>}
+          {!hasPipelineResult ? cancelOrRemoveButton : null}
         </>
       );
 
@@ -387,40 +387,62 @@ class ExecutionTable extends Component {
         };
       });
 
+      const subContent = collapsePipeline[executionIdx]
+        ? resultPipelineTable.map((row) => {
+            const { key, className } = row;
+            return (
+              <TableRow key={key} className={className}>
+                {columns
+                  .filter(({ field }) => field)
+                  .map(({ field, alignField, fieldColSpan }) => {
+                    return (
+                      <TableCell
+                        align={alignField}
+                        key={field}
+                        colSpan={fieldColSpan}
+                      >
+                        {row[field]}
+                      </TableCell>
+                    );
+                  })}
+              </TableRow>
+            );
+          })
+        : null;
+
+      const collapse = hasPipelineResult ? (
+        <IconButton
+          aria-label="expand row"
+          size="small"
+          id={buildExecutionCollapsePipelineButtonId(executionIdx)}
+          onClick={() => {
+            const switchCollapsePipeline = [...collapsePipeline];
+            switchCollapsePipeline[executionIdx] = !switchCollapsePipeline[
+              executionIdx
+            ];
+            this.setState(() => {
+              return { collapsePipeline: switchCollapsePipeline };
+            });
+          }}
+        >
+          {collapsePipeline[executionIdx] ? (
+            <KeyboardArrowDownIcon />
+          ) : (
+            <ChevronRightIcon />
+          )}
+        </IconButton>
+      ) : null;
+
       return {
         key: id,
-        collapse: execution.resultPipeline.length ? (
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            id={buildExecutionCollapsePipelineButtonId(executionIdx)}
-            onClick={() => {
-              const switchCollapsePipeline = [...collapsePipeline];
-              switchCollapsePipeline[executionIdx] = !switchCollapsePipeline[
-                executionIdx
-              ];
-              this.setState(() => {
-                return { collapsePipeline: switchCollapsePipeline };
-              });
-            }}
-          >
-            {collapsePipeline[executionIdx] ? (
-              <KeyboardArrowDownIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        ) : (
-          <></>
-        ),
+        collapse,
         sourceName: sourceNameButton,
         algorithmName: algorithmButton,
         resultId: resultButton,
         status: statusIcon,
         executedAt: executedAtString,
         quickActions,
-        resultPipeline: resultPipelineTable,
-        open: collapsePipeline[executionIdx],
+        subContent,
       };
     });
 

@@ -55,13 +55,11 @@ export const createExecutionPipeline = async (
   { dataset, pipeline, name, parameters },
 ) => {
   const datasetSelect = await client.$(`#${EXECUTIONS_DATASETS_SELECT_ID}`);
-  await client.pause(500);
   await datasetSelect.click();
   await (
     await client.$(`#${buildExecutionDatasetOptionId(dataset.id)}`)
   ).click();
   const pipelineSelect = await client.$(`#${EXECUTIONS_ALGORITHMS_SELECT_ID}`);
-  await client.pause(500);
   await pipelineSelect.click();
   await client.pause(500);
   await (
