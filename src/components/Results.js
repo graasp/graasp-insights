@@ -58,8 +58,8 @@ const styles = (theme) => ({
 
 class Results extends Component {
   state = {
-    collapsePipeline: [],
-    newResults: [],
+    groupedResults: [],
+    collapseResult: [],
   };
 
   static propTypes = {
@@ -103,38 +103,35 @@ class Results extends Component {
   componentDidUpdate({ results: prevResults }) {
     const { results } = this.props;
     if (!prevResults.equals(results)) {
-      const pipelineResults = results
-        .filter((result) => result.pipelineExecutionId)
+      // group results by pipeline execution id
+      const groupedResultsByPipelineId = results
+        .groupBy((item) => item.pipelineExecutionId)
+        .toMap()
         .toArray();
 
-      const uniquePipelineExecutionIds = [
-        ...new Set(pipelineResults.map((res) => res.pipelineExecutionId)),
-      ];
-      const missingResults = results
-        .filter((result) => !result.pipelineExecutionId)
-        .toArray();
-      const newResults = [
-        ...uniquePipelineExecutionIds.map((pipelineExecutionId) =>
-          pipelineResults.filter(
-            (res) => res.pipelineExecutionId === pipelineExecutionId,
-          ),
-        ),
-        ...missingResults.map((res) => [res]),
-      ];
+      // group for the pipeline results
+      const pipelineResults = groupedResultsByPipelineId
+        .filter((v) => v[0])
+        .map((v) => v[1].toArray());
 
-      this.updateResultState(newResults);
+      // group for the algorithm results
+      const algorithmResults = groupedResultsByPipelineId
+        .filter((v) => !v[0])
+        .map((v) => v[1].toArray())
+        .flat()
+        .map((v) => [v]);
+
+      // get results sorted in arrays depending on their pipeline execution id, append algorithm results
+      const groupedResults = [...pipelineResults, ...algorithmResults];
+
+      this.updateResultState(groupedResults);
     }
   }
 
-  updateResultState = (newResults) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      collapsePipeline:
-        newResults.length !== prevState.collapsePipeline.length
-          ? new Array(newResults.length).fill(false)
-          : prevState.collapsePipeline,
-      newResults,
-    }));
+  updateResultState = (groupedResults) => {
+    this.setState({
+      groupedResults,
+    });
   };
 
   handleView = ({ id }) => {
@@ -168,7 +165,8 @@ class Results extends Component {
       pipelines,
     } = this.props;
 
-    const { newResults, collapsePipeline } = this.state;
+    const { groupedResults, collapseResult } = this.state;
+
     if (activity || !results) {
       return (
         <Main fullScreen>
@@ -260,7 +258,7 @@ class Results extends Component {
       };
     };
 
-    const rows = newResults.map((result, resultIdx) => {
+    const rows = groupedResults.map((result, resultIdx) => {
       const lastResult = result[result.length - 1];
       const isSimpleResult = result.length === 1;
 
@@ -389,16 +387,23 @@ class Results extends Component {
             size="small"
             id={buildExecutionCollapsePipelineButtonId(resultIdx)}
             onClick={() => {
-              const switchCollapsePipeline = [...collapsePipeline];
-              switchCollapsePipeline[resultIdx] = !switchCollapsePipeline[
-                resultIdx
-              ];
-              this.setState(() => {
-                return { collapsePipeline: switchCollapsePipeline };
-              });
+              if (!collapseResult.find((resId) => resId === result[0].id)) {
+                this.setState((previousState) => ({
+                  collapseResult: [
+                    ...previousState.collapseResult,
+                    result[0].id,
+                  ],
+                }));
+              } else {
+                this.setState((previousState) => ({
+                  collapseResult: previousState.collapseResult.filter(
+                    (resId) => resId !== result[0].id,
+                  ),
+                }));
+              }
             }}
           >
-            {collapsePipeline[resultIdx] ? (
+            {collapseResult.find((resId) => resId === result[0].id) ? (
               <KeyboardArrowDownIcon />
             ) : (
               <ChevronRightIcon />
@@ -407,7 +412,8 @@ class Results extends Component {
         ) : null;
 
       const subContent =
-        collapsePipeline[resultIdx] && result.length > 1
+        collapseResult.find((resId) => resId === result[0].id) &&
+        result.length > 1
           ? resultPipelineTable.map((row) => {
               const { key, className } = row;
               return (

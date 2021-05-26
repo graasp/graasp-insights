@@ -53,8 +53,8 @@ const styles = () => ({
 
 class ExecutionTable extends Component {
   state = {
-    collapsePipeline: [],
-    structuredExecutions: [],
+    groupedExecutions: [],
+    collapseExecution: [],
   };
 
   static propTypes = {
@@ -100,33 +100,37 @@ class ExecutionTable extends Component {
     const { executions, dispatchGetResults } = this.props;
     if (!prevExecutions.equals(executions)) {
       dispatchGetResults();
+      // group executions by pipeline execution id
+      const groupedExecutionsByPipelineId = executions
+        .groupBy((item) => item.pipelineExecutionId)
+        .toMap()
+        .toArray();
 
-      const mainPipelineExecutions = executions.filter(
-        (item) => !item.pipelineExecutionId,
-      );
+      // find the main executions
+      const mainPipelineExecutions = groupedExecutionsByPipelineId
+        .filter((v) => !v[0])
+        .map((v) => v[1].toArray());
 
-      const structuredExecutions = [...mainPipelineExecutions.toArray()];
-      structuredExecutions.forEach((v) => {
-        const element = v;
-        element.resultPipeline = executions
-          .filter((item) => item.pipelineExecutionId === v.id)
-          .toArray();
-        return element;
-      });
+      if (mainPipelineExecutions.length) {
+        // append pipeline results if found
+        const groupedExecutions = [...mainPipelineExecutions[0]];
+        groupedExecutions.forEach((v) => {
+          const element = v;
+          element.resultPipeline = executions
+            .filter((item) => item.pipelineExecutionId === v.id)
+            .toArray();
+          return element;
+        });
 
-      this.updateExecutionState(structuredExecutions);
+        this.updateExecutionState(groupedExecutions);
+      }
     }
   }
 
-  updateExecutionState = (structuredExecutions) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      collapsePipeline:
-        structuredExecutions.length !== prevState.collapsePipeline.length
-          ? new Array(structuredExecutions.length).fill(false)
-          : prevState.collapsePipeline,
-      structuredExecutions,
-    }));
+  updateExecutionState = (groupedExecutions) => {
+    this.setState({
+      groupedExecutions,
+    });
   };
 
   handleDelete = (execution) => {
@@ -148,7 +152,7 @@ class ExecutionTable extends Component {
 
   render() {
     const { t, executions, isLoading } = this.props;
-    const { structuredExecutions, collapsePipeline } = this.state;
+    const { groupedExecutions, collapseExecution } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -289,7 +293,7 @@ class ExecutionTable extends Component {
       };
     };
 
-    const rows = structuredExecutions.map((execution, executionIdx) => {
+    const rows = groupedExecutions.map((execution, executionIdx) => {
       const {
         id,
         executedAt,
@@ -387,7 +391,7 @@ class ExecutionTable extends Component {
         };
       });
 
-      const subContent = collapsePipeline[executionIdx]
+      const subContent = collapseExecution.find((execId) => execId === id)
         ? resultPipelineTable.map((row) => {
             const { key, className } = row;
             return (
@@ -416,16 +420,20 @@ class ExecutionTable extends Component {
           size="small"
           id={buildExecutionCollapsePipelineButtonId(executionIdx)}
           onClick={() => {
-            const switchCollapsePipeline = [...collapsePipeline];
-            switchCollapsePipeline[executionIdx] = !switchCollapsePipeline[
-              executionIdx
-            ];
-            this.setState(() => {
-              return { collapsePipeline: switchCollapsePipeline };
-            });
+            if (!collapseExecution.find((execId) => execId === id)) {
+              this.setState((previousState) => ({
+                collapseExecution: [...previousState.collapseExecution, id],
+              }));
+            } else {
+              this.setState((previousState) => ({
+                collapseExecution: previousState.collapseExecution.filter(
+                  (execId) => execId !== id,
+                ),
+              }));
+            }
           }}
         >
-          {collapsePipeline[executionIdx] ? (
+          {collapseExecution.find((execId) => execId === id) ? (
             <KeyboardArrowDownIcon />
           ) : (
             <ChevronRightIcon />
