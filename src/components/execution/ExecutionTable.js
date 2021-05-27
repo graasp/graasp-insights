@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import clsx from 'clsx';
 import { List } from 'immutable';
 import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
@@ -49,7 +50,12 @@ const styles = () => ({
     textTransform: 'none',
     textAlign: 'left',
   },
+  subContent: {
+    background: '#eeeeee',
+  },
 });
+
+const MAIN_PIPELINE_EXECUTIONS_ID = 'mainPipelineExecutionsId';
 
 class ExecutionTable extends Component {
   state = {
@@ -74,6 +80,7 @@ class ExecutionTable extends Component {
     isLoading: PropTypes.bool.isRequired,
     classes: PropTypes.shape({
       link: PropTypes.string.isRequired,
+      subContent: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -102,27 +109,30 @@ class ExecutionTable extends Component {
       dispatchGetResults();
       // group executions by pipeline execution id
       const groupedExecutionsByPipelineId = executions
-        .groupBy((item) => item.pipelineExecutionId)
-        .toMap()
-        .toArray();
+        // change undefined pipelineExecutionId to some key
+        .map((e) =>
+          e.pipelineExecutionId
+            ? e
+            : { ...e, pipelineExecutionId: MAIN_PIPELINE_EXECUTIONS_ID },
+        )
+        .groupBy((item) => item.pipelineExecutionId);
 
-      // find the main executions
+      // find the main executions: pipeline executions and algorithm executions
       const mainPipelineExecutions = groupedExecutionsByPipelineId
-        .filter((v) => !v[0])
-        .map((v) => v[1].toArray());
+        .get(MAIN_PIPELINE_EXECUTIONS_ID)
+        .valueSeq();
 
-      if (mainPipelineExecutions.length) {
+      if (mainPipelineExecutions.size) {
         // append pipeline results if found
-        const groupedExecutions = [...mainPipelineExecutions[0]];
-        groupedExecutions.forEach((v) => {
-          const element = v;
-          element.resultPipeline = executions
-            .filter((item) => item.pipelineExecutionId === v.id)
-            .toArray();
-          return element;
+        const completeExecutions = mainPipelineExecutions.map((v) => {
+          return {
+            ...v,
+            resultPipeline:
+              groupedExecutionsByPipelineId.get(v.id)?.toArray() || [],
+          };
         });
 
-        this.updateExecutionState(groupedExecutions);
+        this.updateExecutionState(completeExecutions);
       }
     }
   }
@@ -151,7 +161,7 @@ class ExecutionTable extends Component {
   };
 
   render() {
-    const { t, executions, isLoading } = this.props;
+    const { t, executions, isLoading, classes } = this.props;
     const { groupedExecutions, collapseExecution } = this.state;
 
     if (isLoading) {
@@ -395,7 +405,10 @@ class ExecutionTable extends Component {
         ? resultPipelineTable.map((row) => {
             const { key, className } = row;
             return (
-              <TableRow key={key} className={className}>
+              <TableRow
+                key={key}
+                className={clsx(className, classes.subContent)}
+              >
                 {columns
                   .filter(({ field }) => field)
                   .map(({ field, alignField, fieldColSpan }) => {
@@ -414,24 +427,26 @@ class ExecutionTable extends Component {
           })
         : null;
 
+      const onCollapseClick = () => {
+        if (!collapseExecution.find((execId) => execId === id)) {
+          this.setState((previousState) => ({
+            collapseExecution: [...previousState.collapseExecution, id],
+          }));
+        } else {
+          this.setState((previousState) => ({
+            collapseExecution: previousState.collapseExecution.filter(
+              (execId) => execId !== id,
+            ),
+          }));
+        }
+      };
+
       const collapse = hasPipelineResult ? (
         <IconButton
           aria-label="expand row"
           size="small"
           id={buildExecutionCollapsePipelineButtonId(executionIdx)}
-          onClick={() => {
-            if (!collapseExecution.find((execId) => execId === id)) {
-              this.setState((previousState) => ({
-                collapseExecution: [...previousState.collapseExecution, id],
-              }));
-            } else {
-              this.setState((previousState) => ({
-                collapseExecution: previousState.collapseExecution.filter(
-                  (execId) => execId !== id,
-                ),
-              }));
-            }
-          }}
+          onClick={onCollapseClick}
         >
           {collapseExecution.find((execId) => execId === id) ? (
             <KeyboardArrowDownIcon />
@@ -454,7 +469,15 @@ class ExecutionTable extends Component {
       };
     });
 
-    return <Table id={EXECUTIONS_TABLE_ID} columns={columns} rows={rows} />;
+    return (
+      <Table
+        id={EXECUTIONS_TABLE_ID}
+        columns={columns}
+        rows={rows}
+        orderBy="executedAt"
+        isAsc={false}
+      />
+    );
   }
 }
 

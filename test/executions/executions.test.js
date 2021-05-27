@@ -223,14 +223,14 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW,
             status: EXECUTION_STATUSES.RUNNING,
-            rowIdx: 1,
+            rowIdx: 0,
           });
           await client.pause(WAIT_FOR_SLOW_ALGORITHMS_PAUSE);
           // status should be success
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW,
             status: EXECUTION_STATUSES.SUCCESS,
-            rowIdx: 1,
+            rowIdx: 0,
           });
           await client.goToResults();
           await checkResultRowLayout(client, {
@@ -266,7 +266,7 @@ describe('Executions Scenarios', function () {
             ...EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER,
             status: EXECUTION_STATUSES.SUCCESS,
 
-            rowIdx: 1,
+            rowIdx: 0,
           });
 
           await createExecution(
@@ -278,7 +278,7 @@ describe('Executions Scenarios', function () {
             ...EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER,
             status: EXECUTION_STATUSES.SUCCESS,
 
-            rowIdx: 2,
+            rowIdx: 0,
           });
 
           await client.goToResults();
@@ -345,14 +345,14 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW_ERROR,
             status: EXECUTION_STATUSES.RUNNING,
-            rowIdx: 1,
+            rowIdx: 0,
           });
           await client.pause(WAIT_FOR_SLOW_ALGORITHMS_PAUSE);
           // status should be success
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW_ERROR,
             status: EXECUTION_STATUSES.ERROR,
-            rowIdx: 1,
+            rowIdx: 0,
           });
         }),
       );
@@ -378,7 +378,7 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_WITH_FAILING_FLOAT_PARAMETER,
             status: EXECUTION_STATUSES.ERROR,
-            rowIdx: 1,
+            rowIdx: 0,
           });
 
           await createExecution(
@@ -389,7 +389,7 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_WITH_FAILING_STRING_PARAMETER,
             status: EXECUTION_STATUSES.ERROR,
-            rowIdx: 2,
+            rowIdx: 0,
           });
         }),
       );
@@ -523,7 +523,7 @@ describe('Executions Scenarios', function () {
 
             await createExecution(client, EXECUTION_FAST);
             await createExecution(client, EXECUTION_FAST_ERROR);
-            await deleteExecution(client, { rowIdx: 0 });
+            await deleteExecution(client, { rowIdx: 1 });
             await checkExecutionRowLayout(client, {
               ...EXECUTION_FAST_ERROR,
               status: EXECUTION_STATUSES.ERROR,
@@ -546,17 +546,17 @@ describe('Executions Scenarios', function () {
             await client.pause(WAIT_FOR_SLOW_ALGORITHMS_PAUSE);
 
             await checkExecutionTableLayout(client, [
-              {
-                ...EXECUTION_SLOW,
-                status: EXECUTION_STATUSES.SUCCESS,
-              },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
               {
                 ...EXECUTION_SLOW_ERROR,
                 status: EXECUTION_STATUSES.ERROR,
               },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              {
+                ...EXECUTION_SLOW,
+                status: EXECUTION_STATUSES.SUCCESS,
+              },
             ]);
           }),
         );
@@ -574,32 +574,32 @@ describe('Executions Scenarios', function () {
             await client.pause(500);
 
             await checkExecutionTableLayout(client, [
-              {
-                ...EXECUTION_FAST,
-                status: EXECUTION_STATUSES.SUCCESS,
-              },
-              { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
               {
                 ...EXECUTION_SLOW_ERROR,
                 status: EXECUTION_STATUSES.RUNNING,
               },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
+              { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
+              {
+                ...EXECUTION_FAST,
+                status: EXECUTION_STATUSES.SUCCESS,
+              },
             ]);
 
             await client.goToResults();
             await client.goToExecutions();
 
             await checkExecutionTableLayout(client, [
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
+              {
+                ...EXECUTION_SLOW_ERROR,
+                status: EXECUTION_STATUSES.RUNNING,
+              },
               {
                 ...EXECUTION_FAST,
                 status: EXECUTION_STATUSES.SUCCESS,
               },
               { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
-              {
-                ...EXECUTION_SLOW_ERROR,
-                status: EXECUTION_STATUSES.RUNNING,
-              },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
             ]);
 
             await client.goToResults();
@@ -607,16 +607,16 @@ describe('Executions Scenarios', function () {
             await client.goToExecutions();
 
             await checkExecutionTableLayout(client, [
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              {
+                ...EXECUTION_SLOW_ERROR,
+                status: EXECUTION_STATUSES.ERROR,
+              },
               {
                 ...EXECUTION_FAST,
                 status: EXECUTION_STATUSES.SUCCESS,
               },
               { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
-              {
-                ...EXECUTION_SLOW_ERROR,
-                status: EXECUTION_STATUSES.ERROR,
-              },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
             ]);
           }),
         );
@@ -662,11 +662,11 @@ describe('Executions Scenarios', function () {
             await app.client.goToExecutions();
             await app.client.pause(1000);
             await checkExecutionTableLayout(app.client, [
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.ERROR },
               {
                 ...EXECUTION_SLOW_ERROR,
                 status: EXECUTION_STATUSES.ERROR,
               },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.ERROR },
             ]);
           }),
         );

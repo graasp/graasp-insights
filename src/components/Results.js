@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withStyles, TableCell, TableRow } from '@material-ui/core/';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -40,6 +41,8 @@ import LocationPathAlert from './common/LocationPathAlert';
 import SchemaTags from './common/SchemaTags';
 import { ALGORITHM_TYPES } from '../shared/constants';
 
+const MAIN_RESULT_ID = 'mainResultId';
+
 const styles = (theme) => ({
   addButton: {
     color: theme.palette.secondary.main,
@@ -53,6 +56,9 @@ const styles = (theme) => ({
   },
   infoAlert: {
     margin: theme.spacing(2),
+  },
+  subContent: {
+    background: '#eeeeee',
   },
 });
 
@@ -73,6 +79,7 @@ class Results extends Component {
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      subContent: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
@@ -105,21 +112,23 @@ class Results extends Component {
     if (!prevResults.equals(results)) {
       // group results by pipeline execution id
       const groupedResultsByPipelineId = results
-        .groupBy((item) => item.pipelineExecutionId)
-        .toMap()
-        .toArray();
+        // change undefined pipelineExecutionId to some key
+        .map((e) =>
+          e.pipelineExecutionId
+            ? e
+            : { ...e, pipelineExecutionId: MAIN_RESULT_ID },
+        )
+        .groupBy((item) => item.pipelineExecutionId);
 
-      // group for the pipeline results
+      // group for the pipeline results, all except main results
       const pipelineResults = groupedResultsByPipelineId
-        .filter((v) => v[0])
-        .map((v) => v[1].toArray());
+        .delete(MAIN_RESULT_ID)
+        .valueSeq()
+        .toJS();
 
       // group for the algorithm results
-      const algorithmResults = groupedResultsByPipelineId
-        .filter((v) => !v[0])
-        .map((v) => v[1].toArray())
-        .flat()
-        .map((v) => [v]);
+      const algorithmResults =
+        groupedResultsByPipelineId.get(MAIN_RESULT_ID)?.map((r) => [r]) || [];
 
       // get results sorted in arrays depending on their pipeline execution id, append algorithm results
       const groupedResults = [...pipelineResults, ...algorithmResults];
@@ -380,28 +389,27 @@ class Results extends Component {
         };
       });
 
+      const onCollapseClick = () => {
+        if (!collapseResult.find((resId) => resId === result[0].id)) {
+          this.setState((previousState) => ({
+            collapseResult: [...previousState.collapseResult, result[0].id],
+          }));
+        } else {
+          this.setState((previousState) => ({
+            collapseResult: previousState.collapseResult.filter(
+              (resId) => resId !== result[0].id,
+            ),
+          }));
+        }
+      };
+
       const collapse =
         result.length > 1 ? (
           <IconButton
             aria-label="expand row"
             size="small"
             id={buildExecutionCollapsePipelineButtonId(resultIdx)}
-            onClick={() => {
-              if (!collapseResult.find((resId) => resId === result[0].id)) {
-                this.setState((previousState) => ({
-                  collapseResult: [
-                    ...previousState.collapseResult,
-                    result[0].id,
-                  ],
-                }));
-              } else {
-                this.setState((previousState) => ({
-                  collapseResult: previousState.collapseResult.filter(
-                    (resId) => resId !== result[0].id,
-                  ),
-                }));
-              }
-            }}
+            onClick={onCollapseClick}
           >
             {collapseResult.find((resId) => resId === result[0].id) ? (
               <KeyboardArrowDownIcon />
@@ -417,7 +425,10 @@ class Results extends Component {
           ? resultPipelineTable.map((row) => {
               const { key, className } = row;
               return (
-                <TableRow key={key} className={className}>
+                <TableRow
+                  key={key}
+                  className={clsx(className, classes.subContent)}
+                >
                   {columns
                     .filter(({ field }) => field)
                     .map(({ field, alignField, fieldColSpan }) => {
