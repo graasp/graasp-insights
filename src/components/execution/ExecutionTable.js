@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import clsx from 'clsx';
 import { List } from 'immutable';
 import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core';
+import { TableCell, TableRow, withStyles } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 import CancelIcon from '@material-ui/icons/Cancel';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Table from '../common/Table';
 import {
   getDatasets,
@@ -25,27 +28,41 @@ import { DEFAULT_LOCALE_DATE } from '../../config/constants';
 import { buildExecutionPath } from '../../config/paths';
 import {
   buildExecutionAlgorithmButtonId,
+  buildExecutionPipelineButtonId,
   buildExecutionResultButtonId,
   buildExecutionSourceButtonId,
   buildExecutionViewButtonId,
+  buildExecutionCollapsePipelineButtonId,
   EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS,
   EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS,
   EXECUTIONS_TABLE_ID,
 } from '../../config/selectors';
+
 import { ALGORITHM_TYPES, EXECUTION_STATUSES } from '../../shared/constants';
 import ExecutionStatusIcon from './ExecutionStatusIcon';
 import ResultViewButton from './ResultViewButton';
 import AlgorithmViewButton from './AlgorithmViewButton';
 import DatasetViewButton from './DatasetViewButton';
+import PipelineViewButton from './PipelineViewButton';
 
 const styles = () => ({
   link: {
     textTransform: 'none',
     textAlign: 'left',
   },
+  subContent: {
+    background: '#eeeeee',
+  },
 });
 
+const MAIN_PIPELINE_EXECUTIONS_ID = 'mainPipelineExecutionsId';
+
 class ExecutionTable extends Component {
+  state = {
+    groupedExecutions: [],
+    collapseExecution: [],
+  };
+
   static propTypes = {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -63,6 +80,7 @@ class ExecutionTable extends Component {
     isLoading: PropTypes.bool.isRequired,
     classes: PropTypes.shape({
       link: PropTypes.string.isRequired,
+      subContent: PropTypes.string.isRequired,
     }).isRequired,
   };
 
@@ -89,8 +107,41 @@ class ExecutionTable extends Component {
     const { executions, dispatchGetResults } = this.props;
     if (!prevExecutions.equals(executions)) {
       dispatchGetResults();
+      // group executions by pipeline execution id
+      const groupedExecutionsByPipelineId = executions
+        // change undefined pipelineExecutionId to some key
+        .map((e) =>
+          e.pipelineExecutionId
+            ? e
+            : { ...e, pipelineExecutionId: MAIN_PIPELINE_EXECUTIONS_ID },
+        )
+        .groupBy((item) => item.pipelineExecutionId);
+
+      // find the main executions: pipeline executions and algorithm executions
+      const mainPipelineExecutions = groupedExecutionsByPipelineId
+        .get(MAIN_PIPELINE_EXECUTIONS_ID)
+        .valueSeq();
+
+      if (mainPipelineExecutions.size) {
+        // append pipeline results if found
+        const completeExecutions = mainPipelineExecutions.map((v) => {
+          return {
+            ...v,
+            resultPipeline:
+              groupedExecutionsByPipelineId.get(v.id)?.toArray() || [],
+          };
+        });
+
+        this.updateExecutionState(completeExecutions);
+      }
     }
   }
+
+  updateExecutionState = (groupedExecutions) => {
+    this.setState({
+      groupedExecutions,
+    });
+  };
 
   handleDelete = (execution) => {
     const { dispatchDeleteExecution, t } = this.props;
@@ -110,7 +161,8 @@ class ExecutionTable extends Component {
   };
 
   render() {
-    const { t, executions, isLoading } = this.props;
+    const { t, executions, isLoading, classes } = this.props;
+    const { groupedExecutions, collapseExecution } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -121,6 +173,13 @@ class ExecutionTable extends Component {
     }
 
     const columns = [
+      {
+        columnName: null,
+        sortBy: 'collapse',
+        field: 'collapse',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
       {
         columnName: t('Dataset'),
         sortBy: 'sourceName',
@@ -164,89 +223,261 @@ class ExecutionTable extends Component {
       },
     ];
 
-    const rows = executions.reverse().map((execution) => {
-      const { id, executedAt, algorithm, source, result, status } = execution;
+    const buildTableColumns = ({
+      executedAt,
+      source,
+      algorithm,
+      resultPipeline,
+      result,
+      status,
+      execution,
+      handleCancel,
+      handleDelete,
+    }) => {
+      const lastPipelineExecution = resultPipeline[resultPipeline.length - 1];
+      return {
+        executedAtString: executedAt
+          ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown'),
+        sourceNameButton: (
+          <DatasetViewButton
+            linkId={buildExecutionSourceButtonId(source.id)}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...source}
+          />
+        ),
+        algorithmButton:
+          algorithm.type === ALGORITHM_TYPES.PIPELINE ? (
+            <PipelineViewButton
+              linkId={buildExecutionPipelineButtonId(algorithm.id)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...algorithm}
+            />
+          ) : (
+            <AlgorithmViewButton
+              linkId={buildExecutionAlgorithmButtonId(algorithm.id)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...algorithm}
+            />
+          ),
+        resultButton:
+          algorithm.type === ALGORITHM_TYPES.PIPELINE &&
+          resultPipeline.length ? (
+            <ResultViewButton
+              linkId={buildExecutionResultButtonId(
+                lastPipelineExecution.result.id,
+              )}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...lastPipelineExecution.result}
+            />
+          ) : (
+            <ResultViewButton
+              linkId={buildExecutionResultButtonId(result.id)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...result}
+            />
+          ),
+        statusIcon: <ExecutionStatusIcon status={status} />,
+        cancelOrRemoveButton:
+          status === EXECUTION_STATUSES.RUNNING ? (
+            <Tooltip title={t('Cancel execution')} key="cancel">
+              <IconButton
+                className={EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS}
+                aria-label="cancel"
+                onClick={() => handleCancel(execution)}
+              >
+                <CancelIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title={t('Remove execution')} key="delete">
+              <IconButton
+                className={EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}
+                aria-label="delete"
+                onClick={() => handleDelete(execution)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ),
+      };
+    };
 
-      const executedAtString = executedAt
-        ? new Date(executedAt).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
+    const rows = groupedExecutions.map((execution, executionIdx) => {
+      const {
+        id,
+        executedAt,
+        algorithm,
+        source,
+        status,
+        result,
+        resultPipeline,
+      } = execution;
 
-      const sourceNameButton = (
-        <DatasetViewButton
-          linkId={buildExecutionSourceButtonId(source.id)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...source}
-        />
-      );
+      const lastPipelineExecution = resultPipeline[resultPipeline.length - 1];
+      const hasPipelineResult = resultPipeline.length;
 
-      const algorithmButton = (
-        <AlgorithmViewButton
-          linkId={buildExecutionAlgorithmButtonId(algorithm.id)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...algorithm}
-        />
-      );
+      const {
+        executedAtString,
+        sourceNameButton,
+        algorithmButton,
+        resultButton,
+        statusIcon,
+        cancelOrRemoveButton,
+      } = buildTableColumns({
+        executedAt,
+        source,
+        algorithm,
+        resultPipeline,
+        result,
+        status: hasPipelineResult ? lastPipelineExecution.status : status,
+        execution,
+        handleDelete: this.handleDelete,
+        handleCancel: this.handleCancel,
+      });
 
-      const resultButton = (
-        <ResultViewButton
-          linkId={buildExecutionResultButtonId(result.id)}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          {...result}
-        />
-      );
-
-      const statusIcon = <ExecutionStatusIcon status={status} />;
-
-      const cancelOrRemoveButton =
-        status === EXECUTION_STATUSES.RUNNING ? (
-          <Tooltip title={t('Cancel execution')} key="cancel">
-            <IconButton
-              className={EXECUTIONS_EXECUTION_CANCEL_BUTTON_CLASS}
-              aria-label="cancel"
-              onClick={() => this.handleCancel(execution)}
-            >
-              <CancelIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title={t('Remove execution')} key="delete">
-            <IconButton
-              className={EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}
-              aria-label="delete"
-              onClick={() => this.handleDelete(execution)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        );
+      const quickActionsSourceId = !hasPipelineResult
+        ? source.id
+        : lastPipelineExecution.source.id;
+      const quickActionsAlgorithmId = !hasPipelineResult
+        ? algorithm.id
+        : lastPipelineExecution.algorithm.id;
+      const quickActionsId = !hasPipelineResult ? id : lastPipelineExecution.id;
 
       const quickActions = (
         <>
           <Tooltip title={t('View execution')} key="view">
             <IconButton
-              id={buildExecutionViewButtonId(source.id, algorithm.id)}
+              id={buildExecutionViewButtonId(
+                quickActionsSourceId,
+                quickActionsAlgorithmId,
+              )}
               aria-label="view"
-              onClick={() => this.handleView(id)}
+              onClick={() => this.handleView(quickActionsId)}
             >
               <VisibilityIcon />
             </IconButton>
           </Tooltip>
-          {cancelOrRemoveButton}
+          {!hasPipelineResult ? cancelOrRemoveButton : null}
         </>
       );
 
+      const resultPipelineTable = resultPipeline.map((exec) => {
+        const columnExecution = buildTableColumns({
+          executedAt: exec.executedAt,
+          source: exec.source,
+          algorithm: exec.algorithm,
+          resultPipeline,
+          result: exec.result,
+          status: exec.status,
+          execution: exec,
+          handleDelete: this.handleDelete,
+          handleCancel: this.handleCancel,
+        });
+
+        const quickActionsExecution = (
+          <>
+            <Tooltip title={t('View execution')} key="view">
+              <IconButton
+                id={buildExecutionViewButtonId(source.id, exec.algorithm.id)}
+                aria-label="view"
+                onClick={() => this.handleView(exec.id)}
+              >
+                <VisibilityIcon />
+              </IconButton>
+            </Tooltip>
+            {columnExecution.cancelOrRemoveButton}
+          </>
+        );
+
+        return {
+          key: exec.id,
+          sourceName: columnExecution.sourceNameButton,
+          algorithmName: columnExecution.algorithmButton,
+          resultId: columnExecution.resultButton,
+          status: columnExecution.statusIcon,
+          executedAt: columnExecution.executedAtString,
+          quickActions: quickActionsExecution,
+        };
+      });
+
+      const subContent = collapseExecution.find((execId) => execId === id)
+        ? resultPipelineTable.map((row) => {
+            const { key, className } = row;
+            return (
+              <TableRow
+                key={key}
+                className={clsx(className, classes.subContent)}
+              >
+                {columns
+                  .filter(({ field }) => field)
+                  .map(({ field, alignField, fieldColSpan }) => {
+                    return (
+                      <TableCell
+                        align={alignField}
+                        key={field}
+                        colSpan={fieldColSpan}
+                      >
+                        {row[field]}
+                      </TableCell>
+                    );
+                  })}
+              </TableRow>
+            );
+          })
+        : null;
+
+      const onCollapseClick = () => {
+        if (!collapseExecution.find((execId) => execId === id)) {
+          this.setState((previousState) => ({
+            collapseExecution: [...previousState.collapseExecution, id],
+          }));
+        } else {
+          this.setState((previousState) => ({
+            collapseExecution: previousState.collapseExecution.filter(
+              (execId) => execId !== id,
+            ),
+          }));
+        }
+      };
+
+      const collapse = hasPipelineResult ? (
+        <IconButton
+          aria-label="expand row"
+          size="small"
+          id={buildExecutionCollapsePipelineButtonId(executionIdx)}
+          onClick={onCollapseClick}
+        >
+          {collapseExecution.find((execId) => execId === id) ? (
+            <KeyboardArrowDownIcon />
+          ) : (
+            <ChevronRightIcon />
+          )}
+        </IconButton>
+      ) : null;
+
       return {
         key: id,
+        collapse,
         sourceName: sourceNameButton,
         algorithmName: algorithmButton,
         resultId: resultButton,
         status: statusIcon,
         executedAt: executedAtString,
         quickActions,
+        subContent,
       };
     });
 
-    return <Table id={EXECUTIONS_TABLE_ID} columns={columns} rows={rows} />;
+    return (
+      <Table
+        id={EXECUTIONS_TABLE_ID}
+        columns={columns}
+        rows={rows}
+        orderBy="executedAt"
+        isAsc={false}
+      />
+    );
   }
 }
 

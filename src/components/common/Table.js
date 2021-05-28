@@ -105,23 +105,26 @@ const Table = (props) => {
           </TableHead>
           <TableBody>
             {pageRows.map((row) => {
-              const { key, className } = row;
+              const { key, className, subContent } = row;
               return (
-                <TableRow key={key} className={className}>
-                  {columns
-                    .filter(({ field }) => field)
-                    .map(({ field, alignField, fieldColSpan }) => {
-                      return (
-                        <TableCell
-                          align={alignField}
-                          key={field}
-                          colSpan={fieldColSpan}
-                        >
-                          {row[field]}
-                        </TableCell>
-                      );
-                    })}
-                </TableRow>
+                <>
+                  <TableRow key={key} className={className}>
+                    {columns
+                      .filter(({ field }) => field)
+                      .map(({ field, alignField, fieldColSpan }) => {
+                        return (
+                          <TableCell
+                            align={alignField}
+                            key={field}
+                            colSpan={fieldColSpan}
+                          >
+                            {row[field]}
+                          </TableCell>
+                        );
+                      })}
+                  </TableRow>
+                  {subContent}
+                </>
               );
             })}
           </TableBody>

@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, TableCell, TableRow } from '@material-ui/core/';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -14,21 +15,33 @@ import IconButton from '@material-ui/core/IconButton';
 import PublishIcon from '@material-ui/icons/Publish';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Main from './common/Main';
 import Loader from './common/Loader';
 import { DEFAULT_LOCALE_DATE } from '../config/constants';
-import { getResults, deleteResult, getAlgorithms } from '../actions';
+import {
+  getResults,
+  deleteResult,
+  getAlgorithms,
+  getPipelines,
+} from '../actions';
 import { buildResultPath } from '../config/paths';
 import Table from './common/Table';
 import { formatFileSize } from '../shared/formatting';
 import ExportButton from './common/ExportButton';
 import { EXPORT_RESULT_CHANNEL } from '../shared/channels';
 import { FLAG_EXPORTING_RESULT } from '../shared/types';
-import { RESULTS_MAIN_ID } from '../config/selectors';
+import {
+  buildExecutionCollapsePipelineButtonId,
+  RESULTS_MAIN_ID,
+} from '../config/selectors';
 import ViewDatasetButton from './dataset/ViewDatasetButton';
 import LocationPathAlert from './common/LocationPathAlert';
 import SchemaTags from './common/SchemaTags';
 import { ALGORITHM_TYPES } from '../shared/constants';
+
+const MAIN_RESULT_ID = 'mainResultId';
 
 const styles = (theme) => ({
   addButton: {
@@ -44,9 +57,17 @@ const styles = (theme) => ({
   infoAlert: {
     margin: theme.spacing(2),
   },
+  subContent: {
+    background: '#eeeeee',
+  },
 });
 
 class Results extends Component {
+  state = {
+    groupedResults: [],
+    collapseResult: [],
+  };
+
   static propTypes = {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
@@ -54,13 +75,16 @@ class Results extends Component {
     dispatchGetResults: PropTypes.func.isRequired,
     dispatchDeleteResult: PropTypes.func.isRequired,
     dispatchGetAlgorithms: PropTypes.func.isRequired,
+    dispatchGetPipelines: PropTypes.func.isRequired,
     classes: PropTypes.shape({
       addButton: PropTypes.string.isRequired,
       infoAlert: PropTypes.string.isRequired,
+      subContent: PropTypes.string.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     results: PropTypes.instanceOf(List),
     algorithms: PropTypes.instanceOf(List),
+    pipelines: PropTypes.instanceOf(List),
     activity: PropTypes.bool.isRequired,
     folder: PropTypes.string,
   };
@@ -68,14 +92,56 @@ class Results extends Component {
   static defaultProps = {
     results: List(),
     algorithms: List(),
+    pipelines: List(),
     folder: null,
   };
 
   componentDidMount() {
-    const { dispatchGetResults, dispatchGetAlgorithms } = this.props;
+    const {
+      dispatchGetResults,
+      dispatchGetAlgorithms,
+      dispatchGetPipelines,
+    } = this.props;
     dispatchGetResults();
     dispatchGetAlgorithms();
+    dispatchGetPipelines();
   }
+
+  componentDidUpdate({ results: prevResults }) {
+    const { results } = this.props;
+    if (!prevResults.equals(results)) {
+      // group results by pipeline execution id
+      const groupedResultsByPipelineId = results
+        // change undefined pipelineExecutionId to some key
+        .map((e) =>
+          e.pipelineExecutionId
+            ? e
+            : { ...e, pipelineExecutionId: MAIN_RESULT_ID },
+        )
+        .groupBy((item) => item.pipelineExecutionId);
+
+      // group for the pipeline results, all except main results
+      const pipelineResults = groupedResultsByPipelineId
+        .delete(MAIN_RESULT_ID)
+        .valueSeq()
+        .toJS();
+
+      // group for the algorithm results
+      const algorithmResults =
+        groupedResultsByPipelineId.get(MAIN_RESULT_ID)?.map((r) => [r]) || [];
+
+      // get results sorted in arrays depending on their pipeline execution id, append algorithm results
+      const groupedResults = [...pipelineResults, ...algorithmResults];
+
+      this.updateResultState(groupedResults);
+    }
+  }
+
+  updateResultState = (groupedResults) => {
+    this.setState({
+      groupedResults,
+    });
+  };
 
   handleView = ({ id }) => {
     const {
@@ -98,7 +164,17 @@ class Results extends Component {
   };
 
   render() {
-    const { activity, classes, t, results, algorithms, folder } = this.props;
+    const {
+      activity,
+      classes,
+      t,
+      results,
+      algorithms,
+      folder,
+      pipelines,
+    } = this.props;
+
+    const { groupedResults, collapseResult } = this.state;
 
     if (activity || !results) {
       return (
@@ -119,6 +195,13 @@ class Results extends Component {
     }
 
     const columns = [
+      {
+        columnName: null,
+        sortBy: 'collapse',
+        field: 'collapse',
+        alignColumn: 'left',
+        alignField: 'left',
+      },
       {
         columnName: t('Name'),
         sortBy: 'name',
@@ -162,7 +245,34 @@ class Results extends Component {
       },
     ];
 
-    const rows = results.map((result) => {
+    const buildTableColumns = ({
+      size,
+      createdAt,
+      lastModified,
+      algorithmId,
+      pipelineId,
+    }) => {
+      return {
+        sizeString: size ? `${formatFileSize(size)}` : t('Unknown'),
+        createdAtString: createdAt
+          ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown'),
+        lastModifiedString: lastModified
+          ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
+          : t('Unknown'),
+        algorithmName: pipelineId
+          ? pipelines.find(({ id }) => id === pipelineId)?.name
+          : algorithms.find(({ id: resultId }) => resultId === algorithmId)
+              ?.name,
+      };
+    };
+
+    const rows = groupedResults.map((result, resultIdx) => {
+      const lastResult = result[result.length - 1];
+      const isSimpleResult = result.length === 1;
+
+      // take the last result from a pipeline
+      // or either the result of an algorithm
       const {
         id,
         name,
@@ -171,25 +281,177 @@ class Results extends Component {
         createdAt,
         algorithmId,
         description = '',
+        pipelineId,
         schemaIds,
         isTabular,
-      } = result;
+      } = lastResult;
 
-      const sizeString = size ? `${formatFileSize(size)}` : t('Unknown');
-      const createdAtString = createdAt
-        ? new Date(createdAt).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
-      const lastModifiedString = lastModified
-        ? new Date(lastModified).toLocaleString(DEFAULT_LOCALE_DATE)
-        : t('Unknown');
-      const algorithmName = algorithms.find(
-        ({ id: resultId }) => resultId === algorithmId,
-      )?.name;
+      const {
+        sizeString,
+        createdAtString,
+        lastModifiedString,
+        algorithmName,
+      } = buildTableColumns({
+        size,
+        createdAt,
+        lastModified,
+        algorithmId,
+        pipelineId,
+      });
+
+      const resultPipelineTable = result.map((res) => {
+        const {
+          id: idResult,
+          name: nameResult,
+          size: sizeResult,
+          lastModified: lastModifiedResult,
+          createdAt: createdAtResult,
+          algorithmId: algorithmResultId,
+          description: descriptionResult = '',
+          schemaIds: schemaResultIds,
+        } = res;
+
+        const {
+          sizeString: sizeStringResult,
+          createdAtString: createdAtStringResult,
+          lastModifiedString: lastModifiedStringResult,
+          algorithmName: algorithmNameResult,
+        } = buildTableColumns({
+          size: sizeResult,
+          createdAt: createdAtResult,
+          lastModified: lastModifiedResult,
+          algorithmId: algorithmResultId,
+        });
+
+        return {
+          key: idResult,
+          name: nameResult,
+          algorithmName: algorithmNameResult,
+          result: (
+            <>
+              <Grid container alignItems="center" spacing={1}>
+                <Grid item>
+                  <Typography variant="subtitle1" key="name">
+                    {nameResult}
+                  </Typography>
+                </Grid>
+                <SchemaTags schemaIds={schemaResultIds} />
+              </Grid>
+              <Typography variant="caption" key="description">
+                {descriptionResult}
+              </Typography>
+            </>
+          ),
+          size: sizeStringResult,
+          sizeNumeric: sizeResult,
+          createdAt: createdAtStringResult,
+          lastModified: lastModifiedStringResult,
+          quickActions: [
+            <ViewDatasetButton
+              tooltip={t('View result')}
+              key="view"
+              dataset={res}
+            />,
+            <ExportButton
+              id={id}
+              name={`${name}.json`}
+              flagType={FLAG_EXPORTING_RESULT}
+              channel={EXPORT_RESULT_CHANNEL}
+              tooltipText={t('Export result')}
+            />,
+            <Tooltip title={t('Remove result')} key="delete">
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.handleDelete(res)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>,
+            <Tooltip title={t('Edit result')} key="edit">
+              <IconButton
+                disabled
+                aria-label="edit"
+                onClick={() => this.handleEdit(res)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>,
+            <Tooltip title={t('Publish result')} key="publish">
+              <IconButton
+                disabled
+                aria-label="publish"
+                onClick={() => this.handlePublish(res)}
+              >
+                <PublishIcon />
+              </IconButton>
+            </Tooltip>,
+          ],
+        };
+      });
+
+      const onCollapseClick = () => {
+        if (!collapseResult.find((resId) => resId === result[0].id)) {
+          this.setState((previousState) => ({
+            collapseResult: [...previousState.collapseResult, result[0].id],
+          }));
+        } else {
+          this.setState((previousState) => ({
+            collapseResult: previousState.collapseResult.filter(
+              (resId) => resId !== result[0].id,
+            ),
+          }));
+        }
+      };
+
+      const collapse =
+        result.length > 1 ? (
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            id={buildExecutionCollapsePipelineButtonId(resultIdx)}
+            onClick={onCollapseClick}
+          >
+            {collapseResult.find((resId) => resId === result[0].id) ? (
+              <KeyboardArrowDownIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        ) : null;
+
+      const subContent =
+        collapseResult.find((resId) => resId === result[0].id) &&
+        result.length > 1
+          ? resultPipelineTable.map((row) => {
+              const { key, className } = row;
+              return (
+                <TableRow
+                  key={key}
+                  className={clsx(className, classes.subContent)}
+                >
+                  {columns
+                    .filter(({ field }) => field)
+                    .map(({ field, alignField, fieldColSpan }) => {
+                      return (
+                        <TableCell
+                          align={alignField}
+                          key={field}
+                          colSpan={fieldColSpan}
+                        >
+                          {row[field]}
+                        </TableCell>
+                      );
+                    })}
+                </TableRow>
+              );
+            })
+          : null;
 
       return {
         key: id,
         name,
         algorithmName,
+        collapse,
         result: (
           <>
             <Grid container alignItems="center" spacing={1}>
@@ -213,7 +475,7 @@ class Results extends Component {
           <ViewDatasetButton
             tooltip={t('View result')}
             key="view"
-            dataset={result}
+            dataset={lastResult}
           />,
           <ExportButton
             id={id}
@@ -223,19 +485,23 @@ class Results extends Component {
             isTabular={isTabular}
             tooltipText={t('Export result')}
           />,
-          <Tooltip title={t('Remove result')} key="delete">
-            <IconButton
-              aria-label="delete"
-              onClick={() => this.handleDelete(result)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>,
+          isSimpleResult ? (
+            <Tooltip title={t('Remove result')} key="delete">
+              <IconButton
+                aria-label="delete"
+                onClick={() => this.handleDelete(lastResult)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          ) : null,
           <Tooltip title={t('Edit result')} key="edit">
             <IconButton
               disabled
               aria-label="edit"
-              onClick={() => this.handleEdit(result)}
+              onClick={() => {
+                this.handleEdit(lastResult);
+              }}
             >
               <EditIcon />
             </IconButton>
@@ -244,12 +510,15 @@ class Results extends Component {
             <IconButton
               disabled
               aria-label="publish"
-              onClick={() => this.handlePublish(result)}
+              onClick={() => {
+                this.handlePublish(lastResult);
+              }}
             >
               <PublishIcon />
             </IconButton>
           </Tooltip>,
         ],
+        subContent,
       };
     });
 
@@ -270,11 +539,12 @@ class Results extends Component {
   }
 }
 
-const mapStateToProps = ({ result, algorithms }) => ({
+const mapStateToProps = ({ result, algorithms, pipeline }) => ({
   results: result.getIn(['results']),
   algorithms: algorithms
     .get('algorithms')
     .filter(({ type }) => type === ALGORITHM_TYPES.ANONYMIZATION),
+  pipelines: pipeline.get('pipelines'),
   activity: Boolean(result.get('activity').size),
   folder: result.getIn(['folder']),
 });
@@ -283,6 +553,7 @@ const mapDispatchToProps = {
   dispatchGetResults: getResults,
   dispatchGetAlgorithms: getAlgorithms,
   dispatchDeleteResult: deleteResult,
+  dispatchGetPipelines: getPipelines,
 };
 
 const ConnectedComponent = connect(

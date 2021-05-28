@@ -197,3 +197,7 @@ export const buildAddValidationAlgorithmOptionId = (id) =>
 export const ADD_VALIDATION_EXECUTE_BUTTON_ID = 'addValidationExecuteButton';
 export const buildExecutionPipelineOptionId = (id) =>
   `executionPipelineOption-${id}`;
+export const buildExecutionPipelineButtonId = (id) =>
+  `executionRowPipelineButton-${id}`;
+export const buildExecutionCollapsePipelineButtonId = (id) =>
+  `executionCollapsePipelineButton-${id}`;

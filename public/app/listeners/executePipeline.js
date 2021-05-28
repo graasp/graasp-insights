@@ -24,6 +24,7 @@ const executePipeline = (mainWindow, db) => (event, execution) => {
   try {
     return executePipelineAlgorithm(mainWindow, db, {
       pipelineExecutionId,
+      pipelineId,
       algorithms,
       sourceId,
       userProvidedFilename: resultName,

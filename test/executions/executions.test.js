@@ -12,6 +12,7 @@ import {
 import {
   buildExecutionAlgorithmButtonId,
   buildExecutionSourceButtonId,
+  buildExecutionCollapsePipelineButtonId,
   DATASET_BACK_BUTTON_ID,
   DATASET_SCREEN_MAIN_ID,
   EDIT_ALGORITHM_MAIN_ID,
@@ -52,8 +53,7 @@ const checkExecutionRowLayout = async (
   client,
   { dataset, algorithm, name, status, rowIdx },
 ) => {
-  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
-  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
 
   const resultName = name || `${dataset.name}_${algorithm.name}`;
 
@@ -76,15 +76,20 @@ const checkExecutionRowLayoutPipeline = async (
   client,
   { algorithm, status, rowIdx },
 ) => {
-  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
-  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
-
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
   const algoName = await tr.$(
     `#${buildExecutionAlgorithmButtonId(algorithm.id)}`,
   );
   expect(await algoName.getText()).to.contain(algorithm.name);
 
   await client.expectElementToExist(`.${status}`);
+};
+
+const clickExecutionCollapsePipelineButton = async (client, { idx }) => {
+  const collapsePipelineButton = await client.$(
+    `#${buildExecutionCollapsePipelineButtonId(idx)}`,
+  );
+  await collapsePipelineButton.click();
 };
 
 const checkExecutionTableLayout = async (client, executions) => {
@@ -110,10 +115,14 @@ const checkResultRowLayout = async (
   expect(html).to.contain(algorithm.name);
 };
 
-const deleteExecution = async (client, { rowIdx }) => {
-  const trs = await client.$$(`#${EXECUTIONS_TABLE_ID} tr`);
-  const tr = trs[trs.length - rowIdx - 1]; // more recent is first, skip header
+const checkResultRowLayoutPipeline = async (client, { algorithm, rowIdx }) => {
+  const tr = (await client.$$(`#${RESULTS_MAIN_ID} tr`))[rowIdx + 1]; // +1 to skip header
+  const html = await tr.getHTML();
+  expect(html).to.contain(algorithm.name);
+};
 
+const deleteExecution = async (client, { rowIdx }) => {
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
   await (await tr.$(`.${EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}`)).click();
 };
 
@@ -214,14 +223,14 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW,
             status: EXECUTION_STATUSES.RUNNING,
-            rowIdx: 1,
+            rowIdx: 0,
           });
           await client.pause(WAIT_FOR_SLOW_ALGORITHMS_PAUSE);
           // status should be success
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW,
             status: EXECUTION_STATUSES.SUCCESS,
-            rowIdx: 1,
+            rowIdx: 0,
           });
           await client.goToResults();
           await checkResultRowLayout(client, {
@@ -257,7 +266,7 @@ describe('Executions Scenarios', function () {
             ...EXECUTION_WITH_SUCCESSFUL_FLOAT_PARAMETER,
             status: EXECUTION_STATUSES.SUCCESS,
 
-            rowIdx: 1,
+            rowIdx: 0,
           });
 
           await createExecution(
@@ -269,7 +278,7 @@ describe('Executions Scenarios', function () {
             ...EXECUTION_WITH_SUCCESSFUL_STRING_PARAMETER,
             status: EXECUTION_STATUSES.SUCCESS,
 
-            rowIdx: 2,
+            rowIdx: 0,
           });
 
           await client.goToResults();
@@ -336,14 +345,14 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW_ERROR,
             status: EXECUTION_STATUSES.RUNNING,
-            rowIdx: 1,
+            rowIdx: 0,
           });
           await client.pause(WAIT_FOR_SLOW_ALGORITHMS_PAUSE);
           // status should be success
           await checkExecutionRowLayout(client, {
             ...EXECUTION_SLOW_ERROR,
             status: EXECUTION_STATUSES.ERROR,
-            rowIdx: 1,
+            rowIdx: 0,
           });
         }),
       );
@@ -369,7 +378,7 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_WITH_FAILING_FLOAT_PARAMETER,
             status: EXECUTION_STATUSES.ERROR,
-            rowIdx: 1,
+            rowIdx: 0,
           });
 
           await createExecution(
@@ -380,7 +389,7 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayout(client, {
             ...EXECUTION_WITH_FAILING_STRING_PARAMETER,
             status: EXECUTION_STATUSES.ERROR,
-            rowIdx: 2,
+            rowIdx: 0,
           });
         }),
       );
@@ -514,7 +523,7 @@ describe('Executions Scenarios', function () {
 
             await createExecution(client, EXECUTION_FAST);
             await createExecution(client, EXECUTION_FAST_ERROR);
-            await deleteExecution(client, { rowIdx: 0 });
+            await deleteExecution(client, { rowIdx: 1 });
             await checkExecutionRowLayout(client, {
               ...EXECUTION_FAST_ERROR,
               status: EXECUTION_STATUSES.ERROR,
@@ -537,17 +546,17 @@ describe('Executions Scenarios', function () {
             await client.pause(WAIT_FOR_SLOW_ALGORITHMS_PAUSE);
 
             await checkExecutionTableLayout(client, [
-              {
-                ...EXECUTION_SLOW,
-                status: EXECUTION_STATUSES.SUCCESS,
-              },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
               {
                 ...EXECUTION_SLOW_ERROR,
                 status: EXECUTION_STATUSES.ERROR,
               },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              {
+                ...EXECUTION_SLOW,
+                status: EXECUTION_STATUSES.SUCCESS,
+              },
             ]);
           }),
         );
@@ -565,32 +574,32 @@ describe('Executions Scenarios', function () {
             await client.pause(500);
 
             await checkExecutionTableLayout(client, [
-              {
-                ...EXECUTION_FAST,
-                status: EXECUTION_STATUSES.SUCCESS,
-              },
-              { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
               {
                 ...EXECUTION_SLOW_ERROR,
                 status: EXECUTION_STATUSES.RUNNING,
               },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
+              { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
+              {
+                ...EXECUTION_FAST,
+                status: EXECUTION_STATUSES.SUCCESS,
+              },
             ]);
 
             await client.goToResults();
             await client.goToExecutions();
 
             await checkExecutionTableLayout(client, [
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
+              {
+                ...EXECUTION_SLOW_ERROR,
+                status: EXECUTION_STATUSES.RUNNING,
+              },
               {
                 ...EXECUTION_FAST,
                 status: EXECUTION_STATUSES.SUCCESS,
               },
               { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
-              {
-                ...EXECUTION_SLOW_ERROR,
-                status: EXECUTION_STATUSES.RUNNING,
-              },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.RUNNING },
             ]);
 
             await client.goToResults();
@@ -598,16 +607,16 @@ describe('Executions Scenarios', function () {
             await client.goToExecutions();
 
             await checkExecutionTableLayout(client, [
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
+              {
+                ...EXECUTION_SLOW_ERROR,
+                status: EXECUTION_STATUSES.ERROR,
+              },
               {
                 ...EXECUTION_FAST,
                 status: EXECUTION_STATUSES.SUCCESS,
               },
               { ...EXECUTION_FAST, status: EXECUTION_STATUSES.SUCCESS },
-              {
-                ...EXECUTION_SLOW_ERROR,
-                status: EXECUTION_STATUSES.ERROR,
-              },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.SUCCESS },
             ]);
           }),
         );
@@ -653,11 +662,11 @@ describe('Executions Scenarios', function () {
             await app.client.goToExecutions();
             await app.client.pause(1000);
             await checkExecutionTableLayout(app.client, [
+              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.ERROR },
               {
                 ...EXECUTION_SLOW_ERROR,
                 status: EXECUTION_STATUSES.ERROR,
               },
-              { ...EXECUTION_SLOW, status: EXECUTION_STATUSES.ERROR },
             ]);
           }),
         );
@@ -681,7 +690,7 @@ describe('Executions Scenarios', function () {
       );
 
       it(
-        'Executing pipeline',
+        'Execute a pipeline and check its results',
         mochaAsync(async () => {
           const { client } = app;
 
@@ -691,7 +700,9 @@ describe('Executions Scenarios', function () {
             name: 'primary_pipeline',
           });
 
-          await client.pause(3000);
+          await client.pause(2000);
+
+          await clickExecutionCollapsePipelineButton(client, { idx: 0 });
 
           await checkExecutionRowLayoutPipeline(client, {
             algorithm: PRIMARY_PIPELINE.algorithms[0],
@@ -701,6 +712,22 @@ describe('Executions Scenarios', function () {
           await checkExecutionRowLayoutPipeline(client, {
             algorithm: PRIMARY_PIPELINE.algorithms[1],
             status: EXECUTION_STATUSES.SUCCESS,
+            rowIdx: 2,
+          });
+
+          await client.goToResults();
+
+          await client.pause(2000);
+
+          await clickExecutionCollapsePipelineButton(client, { idx: 0 });
+
+          await checkResultRowLayoutPipeline(client, {
+            algorithm: PRIMARY_PIPELINE.algorithms[0],
+            rowIdx: 1,
+          });
+
+          await checkResultRowLayoutPipeline(client, {
+            algorithm: PRIMARY_PIPELINE.algorithms[1],
             rowIdx: 2,
           });
         }),

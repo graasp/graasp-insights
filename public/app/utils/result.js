@@ -7,7 +7,15 @@ const { createNewDataset } = require('../listeners/loadDataset');
 
 const createNewResultDataset = (
   db,
-  { name, filepath, algorithmId, description, originId },
+  {
+    name,
+    filepath,
+    algorithmId,
+    pipelineExecutionId,
+    pipelineId,
+    description,
+    originId,
+  },
 ) => {
   let resultName = name;
   if (!name) {
@@ -33,7 +41,13 @@ const createNewResultDataset = (
     db,
   );
 
-  const result = { ...datasetInfo, algorithmId, originId };
+  const result = {
+    ...datasetInfo,
+    algorithmId,
+    originId,
+    pipelineExecutionId,
+    pipelineId,
+  };
   db.get(DATASETS_COLLECTION).push(result).write();
 
   return result;

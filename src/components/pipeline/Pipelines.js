@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import LaunchIcon from '@material-ui/icons/Launch';
+import Alert from '@material-ui/lab/Alert';
 
 import Main from '../common/Main';
 import Table from '../common/Table';
@@ -48,6 +49,9 @@ const styles = (theme) => ({
     '&:hover, &.Mui-focusVisible': {
       backgroundColor: theme.palette.primary.main,
     },
+  },
+  infoAlert: {
+    margin: theme.spacing(2),
   },
 });
 
@@ -150,6 +154,24 @@ const Pipelines = (props) => {
     };
   });
 
+  if (!pipelines.size) {
+    return (
+      <Main>
+        <Alert severity="info" className={classes.infoAlert}>
+          {t('No pipelines available')}
+        </Alert>
+        <IconButton
+          variant="contained"
+          className={classes.addButton}
+          onClick={handleAdd}
+          id={PIPELINE_ADD_BUTTON_ID}
+        >
+          <AddIcon />
+        </IconButton>
+      </Main>
+    );
+  }
+
   return (
     <Main>
       <Container className={classes.content}>
@@ -178,6 +200,7 @@ Pipelines.propTypes = {
   classes: PropTypes.shape({
     content: PropTypes.string.isRequired,
     addButton: PropTypes.string.isRequired,
+    infoAlert: PropTypes.string.isRequired,
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
