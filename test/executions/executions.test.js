@@ -85,6 +85,15 @@ const checkExecutionRowLayoutPipeline = async (
   await client.expectElementToExist(`.${status}`);
 };
 
+const deleteExecutionRowLayoutPipeline = async (client, { rowIdx }) => {
+  const tr = (await client.$$(`#${EXECUTIONS_TABLE_ID} tr`))[rowIdx + 1];
+  const algoDeleteButton = await tr.$(
+    `.${EXECUTIONS_EXECUTION_DELETE_BUTTON_CLASS}`,
+  );
+
+  await algoDeleteButton.click();
+};
+
 const clickExecutionCollapsePipelineButton = async (client, { idx }) => {
   const collapsePipelineButton = await client.$(
     `#${buildExecutionCollapsePipelineButtonId(idx)}`,
@@ -730,6 +739,38 @@ describe('Executions Scenarios', function () {
             algorithm: PRIMARY_PIPELINE.algorithms[1],
             rowIdx: 2,
           });
+        }),
+      );
+
+      it(
+        'Execute a pipeline and delete it',
+        mochaAsync(async () => {
+          const { client } = app;
+
+          await createExecutionPipeline(client, {
+            dataset: EXECUTION_FAST.dataset,
+            pipeline: PRIMARY_PIPELINE,
+            name: 'primary_pipeline',
+          });
+
+          await client.pause(2000);
+
+          await clickExecutionCollapsePipelineButton(client, { idx: 0 });
+
+          await deleteExecutionRowLayoutPipeline(client, {
+            rowIdx: 1,
+          });
+          await deleteExecutionRowLayoutPipeline(client, {
+            rowIdx: 1,
+          });
+          await deleteExecution(client, {
+            rowIdx: 0,
+          });
+
+          await client.expectElementToNotExist(
+            `#${EXECUTIONS_MAIN_ID}`,
+            `#${EXECUTIONS_TABLE_ID}`,
+          );
         }),
       );
     });

@@ -118,19 +118,21 @@ class ExecutionTable extends Component {
         .groupBy((item) => item.pipelineExecutionId);
 
       // find the main executions: pipeline executions and algorithm executions
-      const mainPipelineExecutions = groupedExecutionsByPipelineId
-        .get(MAIN_PIPELINE_EXECUTIONS_ID)
-        .valueSeq();
+      const mainPipelineExecutions = groupedExecutionsByPipelineId.get(
+        MAIN_PIPELINE_EXECUTIONS_ID,
+      );
 
-      if (mainPipelineExecutions.size) {
+      if (mainPipelineExecutions?.size) {
         // append pipeline results if found
-        const completeExecutions = mainPipelineExecutions.map((v) => {
-          return {
-            ...v,
-            resultPipeline:
-              groupedExecutionsByPipelineId.get(v.id)?.toArray() || [],
-          };
-        });
+        const completeExecutions = mainPipelineExecutions
+          .valueSeq()
+          .map((v) => {
+            return {
+              ...v,
+              resultPipeline:
+                groupedExecutionsByPipelineId.get(v.id)?.toArray() || [],
+            };
+          });
 
         this.updateExecutionState(completeExecutions);
       }
