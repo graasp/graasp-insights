@@ -1,7 +1,7 @@
-const { PIPELINES_COLLECTION } = require('../../../src/shared/constants');
 const {
   ALGORITHM_TYPES,
   ALGORITHMS_COLLECTION,
+  PIPELINES_COLLECTION,
 } = require('../../shared/constants');
 
 // todo: merge pipeline and algorithm?

@@ -1,15 +1,34 @@
+# Table of content
+
+- [Datasets](#Datasets)
+  - [Menu navigation](#Menu-navigation)
+  - [Before You Begin](#Before-You-Begin)
+  - [Importing a dataset](#Importing-a-dataset)
+  - [Dataset management](#Dataset-management)
+- [Algorithms](#Algorithms)
+  - [Edit algorithm](#Edit-algorithm)
+- [Executions](#Executions)
+- [Validation](#Validation)
+- [Results](#Results)
+- [Schemas](#Schemas)
+- [Adding an algorithm](#Adding-an-algorithm)
+  - [Adding parameters](#Adding-parameters)
+  - [Utils files](#Utils-files)
+
 # Datasets
 
 ## Menu navigation
 
-When opening Graasp-Insights, you are greeted with the `Datasets` tab.
-Use the top-left menu button to navigate to each distinctive tab.
+When opening Graasp Insights, you are greeted with the `Datasets` tab.
+Use the top-left menu button <img src="./figures/menu-icon.png" align="center" alt="Menu icon" height="28px"/> to navigate to each distinct tab.
 
 ![Datasets tab with menu open](./figures/datasets-menu.png)
 
+## Before You Begin
+
 ## Importing a dataset
 
-Load a dataset into Graasp Insights by using the lower right `+` button.
+Load a dataset into Graasp Insights by using the plus button <img src="./figures/plus-icon.png" align="center" alt="Plus icon" height="28px"/> on the lower right .
 
 Choose a dataset to import by navigating to its location in your file system.
 You can optionally give it a name and description for its use in Graasp Insights.
@@ -17,7 +36,9 @@ You can optionally give it a name and description for its use in Graasp Insights
 ![Add dataset form](./figures/add-dataset.png)
 
 Importing a dataset will create a copy of the file and manipulating it through Graasp Insights will have no impact on the original file.
-Only `json`, `csv` and `xlsx` datasets are supported in the current state.
+`json`, `csv` and `xlsx` datasets are supported in the current state.
+
+If the dataset conforms to an existing schema, it will be tagged with that schema. For more about Schemas see the [Schemas](#Schemas) section.
 
 ## Dataset management
 
@@ -25,7 +46,7 @@ Once loaded, general information about the dataset is displayed. It can addition
 
 ![Datasets tab with loaded dataset](./figures/loaded-dataset.png)
 
-Click on the `View dataset` button to inspect the content of the dataset.
+Click on the `View dataset` button <img src="./figures/view-icon.png" align="center" alt="View dataset button" height="28px"/> to inspect the content of the dataset.
 If the dataset follows the `Graasp` schema, additional information about the content is also displayed.
 
 Navigate through the data and edit any particular value with the `RAW` view.
@@ -42,9 +63,11 @@ The `Algorithms` tab contains every algorithm that can be used throughout Graasp
 
 ![Algorithms tab](./figures/algorithms.png)
 
+> Note: algorithms in Graasp Insights are written in the Python programming language.
+
 ## Edit algorithm
 
-Each algorithm can be viewed and edited with the `Edit Algorithm` button.
+Each algorithm can be viewed and edited with the `Edit Algorithm` button <img src="./figures/edit-icon.png" align="center" alt="Edit algorithm button" height="28px"/>.
 
 ![Edit algorithm](./figures/edit-algorithm.png)
 
@@ -52,31 +75,35 @@ An editor shows up on the left for you to modify the code of the algorithm. Addi
 
 For more information about how to write an algorithm within Graasp Insights, jump to the [Adding an algorithm](#Adding-an-algorithm) section.
 
-When you have finished editing the algorithm click on the `Save` button to save your modifications. Alternatively, click on the `Back` button to discard your changes and go back to the `Algorithms` screen.
+When you have finished editing the algorithm click on the `Save` button <img src="./figures/save-button.png" align="center" alt="Save button" height="28px"/> to save your modifications. Alternatively, click on the `Back` <img src="./figures/back-button.png" align="center" alt="Back button" height="28px"/> button to discard your changes and go back to the `Algorithms` screen.
+
+> Note: Graasp algorithms are not editable. Attempting to edit one will create a new algorithm instead
 
 # Executions
 
 Use the `Executions` tab to execute algorithms on datasets.
 
+Before proceeding, make sure a Python installation is present and recognized by the client. Check the version of your Python installation by hovering on the top right Python logo. The logo turns gray if no Python installation is found.
+
 Select a dataset, the algorithm you want to apply, and (optionally) a name for the resulting dataset.
 
 ![Executions tab](./figures/executions.png)
 
-If the algorithm has parameters, then a green `EDIT PARAMETERS` button should appear for you to edit them.
+If the algorithm has parameters, then a green `EDIT PARAMETERS` button <img src="./figures/edit-parameters-button.png" align="center" alt="Edit parameters button" height="28px"/> should appear for you to edit them.
 
 ![Executions tab](./figures/executions-edit-parameters.png)
 
 > Note: If there is a field selection (as in the example above) and the schema doesn't correspond to the dataset, you can generate a new schema for your dataset in the `Schemas` tab.
 
-Finally, start the execution by clicking on the `EXECUTE` button.
+Finally, start the execution by clicking on the `EXECUTE` button <img src="./figures/execute-button.png" align="center" alt="Execute button" height="28px"/>.
 
 The status of your new execution can then be tracked with the table underneath. A green "check" icon will indicate that the execution has finished and was successful. A red cross will indicate that an error has happened.
 
+You can click on the dataset, algorithm, or result buttons to access the corresponding data
+
 ![Executions tab with table](./figures/executions-with-table.png)
 
-The Dataset select menu also includes the resulting datasets. This allows you to chain and apply multiple algorithms to a dataset.
-
-> Note: you can also check the version of your python installation by hovering on the top right python logo. The logo turns gray if no python installation is found.
+The dropdown for dataset selection in this Executions tab will also include the resulting datasets. This allows you to chain and apply multiple algorithms to a dataset.
 
 Click on the `View execution` icon to see more information about the execution. From there, the used parameters and the output log are also displayed. The output log is particularly useful for debugging your algorithm if an error happened.
 
@@ -88,15 +115,15 @@ Use the `Validations` tab to execute validation algorithms that test whether dat
 
 ![Validations tab](./figures/validations.png)
 
-Click on the lower-right `+` button to validate a dataset.
+Click on the lower-right <img src="./figures/plus-icon.png" align="center" alt="Plus icon" height="28px"/> to begin validation.
 
-First select the dataset you want to validate. Then select an algorithm in the algorithm select menu and click on the squared `+` button next to it to add it to the set of algorithms that will be executed.
+First select the dataset you want to validate. Then select an algorithm in the algorithm select menu and click on the squared plus button <img src="./figures/squared-plus-button.png" align="center" alt="Squared plus button" height="28px"/> next to it to add it to the set of algorithms that will be executed.
 
 ![Add validation algorithms](./figures/add-validation.png)
 
 The added algorithms show up on the right. Expand them to see their description, edit parameters or remove them from the list.
 
-Keep on adding validation algorithms and then click on the `VALIDATE` button to execute them.
+Keep on adding validation algorithms and then click on the `VALIDATE` button <img src="./figures/validate-button.png" align="center" alt="Validate button" height="28px"/> to execute them.
 
 Back to the `Validations` tab, the validation now shows up in a table.
 
@@ -104,13 +131,15 @@ A status icon will be present next to each validation algorithm notifying you of
 
 ![Validations table](./figures/validations-with-table.png)
 
+> Note: New validation algorithms can be added in the `Algorithms` tab. For more information about how to add an algorithm to Graasp Insights, jump to the [Adding an algorithm](#Adding-an-algorithm) section.
+
 # Results
 
 The `Results` tab displays the datasets resulting from executing algorithms.
 
 ![Results tab](./figures/results.png)
 
-Similar to the `Datasets tab`, various information about a result is displayed and its content can be inspected with the `View result` icon.
+Similar to the `Datasets` tab, various information about a result is displayed and its content can be inspected with the `View result` icon.
 
 After having certified that the dataset was properly anonymized using the [Validations](#Validations) screen, you can export it into your file system by clicking on the `Export result` icon (floppy disk).
 
@@ -120,11 +149,11 @@ Navigate to the `Schemas` tab to see every schema that is defined in Graasp Insi
 
 ![Schemas tab](./figures/schemas.png)
 
-A schema describes the content structure of a dataset. The datasets loaded in Graasp Insights will have a schema tag attached to it if it satisfies the schema definition.
+A schema describes the content structure of a dataset. The datasets loaded in Graasp Insights will have a schema tag attached to it if it satisfies the schema definition. A dataset can satisfy multiple schemas at the same time.
 
-Generic algorithms will usually have a field selection that is fully dependent on the definition of schemas. Therefore, if a dataset doesn't follow any schema, it is advised to (automatically) generate one through the `Schemas` tab.
+Some generic algorithms depend on the input dataset schema, therefore if a dataset doesn't follow any schema, it is advised to (automatically) generate one through the `Schemas` tab.
 
-Click on the lower right `+` button to generate a new schema.
+Click on the lower right plus button <img src="./figures/plus-icon.png" align="center" alt="Plus icon" height="28px"/> to generate a new schema.
 
 ![Add Schema](./figures/add-schema.png)
 
@@ -132,7 +161,7 @@ Enter a label, a description, a dataset to generate the schema from and a color 
 
 ![Schemas tab with new schema](./figures/schemas-with-new-schema.png)
 
-Click on the `View Schema` button to inspect the generated schema.
+Click on the `View Schema` button <img src="./figures/view-icon.png" align="center" alt="View schema button" height="28px"/> to inspect the generated schema.
 
 ![View Schema](./figures/view-schema.png)
 
@@ -142,19 +171,19 @@ Do not forget to `SAVE` your modifications before leaving the page.
 
 # Adding an algorithm
 
-From the `Algorithms` tab, add a new algorithm with the lower right `+` button.
+From the `Algorithms` tab, add a new algorithm with the lower right plus button <img src="./figures/plus-icon.png" align="center" alt="Plus icon" height="28px"/>.
 
 A new screen titled `Add Algorithm` shows up with three alternatives to add a new algorithm:
 
 1. > Load algorithm from a file
 
-Add an algorithm from your file system. Although any `python` algorithm can be added, dataset loading and saving as well as parameter handling is done in a specific way. It is therefore recommended having a look at existing algorithms to have a better understanding of how the algorithm should communicate with the interface. The `Write algorithm` option is also a good alternative to quickly learn about what the algorithm layout should look like.
+Add an algorithm from your file system. Although any `Python` algorithm can be added, dataset loading and saving as well as parameter handling is done in a specific way. It is therefore recommended to review existing existing algorithms to have a better understanding of how the algorithm should communicate with the interface. The `Write algorithm` option is also a good alternative to quickly learn about what the algorithm layout should look like.
 
 ![Load algorithm from a file](./figures/load-algorithm-from-file.png)
 
 2. > Add Graasp algorithm
 
-Select a premade Graasp algorithm to add to the application. Those are already present when first launching Graasp Insights. If you delete a pre-existing algorithm, you can add it back with this option.
+Select a pre-made Graasp algorithm to add to the application. Those are already present when first launching Graasp Insights. If you delete a pre-existing algorithm, you can add it back with this option.
 
 ![Add Graasp algorithm](./figures/add-graasp-algorithm.png)
 
@@ -168,11 +197,11 @@ Give the algorithm a name and a description so that you can refer to it later wh
 
 Both anonymization and validation algorithms can be written and switching between the two can be done with the `Type` menu select.
 
-Click on the `SAVE` button when you are done writing your algorithm. The algorithm will then be available in the [Executions](#Executions) tab.
+Click on the `SAVE` button <img src="./figures/save-button.png" align="center" alt="Save button" height="28px"/> when you are done writing your algorithm. The algorithm will then be available in the [Executions](#Executions) tab.
 
 ## Adding parameters
 
-When adding an algorithm with the `Write algorithm` option, a new parameter can be added by clicking on the `ADD PARAMETER` button.
+When adding an algorithm with the `Write algorithm` option, a new parameter can be added by clicking on the `ADD PARAMETER` button <img src="./figures/add-parameter-button.png" align="center" alt="Add parameter button" height="28px"/>.
 
 Choose a type and enter a name, a description and a default value for your new parameter. As you modify the parameters, the code is automatically updated to accommodate for the new parameters. You can then access your parameter with `args.parameter_name`.
 
@@ -197,13 +226,17 @@ The `Field Selector` is particularly useful for executing algorithms on specific
 
 > Note: if no schema corresponds to the dataset you want to apply the algorithm on, you can generate one for your dataset in the [Schemas](#Schemas) tab.
 
+> Note: Parameters cannot be empty and parameter names must be unique. Otherwise the algorithm cannot be saved.
+
 ## Utils files
 
-Access the utils files by clicking on `EDIT UTILS` in the `Algorithms` tab.
+Utils files, short for 'utility files', contain general purpose scripts that can be used across multiple algorithms.
 
-The utils files contain functions that can be used across multiple algorithms. Two utils files are available and you can switch between the two with the `USER|GRAASP` buttons.
+Access the utils files by clicking on `EDIT UTILS` <img src="./figures/edit-utils-button.png" align="center" alt="Edit utils button" height="28px"/> in the `Algorithms` tab.
 
-The `USER` utils file is reserved for the user to write its own custom functions. You will then be able to import your custom function called for example `function_name` with:
+Two types of utils files are available and you can switch between the two with the `USER|GRAASP` buttons <img src="./figures/user-graasp-switch-button.png" align="center" alt="user|graasp buttons" height="28px"/>.
+
+The `USER` utils file is reserved for the user to write their own custom functions. The user can then import their custom function called for example `function_name` with:
 
 ```python
 from utils import function_name
@@ -219,12 +252,12 @@ from graasp_utils import graasp_function_name
 
 ![Edit utils (user)](./figures/edit-utils-graasp.png)
 
-Quick description of functions that might be useful:
+A brief description of functions that might be useful:
 
 - `load_dataset(dataset_path)`
-  > Load a json dataset located at `dataset_path` into a python dictionary
+  > Load a json dataset located at `dataset_path` into a Python dictionary
 - `save_dataset(dataset, dest_path)`:
-  > Save a python dictionary `dataset` at `dest_path`
+  > Save a Python dictionary `dataset` at `dest_path`
 - `parse_arguments(additional_arguments)`:
   > Parses the arguments/parameters that are given as input to the algorithm.
 - `iterate_and_apply(dataset, field_selection, func)`:
