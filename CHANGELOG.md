@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/graasp/graasp-insights/compare/v0.1.4...v0.1.5) (2021-09-22)
+
+
+### Features
+
+* add execution view for validations ([4e54e81](https://github.com/graasp/graasp-insights/commit/4e54e81029d7d35d70946f4954692e9b9e1bcbe1))
+* add validation functionality ([36e092b](https://github.com/graasp/graasp-insights/commit/36e092b8adef4be51b73dbf0a5865176dc5018fc))
+* apply final PR requested changes ([8a8ec23](https://github.com/graasp/graasp-insights/commit/8a8ec237e7d950b10375362514450b13be770533))
+* apply PR requested changes ([88c5972](https://github.com/graasp/graasp-insights/commit/88c59726c980a7ffd56cbdebb68b860f0433ea78))
+* apply PR requested changes ([6aa72d1](https://github.com/graasp/graasp-insights/commit/6aa72d162eb1f47f4f934c379c77dbc325ba1747))
+* apply PR requested changes ([a813c7c](https://github.com/graasp/graasp-insights/commit/a813c7c49b035eb30c918d2c5ff659e10166fd5d))
+* apply PR requested changes ([dc5f9b9](https://github.com/graasp/graasp-insights/commit/dc5f9b965cbb82a3c9ece493df7c8a1ad8524812))
+* create execution view page ([66cb08c](https://github.com/graasp/graasp-insights/commit/66cb08c34f1c1b64586783c9f6069f4749787961))
+* implement add,save and delete pipeline ([f784780](https://github.com/graasp/graasp-insights/commit/f784780873a2136c6984a934f513503d569e6511))
+* modify execution and result pages for pipeline visualization ([c09b324](https://github.com/graasp/graasp-insights/commit/c09b3244343fb3ac9fe985d8b1bc117eb82a6b3a))
+* run pipeline and tests related ([68229c2](https://github.com/graasp/graasp-insights/commit/68229c24f240663ea790d6daf0d6692de992b3d5))
+* support csv files and add dataset csv view ([ad04b99](https://github.com/graasp/graasp-insights/commit/ad04b99aea3fb9dca49f5003fc5aab4c7199916b))
+* test add, save and delete pipeline ([ef75f19](https://github.com/graasp/graasp-insights/commit/ef75f191c3b23046bb8ecdd138fa490ad9d004ed))
+
+
+### Bug Fixes
+
+* add PIPELINES_COLLECTION to the correct shared file ([2883d7d](https://github.com/graasp/graasp-insights/commit/2883d7d3a11a008fa9ee5a71ce33f322bb6e2c85))
+* avoid valueSeq on undefined ([b80d0de](https://github.com/graasp/graasp-insights/commit/b80d0def581602c0f42ff42222b0ac28d9389b93))
+* correct pipeline test files and pipeline files ([78a3768](https://github.com/graasp/graasp-insights/commit/78a3768b86e67bd7f7891e8f7d4b6d4518d1d9cb))
+* display non-utils algorithms when editing a pipeline ([1e9f642](https://github.com/graasp/graasp-insights/commit/1e9f642f06795325d427af933157b41d8700a236))
+* failing tests and python 2 incompabilities ([df815c3](https://github.com/graasp/graasp-insights/commit/df815c318407a0b1d5763680a5ff76f88f9d37bc))
+* modify collapse icons ([4a02dba](https://github.com/graasp/graasp-insights/commit/4a02dba5c3770aa63e19b680f17a2e005a621963))
+* modify files for cleaner code ([a5efb8a](https://github.com/graasp/graasp-insights/commit/a5efb8a56b959e9f0ed5c880e74ae3e328632840))
+* modify pipeline listener files and add utils ([6171fd9](https://github.com/graasp/graasp-insights/commit/6171fd98563e09dc7b8aa5e2773d24e42120521c))
+* modify some files ([eb51e2f](https://github.com/graasp/graasp-insights/commit/eb51e2f51f6e1a940e6a8a5ba337336c981f7208))
+* rename create pipeline page to add pipeline ([e6461d9](https://github.com/graasp/graasp-insights/commit/e6461d9047ccbc978e1455733f1963556b4d3423))
+* return string 'null' for null types for crazy datasets ([6384128](https://github.com/graasp/graasp-insights/commit/63841288bd65d6ad3390bd20de16756f3fa7e423))
+* state management ([c60bad5](https://github.com/graasp/graasp-insights/commit/c60bad5855abe3699f034a7b51108c2f8f7fd40f))
+
+
+### Tests
+
+* add test for execution view page ([e38a3bb](https://github.com/graasp/graasp-insights/commit/e38a3bb3b207b08120c041f8fc91401186436bde))
+* generate schema for complex actions dataset ([a9b8e39](https://github.com/graasp/graasp-insights/commit/a9b8e392efb49aa975ebe8554132983746f94c11))
+
+
+### Build System
+
+* remove codeship ([270f0a7](https://github.com/graasp/graasp-insights/commit/270f0a7798f084d9d84f91ad5f546260a8cf5257))
+* run spectron tests in github actions ([33a7494](https://github.com/graasp/graasp-insights/commit/33a7494e61fb491c226d3852aa9aebdc7aa4747a))
+
+
+### Documentation
+
+* apply some PR requested changes ([89c6f02](https://github.com/graasp/graasp-insights/commit/89c6f020e81473188dc100de279ad9e69badadaf))
+* create a user guide ([fd19db8](https://github.com/graasp/graasp-insights/commit/fd19db8ca3871535c3888b2508a5cbcaf17041a0))
+* edit link to user guide closes [#174](https://github.com/graasp/graasp-insights/issues/174) ([b14e984](https://github.com/graasp/graasp-insights/commit/b14e984d480bcb3e56fea67aac0fd58ae0b4cbdf))
+
 ### [0.1.4](https://github.com/graasp/graasp-insights/compare/v0.1.3...v0.1.4) (2021-03-11)
 
 ### Features
