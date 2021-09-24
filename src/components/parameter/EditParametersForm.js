@@ -215,8 +215,10 @@ const EditParametersForm = (props) => {
 
             if (
               !schema ||
-              _.isEmpty(fieldSelection) ||
-              _.isEmpty(fieldSelection.properties)
+              // schema is not valid if has no properties (object schema)
+              // and no items.properties (array schema)
+              (_.isEmpty(fieldSelection?.properties) &&
+                _.isEmpty(fieldSelection?.items?.properties))
             ) {
               return (
                 <Alert
